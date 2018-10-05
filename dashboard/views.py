@@ -8,8 +8,5 @@ def dashboard_home(request):
 def dashboard_login(request):
     return HttpResponse("Dashboard Login")
 
-def dashboard_role(request, role):
-    return HttpResponse(role + " Dashboard")
-
-def dashboard_action(request, role, action):
-    return HttpResponse(role + " performed " + action)
+def dashboard_action(request, action):
+    return HttpResponse("Page to " + action)
