@@ -16,7 +16,7 @@ Click on the 'Fork' button on the top right corner of this page the create a 'co
 
 **3. Set up a git repository for your system**  
 Run these commands to set up a local git repository and populate with the code you just forked:
-```sh
+```bash
 mkdir code
 cd code
 git init
@@ -35,3 +35,12 @@ The project reads some values for the configuration from the environment variabl
 export sawaliram_secret_key='some_string_without_spaces'
 ```
 After saving the file, make sure you run ```source .bash_profile``` to save the changes to your existing bash session.
+
+**6. Setting up the database**
+The project uses PostgreSQL as its database. If you haven't set up a postgresql server on your system, follow [this](https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-14-04) or [this](http://www.marinamele.com/taskbuster-django-tutorial/install-and-configure-posgresql-for-django) resource to set it up.
+Once you have your database up and running, apply the migrations for the data models by running the following command in the root directory:
+```bash
+python manage.py migrate
+```
+
+You are now ready to write some code! Start by looking at the open issues on the repo.
