@@ -29,14 +29,14 @@ In the root folder (where the requirements.txt file is), run this command to ins
 ```bash
 pip install -r requirements.txt
 ```
-**5. Add environment variables to your shell**
+**5. Add environment variables to your shell**  
 The project reads some values for the configuration from the environment variables. To permanently add variables to the shell environment, add this line to the ```.bash_profile``` file:
 ```sh
 export sawaliram_secret_key='some_string_without_spaces'
 ```
 After saving the file, make sure you run ```source .bash_profile``` to save the changes to your existing bash session.
 
-**6. Setting up the database**
+**6. Setting up the database**  
 The project uses PostgreSQL as its database. If you haven't set up a postgresql server on your system, follow [this](https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-14-04) or [this](http://www.marinamele.com/taskbuster-django-tutorial/install-and-configure-posgresql-for-django) resource to set it up.
 Once you have your database up and running, apply the migrations for the data models by running the following command in the root directory:
 ```bash
