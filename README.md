@@ -17,8 +17,8 @@ Click on the 'Fork' button on the top right corner of this page the create a 'co
 **3. Set up a git repository for your system**  
 Run these commands to set up a local git repository and populate with the code you just forked:
 ```sh
-mkdir
-cd into/your/code/folder/
+mkdir code
+cd code
 git init
 git remote add origin https://github.com/tifrh/sawaliram.git
 git pull origin master
