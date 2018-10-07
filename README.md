@@ -9,4 +9,10 @@ It is recommended to use an environment management tool like [virtualenv](https:
 Click on the 'Fork' button on the top right corner of this page the create a 'copy' of this project for yourself. You will keep this fork updated with the 'upstream' repository, the one you're at now. You will also create branches on your own fork before sending a Pull Request to the upstream repo.  
 
 **3. Set up a git repository for your system**  
-Run these commands to set up a local git repository and populate with the code you just forked.
+Run these commands to set up a local git repository and populate with the code you just forked:
+```sh
+cd into/a/directory/
+git init
+git remote add origin https://github.com/tifrh/sawaliram.git
+git pull origin master
+```
