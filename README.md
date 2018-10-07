@@ -3,7 +3,13 @@ Sawaliram is an online platform built to collect, answer and analyse science que
 
 ## Setting up your development environment
 **1. Install an environment manager**  
-It is recommended to use an environment management tool like [virtualenv](https://virtualenv.pypa.io/en/stable/) to easily manage the projects requirements and avoid any conflicts with your system packages.  
+It is recommended to use an environment management tool like [virtualenv](https://virtualenv.pypa.io/en/stable/) to easily manage the projects requirements and avoid any conflicts with your system packages. If you are using virtualenv, run these commands to set up a development environment:
+```bash
+cd into/your/project/folder
+virtualenv -p python3 env
+source env/bin/activate
+```
+This will activate an empty environment. Use can use ```deactivate``` to exit the environment.
 
 **2. Fork the project**  
 Click on the 'Fork' button on the top right corner of this page the create a 'copy' of this project for yourself. You will keep this fork updated with the 'upstream' repository, the one you're at now. You will also create branches on your own fork before sending a Pull Request to the upstream repo.  
@@ -11,8 +17,15 @@ Click on the 'Fork' button on the top right corner of this page the create a 'co
 **3. Set up a git repository for your system**  
 Run these commands to set up a local git repository and populate with the code you just forked:
 ```sh
-cd into/a/directory/
+mkdir
+cd into/your/code/folder/
 git init
 git remote add origin https://github.com/tifrh/sawaliram.git
 git pull origin master
+```
+
+**4. Install dependencies**
+In the root folder (where the requirements.txt file is), run this command to install all dependencies:
+```bash
+pip install -r requirements.txt
 ```
