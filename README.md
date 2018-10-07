@@ -24,8 +24,14 @@ git remote add origin https://github.com/tifrh/sawaliram.git
 git pull origin master
 ```
 
-**4. Install dependencies**
+**4. Install dependencies**  
 In the root folder (where the requirements.txt file is), run this command to install all dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+**5. Add environment variables to your shell**
+The project reads some values for the configuration from the environment variables. To permanently add variables to the shell environment, add this line to the ```.bash_profile``` file:
+```sh
+export sawaliram_secret_key='some_string_without_spaces'
+```
+After saving the file, make sure you run ```source .bash_profile``` to save the changes to your existing bash session.
