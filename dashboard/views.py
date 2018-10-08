@@ -10,4 +10,5 @@ def dashboard_login(request):
     return HttpResponse("Dashboard Login")
 
 def dashboard_action(request, action):
-    return HttpResponse("Page to " + action)
+    context = {}
+    return render(request, 'dashboard/' + action + '.html', context)
