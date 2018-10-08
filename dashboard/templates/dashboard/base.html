@@ -11,7 +11,18 @@
     </head>
     <body>
 
-        {% block content %} {% endblock %}
-        
+        <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand" href="{% url 'dashboard:dashboard_home' %}">
+                Sawaliram Dashboard
+            </a>
+            <div class="d-flex flex-row-reverse">
+                <a href="#">Logout</a>
+            </div>
+        </nav>
+
+        <div class="container">
+            {% block content %} {% endblock %}
+        </div>
+
     </body>
 </html>
