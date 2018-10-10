@@ -1,0 +1,35 @@
+
+/* General styles */
+
+.navbar .navbar-brand {
+    color: #585858;
+}
+
+.navbar a.logout-button {
+    color: #757575;
+    padding: 5px 15px;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.navbar a.logout-button:hover {
+    background-color: #e9ecef;
+}
+
+.sawaliram-container {
+    margin-top: 30px;
+}
+
+/* Home styles */
+
+h1.dashboard-home-greeting {
+    font-size: 30px;
+}
+
+/* Actions styles */
+
+h2.sub-heading {
+    font-size: 20px;
+    font-weight: normal;
+    color: #757575;
+}
