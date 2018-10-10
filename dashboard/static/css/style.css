@@ -26,6 +26,36 @@ h1.dashboard-home-greeting {
     font-size: 30px;
 }
 
+.tasks-list {
+    margin-top: 30px;
+}
+
+.tasks-list a.task-card {
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    display: inline-block;
+    border: 2px solid #d6d6d6;
+    border-radius: 3px;
+    padding: 20px;
+    padding-bottom: 5px;
+}
+
+.tasks-list a.task-card:hover {
+    background-color: #f7f7f7;
+}
+
+.tasks-list a.task-card h3 {
+    font-size: 22px;
+    margin-top: 8px;
+}
+
+.tasks-list a.task-card p {
+    font-size: 14px;
+    color: #8e8e8e;
+    font-style: italic;
+}
+
 /* Actions styles */
 
 h2.sub-heading {

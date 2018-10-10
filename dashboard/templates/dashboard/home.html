@@ -3,8 +3,20 @@
 
 {% block title %} Dashboard Home | Sawaliram {% endblock %}
 
+{% load static %}
+
 {% block content %}
 
 <h1 class="dashboard-home-greeting">Hello Nitin, what do you wanna do today?</h1>
+
+<div class="row tasks-list">
+    <div class="col-4">
+        <a href="{% url 'dashboard:dashboard_action' 'submit-questions' %}" class="task-card">
+            <img src="{% static 'task_icons/submit_questions.png' %}" alt="Submit Questions">
+            <h3>Submit Questions</h3>
+            <p>Submit questions collected from schools or events</p>
+        </a>
+    </div>
+</div>
 
 {% endblock %}
