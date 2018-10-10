@@ -1,9 +1,9 @@
 # Sawaliram
-Sawaliram is an online platform built to collect, answer and analyse science questions asked by school students across India. It is developed and maintained by Tata Institue of Fundamanetal Research and Eklavya. The current development focuses on buildig a dashboard to collect and answer questions, including tools to moderate and correct the data.
+Sawaliram is an online platform built to collect, answer and analyze science questions asked by school students across India. It is developed and maintained by Tata Institue of Fundamental Research and Eklavya. The current development focuses on building a dashboard to collect and answer questions, including tools to moderate and correct the data.
 
 ## Setting up your development environment
 **1. Install an environment manager**  
-It is recommended to use an environment management tool like [virtualenv](https://virtualenv.pypa.io/en/stable/) to easily manage the projects requirements and avoid any conflicts with your system packages. If you are using virtualenv, run these commands to set up a development environment:
+It is recommended to use an environment management tool like [virtualenv](https://virtualenv.pypa.io/en/stable/) to easily manage the project's requirements and avoid any conflicts with your system packages. If you are using virtualenv, run these commands to set up a development environment:
 ```bash
 cd into/your/project/folder
 virtualenv -p python3 env
@@ -37,7 +37,7 @@ export sawaliram_secret_key='some_string_without_spaces'
 After saving the file, make sure you run ```source .bash_profile``` to save the changes to your existing bash session.
 
 **6. Setting up the database**  
-The project uses PostgreSQL as its database. If you haven't set up a postgresql server on your system, follow [this](https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-14-04) or [this](http://www.marinamele.com/taskbuster-django-tutorial/install-and-configure-posgresql-for-django) resource to set it up.
+The project uses PostgreSQL as its database. If you haven't set up a PostgreSQL server on your system, follow [this](https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-14-04) or [this](http://www.marinamele.com/taskbuster-django-tutorial/install-and-configure-posgresql-for-django) resource to set it up.
 Once you have your database up and running, apply the migrations for the data models by running the following command in the root directory:
 ```bash
 python manage.py migrate
