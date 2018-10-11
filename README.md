@@ -1,5 +1,5 @@
 # Sawaliram
-Sawaliram is an online platform built to collect, answer and analyze science questions asked by school students across India. It is developed and maintained by Tata Institue of Fundamental Research and Eklavya. The current development focuses on building a dashboard to collect and answer questions, including tools to moderate and correct the data.
+Sawaliram is an online platform built to collect, answer and analyze questions asked by school students across India. It is developed and maintained by TIFR Centre for Interdisciplinary Sciences, Hyderabad and Eklavya, Bhopal. The current development focuses on building a dashboard to collect and answer questions, including tools to moderate and correct the data.
 
 ## Setting up your development environment
 **1. Install an environment manager**  
