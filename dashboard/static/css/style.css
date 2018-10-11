@@ -1,5 +1,5 @@
 
-/* General styles */
+/* ----- General styles ----- */
 
 .navbar .navbar-brand {
     color: #585858;
@@ -13,14 +13,14 @@
 }
 
 .navbar a.logout-button:hover {
-    background-color: #e9ecef;
+    background-color: #f7f7f7;
 }
 
 .sawaliram-container {
     margin-top: 30px;
 }
 
-/* Home styles */
+/* ----- Home styles ----- */
 
 h1.dashboard-home-greeting {
     font-size: 30px;
@@ -56,10 +56,22 @@ h1.dashboard-home-greeting {
     font-style: italic;
 }
 
-/* Actions styles */
+/* ----- Actions styles ----- */
 
-h2.sub-heading {
+h1.task-heading {
+    font-size: 30px;
+}
+
+h2.task-sub-heading {
     font-size: 20px;
     font-weight: normal;
     color: #757575;
+    margin-bottom: 30px;
 }
+
+h3.task-section-heading {
+    font-size: 22px;
+}
+
+/* submit-questions */
+
