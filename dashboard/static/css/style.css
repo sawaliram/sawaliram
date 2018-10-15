@@ -1,6 +1,10 @@
 
 /* ----- General styles ----- */
 
+.navbar {
+    background-color: #fff;
+}
+
 .navbar .navbar-brand {
     color: #585858;
 }
@@ -17,7 +21,15 @@
 }
 
 .sawaliram-container {
-    margin-top: 30px;
+    margin-top: 90px;
+    margin-bottom: 60px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    padding-bottom: 50px; 
+    color: #757575;
 }
 
 /* ----- Home styles ----- */

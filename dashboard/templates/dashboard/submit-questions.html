@@ -24,6 +24,13 @@
     <div class="form-group">
         <label for="area">Area <span class="required-field-text">(required)</span></label>
         <input type="text" class="form-control" name="area" id="area">
+        <small class="form-text text-muted">The PO or city/district/zone from where the question was collected</small>
+    </div>
+
+    <div class="form-group">
+        <label for="state">State <span class="required-field-text">(required)</span></label>
+        <input type="text" class="form-control" name="state" id="state">
+        <small class="form-text text-muted">The state in India from where the question was collected</small>
     </div>
 
     <div class="form-group">
@@ -50,6 +57,57 @@
         <small class="form-text text-muted">Role of the person the question was asked to, ex: Teacher, Volunteer, AFSP etc</small>
     </div>
 
+    <div class="form-group">
+        <label for="area">Context <span class="required-field-text">(required)</span></label>
+        <select class="form-control" name="context" id="context">
+            <option>During regular class</option>
+            <option>Before an event</option>
+            <option>During an event</option>
+            <option>After an event</option>
+            <option>Asked to a teacher/volunteer spontaneaously</option>
+            <option>Submitted in written form</option>
+        </select>
+        <small class="form-text text-muted">The context in which the question was asked</small>
+    </div>
+
+    <div class="form-group">
+        <label for="medium_language">Medium of teaching</label>
+        <input type="text" class="form-control" name="medium_language" id="medium_language">
+        <small class="form-text text-muted">Language in which classes are taught in the school</small>
+    </div>
+
+    <br>
+    <h3 class="task-section-heading">Questions & Related Metadata</h3>
+
+    <div class="form-group">
+        <label for="question_text">Question <span class="required-field-text">(required)</span></label>
+        <textarea class="form-control" name="question_text" id="question_text"></textarea>
+        <small class="form-text text-muted">Enter the question in the original language it was asked in, or a reliable English translation</small>
+    </div>
+
+    <div class="form-group">
+        <label for="student_name">Student name</label>
+        <input type="text" class="form-control" name="student_name" id="student_name">
+        <small class="form-text text-muted">Name of the student who asked the question</small>
+    </div>
+
+    <div class="form-group">
+        <label for="student_class">Student class</label>
+        <input type="text" class="form-control" name="student_class" id="student_class">
+        <small class="form-text text-muted">Class of the student who asked the quesion</small>
+    </div>
+
+    <div class="form-group">
+        <label for="question_language">Question language</label>
+        <input type="text" class="form-control" name="question_language" id="question_language">
+        <small class="form-text text-muted">The language in which the question is being submitted</small>
+    </div>
+
+    <button type="button" class="btn btn-outline-dark btn-block">Add Another Question</button>
+
+    <br>
+    <button type="submit" class="btn btn-dark btn-block">Submit</button>
+    
 </form>
 
 {% endblock %}
