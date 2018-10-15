@@ -12,5 +12,8 @@ urlpatterns = [
     path('login/', views.dashboard_login, name='dashboard_login'),
 
     # ex: /dashboard/submit-questions/
-    path('<slug:action>/', views.dashboard_action, name='dashboard_action'),
+    path('<slug:page>/', views.dashboard_page, name='dashboard_page'),
+
+    # ex: /dashboard/action/save-questions/
+    path('action/<slug:action>', views.dashboard_action, name='dashboard_action'),
 ]

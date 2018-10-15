@@ -66,12 +66,20 @@ h2.task-sub-heading {
     font-size: 20px;
     font-weight: normal;
     color: #757575;
-    margin-bottom: 30px;
+}
+
+.task-hr {
+    margin-bottom: 35px;
 }
 
 h3.task-section-heading {
     font-size: 22px;
+    margin-bottom: 20px;
 }
 
 /* submit-questions */
 
+.required-field-text {
+    color: #a0a0a0;
+    font-style: italic;
+}

@@ -9,6 +9,13 @@ def dashboard_home(request):
 def dashboard_login(request):
     return HttpResponse("Dashboard Login")
 
-def dashboard_action(request, action):
+def dashboard_page(request, page):
     context = {}
-    return render(request, 'dashboard/' + action + '.html', context)
+    return render(request, 'dashboard/' + page + '.html', context)
+
+def dashboard_action(request, action):
+    if action == 'save-questions':
+        save_questions(request)
+
+def save_questions(request):
+    return None

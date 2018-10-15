@@ -9,7 +9,47 @@
 
 <h2 class="task-sub-heading">Submit a single question or a set of collected questions</h2>
 
-<h3 class="task-section-heading">Common Metadata</h3>
+<hr class="task-hr">
 
+<form action="{% url 'dashboard:dashboard_action' 'save-questions' %}" method="POST">
+    {% csrf_token %}
+
+    <h3 class="task-section-heading">Common Metadata</h3>
+
+    <div class="form-group">
+        <label for="schoolName">School Name</label>
+        <input type="text" class="form-control" name="school-name" id="schoolName">
+    </div>
+
+    <div class="form-group">
+        <label for="area">Area <span class="required-field-text">(required)</span></label>
+        <input type="text" class="form-control" name="area" id="area">
+    </div>
+
+    <div class="form-group">
+        <label>Question Format</label><br>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="question-form" id="questionFormWritten" value="written" checked>
+            <label class="form-check-label" for="questionFormWritten">Written</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="question-form" id="questionFormOral" value="oral">
+            <label class="form-check-label" for="questionFormOral">Oral</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="area">Contributor Name</label>
+        <input type="text" class="form-control" name="area" id="area">
+        <small class="form-text text-muted">The name of the person the question was asked to</small>
+    </div>
+
+    <div class="form-group">
+        <label for="area">Contributor Role</label>
+        <input type="text" class="form-control" name="area" id="area">
+        <small class="form-text text-muted">Role of the person the question was asked to, ex: Teacher, Volunteer, AFSP etc</small>
+    </div>
+
+</form>
 
 {% endblock %}
