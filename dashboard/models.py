@@ -8,6 +8,7 @@ class Question(models.Model):
 
     school = models.CharField(max_length=100)
     area = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
     student_name = models.CharField(max_length=100)
     student_class = models.IntegerField()
     student_age = models.IntegerField()
