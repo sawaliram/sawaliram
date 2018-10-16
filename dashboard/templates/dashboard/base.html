@@ -10,7 +10,7 @@
 
         <title>{% block title %} {% endblock %}</title>
     </head>
-    <body>
+    <body class="d-flex flex-column">
 
         <nav class="navbar fixed-top navbar-light shadow-sm">
             <a class="navbar-brand" href="{% url 'dashboard:dashboard_home' %}">
@@ -21,7 +21,7 @@
             </div>
         </nav>
 
-        <div class="container sawaliram-container">
+        <div class="container sawaliram-container flex-grow">
             {% block content %} {% endblock %}
         </div>
 

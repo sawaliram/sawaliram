@@ -1,6 +1,14 @@
 
 /* ----- General styles ----- */
 
+body {
+    min-height: 100vh; 
+}
+
+.flex-grow {
+    flex: 1;
+ }
+
 .navbar {
     background-color: #fff;
 }
@@ -30,6 +38,10 @@ footer {
     padding: 20px;
     padding-bottom: 50px; 
     color: #757575;
+}
+
+footer p {
+    margin-bottom: 3px;
 }
 
 /* ----- Home styles ----- */
