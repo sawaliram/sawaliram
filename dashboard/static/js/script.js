@@ -18,7 +18,9 @@ function addQuestion() {
 function deleteQuestion() {
     $('.delete-question-button').click(function(event) {
         
-        $(this).closest('.question-card').remove();
+        $(this).closest('.question-card').hide('normal', function() {
+            $(this).closest('.question-card').remove();
+        });
 
         reserializeQuestionCards();
     });
