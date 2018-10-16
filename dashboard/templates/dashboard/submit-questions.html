@@ -79,31 +79,39 @@
     <br>
     <h3 class="task-section-heading">Questions & Related Metadata</h3>
 
-    <div class="form-group">
-        <label for="question_text">Question <span class="required-field-text">(required)</span></label>
-        <textarea class="form-control" name="question_text" id="question_text"></textarea>
-        <small class="form-text text-muted">Enter the question in the original language it was asked in, or a reliable English translation</small>
+    <div class="card question-card">
+        <div class="card-header">
+            #<span class="question-number">1</span>
+            <button type="button" class="delete-question-button">Delete</button>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="question_text">Question <span class="required-field-text">(required)</span></label>
+                <textarea class="form-control" name="question_text" id="question_text"></textarea>
+                <small class="form-text text-muted">Enter the question in the original language it was asked in, or a reliable English translation</small>
+            </div>
+        
+            <div class="form-group">
+                <label for="student_name">Student name</label>
+                <input type="text" class="form-control" name="student_name" id="student_name">
+                <small class="form-text text-muted">Name of the student who asked the question</small>
+            </div>
+        
+            <div class="form-group">
+                <label for="student_class">Student class</label>
+                <input type="text" class="form-control" name="student_class" id="student_class">
+                <small class="form-text text-muted">Class of the student who asked the quesion</small>
+            </div>
+        
+            <div class="form-group">
+                <label for="question_language">Question language <span class="required-field-text">(required)</span></label>
+                <input type="text" class="form-control" name="question_language" id="question_language">
+                <small class="form-text text-muted">The language in which the question is being submitted</small>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="student_name">Student name</label>
-        <input type="text" class="form-control" name="student_name" id="student_name">
-        <small class="form-text text-muted">Name of the student who asked the question</small>
-    </div>
-
-    <div class="form-group">
-        <label for="student_class">Student class</label>
-        <input type="text" class="form-control" name="student_class" id="student_class">
-        <small class="form-text text-muted">Class of the student who asked the quesion</small>
-    </div>
-
-    <div class="form-group">
-        <label for="question_language">Question language <span class="required-field-text">(required)</span></label>
-        <input type="text" class="form-control" name="question_language" id="question_language">
-        <small class="form-text text-muted">The language in which the question is being submitted</small>
-    </div>
-
-    <button type="button" class="btn btn-light btn-block">Add Another Question</button>
+    <button type="button" class="btn btn-block add-question-button">Add Another Question</button>
 
     <br><br>
     <button type="submit" class="btn btn-dark btn-block">Submit</button>
