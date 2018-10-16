@@ -107,3 +107,34 @@ h3.task-section-heading {
     color: #a0a0a0;
     font-style: italic;
 }
+
+.question-card {
+    margin-bottom: 25px;
+}
+
+.delete-question-button {
+    position: absolute;
+    right: 15px;
+    top: 11px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #a7a7a7;
+    display: none;
+}
+
+.delete-question-button:hover {
+    color: #dc3545;
+}
+
+.add-question-button {
+    background-color: #f7f7f7;
+}
+
+.add-question-button:hover {
+    background-color: #e2e2e2;
+}
+
+.btn.add-question-button:focus {
+    box-shadow: none;
+}
