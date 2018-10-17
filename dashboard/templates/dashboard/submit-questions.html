@@ -14,7 +14,7 @@
 <form action="{% url 'dashboard:dashboard_action' 'save-questions' %}" method="POST">
     {% csrf_token %}
 
-    <h3 class="task-section-heading">Common Metadata</h3>
+    <h3 class="task-section-heading">Common Information</h3>
 
     <div class="form-group">
         <label for="schoolName">School Name</label>
@@ -48,13 +48,13 @@
     <div class="form-group">
         <label for="area">Contributor Name</label>
         <input type="text" class="form-control" name="area" id="area">
-        <small class="form-text text-muted">The name of the person the question was asked to</small>
+        <small class="form-text text-muted">Name of the person to whom the question was asked</small>
     </div>
 
     <div class="form-group">
         <label for="area">Contributor Role</label>
         <input type="text" class="form-control" name="area" id="area">
-        <small class="form-text text-muted">Role of the person the question was asked to, ex: Teacher, Volunteer, AFSP etc</small>
+        <small class="form-text text-muted">Role of the person to whom the question was asked, e.g.: Teacher, Volunteer, AFSP, etc</small>
     </div>
 
     <div class="form-group">
@@ -67,17 +67,17 @@
             <option>Asked to a teacher/volunteer spontaneaously</option>
             <option>Submitted in written form</option>
         </select>
-        <small class="form-text text-muted">The context in which the question was asked</small>
+        <small class="form-text text-muted">Context in which the question was asked</small>
     </div>
 
     <div class="form-group">
-        <label for="medium_language">Medium of teaching</label>
+        <label for="medium_language">Medium of instruction</label>
         <input type="text" class="form-control" name="medium_language" id="medium_language">
         <small class="form-text text-muted">Language in which classes are taught in the school</small>
     </div>
 
     <br>
-    <h3 class="task-section-heading">Questions & Related Metadata</h3>
+    <h3 class="task-section-heading">Questions & Related Information</h3>
 
     <div class="card question-card">
         <div class="card-header">
@@ -88,7 +88,19 @@
             <div class="form-group">
                 <label for="question_text">Question <span class="required-field-text">(required)</span></label>
                 <textarea class="form-control" name="question_text" id="question_text"></textarea>
-                <small class="form-text text-muted">Enter the question in the original language it was asked in, or a reliable English translation</small>
+                <small class="form-text text-muted">Enter the question in its original language</small>
+            </div>
+
+            <div class="form-group">
+                <label for="question_language">Question language <span class="required-field-text">(required)</span></label>
+                <input type="text" class="form-control" name="question_language" id="question_language">
+                <small class="form-text text-muted">Language of Question</small>
+            </div>
+
+            <div class="form-group">
+                <label for="question_text_english">English translation of question</label>
+                <textarea class="form-control" name="question_text_english" id="question_text_english"></textarea>
+                <small class="form-text text-muted">Leave blank if the language of the question is English</small>
             </div>
         
             <div class="form-group">
@@ -100,14 +112,9 @@
             <div class="form-group">
                 <label for="student_class">Student class</label>
                 <input type="text" class="form-control" name="student_class" id="student_class">
-                <small class="form-text text-muted">Class of the student who asked the quesion</small>
+                <small class="form-text text-muted">Class of the student who asked the question</small>
             </div>
-        
-            <div class="form-group">
-                <label for="question_language">Question language <span class="required-field-text">(required)</span></label>
-                <input type="text" class="form-control" name="question_language" id="question_language">
-                <small class="form-text text-muted">The language in which the question is being submitted</small>
-            </div>
+    
         </div>
     </div>
 
