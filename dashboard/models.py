@@ -13,6 +13,7 @@ class Question(models.Model):
     student_class = models.IntegerField()
     student_age = models.IntegerField()
     question_text = models.CharField(max_length=200)
+    question_text_english = models.CharField(max_length=200)
     question_topic = models.CharField(max_length=100)
     question_form = models.CharField(max_length=100)
     question_language = models.CharField(max_length=100)
