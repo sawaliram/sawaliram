@@ -35,4 +35,17 @@ function reserializeQuestionCards() {
     });
 }
 
+function toggleQuestionSubmittedInBoxCheckbox() {
+
+    $('input[type=radio][name=question-form]').change(function() {
+        if (this.value == 'oral') {
+            $('.question-box-group').hide(300);
+        }
+        else {
+            $('.question-box-group').show(300);
+        }
+    });
+}
+
 addQuestion();
+toggleQuestionSubmittedInBoxCheckbox();
