@@ -105,3 +105,6 @@ venv.bak/
 
 # mac ignores
 .DS_Store
+
+# ignore static files dir
+staticfiles/
