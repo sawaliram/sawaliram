@@ -138,15 +138,3 @@ h3.task-section-heading {
 .btn.add-question-button:focus {
     box-shadow: none;
 }
-
-/* ----- Standalone pages styles ----- */
-
-.error-page-wrapper {
-    text-align: center;
-    margin-top: 40px;
-}
-
-.error-page-wrapper h3 {
-    margin-top: 20px;
-    margin-bottom: 40px;
-}

@@ -19,3 +19,7 @@ def dashboard_action(request, action):
 
 def save_questions(request):
     return None
+
+def error_404(request, exception):
+    context = {}
+    return render(request, 'dashboard/404.html', context)
