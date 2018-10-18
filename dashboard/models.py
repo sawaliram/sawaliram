@@ -16,6 +16,7 @@ class Question(models.Model):
     question_text_english = models.CharField(max_length=200)
     question_topic = models.CharField(max_length=100)
     question_form = models.CharField(max_length=100)
+    submitted_in_question_box = models.BooleanField(default=False)
     question_language = models.CharField(max_length=100)
     contributor = models.CharField(max_length=100)
     contributor_role = models.CharField(max_length=100)
