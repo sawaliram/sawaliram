@@ -11,7 +11,7 @@
 
 <hr class="task-hr">
 
-<form action="{% url 'dashboard:dashboard_action' 'save-questions' %}" method="POST">
+<form action="{% url 'dashboard:save-questions' %}" method="POST">
     {% csrf_token %}
 
     <h3 class="task-section-heading">Common Information</h3>
@@ -23,25 +23,25 @@
 
     <div class="form-group">
         <label for="area">Area <span class="required-field-text">(required)</span></label>
-        <input type="text" class="form-control" name="area" id="area">
+        <input type="text" class="form-control" name="area" id="area" required>
         <small class="form-text text-muted">The PO or city/district/zone from where the question was collected</small>
     </div>
 
     <div class="form-group">
         <label for="state">State <span class="required-field-text">(required)</span></label>
-        <input type="text" class="form-control" name="state" id="state">
+        <input type="text" class="form-control" name="state" id="state" required>
         <small class="form-text text-muted">The state in India from where the question was collected</small>
     </div>
 
     <div class="form-group">
         <label>Question Format</label><br>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="question-form" id="questionFormWritten" value="written" checked>
-            <label class="form-check-label" for="questionFormWritten">Written</label>
+            <input class="form-check-input" type="radio" name="question-format" id="questionFormatWritten" value="written" checked>
+            <label class="form-check-label" for="questionFormatWritten">Written</label>
         </div>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="question-form" id="questionFormOral" value="oral">
-            <label class="form-check-label" for="questionFormOral">Oral</label>
+            <input class="form-check-input" type="radio" name="question-format" id="questionFormatOral" value="oral">
+            <label class="form-check-label" for="questionFormatOral">Oral</label>
         </div>
     </div>
 
@@ -58,20 +58,20 @@
     </div>
 
     <div class="form-group">
-        <label for="area">Contributor Name</label>
-        <input type="text" class="form-control" name="area" id="area">
+        <label for="contributorName">Contributor Name</label>
+        <input type="text" class="form-control" name="contributor-name" id="contributorName">
         <small class="form-text text-muted">Name of the person to whom the question was asked</small>
     </div>
 
     <div class="form-group">
-        <label for="area">Contributor Role</label>
-        <input type="text" class="form-control" name="area" id="area">
-        <small class="form-text text-muted">Role of the person to whom the question was asked, e.g.: Teacher, Volunteer, AFSP, etc</small>
+        <label for="contributorRole">Contributor Role</label>
+        <input type="text" class="form-control" name="contributor-role" id="contributorRole">
+        <small class="form-text text-muted">Role of the person to whom the question was asked, ex: Teacher, Volunteer, AFSP etc</small>
     </div>
 
     <div class="form-group">
         <label for="area">Context <span class="required-field-text">(required)</span></label>
-        <select class="form-control" name="context" id="context">
+        <select class="form-control" name="context" id="context" required>
             <option>During regular class</option>
             <option>During or after an activity or field visit</option>
             <option>During or after a special event</option>
@@ -81,8 +81,8 @@
     </div>
 
     <div class="form-group">
-        <label for="medium_language">Medium of instruction</label>
-        <input type="text" class="form-control" name="medium_language" id="medium_language">
+        <label for="mediumLanguage">Medium of instruction</label>
+        <input type="text" class="form-control" name="medium-language" id="mediumLanguage">
         <small class="form-text text-muted">Language in which classes are taught in the school</small>
     </div>
 
@@ -97,31 +97,31 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="question_text">Question <span class="required-field-text">(required)</span></label>
-                <textarea class="form-control" name="question_text" id="question_text"></textarea>
+                <textarea class="form-control" name="question-text" id="question_text" required></textarea>
                 <small class="form-text text-muted">Enter the question in its original language</small>
             </div>
 
             <div class="form-group">
                 <label for="question_language">Question language <span class="required-field-text">(required)</span></label>
-                <input type="text" class="form-control" name="question_language" id="question_language">
+                <input type="text" class="form-control" name="question-language" id="question_language" required>
                 <small class="form-text text-muted">Language of Question</small>
             </div>
 
             <div class="form-group">
                 <label for="question_text_english">English translation of question</label>
-                <textarea class="form-control" name="question_text_english" id="question_text_english"></textarea>
+                <textarea class="form-control" name="question-text-english" id="question_text_english"></textarea>
                 <small class="form-text text-muted">Leave blank if the language of the question is English</small>
             </div>
         
             <div class="form-group">
                 <label for="student_name">Student name</label>
-                <input type="text" class="form-control" name="student_name" id="student_name">
+                <input type="text" class="form-control" name="student-name" id="student_name">
                 <small class="form-text text-muted">Name of the student who asked the question</small>
             </div>
         
             <div class="form-group">
                 <label for="student_class">Student class</label>
-                <input type="text" class="form-control" name="student_class" id="student_class">
+                <input type="text" class="form-control" name="student-class" id="student_class">
                 <small class="form-text text-muted">Class of the student who asked the question</small>
             </div>
     
