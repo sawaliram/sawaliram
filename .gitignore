@@ -108,3 +108,6 @@ venv.bak/
 
 # ignore static files dir
 staticfiles/
+
+# local ignores
+.vscode
