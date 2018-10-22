@@ -15,5 +15,5 @@ urlpatterns = [
     path('<slug:page>/', views.dashboard_page, name='dashboard_page'),
 
     # action URLs
-    path('action/save-questions', views.save_questions, name='save-questions'),
+    path('action/submit-questions', views.submit_questions, name='submit-questions'),
 ]

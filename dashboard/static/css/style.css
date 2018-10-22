@@ -80,7 +80,7 @@ h1.dashboard-home-greeting {
     font-style: italic;
 }
 
-/* ----- Actions styles ----- */
+/* ----- Task pages styles ----- */
 
 h1.task-heading {
     font-size: 30px;
@@ -137,6 +137,32 @@ h3.task-section-heading {
 
 .btn.add-question-button:focus {
     box-shadow: none;
+}
+
+/* ----- Action successfull pages styles ----- */
+
+.action-success-page-wrapper {
+    text-align: center;
+    margin-top: 160px;
+}
+
+.action-success-page-wrapper i {
+    font-size: 35px;
+    color: green;
+}
+
+.action-success-page-wrapper h1 {
+    font-size: 32px;
+    margin-top: 15px;
+}
+
+.action-success-page-wrapper p {
+    color: #757575;
+}
+
+.action-success-page-wrapper a {
+    color: #3a3a3a;
+    text-decoration: underline;
 }
 
 /* ----- Standalone pages styles ----- */

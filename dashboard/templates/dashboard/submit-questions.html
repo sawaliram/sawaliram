@@ -11,7 +11,7 @@
 
 <hr class="task-hr">
 
-<form action="{% url 'dashboard:save-questions' %}" method="POST">
+<form action="{% url 'dashboard:submit-questions' %}" method="POST">
     {% csrf_token %}
 
     <h3 class="task-section-heading">Common Information</h3>

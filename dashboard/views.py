@@ -16,7 +16,7 @@ def dashboard_page(request, page):
     context = {}
     return render(request, 'dashboard/' + page + '.html', context)
 
-def save_questions(request):
+def submit_questions(request):
 	question_text_list = request.POST.getlist('question-text')
 	question_language_list = request.POST.getlist('question-language')
 	question_text_english_list = request.POST.getlist('question-text-english')
@@ -44,8 +44,12 @@ def save_questions(request):
 		)
 
 		question.save()
+
+	context = {
+		'number_of_questions_submitted': len(question_text_list),
+	}
 	
-	return HttpResponse("Saved!")
+	return render(request, 'dashboard/questions-submitted-successfully.html', context)
 
 def error_404(request, exception):
     context = {}
