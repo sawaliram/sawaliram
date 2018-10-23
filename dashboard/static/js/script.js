@@ -37,7 +37,7 @@ function reserializeQuestionCards() {
 
 function toggleQuestionSubmittedInBoxCheckbox() {
 
-    $('input[type=radio][name=question-form]').change(function() {
+    $('input[type=radio][name=question-format]').change(function() {
         if (this.value == 'oral') {
             $('.question-box-group').hide(300);
         }
@@ -49,7 +49,7 @@ function toggleQuestionSubmittedInBoxCheckbox() {
 
 function displayNameOfSelectedFile() {
 
-    $('#excelFileBrowser').on('change', function() {
+    $('#excelFileBrowser').change(function() {
         var file_name = $(this).val().replace('C:\\fakepath\\', '');
         $(this).next('.custom-file-label').text(file_name);
     });
