@@ -47,5 +47,14 @@ function toggleQuestionSubmittedInBoxCheckbox() {
     });
 }
 
+function displayNameOfSelectedFile() {
+
+    $('#excelFileBrowser').on('change', function() {
+        var file_name = $(this).val().replace('C:\\fakepath\\', '');
+        $(this).next('.custom-file-label').text(file_name);
+    });
+}
+
 addQuestion();
 toggleQuestionSubmittedInBoxCheckbox();
+displayNameOfSelectedFile();

@@ -1,0 +1,53 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %} Submit Excel Sheet | Sawaliram {% endblock %}
+
+{% block content %}
+
+<h1 class="task-heading">Submit Excel Sheet</h1>
+
+<h2 class="task-sub-heading">Submit an excel file with questions and related information, or only questions</h2>
+
+<hr class="task-hr">
+
+<div class="task-info">
+    Click <a href="#">here</a> to download our blank Excel template file with pre-filled column headers to easily fill out the data in the correct format
+</div>
+
+<form action="{% url 'dashboard:submit-excel-sheet' %}" method="POST">
+    {% csrf_token %}
+
+    <br>
+    <h3 class="task-section-heading">What kind of data does your excel file have?</h3>
+
+    <div class="form-group">
+        <div class="form-check first-excel-data-type-radio-button">
+            <input class="form-check-input" type="radio" name="excel-data-type" id="excelDataTypeWithMeta" value="with_meta" checked>
+            <label class="form-check-label" for="excelDataTypeWithMeta">
+                Questions + Related Information
+            </label>
+            <small class="form-text text-muted">Questions with information like school name, state, name of the student who asked the question etc</small>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="excel-data-type" id="excelDataTypeWithWithoutMeta" value="without_meta">
+            <label class="form-check-label" for="excelDataTypeWithWithoutMeta">
+                Just Questions
+            </label>
+            <small class="form-text text-muted">List of quesions with no other related information</small>
+        </div>
+    </div>
+
+    <br>
+    <h3 class="task-section-heading">Select your Excel file</h3>
+
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" id="excelFileBrowser" required>
+        <label class="custom-file-label" for="excelFileBrowser">Choose Excel file</label>
+    </div>
+
+    <br><br><br>
+    <button type="submit" class="btn btn-dark btn-block">Submit</button>
+
+</form>
+
+{% endblock %}

@@ -59,14 +59,14 @@ h1.dashboard-home-greeting {
     color: black;
     text-align: center;
     display: inline-block;
-    border: 2px solid #d6d6d6;
+    box-shadow: 0 0 5px rgba(150,150,150,.4);
     border-radius: 3px;
     padding: 20px;
     padding-bottom: 5px;
 }
 
 .tasks-list a.task-card:hover {
-    background-color: #f7f7f7;
+    box-shadow: 0 0 15px 0px rgba(150,150,150,.4);
 }
 
 .tasks-list a.task-card h3 {
@@ -94,6 +94,19 @@ h2.task-sub-heading {
 
 .task-hr {
     margin-bottom: 35px;
+}
+
+.task-info {
+    background-color: #f7f7f7;
+    border-radius: 3px;
+    color: #7a7a7a;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.task-info a {
+    color: #7a7a7a;
+    text-decoration: underline;
 }
 
 h3.task-section-heading {
@@ -137,6 +150,12 @@ h3.task-section-heading {
 
 .btn.add-question-button:focus {
     box-shadow: none;
+}
+
+/* submit-excel-sheet */
+
+.first-excel-data-type-radio-button {
+    margin-bottom: 10px;
 }
 
 /* ----- Action successfull pages styles ----- */

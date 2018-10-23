@@ -12,7 +12,7 @@ def dashboard_home(request):
 def dashboard_login(request):
     return HttpResponse("Dashboard Login")
 
-def dashboard_page(request, page):
+def task_page(request, page):
     context = {}
     return render(request, 'dashboard/' + page + '.html', context)
 
@@ -50,6 +50,9 @@ def submit_questions(request):
 	}
 	
 	return render(request, 'dashboard/questions-submitted-successfully.html', context)
+
+def submit_excel_sheet(request):
+	return HttpResponse("This feature is still under development!")
 
 def error_404(request, exception):
     context = {}
