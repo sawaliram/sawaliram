@@ -10,7 +10,7 @@ class Question(models.Model):
     area = models.CharField(max_length=100)
     state = models.CharField(max_length=100, default='')
     student_name = models.CharField(max_length=100)
-    student_class = models.IntegerField()
+    student_class = models.IntegerField(default=0)
     student_age = models.IntegerField(default=0)
     question_text = models.CharField(max_length=200)
     question_text_english = models.CharField(max_length=200, default='')
