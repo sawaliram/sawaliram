@@ -55,6 +55,29 @@ function displayNameOfSelectedFile() {
     });
 }
 
+function togglePublishedInformationFormGroups() {
+
+    $('input[type=radio][name=published]').change(function() {
+        if (this.value == 'True') {
+            $('input[type=text][name=published-source]').prop('required', true);
+            $('.published-information').show(300);
+            $('input[type=text][name=area]').removeAttr('required');
+            $('input[type=text][name=state]').removeAttr('required');
+            $('select[name=context]').removeAttr('required');
+            $('.not-required-if-published').hide(300);
+        }
+        else {
+            $('input[type=text][name=published-source]').removeAttr('required');
+            $('.published-information').hide(300);
+            $('input[type=text][name=area]').prop('required', true);
+            $('input[type=text][name=state]').prop('required', true);
+            $('select[name=context]').prop('required', true);
+            $('.not-required-if-published').show(300);
+        }
+    });
+}
+
 addQuestion();
 toggleQuestionSubmittedInBoxCheckbox();
 displayNameOfSelectedFile();
+togglePublishedInformationFormGroups();

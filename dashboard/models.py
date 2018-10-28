@@ -1,5 +1,6 @@
 
 from django.db import models
+import datetime
 
 class Question(models.Model):
 
@@ -23,6 +24,9 @@ class Question(models.Model):
     context = models.CharField(max_length=100)
     local_language = models.CharField(max_length=100)
     medium_language = models.CharField(max_length=100)
+    published = models.BooleanField(default=False)
+    published_source = models.CharField(max_length=200, default='')
+    published_date = models.DateField(default=datetime.date.today)
     question_submission_date = models.DateTimeField()
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

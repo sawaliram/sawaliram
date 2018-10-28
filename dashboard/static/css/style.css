@@ -121,6 +121,10 @@ h3.task-section-heading {
     font-style: italic;
 }
 
+.published-information {
+    display: none;
+}
+
 .question-card {
     margin-bottom: 25px;
 }
