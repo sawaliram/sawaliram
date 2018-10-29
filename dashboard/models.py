@@ -27,7 +27,7 @@ class Question(models.Model):
     published = models.BooleanField(default=False)
     published_source = models.CharField(max_length=200, default='')
     published_date = models.DateField(default=datetime.date.today)
-    question_submission_date = models.DateTimeField()
+    question_asked_on = models.DateField(null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
