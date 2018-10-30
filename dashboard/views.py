@@ -64,3 +64,6 @@ def submit_excel_sheet(request):
 def error_404(request, exception):
     context = {}
     return render(request, 'dashboard/404.html', context)
+
+def work_in_progress(request):
+	return render(request, 'dashboard/work-in-progress.html')

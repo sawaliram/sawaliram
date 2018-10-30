@@ -1,0 +1,15 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %} Work In Progress | Sawaliram {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="error-page-wrapper">
+    <img src="{% static 'error_icons/coding.png' %}" alt="Work in progress">
+    <h3>Much code needs to be written before this feature is available!</h3>
+    <button type="button" onclick="window.history.back();" class="btn btn-dark">Back to previous page</button>
+</div>
+
+{% endblock %}
