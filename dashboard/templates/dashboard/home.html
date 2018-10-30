@@ -14,7 +14,7 @@
         <a href="{% url 'dashboard:task_page' 'submit-questions' %}" class="task-card">
             <img src="{% static 'task_icons/submit_questions.png' %}" alt="Submit Questions">
             <h3>Submit Questions</h3>
-            <p>Fill out a form to enter single or multiple questions</p>
+            <p>Fill out a form to enter single or a batch of multiple questions</p>
         </a>
     </div>
     <div class="col-4">
@@ -22,6 +22,13 @@
             <img src="{% static 'task_icons/submit_excel_sheet.png' %}" alt="Submit Excel Sheet">
             <h3>Submit Excel Sheet</h3>
             <p>Submit an Excel sheet with questions, with or without additional information</p>
+        </a>
+    </div>
+    <div class="col-4">
+        <a href="{% url 'dashboard:task_page' 'work-in-progress' %}" class="task-card">
+            <img src="{% static 'task_icons/view_questions.png' %}" alt="View Questions">
+            <h3>View Questions</h3>
+            <p>View questions and their available answers and related information</p>
         </a>
     </div>
 </div>
