@@ -11,7 +11,7 @@
 
 <hr class="task-hr">
 
-<form action="{% url 'dashboard:submit-questions' %}" method="POST">
+<form class="question-submission-form" action="{% url 'dashboard:submit-questions' %}" method="POST">
     {% csrf_token %}
 
     <h3 class="task-section-heading">Common Information</h3>
@@ -19,11 +19,11 @@
     <div class="form-group">
         <label>Were these questions published in an article/magazine?</label><br>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="published" id="publishedTrue" value="True">
+            <input class="form-check-input" type="radio" name="published" id="publishedTrue" value="Yes">
             <label class="form-check-label" for="publishedTrue">Yes</label>
         </div>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="published" id="publishedFalse" value="False" checked>
+            <input class="form-check-input" type="radio" name="published" id="publishedFalse" value="No" checked>
             <label class="form-check-label" for="publishedFalse">No</label>
         </div>
     </div>
@@ -60,27 +60,36 @@
     </div>
 
     <div class="form-group">
-        <label>Question Format</label><br>
+        <label>How was the question originally asked?</label><br>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="question-format" id="questionFormatWritten" value="written" checked>
-            <label class="form-check-label" for="questionFormatWritten">Written</label>
+            <label class="form-check-label" for="questionFormatWritten">Handed over in writen form</label>
         </div>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="question-format" id="questionFormatOral" value="oral">
-            <label class="form-check-label" for="questionFormatOral">Oral</label>
+            <label class="form-check-label" for="questionFormatOral">Asked orally</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="question-format" id="questionFormatPost" value="post">
+            <label class="form-check-label" for="questionFormatPost">Sent in by post</label>
         </div>
     </div>
 
-    <div class="form-group question-box-group">
-        <label>Was the question submitted in a question box?</label><br>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="question-submitted-in-box" id="questionSubmittedInBoxYes" value="True" checked>
-            <label class="form-check-label" for="questionSubmittedInBoxYes">Yes</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="question-submitted-in-box" id="questionSubmittedInBoxNo" value="False">
-            <label class="form-check-label" for="questionSubmittedInBoxNo">No</label>
-        </div>
+    <div class="form-group">
+        <label for="area">Context <span class="required-field-text not-required-if-published">(required)</span></label>
+        <select class="form-control" name="context" id="context" required>
+            <option>In regular class</option>
+            <option>During or after an activity or field visit</option>
+            <option>During or after a special event</option>
+            <option>Other</option>
+        </select>
+        <small class="form-text text-muted">When was the question asked?</small>
+    </div>
+
+    <div class="form-group">
+        <label for="mediumLanguage">Medium of instruction</label>
+        <input type="text" class="form-control" name="medium-language" id="mediumLanguage">
+        <small class="form-text text-muted">Language in which classes are taught in the school</small>
     </div>
 
     <div class="form-group">
@@ -93,22 +102,6 @@
         <label for="contributorRole">Contributor Role</label>
         <input type="text" class="form-control" name="contributor-role" id="contributorRole">
         <small class="form-text text-muted">Role of the person to whom the question was asked, ex: Teacher, Volunteer, AFSP etc</small>
-    </div>
-
-    <div class="form-group">
-        <label for="area">Context <span class="required-field-text not-required-if-published">(required)</span></label>
-        <select class="form-control" name="context" id="context" required>
-            <option>In regular class</option>
-            <option>During or after an activity or field visit</option>
-            <option>During or after a special event</option>
-        </select>
-        <small class="form-text text-muted">When was the question asked?</small>
-    </div>
-
-    <div class="form-group">
-        <label for="mediumLanguage">Medium of instruction</label>
-        <input type="text" class="form-control" name="medium-language" id="mediumLanguage">
-        <small class="form-text text-muted">Language in which classes are taught in the school</small>
     </div>
 
     <br>

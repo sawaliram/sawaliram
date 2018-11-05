@@ -35,18 +35,6 @@ function reserializeQuestionCards() {
     });
 }
 
-function toggleQuestionSubmittedInBoxCheckbox() {
-
-    $('input[type=radio][name=question-format]').change(function() {
-        if (this.value == 'oral') {
-            $('.question-box-group').hide(300);
-        }
-        else {
-            $('.question-box-group').show(300);
-        }
-    });
-}
-
 function displayNameOfSelectedFile() {
 
     $('#excelFileBrowser').change(function() {
@@ -58,7 +46,7 @@ function displayNameOfSelectedFile() {
 function togglePublishedInformationFormGroups() {
 
     $('input[type=radio][name=published]').change(function() {
-        if (this.value == 'True') {
+        if (this.value == 'Yes') {
             $('input[type=text][name=published-source]').prop('required', true);
             $('.published-information').show(300);
             $('input[type=text][name=area]').removeAttr('required');
@@ -78,6 +66,5 @@ function togglePublishedInformationFormGroups() {
 }
 
 addQuestion();
-toggleQuestionSubmittedInBoxCheckbox();
 displayNameOfSelectedFile();
 togglePublishedInformationFormGroups();

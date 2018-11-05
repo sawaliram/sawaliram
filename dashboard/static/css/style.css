@@ -116,6 +116,10 @@ h3.task-section-heading {
 
 /* submit-questions */
 
+.question-submission-form .form-group {
+    margin-bottom: 30px;
+}
+
 .required-field-text {
     color: #a0a0a0;
     font-style: italic;

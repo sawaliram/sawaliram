@@ -30,7 +30,6 @@ def submit_questions(request):
 			area = request.POST['area'],
 			state = request.POST['state'],
 			question_format = request.POST['question-format'],
-			submitted_in_question_box = request.POST['question-submitted-in-box'],
 			contributor = request.POST['contributor-name'],
 			contributor_role = request.POST['contributor-role'],
 			context = request.POST['context'],
@@ -40,12 +39,14 @@ def submit_questions(request):
 			question_text_english = question_text_english_list[i],
 			student_name = student_name_list[i],
 			student_class = student_class_list[i] if student_class_list[i] else 0,
-			published = request.POST['published'],
 		)
 
-		if (request.POST['published'] == 'True'):
+		if (request.POST['published'] == 'Yes'):
+			question.published = True
 			question.published_source = request.POST['published-source']
 			question.published_date = request.POST['published-date']
+		else:
+			question.published = False
 
 		if (request.POST['question-asked-on']):
 			question.question_asked_on = request.POST['question-asked-on']
