@@ -36,7 +36,7 @@ function reserializeQuestionCards() {
 }
 
 function displayNameOfSelectedFile() {
-
+    
     $('#excelFileBrowser').change(function() {
         var file_name = $(this).val().replace('C:\\fakepath\\', '');
         $(this).next('.custom-file-label').text(file_name);
@@ -46,7 +46,7 @@ function displayNameOfSelectedFile() {
 function togglePublishedInformationFormGroups() {
 
     $('input[type=radio][name=published]').change(function() {
-        if (this.value == 'Yes') {
+        if (this.value == 'True') {
             $('input[type=text][name=published-source]').prop('required', true);
             $('.published-information').show(300);
             $('input[type=text][name=area]').removeAttr('required');
