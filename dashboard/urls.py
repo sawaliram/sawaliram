@@ -16,5 +16,5 @@ urlpatterns = [
 
     # action URLs
     path('action/submit-questions', views.submit_questions, name='submit-questions'),
-    path('action/submit-excel-sheet', views.work_in_progress, name='submit-excel-sheet'),
+    path('action/submit-excel-sheet', views.submit_excel_sheet, name='submit-excel-sheet'),
 ]

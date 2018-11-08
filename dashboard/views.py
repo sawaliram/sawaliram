@@ -4,17 +4,24 @@ from django.http import HttpResponse
 from dashboard.models import Question
 from datetime import datetime
 from pprint import pprint
+import random
+import pandas as pd
 
 def dashboard_home(request):
-    context = {}
-    return render(request, 'dashboard/home.html', context)
+	context = {}
+	return render(request, 'dashboard/home.html', context)
 
 def dashboard_login(request):
-    return HttpResponse("Dashboard Login")
+	return HttpResponse("Dashboard Login")
 
 def task_page(request, page):
-    context = {}
-    return render(request, 'dashboard/' + page + '.html', context)
+	
+	context = {}
+	
+	if (page == 'submit-excel-sheet'):
+		context['excel_file_name'] = 'excel' + str(random.randint(1, 999))
+
+	return render(request, 'dashboard/' + page + '.html', context)
 
 def submit_questions(request):
 	question_text_list = request.POST.getlist('question-text')
@@ -60,11 +67,49 @@ def submit_questions(request):
 	return render(request, 'dashboard/questions-submitted-successfully.html', context)
 
 def submit_excel_sheet(request):
+	
+	file = pd.read_excel(request.FILES[request.POST['excel-file-name']])
+	columns = list(file)
+
+	column_name_mapping = {
+		'Question': 'question_text',
+		'Question Language': 'question_language',
+		'English translation of question': 'question_text_english',
+		'How was the question originally asked?': 'question_format',
+		'Context': 'context',
+		'When was the question asked?': 'question_asked_on',
+		'Student Name': 'student_name',
+		'Student Class': 'student_class',
+		'School Name': 'school',
+		'Medium of instruction': 'medium_language',
+		'Area': 'area',
+		'State': 'state',
+		'Published': 'published',
+		'Publication Name': 'published_source',
+		'Publication Date': 'published_date',
+		'Contributor Name': 'contributor',
+		'Contributor Role': 'contributor_role'
+	}
+
+	for index, row in file.iterrows():
+		
+		question = Question()
+
+		for column in columns:
+			if not row[column] != row[column]: # check if the value is not nan
+
+				if column == 'Published':
+					setattr(question, column_name_mapping[column], True if row[column] == 'Yes' else False)
+				else:	
+					setattr(question, column_name_mapping[column], row[column])
+
+		question.save()
+
 	return HttpResponse("This feature is still under development!")
 
 def error_404(request, exception):
-    context = {}
-    return render(request, 'dashboard/404.html', context)
+	context = {}
+	return render(request, 'dashboard/404.html', context)
 
 def work_in_progress(request):
 	return render(request, 'dashboard/work-in-progress.html')

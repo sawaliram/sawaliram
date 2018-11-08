@@ -14,7 +14,7 @@
     Click <a href="#">here</a> to download our blank Excel template file with pre-filled column headers to easily fill out the data in the correct format
 </div>
 
-<form action="{% url 'dashboard:submit-excel-sheet' %}" method="POST">
+<form action="{% url 'dashboard:submit-excel-sheet' %}" enctype="multipart/form-data" method="POST">
     {% csrf_token %}
 
     <br>
@@ -41,8 +41,9 @@
     <h3 class="task-section-heading">Select your Excel file</h3>
 
     <div class="custom-file">
-        <input type="file" class="custom-file-input" id="excelFileBrowser" required>
+        <input type="file" class="custom-file-input" id="excelFileBrowser" name="{{ excel_file_name }}" required>
         <label class="custom-file-label" for="excelFileBrowser">Choose Excel file</label>
+        <input type="hidden" name="excel-file-name" value="{{ excel_file_name }}">
     </div>
 
     <br><br><br>
