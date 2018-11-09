@@ -48,6 +48,40 @@
     </div>
 
     <div class="form-group">
+        <label>Curriculum Followed</label><br>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedStateBoard" value="state_board" checked>
+            <label class="form-check-label" for="curriculumFollowedStateBoard">State Board</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedCBSE" value="cbse">
+            <label class="form-check-label" for="curriculumFollowedCBSE">CBSE</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedICSE" value="icse">
+            <label class="form-check-label" for="curriculumFollowedICSE">ICSE</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedHSTP" value="hstp">
+            <label class="form-check-label" for="curriculumFollowedHSTP">HSTP</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedSmallScience" value="small_science">
+            <label class="form-check-label" for="curriculumFollowedSmallScience">Small Science</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedOther" value="other">
+            <label class="form-check-label" for="curriculumFollowedOther">Other</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="mediumLanguage">Medium of instruction</label>
+        <input type="text" class="form-control" name="medium-language" id="mediumLanguage">
+        <small class="form-text text-muted">Language in which classes are taught in the school</small>
+    </div>
+
+    <div class="form-group">
         <label for="area">Area <span class="required-field-text not-required-if-published">(required)</span></label>
         <input type="text" class="form-control" name="area" id="area" required>
         <small class="form-text text-muted">The PO or city/district/zone from where the question was collected</small>
@@ -84,12 +118,6 @@
             <option>Other</option>
         </select>
         <small class="form-text text-muted">When was the question asked?</small>
-    </div>
-
-    <div class="form-group">
-        <label for="mediumLanguage">Medium of instruction</label>
-        <input type="text" class="form-control" name="medium-language" id="mediumLanguage">
-        <small class="form-text text-muted">Language in which classes are taught in the school</small>
     </div>
 
     <div class="form-group">
@@ -147,6 +175,12 @@
                 <label for="questionAskedOn">When was the question asked?</label>
                 <input type="date" class="form-control" name="question-asked-on" id="questionAskedOn" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
                 <small class="form-text text-muted">The date on which the question was asked, in the format dd/mm/yyyy</small>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes</label>
+                <textarea class="form-control" name="notes" id="notes"></textarea>
+                <small class="form-text text-muted">Additional information that does not fit into any of the fields</small>
             </div>
     
         </div>

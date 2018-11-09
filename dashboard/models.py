@@ -23,10 +23,12 @@ class Question(models.Model):
     context = models.CharField(max_length=100)
     local_language = models.CharField(max_length=100)
     medium_language = models.CharField(max_length=100)
+    curriculum_followed = models.CharField(max_length=100, default='')
     published = models.BooleanField(default=False)
     published_source = models.CharField(max_length=200, default='')
     published_date = models.DateField(default=datetime.date.today)
     question_asked_on = models.DateField(null=True)
+    notes = models.CharField(max_length=500, default='')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 

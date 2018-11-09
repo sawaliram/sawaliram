@@ -40,12 +40,14 @@ def submit_questions(request):
 			contributor = request.POST['contributor-name'],
 			contributor_role = request.POST['contributor-role'],
 			context = request.POST['context'],
+			curriculum_followed = request.POST['curriculum-followed'],
 			medium_language = request.POST['medium-language'],
 			question_text = question_text_list[i],
 			question_language = question_language_list[i],
 			question_text_english = question_text_english_list[i],
 			student_name = student_name_list[i],
 			student_class = student_class_list[i] if student_class_list[i] else 0,
+			notes = request.POST['notes']
 		)
 
 		if (request.POST['published'] == 'Yes'):
@@ -87,6 +89,7 @@ def submit_excel_sheet(request):
 		'Published': 'published',
 		'Publication Name': 'published_source',
 		'Publication Date': 'published_date',
+		'Notes': 'notes',
 		'Contributor Name': 'contributor',
 		'Contributor Role': 'contributor_role'
 	}
