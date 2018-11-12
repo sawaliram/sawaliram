@@ -6,7 +6,7 @@
 
 <h1 class="task-heading">Submit Excel Sheet</h1>
 
-<h2 class="task-sub-heading">Submit an excel file with questions and related information, or only questions</h2>
+<h2 class="task-sub-heading">Submit an excel file with questions and related information</h2>
 
 <hr class="task-hr">
 
@@ -14,28 +14,21 @@
     Click <a href="#">here</a> to download our blank Excel template file with pre-filled column headers to easily fill out the data in the correct format
 </div>
 
+<h3 class="task-section-heading">Guidelines for filling out and submitting the Excel file</h3>
+
+<ul>
+    <li>The Excel file template has help boxes that appear when you click or hover over a column. The help box provides an overview of the data that needs to be filled out in that column. Be sure to read it while filling out the Excel file.</li>
+    <li>Please check for spelling or grammatical errors before submitting the file.</li>
+    <li>Only fill out single values in the columns and avoid comma-separated lists or brackets in the fields.</li>
+    <li>If you need to enter a range of grades from which a question might have been asked, enter the average value instead of entering a value like ‘7-8’, instead enter ‘7.5’</li>
+    <li>If there is additional information or clarification that does not fit into any of the columns/fields, enter it into the ‘Notes’ field as a comma-separated list of entries.</li>
+    <li>Do not create multiple sheets in a single Excel file</li>
+    <li>You can open the drop-down menu in fields like ‘Context’ by clicking on the drop-down button next to the cell or by using the keyboard with ‘Alt + Down Arrow’.</li>
+    <li>You can copy the contents of the cell directly above the current cell by pressing Ctrl + D on Windows/Linux or Command + D on MacOS. Handy when entering a question with similar information as the previous entry.</li>
+</ul>
+
 <form action="{% url 'dashboard:submit-excel-sheet' %}" enctype="multipart/form-data" method="POST">
     {% csrf_token %}
-
-    <br>
-    <h3 class="task-section-heading">What kind of data does your excel file have?</h3>
-
-    <div class="form-group">
-        <div class="form-check first-excel-data-type-radio-button">
-            <input class="form-check-input" type="radio" name="excel-data-type" id="excelDataTypeWithMeta" value="with_meta" checked>
-            <label class="form-check-label" for="excelDataTypeWithMeta">
-                Questions + Related Information
-            </label>
-            <small class="form-text text-muted">Questions with information like school name, state, name of the student who asked the question etc</small>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="excel-data-type" id="excelDataTypeWithWithoutMeta" value="without_meta">
-            <label class="form-check-label" for="excelDataTypeWithWithoutMeta">
-                Just Questions
-            </label>
-            <small class="form-text text-muted">List of quesions with no other related information</small>
-        </div>
-    </div>
 
     <br>
     <h3 class="task-section-heading">Select your Excel file</h3>
