@@ -83,6 +83,7 @@ def submit_excel_sheet(request):
 		'Student Name': 'student_name',
 		'Student Class': 'student_class',
 		'School Name': 'school',
+		'Curriculum followed' : 'curriculum_followed',
 		'Medium of instruction': 'medium_language',
 		'Area': 'area',
 		'State': 'state',
@@ -108,7 +109,7 @@ def submit_excel_sheet(request):
 
 		question.save()
 
-	return HttpResponse("This feature is still under development!")
+	return HttpResponse("Excel sheet saved!")
 
 def error_404(request, exception):
 	context = {}
