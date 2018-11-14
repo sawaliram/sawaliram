@@ -5,16 +5,20 @@ from . import views
 app_name = 'dashboard'
 
 urlpatterns = [
-    # /dashboard/
-    path('', views.dashboard_home, name='dashboard_home'),
 
-    # /dashboard/login/
-    path('login/', views.dashboard_login, name='dashboard_login'),
+    path('', views.get_home_view, name='dashboard_home'),
 
-    # ex: /dashboard/submit-questions/
-    path('<slug:page>/', views.task_page, name='task_page'),
+    path('login/', views.get_login_view, name='login-view'),
+
+    # task pages
+    # these URLs point to a task page, like submit-questions
+    path('submit-questions', views.get_submit_questions_view, name='submit-questions-view'),
+    path('submit-excel-sheet', views.get_submit_excel_sheet_view, name='submit-excel-sheet-view'),
+    path('view-questions', views.get_view_questions_view, name='view-questions-view'),
 
     # action URLs
+    # these URLs perform an action, like submitting a question
+    # they are generally called from a form action
     path('action/submit-questions', views.submit_questions, name='submit-questions'),
     path('action/submit-excel-sheet', views.submit_excel_sheet, name='submit-excel-sheet'),
 ]

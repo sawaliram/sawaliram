@@ -7,22 +7,39 @@ from pprint import pprint
 import random
 import pandas as pd
 
-def dashboard_home(request):
+""" get_view funcions
+They return a view or a page
+"""
+def get_login_view(request):
+	return HttpResponse("Dashboard Login")
+
+def get_home_view(request):
 	context = {}
 	return render(request, 'dashboard/home.html', context)
 
-def dashboard_login(request):
-	return HttpResponse("Dashboard Login")
+def get_submit_questions_view(request):
+	return render(request, 'dashboard/submit-questions.html')
 
-def task_page(request, page):
-	
-	context = {}
-	
-	if (page == 'submit-excel-sheet'):
-		context['excel_file_name'] = 'excel' + str(random.randint(1, 999))
+def get_submit_excel_sheet_view(request):
 
-	return render(request, 'dashboard/' + page + '.html', context)
+	context = {
+		'excel_file_name': 'excel' + str(random.randint(1, 999)),
+	}
 
+	return render(request, 'dashboard/submit-excel-sheet.html', context)
+
+def get_view_questions_view(request):
+	return HttpResponse("View Questions here!")
+
+def get_error_404_view(request, exception):
+	return render(request, 'dashboard/404.html')
+
+def get_work_in_progress_view(request):
+	return render(request, 'dashboard/work-in-progress.html')
+
+""" action functions
+They perform some actions - like saving questions to the database
+"""
 def submit_questions(request):
 	question_text_list = request.POST.getlist('question-text')
 	question_language_list = request.POST.getlist('question-language')
@@ -110,10 +127,3 @@ def submit_excel_sheet(request):
 		question.save()
 
 	return HttpResponse("Excel sheet saved!")
-
-def error_404(request, exception):
-	context = {}
-	return render(request, 'dashboard/404.html', context)
-
-def work_in_progress(request):
-	return render(request, 'dashboard/work-in-progress.html')
