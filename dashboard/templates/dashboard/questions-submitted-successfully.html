@@ -9,7 +9,7 @@
 
     <h1>Question{{ number_of_questions_submitted|pluralize }} submitted successfully!</h1>
     
-    <p>You can either <a href="{% url 'dashboard:dashboard_home' %}">go to dashboard home</a> and start a new task or <a href="{% url 'dashboard:task_page' 'submit-questions' %}">submit another question</a></p>
+    <p>You can either <a href="{% url 'dashboard:dashboard_home' %}">go to dashboard home</a> and start a new task or <a href="{% url 'dashboard:submit-questions-view' %}">submit another question</a></p>
 </div>
 
 {% endblock %}
