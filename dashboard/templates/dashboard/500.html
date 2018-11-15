@@ -1,0 +1,16 @@
+
+{% extends "dashboard/base.html" %}
+
+{% block title %} Page Not Found | Sawaliram {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="error-page-wrapper">
+    <img src="{% static 'error_icons/500.png' %}" alt="Internal Server Error">
+    <h3> Sorry something has gone wrong on the server!</h3>
+    <button type="button" onclick="window.history.back();" class="btn btn-dark">Back to previous page</button>
+</div>
+
+{% endblock %}

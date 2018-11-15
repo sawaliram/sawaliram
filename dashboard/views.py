@@ -38,6 +38,10 @@ def get_error_404_view(request, exception):
 	"""Return the custom 404 page."""
 	return render(request, 'dashboard/404.html')
 
+def get_error_500_view(request, exception):
+	"""Return the custom 500 page."""
+	return render(request, 'dashboard/500.html')
+
 def get_work_in_progress_view(request):
 	"""Return work-in-progress view."""
 	return render(request, 'dashboard/work-in-progress.html')
