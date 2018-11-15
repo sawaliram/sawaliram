@@ -1,0 +1,31 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %} View Questions | Sawaliram {% endblock %}
+
+{% block content %}
+
+<h1 class="task-heading">View Questions</h1>
+
+<h2 class="task-sub-heading">View questions and related information by searching and filtering</h2>
+
+<hr class="task-hr">
+
+
+    <div class="accordion" id="questionsList">
+        {% for question in questions %}
+        <div class="card">
+            <div class="card-header" id="questionCard{{ forloop.counter }}">
+                <a href="#metaCard{{ forloop.counter }}" data-toggle="collapse" data-parent="#questionsList" aria-expanded="false" aria-controls="metaCard{{ forloop.counter }}">
+                    {{ question.question_text }}
+                </a>
+            </div>
+            <div id="metaCard{{ forloop.counter }}" class="collapse" aria-labelledby="questionCard{{ forloop.counter }}" data-parent="#questionsList">
+                <div class="card-body">
+                    Meta data goes here
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
