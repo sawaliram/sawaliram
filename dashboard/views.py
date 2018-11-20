@@ -97,15 +97,16 @@ def submit_excel_sheet(request):
 		'English translation of question': 'question_text_english',
 		'How was the question originally asked?': 'question_format',
 		'Context': 'context',
-		'When was the question asked?': 'question_asked_on',
+		'Date of asking the question': 'question_asked_on',
 		'Student Name': 'student_name',
+		'Gender': 'student_gender',
 		'Student Class': 'student_class',
 		'School Name': 'school',
 		'Curriculum followed' : 'curriculum_followed',
 		'Medium of instruction': 'medium_language',
 		'Area': 'area',
 		'State': 'state',
-		'Published': 'published',
+		'Published (Yes/No)': 'published',
 		'Publication Name': 'published_source',
 		'Publication Date': 'published_date',
 		'Notes': 'notes',
@@ -119,10 +120,10 @@ def submit_excel_sheet(request):
 		for column in columns:
 			if not row[column] != row[column]: # check if the value is not nan
 
-				if column == 'Published':
+				if column == 'Published (Yes/No)':
 					setattr(question, column_name_mapping[column], True if row[column] == 'Yes' else False)
-				else:	
+				else:
 					setattr(question, column_name_mapping[column], row[column])
 
 		question.save()
-	return HttpResponse("Excel sheet saved!")
+	return render(request, 'dashboard/excel-submitted-successfully.html')
