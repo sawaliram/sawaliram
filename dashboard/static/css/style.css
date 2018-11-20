@@ -161,9 +161,49 @@ h3.task-section-heading {
 }
 
 /* submit-excel-sheet */
-
 .first-excel-data-type-radio-button {
     margin-bottom: 10px;
+}
+
+/* view-questions */
+#questionsList .card {
+    border: 2px solid #d0d0d0;
+    border-radius: 3px;
+    color: #b7b7b7;
+}
+
+#questionsList .card:not(:last-child) {
+    margin-bottom: 30px;
+}
+
+#questionsList .card .card-header {
+    padding: 0;
+    border-bottom: none;
+}
+
+#questionsList .card .card-header h3 {
+    color: #444;
+    font-size: 16px;
+    margin-bottom: 0;
+    padding: 10px 15px;
+}
+
+#questionsList .card .card-body {
+    padding: 10px 15px;
+    font-size: 15px;
+}
+
+#questionsList .card .card-body .meta-date-column {
+    text-align: right;
+}
+
+#questionsList .card .card-body .meta-phrase-section {
+    margin-bottom: 0;
+    margin-top: 13px;
+}
+
+#questionsList .card .card-body .meta-value {
+    color: #545454;
 }
 
 /* ----- Action successfull pages styles ----- */
