@@ -6,26 +6,80 @@
 
 <h1 class="task-heading">View Questions</h1>
 
-<h2 class="task-sub-heading">View questions and related information by searching and filtering</h2>
+<h2 class="task-sub-heading">View questions and related information - filtered by language or state.</h2>
 
 <hr class="task-hr">
 
+<div id="questionsList">
+    {% for question in questions %}
+    <div class="card">
 
-    <div class="accordion" id="questionsList">
-        {% for question in questions %}
-        <div class="card">
-            <div class="card-header" id="questionCard{{ forloop.counter }}">
-                <a href="#metaCard{{ forloop.counter }}" data-toggle="collapse" data-parent="#questionsList" aria-expanded="false" aria-controls="metaCard{{ forloop.counter }}">
-                    {{ question.question_text }}
-                </a>
-            </div>
-            <div id="metaCard{{ forloop.counter }}" class="collapse" aria-labelledby="questionCard{{ forloop.counter }}" data-parent="#questionsList">
-                <div class="card-body">
-                    Meta data goes here
+        <div class="card-header" id="questionCard{{ forloop.counter }}">
+            <h3>
+                {{ question.question_text }}
+            </h3>
+        </div>
+
+        <div class="card-body">
+            {% if question.school or question.state or question.area %}
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span class="meta-value">
+                    {% if question.school %}
+                        {{ question.school }}
+                        {% if question.curriculum_followed %}
+                        ({{ question.curriculum_followed }})
+                        {% endif %}
+                    {% else %}
+                        NA
+                    {% endif %}
+                    </span>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span class="meta-value">
+                        {% if question.area %}
+                            {{ question.area.rstrip }}{% endif %}{% if question.state %}, {{ question.state }}
+                        {% elif question.state %}
+                            {{ question.state }}
+                        {% else %}
+                            Location details not available
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="col-12 col-sm-4 meta-date-column">
+                    <i class="far fa-calendar-alt"></i>
+                    <span class="meta-value">
+                        {% if question.question_asked_on %}
+                            {{ question.question_asked_on }}
+                        {% else %}
+                            Date not available
+                        {% endif %}
+                    </span>
                 </div>
             </div>
+            {% endif %}
+
+            {% if question.question_format %}
+            <p class="meta-phrase-section">
+                This question was <span class="meta-value">{{ question.question_format|lower }}</span>,{% if question.question_language %} in <span class="meta-value">{{ question.question_language }}</span>.{% endif %}
+            </p>
+            {% elif question.question_language %}
+            <p class="meta-phrase-section">
+                This question was asked in <span class="meta-value">{{ question.question_language }}</span>.
+            </p>
+            {% endif %}
+
+            {% if question.contributor %}
+            <p class="meta-phrase-section">
+                Collected by: <span class="meta-value">{{ question.contributor }} {% if question.contributor_role %}({{ question.contributor_role }}){% endif %}</span>
+            </p>
+            {% endif %}
         </div>
-        {% endfor %}
+
     </div>
+    {% endfor %}
+</div>
 
 {% endblock %}
