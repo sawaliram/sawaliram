@@ -48,16 +48,14 @@
                         {% endif %}
                     </span>
                 </div>
+                {% if question.question_asked_on %}
                 <div class="col-12 col-sm-4 meta-date-column">
                     <i class="far fa-calendar-alt"></i>
                     <span class="meta-value">
-                        {% if question.question_asked_on %}
-                            {{ question.question_asked_on }}
-                        {% else %}
-                            Date not available
-                        {% endif %}
+                        {{ question.question_asked_on }}
                     </span>
                 </div>
+                {% endif %}
             </div>
             {% endif %}
 
@@ -68,6 +66,12 @@
             {% elif question.question_language %}
             <p class="meta-phrase-section">
                 This question was asked in <span class="meta-value">{{ question.question_language }}</span>.
+            </p>
+            {% endif %}
+
+            {% if question.question_text_english %}
+            <p class="meta-phrase-section">
+                English translation: "<span class="meta-value">{{ question.question_text_english }}</span>".
             </p>
             {% endif %}
 
