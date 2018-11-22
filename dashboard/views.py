@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import pandas as pd
 from dashboard.models import Question
+from pprint import pprint
 
 def get_login_view(request):
 	"""Return the login view."""
@@ -28,9 +29,28 @@ def get_submit_excel_sheet_view(request):
 
 def get_view_questions_view(request):
 	"""Return the 'View Questions' view after applying filters, if any."""
-	questions = Question.objects.all()
+	questions_superset = Question.objects.all().order_by('-created_on')
+
+	states_list = questions_superset.order_by().values_list('state').distinct('state').values('state')
+	languages_list = questions_superset.order_by().values_list().distinct('question_language').values('question_language')
+
+	questions = questions_superset
+	languages_to_filter_by = request.GET.getlist('languages')
+	states_to_filter_by = request.GET.getlist('states')
+	pprint(states_to_filter_by)
+
+	if languages_to_filter_by:
+		questions = questions_superset.filter(question_language__in=languages_to_filter_by)
+
+	if states_to_filter_by:
+		questions = questions.filter(state__in=states_to_filter_by)
+
 	context = {
 		'questions': questions,
+		'states_list': states_list,
+		'languages_list': languages_list,
+		'states_to_filter_by': states_to_filter_by,
+		'languages_to_filter_by': languages_to_filter_by
 	}
 	return render(request, 'dashboard/view-questions.html', context)
 

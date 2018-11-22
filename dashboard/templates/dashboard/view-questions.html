@@ -10,7 +10,45 @@
 
 <hr class="task-hr">
 
+<div class="filter-area">
+    <button class="btn filter-button" type="button" data-toggle="collapse" data-target="#filterForm" aria-expanded="false" aria-controls="filterForm">
+            <i class="fas fa-filter"></i> FILTERS
+    </button>
+    <div class="collapse" id="filterForm">
+        <form action="{% url 'dashboard:view-questions-view' %}" method="GET">
+
+            <div class="form-group">
+                <label class="filter-form-section-label">Filter States</label><br>
+                {% for state in states_list %}
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" name="states" value="{{ state.state }}" id="statesOption{{ forloop.counter }}" {% if state.state in states_to_filter_by %} checked {% endif %}>
+                    <label for="statesOption{{ forloop.counter }}" class="form-check-label">
+                        {{ state.state|capfirst }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label class="filter-form-section-label">Filter Languages</label><br>
+                {% for language in languages_list %}
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" name="languages" value="{{ language.question_language }}" id="languagesOption{{ forloop.counter }}" {% if language.question_language in languages_to_filter_by %} checked {% endif %}>
+                    <label for="languagesOption{{ forloop.counter }}" class="form-check-label">
+                        {{ language.question_language|capfirst }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn btn-dark btn-sm">Apply Filters</button>
+
+        </form>
+    </div>
+</div>
+
 <div id="questionsList">
+    {% if questions %}
     {% for question in questions %}
     <div class="card">
 
@@ -84,6 +122,9 @@
 
     </div>
     {% endfor %}
+    {% else %}
+        <p class="empty-result-text">No questions found. Try changing the filters.</p>
+    {% endif %}
 </div>
 
 {% endblock %}

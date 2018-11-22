@@ -166,8 +166,29 @@ h3.task-section-heading {
 }
 
 /* view-questions */
+.filter-area {
+    margin-bottom: 20px;
+}
+
+.filter-area .filter-button {
+    background-color: #f7f7f7;
+    color: #868686;
+}
+
+.filter-area .filter-button:hover {
+    background-color: #e2e2e2;
+}
+
+#filterForm {
+    padding-top: 15px;
+}
+
+#filterForm .filter-form-section-label {
+    color: #888;
+}
+
 #questionsList .card {
-    border: 2px solid #d0d0d0;
+    border: 2px solid #efefef;
     border-radius: 3px;
     color: #b7b7b7;
 }
@@ -204,6 +225,11 @@ h3.task-section-heading {
 
 #questionsList .card .card-body .meta-value {
     color: #545454;
+}
+
+#questionsList .empty-result-text {
+    text-align: center;
+    color: #4e4e4e;
 }
 
 /* ----- Action successfull pages styles ----- */
