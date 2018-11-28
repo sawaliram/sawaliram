@@ -167,20 +167,7 @@ h3.task-section-heading {
 
 /* view-questions */
 .filter-area {
-    margin-bottom: 20px;
-}
-
-.filter-area .filter-button {
-    background-color: #f7f7f7;
-    color: #868686;
-}
-
-.filter-area .filter-button:hover {
-    background-color: #e2e2e2;
-}
-
-#filterForm {
-    padding-top: 15px;
+    margin-bottom: 30px;
 }
 
 #filterForm .filter-form-section-label {

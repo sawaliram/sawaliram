@@ -11,10 +11,7 @@
 <hr class="task-hr">
 
 <div class="filter-area">
-    <button class="btn filter-button" type="button" data-toggle="collapse" data-target="#filterForm" aria-expanded="false" aria-controls="filterForm">
-            <i class="fas fa-filter"></i> FILTERS
-    </button>
-    <div class="collapse" id="filterForm">
+    <div id="filterForm">
         <form action="{% url 'dashboard:view-questions-view' %}" method="GET">
 
             <div class="form-group">
