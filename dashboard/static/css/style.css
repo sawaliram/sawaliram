@@ -167,7 +167,7 @@ h3.task-section-heading {
 
 /* view-questions */
 .filter-area {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 #filterForm .filter-form-section-label {
@@ -175,34 +175,43 @@ h3.task-section-heading {
 }
 
 #questionsList .card {
-    border: 2px solid #efefef;
-    border-radius: 3px;
+    border: none;
     color: #b7b7b7;
 }
 
 #questionsList .card:not(:last-child) {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 #questionsList .card .card-header {
     padding: 0;
     border-bottom: none;
+    background: none;
 }
 
 #questionsList .card .card-header h3 {
     color: #444;
-    font-size: 16px;
-    margin-bottom: 0;
-    padding: 10px 15px;
+    font-size: 18px;
+    margin-bottom: 5px;
 }
 
 #questionsList .card .card-body {
     padding: 10px 15px;
+    padding-left: 0;
     font-size: 15px;
 }
 
-#questionsList .card .card-body .meta-date-column {
-    text-align: right;
+#questionsList .card .card-body .highlighted-meta {
+    border: 1px solid;
+    border-radius: 3px;
+    margin-right: 10px;
+    padding: 4px;
+    padding-right: 10px;
+}
+
+#questionsList .card .card-body .highlighted-meta i {
+    font-size: 13px;
+    margin: 0 5px;
 }
 
 #questionsList .card .card-body .meta-phrase-section {

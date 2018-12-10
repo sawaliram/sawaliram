@@ -26,18 +26,6 @@
                 {% endfor %}
             </div>
 
-            <div class="form-group">
-                <label class="filter-form-section-label">Filter Languages</label><br>
-                {% for language in languages_list %}
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input" name="languages" value="{{ language.question_language }}" id="languagesOption{{ forloop.counter }}" {% if language.question_language in languages_to_filter_by %} checked {% endif %}>
-                    <label for="languagesOption{{ forloop.counter }}" class="form-check-label">
-                        {{ language.question_language|capfirst }}
-                    </label>
-                </div>
-                {% endfor %}
-            </div>
-
             <button type="submit" class="btn btn-dark btn-sm">Apply Filters</button>
 
         </form>
@@ -51,46 +39,49 @@
 
         <div class="card-header" id="questionCard{{ forloop.counter }}">
             <h3>
-                {{ question.question_text }}
+                {{ forloop.counter }}. {{ question.question_text }}
             </h3>
         </div>
 
         <div class="card-body">
-            {% if question.school or question.state or question.area %}
-            <div class="row">
-                <div class="col-12 col-sm-4">
+            
+            {% if question.school or question.state or question.area or question.question_asked_on %}
+            <div>
+
+                {% if question.school %}
+                <span class="highlighted-meta">
                     <i class="fas fa-graduation-cap"></i>
                     <span class="meta-value">
-                    {% if question.school %}
                         {{ question.school }}
                         {% if question.curriculum_followed %}
-                        ({{ question.curriculum_followed }})
+                            ({{ question.curriculum_followed }})
                         {% endif %}
-                    {% else %}
-                        NA
-                    {% endif %}
                     </span>
-                </div>
-                <div class="col-12 col-sm-4">
+                </span>
+                {% endif %}
+
+                {% if question.area or question.state %}
+                <span class="highlighted-meta">
                     <i class="fas fa-map-marker-alt"></i>
                     <span class="meta-value">
                         {% if question.area %}
                             {{ question.area.rstrip }}{% endif %}{% if question.state %}, {{ question.state }}
                         {% elif question.state %}
                             {{ question.state }}
-                        {% else %}
-                            Location details not available
                         {% endif %}
-                    </span>
-                </div>
+                    </span>    
+                </span>
+                {% endif %}
+
                 {% if question.question_asked_on %}
-                <div class="col-12 col-sm-4 meta-date-column">
+                <span class="highlighted-meta">
                     <i class="far fa-calendar-alt"></i>
                     <span class="meta-value">
                         {{ question.question_asked_on }}
                     </span>
-                </div>
+                </span>
                 {% endif %}
+
             </div>
             {% endif %}
 
@@ -106,7 +97,7 @@
 
             {% if question.question_text_english %}
             <p class="meta-phrase-section">
-                English translation: "<span class="meta-value">{{ question.question_text_english }}</span>".
+                English translation: <span class="meta-value">"{{ question.question_text_english }}"</span>.
             </p>
             {% endif %}
 

@@ -32,7 +32,6 @@ def get_view_questions_view(request):
 	questions_superset = Question.objects.all().order_by('-created_on')
 
 	states_list = questions_superset.order_by().values_list('state').distinct('state').values('state')
-	languages_list = questions_superset.order_by().values_list().distinct('question_language').values('question_language')
 
 	questions = questions_superset
 	languages_to_filter_by = request.GET.getlist('languages')
@@ -48,7 +47,6 @@ def get_view_questions_view(request):
 	context = {
 		'questions': questions,
 		'states_list': states_list,
-		'languages_list': languages_list,
 		'states_to_filter_by': states_to_filter_by,
 		'languages_to_filter_by': languages_to_filter_by
 	}
