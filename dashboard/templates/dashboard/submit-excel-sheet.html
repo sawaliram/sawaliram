@@ -2,6 +2,8 @@
 
 {% block title %} Submit Excel Sheet | Sawaliram {% endblock %}
 
+{% load static %}
+
 {% block content %}
 
 <h1 class="task-heading">Submit Excel Sheet</h1>
@@ -11,7 +13,7 @@
 <hr class="task-hr">
 
 <div class="task-info">
-    Click <a href="#">here</a> to download our blank Excel template file with pre-filled column headers to easily fill out the data in the correct format
+    Click <a href="{% static 'files/sawaliram_template.xlsx' %}">here</a> to download our blank Excel template file with pre-filled column headers to easily fill out the data in the correct format
 </div>
 
 <h3 class="task-section-heading">Guidelines for filling out and submitting the Excel file</h3>
