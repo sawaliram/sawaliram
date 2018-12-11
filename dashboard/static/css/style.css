@@ -205,8 +205,9 @@ h3.task-section-heading {
     border: 1px solid;
     border-radius: 3px;
     margin-right: 10px;
-    padding: 4px;
+    padding: 2px;
     padding-right: 10px;
+    font-size: 14px;
 }
 
 #questionsList .card .card-body .highlighted-meta i {
