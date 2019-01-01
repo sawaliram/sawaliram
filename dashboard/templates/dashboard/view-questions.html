@@ -20,7 +20,11 @@
                 <div class="form-check form-check-inline">
                     <input type="checkbox" class="form-check-input" name="states" value="{{ state.state }}" id="statesOption{{ forloop.counter }}" {% if state.state in states_to_filter_by %} checked {% endif %}>
                     <label for="statesOption{{ forloop.counter }}" class="form-check-label">
-                        {{ state.state|capfirst }}
+                        {% if state.state == '' %}
+                            Not Specified
+                        {% else %}  
+                            {{ state.state|capfirst }}
+                        {% endif %}
                     </label>
                 </div>
                 {% endfor %}
@@ -46,7 +50,7 @@
         <div class="card-body">
             
             {% if question.school or question.state or question.area or question.question_asked_on %}
-            <div>
+            <div class="highlighted-meta-area">
 
                 {% if question.school %}
                 <span class="highlighted-meta">

@@ -201,6 +201,10 @@ h3.task-section-heading {
     font-size: 15px;
 }
 
+#questionsList .card .card-body .highlighted-meta-area {
+    margin-bottom: 13px;
+}
+
 #questionsList .card .card-body .highlighted-meta {
     border: 1px solid;
     border-radius: 3px;
@@ -216,8 +220,7 @@ h3.task-section-heading {
 }
 
 #questionsList .card .card-body .meta-phrase-section {
-    margin-bottom: 0;
-    margin-top: 13px;
+    margin-bottom: 13px;
 }
 
 #questionsList .card .card-body .meta-value {
