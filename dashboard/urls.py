@@ -1,6 +1,7 @@
 
 from django.urls import path
 from . import views
+from django.conf.urls import handler500
 
 app_name = 'dashboard'
 
@@ -22,3 +23,4 @@ urlpatterns = [
     path('action/submit-questions', views.submit_questions, name='submit-questions'),
     path('action/submit-excel-sheet', views.submit_excel_sheet, name='submit-excel-sheet'),
 ]
+handler500 = views.get_error_500_view
