@@ -106,7 +106,7 @@ def submit_excel_sheet(request):
 	column_name_mapping = {
 		'Question': 'question_text',
 		'Question Language': 'question_language',
-		'English translation of question': 'question_text_english',
+		'English translation of the question': 'question_text_english',
 		'How was the question originally asked?': 'question_format',
 		'Context': 'context',
 		'Date of asking the question': 'question_asked_on',
