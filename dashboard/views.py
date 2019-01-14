@@ -34,12 +34,7 @@ def get_view_questions_view(request):
 	states_list = questions_superset.order_by().values_list('state').distinct('state').values('state')
 
 	questions = questions_superset
-	languages_to_filter_by = request.GET.getlist('languages')
 	states_to_filter_by = request.GET.getlist('states')
-	pprint(states_to_filter_by)
-
-	if languages_to_filter_by:
-		questions = questions_superset.filter(question_language__in=languages_to_filter_by)
 
 	if states_to_filter_by:
 		questions = questions.filter(state__in=states_to_filter_by)
@@ -48,7 +43,6 @@ def get_view_questions_view(request):
 		'questions': questions,
 		'states_list': states_list,
 		'states_to_filter_by': states_to_filter_by,
-		'languages_to_filter_by': languages_to_filter_by
 	}
 	return render(request, 'dashboard/view-questions.html', context)
 
