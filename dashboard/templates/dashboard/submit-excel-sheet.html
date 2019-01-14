@@ -16,7 +16,7 @@
     Click <a href="{% static 'files/sawaliram_template.xlsx' %}">here</a> to download our blank Excel template file with pre-filled column headers to easily fill out the data in the correct format
 </div>
 
-<h3 class="task-section-heading">Guidelines for filling out and submitting the Excel file</h3>
+<h3 class="task-section-heading">Guidelines to fill and submit the Excel file</h3>
 
 <ul>
     <li>The Excel file template has help boxes that appear when you click or hover over a column. The help box provides an overview of the data that needs to be filled out in that column. Be sure to read it while filling out the Excel file.</li>
@@ -28,6 +28,31 @@
     <li>You can open the drop-down menu in fields like ‘Context’ by clicking on the drop-down button next to the cell or by using the keyboard with ‘Alt + Down Arrow’.</li>
     <li>You can copy the contents of the cell directly above the current cell by pressing [Ctrl + d] on Windows/Linux or [Command + d] on MacOS. Handy when entering a question with similar information as the previous entry.</li>
 </ul>
+
+<h5>Overview of the fields in the excel template</h5>
+
+<ol>
+    <li>Question: The question asked by a student, in its original language.</li>
+    <li>Question Language: The language in which the question was originally asked.</li>
+    <li>English translation of the question: Translation of the question in English. Leave blank if the original question is in English</li>
+    <li>How was the question originally asked?: Format in which the question was asked. Choose one of the options listed.</li>
+    <li>Context: The setting in which the question was asked. If none of the options match the context, select the 'Other' option, and elaborate in the Notes Column.</li>
+    <li>Date of asking the question: The date on which the question was asked (dd/mm/yyyy).</li>
+    <li>Student Name: Name(s) of the student(s) who asked the question (may be entered in the local language). If multiple students have asked the same question, enter their names with comma-separation, eg: Geeta, Ali, Mary.</li>
+    <li>Gender: Gender of the student who asked the question. If the gender is not known, leave this field blank.</li>
+    <li>Student Class: The class of the student(s) in Arabic numerals (1-12). Avoid ordinals like 3rd or 4th. If the class of that student is not known but the group had students from multiple classes, enter the classes with comma-separation, Eg: 7, 8, 9, 10.</li>
+    <li>School Name: Name of the school the student is enrolled in (may be entered in the local language).</li>
+    <li>Curriculum followed: The curriculum of the school. If none of the options match the curriculum, select the 'Other' option, and elaborate in the Notes Column.</li>
+    <li>Medium of instruction: Language in which classes are taught in the school.</li>
+    <li>Area: The address of the student’s school or residence (locality/village-town-city/district). May be entered in local language.</li>
+    <li>State: The state in India where the school/residence is located (may be entered in local language).</li>
+    <li>Published (Yes/No): Has the question been published in a magazine, book, newspaper or website? Select Yes/No. In case you select ‘No’ then leave the next two columns blank.</li>
+    <li>Publication Name: Name of the publication in which the question appeared.</li>
+    <li>Publication Date: Date of publication (dd/mm/yyyy).</li>
+    <li>Notes: Space for additional details or information points not recorded in any other field. Use semicolon (;) as a separator for more than one point.</li>
+    <li>Contributor Name: Name of the person who received/entered the question.</li>
+    <li>Contributor Role: Role of the person who received/entered the question, eg: teacher, volunteer, AFSP, project officer, etc.</li>
+</ol>
 
 <form action="{% url 'dashboard:submit-excel-sheet' %}" enctype="multipart/form-data" method="POST">
     {% csrf_token %}
