@@ -165,6 +165,10 @@ h3.task-section-heading {
     margin-bottom: 10px;
 }
 
+.custom-file-input {
+    cursor: pointer;
+}
+
 /* view-questions */
 .filter-area {
     margin-bottom: 40px;
