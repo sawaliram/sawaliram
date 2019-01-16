@@ -13,7 +13,7 @@ class Question(models.Model):
 	state = models.CharField(max_length=100, default='')
 	student_name = models.CharField(max_length=100)
 	student_gender = models.CharField(max_length=100, default='')
-	student_class = models.IntegerField(default=0)
+	student_class = models.CharField(max_length=100, default='')
 	question_text = models.CharField(max_length=500)
 	question_text_english = models.CharField(max_length=500, default='')
 	question_topic = models.CharField(max_length=100)
