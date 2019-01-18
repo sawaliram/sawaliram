@@ -135,7 +135,8 @@ def submit_excel_sheet(request):
 				if column == 'Published (Yes/No)':
 					setattr(question, column_name_mapping[column], True if row[column] == 'Yes' else False)
 				else:
-					setattr(question, column_name_mapping[column], row[column].strip())
+					setattr(question, column_name_mapping[column], row[column].strip() if isinstance(row[column], str) else row[column])
 
-		question.save()
+		question.save()				
+	
 	return render(request, 'dashboard/excel-submitted-successfully.html')
