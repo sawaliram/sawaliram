@@ -154,7 +154,8 @@ h4.task-section-sub-heading {
 }
 
 .add-question-button {
-    background-color: #f7f7f7;
+    background-color: #eaeaea;
+    color: #444;
 }
 
 .add-question-button:hover {
