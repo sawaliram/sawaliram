@@ -114,6 +114,11 @@ h3.task-section-heading {
     margin-bottom: 20px;
 }
 
+h4.task-section-sub-heading {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
 /* submit-questions */
 
 .question-submission-form .form-group {
@@ -167,6 +172,10 @@ h3.task-section-heading {
 
 .custom-file-input {
     cursor: pointer;
+}
+
+.template-download-message {
+    margin-bottom: 30px;
 }
 
 /* view-questions */
