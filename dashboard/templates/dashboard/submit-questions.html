@@ -32,13 +32,13 @@
         <div class="form-group">
             <label for="publishedSource">Name of publication <span class="required-field-text">(required)</span></label>
             <input type="text" class="form-control" name="published-source" id="publishedSource">
-            <small class="form-text text-muted">The name of the magazine/newspaper/website/book in which the question was published</small>
+            <small class="form-text text-muted">Name of the publication in which the question appeared</small>
         </div>
 
         <div class="form-group">
             <label for="publishedDate">Date of publication</label>
             <input type="date" class="form-control" name="published-date" id="publishedDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
-            <small class="form-text text-muted">The date on which the question was published in the format dd/mm/yyyy</small>
+            <small class="form-text text-muted">Date of publication (dd/mm/yyyy)</small>
         </div>
     </div>
 
@@ -84,13 +84,13 @@
     <div class="form-group">
         <label for="area">Area <span class="required-field-text not-required-if-published">(required)</span></label>
         <input type="text" class="form-control" name="area" id="area" required>
-        <small class="form-text text-muted">The PO or city/district/zone from where the question was collected</small>
+        <small class="form-text text-muted">The address of the student’s school or residence (locality/village-town-city/district). May be entered in local language.</small>
     </div>
 
     <div class="form-group">
         <label for="state">State <span class="required-field-text not-required-if-published">(required)</span></label>
         <input type="text" class="form-control" name="state" id="state" required>
-        <small class="form-text text-muted">The State in India from where the question was collected</small>
+        <small class="form-text text-muted">The state in India where the school/residence is located (may be entered in local language)</small>
     </div>
 
     <div class="form-group">
@@ -117,19 +117,19 @@
             <option>During or after a special event</option>
             <option>Other</option>
         </select>
-        <small class="form-text text-muted">When was the question asked?</small>
+        <small class="form-text text-muted">The setting in which the question was asked. If none of the options match the context, select the 'Other' option, and elaborate in the Notes Column.</small>
     </div>
 
     <div class="form-group">
         <label for="contributorName">Contributor Name</label>
         <input type="text" class="form-control" name="contributor-name" id="contributorName">
-        <small class="form-text text-muted">Name of the person to whom the question was asked</small>
+        <small class="form-text text-muted">Name of the person who received/entered the question</small>
     </div>
 
     <div class="form-group">
         <label for="contributorRole">Contributor Role</label>
         <input type="text" class="form-control" name="contributor-role" id="contributorRole">
-        <small class="form-text text-muted">Role of the person to whom the question was asked, eg: Teacher, Volunteer, AFSP, etc</small>
+        <small class="form-text text-muted">Role of the person who received/entered the question, eg: teacher, volunteer, AFSP, project officer, etc</small>
     </div>
 
     <br>
@@ -144,43 +144,43 @@
             <div class="form-group">
                 <label for="question_text">Question <span class="required-field-text">(required)</span></label>
                 <textarea class="form-control" name="question-text" id="question_text" required></textarea>
-                <small class="form-text text-muted">Enter the question in its original language</small>
+                <small class="form-text text-muted">The question asked by a student, in its original language</small>
             </div>
 
             <div class="form-group">
                 <label for="question_language">Question language <span class="required-field-text">(required)</span></label>
                 <input type="text" class="form-control" name="question-language" id="question_language" required>
-                <small class="form-text text-muted">Original language of the question</small>
+                <small class="form-text text-muted">The language in which the question was originally asked</small>
             </div>
 
             <div class="form-group">
                 <label for="question_text_english">English translation of question</label>
                 <textarea class="form-control" name="question-text-english" id="question_text_english"></textarea>
-                <small class="form-text text-muted">Leave blank if the language of the question is English</small>
+                <small class="form-text text-muted">Translation of the question in English. Leave blank if the original question is in English</small>
             </div>
         
             <div class="form-group">
                 <label for="student_name">Student name</label>
                 <input type="text" class="form-control" name="student-name" id="student_name">
-                <small class="form-text text-muted">Name of the student who asked the question</small>
+                <small class="form-text text-muted">Name(s) of the student(s) who asked the question (may be entered in the local language). If multiple students have asked the same question, enter their names with comma-separation, eg: Geeta, Ali, Mary.</small>
             </div>
         
             <div class="form-group">
                 <label for="student_class">Student class</label>
                 <input type="text" class="form-control" name="student-class" id="student_class">
-                <small class="form-text text-muted">Class of the student who asked the question</small>
+                <small class="form-text text-muted">The class of the student(s) in Arabic numerals (1-12). Avoid ordinals like 3rd or 4th. If the class of that student is not known but the group had students from multiple classes, enter the classes with comma-separation, Eg: 7, 8, 9, 10</small>
             </div>
 
             <div class="form-group">
                 <label for="questionAskedOn">When was the question asked?</label>
                 <input type="date" class="form-control" name="question-asked-on" id="questionAskedOn" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
-                <small class="form-text text-muted">The date on which the question was asked, in the format dd/mm/yyyy</small>
+                <small class="form-text text-muted">The date on which the question was asked (dd/mm/yyyy)</small>
             </div>
 
             <div class="form-group">
                 <label for="notes">Notes</label>
                 <textarea class="form-control" name="notes" id="notes"></textarea>
-                <small class="form-text text-muted">Additional information or clarification that does not fit into any of the fields</small>
+                <small class="form-text text-muted">Space for additional details or information points not recorded in any other field. Use semicolon (;) as a separator for more than one point</small>
             </div>
     
         </div>
