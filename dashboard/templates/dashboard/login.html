@@ -1,0 +1,34 @@
+
+{% extends "dashboard/base.html" %}
+
+{% block title %} Login | Sawaliram {% endblock %}
+
+{% load static %}
+
+{% block navbar %} {% endblock %}
+
+{% block content %}
+
+<div class="auth-container">
+    <h1>Login to access this page</h1>
+
+    {% if error %}
+        <p class="error-message">{{ error }}</p>
+    {% endif %}
+
+    <form class="login-form" action="{% url 'dashboard:login-user' %}" method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <input type="email" name="email" class="form-control" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" class="form-control" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn btn-block btn-dark">Login</button>
+    </form>
+
+    <a class="text-muted signup-link" href="{% url 'dashboard:signup-view' %}">Are you a new user? Signup here!</a>
+</div>
+
+{% endblock %}
