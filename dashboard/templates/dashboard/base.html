@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -13,14 +13,21 @@
     </head>
     <body class="d-flex flex-column">
 
+        {% block navbar %}
         <nav class="navbar fixed-top navbar-light shadow-sm">
             <a class="navbar-brand" href="{% url 'dashboard:dashboard_home' %}">
                 Sawaliram Dashboard
             </a>
-            <!-- <div class="d-flex flex-row-reverse">
-                <a class="logout-button" href="#">Logout</a>
-            </div> -->
+            {% if user.is_authenticated %}
+                <form action="{% url 'dashboard:logout-user' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="d-flex flex-row-reverse">
+                        <button class="btn logout-button">Logout</button>
+                    </div>
+                </form>
+            {% endif %}
         </nav>
+        {% endblock %}
 
         <div class="container sawaliram-container flex-grow">
             {% block content %} {% endblock %}
@@ -28,7 +35,7 @@
 
         <footer>
             <p>Found an issue with the dashboard? Want to suggest a feature?</p>
-            <a class="grey-link" href="mailto:mail.sawaliram@gmail.com" target="_blank">Write to us at: mail.sawaliram@gmail.com</a>
+            <a class="grey-link" href="mailto:mail.sawaliram@gmail.com" target="_blank">Write to us: mail.sawaliram@gmail.com</a>
         </footer>
 
         <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
