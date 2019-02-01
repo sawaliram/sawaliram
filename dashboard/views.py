@@ -1,25 +1,34 @@
-"""Define the functions that handle various requests by returnig a view or HttpResponse"""
+"""Define the functions that handle various requests by returnig a view"""
 
 import random
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 import pandas as pd
-from dashboard.models import Question
+from dashboard.models import Question, User
 from pprint import pprint
 
 def get_login_view(request):
 	"""Return the login view."""
-	return HttpResponse("Dashboard Login")
+	return render(request, 'dashboard/login.html')
 
+def get_signup_view(request):
+	"""Return the signup view."""
+	return render(request, 'dashboard/signup.html')
+
+@login_required(login_url='login/')
 def get_home_view(request):
 	"""Return the dashboard home view."""
 	context = {}
 	return render(request, 'dashboard/home.html', context)
 
+@login_required(login_url='login/')
 def get_submit_questions_view(request):
 	"""Return the view for submitting questions."""
 	return render(request, 'dashboard/submit-questions.html')
 
+@login_required(login_url='login/')
 def get_submit_excel_sheet_view(request):
 	"""Return the view for submitting Excel sheet."""
 	context = {
@@ -27,6 +36,7 @@ def get_submit_excel_sheet_view(request):
 	}
 	return render(request, 'dashboard/submit-excel-sheet.html', context)
 
+@login_required(login_url='login/')
 def get_view_questions_view(request):
 	"""Return the 'View Questions' view after applying filters, if any."""
 	questions_superset = Question.objects.all().order_by('-created_on')
@@ -46,13 +56,51 @@ def get_view_questions_view(request):
 	}
 	return render(request, 'dashboard/view-questions.html', context)
 
-def get_error_404_view(request, exception):
-	"""Return the custom 404 page."""
-	return render(request, 'dashboard/404.html')
+def login_user(request):
+	"""Log the user in"""
+	email = request.POST.get('email')
+	password = request.POST.get('password')
+	user = authenticate(request, email=email, password=password)
 
-def get_work_in_progress_view(request):
-	"""Return work-in-progress view."""
-	return render(request, 'dashboard/work-in-progress.html')
+	if user is not None:
+		login(request, user)
+		return redirect(request.POST.get('next', 'dashboard:dashboard_home'))
+	else:
+		return render(request, 'dashboard/login.html', {'error': 'Incorrect login info! Please try again'}) 
+
+def logout_user(request):
+	"""Log out the user"""
+	logout(request)
+	return redirect('dashboard:dashboard_home')
+
+def signup_user(request):
+	"""Create a user"""
+	if request.POST.get('password') != request.POST.get('re-password'):
+		return render(request, 'dashboard/signup.html', {'error': 'Passwords do not match! Please try again'})
+	
+	email = request.POST.get('email').strip()
+	email_exists = User.objects.filter(email=email).exists()
+
+	if email_exists:
+		return render(request, 'dashboard/signup.html', {'error': 'Email already exists! Try logging in or use another email'})
+	else:
+		password = request.POST.get('password').strip()
+		organisation = request.POST.get('organisation').strip()
+		access_requested = ','.join(request.POST.getlist('access_request'))
+
+		user = User.objects.create_user(email, password)
+		user.first_name = request.POST.get('first_name').strip()
+		user.last_name = request.POST.get('last_name').strip()
+
+		if organisation == 'other':
+			organisation = request.POST.get('other-org')
+
+		user.organisation = organisation
+		user.access_requested = access_requested
+		user.save()
+
+		login(request, user)
+		return redirect('dashboard:dashboard_home')
 
 def submit_questions(request):
 	"""Save the submitted question(s) to the database."""
@@ -130,6 +178,8 @@ def submit_excel_sheet(request):
 		question = Question()
 
 		for column in columns:
+			column = column.strip()
+			
 			if not row[column] != row[column]: # check if the value is not nan
 
 				if column == 'Published (Yes/No)':
@@ -140,3 +190,11 @@ def submit_excel_sheet(request):
 		question.save()				
 	
 	return render(request, 'dashboard/excel-submitted-successfully.html')
+
+def get_error_404_view(request, exception):
+	"""Return the custom 404 page."""
+	return render(request, 'dashboard/404.html')
+
+def get_work_in_progress_view(request):
+	"""Return work-in-progress view."""
+	return render(request, 'dashboard/work-in-progress.html')

@@ -65,6 +65,19 @@ function togglePublishedInformationFormGroups() {
     });
 }
 
+function toggleOtherOrganisationTextBox() {
+
+    $('#organisationDropDown').change(function() {
+        if (this.value == 'other') {
+            $('.other-organisation-textbox').show(300)
+        }
+        else {
+            $('.other-organisation-textbox').hide(300)
+        }
+    });
+}
+
 addQuestion();
 displayNameOfSelectedFile();
 togglePublishedInformationFormGroups();
+toggleOtherOrganisationTextBox();

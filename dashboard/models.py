@@ -1,5 +1,6 @@
 """Define the data models for questions, answers and other components of the data."""
 import datetime
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
 
 class Question(models.Model):
@@ -35,3 +36,53 @@ class Question(models.Model):
 
 	def __str__(self):
 		return self.question_text
+
+
+class UserManager(BaseUserManager):
+	def create_user(self, email, password):
+		"""
+		Creates and saves a User with email and organisation
+		"""
+		if not email:
+			raise ValueError("Email must be provided to create a user")
+		email = self.normalize_email(email)
+		user = self.model(email = email)
+		user.set_password(password)
+		user.save()
+		return user
+
+	def create_superuser(self, email):
+		"""
+		Creates and saves a user as superuser
+		"""
+		email = self.normalize_email(email)
+		user = self.create_user(email)
+		user.is_staff()
+		user.is_superuser = True
+		user.save()
+		return user
+
+class User(AbstractBaseUser, PermissionsMixin):
+	first_name = models.CharField(max_length=30, blank=True)
+	last_name = models.CharField(max_length=30, blank=True)
+	email = models.EmailField(unique=True)
+	is_active = models.BooleanField(default=True)
+	organisation = models.CharField(max_length=200, default='')
+	access_requested = models.CharField(max_length=200, default='')
+
+	objects = UserManager()
+
+	USERNAME_FIELD = 'email'
+	REQUIRED_FIELDS = []
+
+	def get_full_name(self):
+		"""
+		Returns the first_name (we're not storing last names)
+		"""
+		return self.first_name
+
+	def get_short_name(self):
+		"""
+		Returns the first_name
+		"""
+		return self.first_name
