@@ -5,6 +5,16 @@ body {
     min-height: 100vh; 
 }
 
+::-moz-selection { /* Code for Firefox */
+    color: #ffffff;
+    background: #79BF93;
+}
+
+::selection {
+    color: #ffffff;
+    background: #79BF93;
+}
+
 .flex-grow {
     flex: 1;
  }
@@ -14,17 +24,40 @@ body {
 }
 
 .navbar .navbar-brand {
-    color: #585858;
+    color: #629781;
+}
+
+.navbar .navbar-brand:hover {
+    color: #79BF93;
 }
 
 .navbar .logout-button {
-    color: #757575;
-    background-color: #e9e9e9;
+    color: #ba0000;
+    background-color: #ffffff;
+}
+
+.navbar .logout-button:hover {
+    background-color: #ba00001a;
+}
+
+.gradient-button {
+    background-image: linear-gradient(to right, #56986E 55%, #A2DCAB );
+    border: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.20);
 }
 
 .sawaliram-container {
     margin-top: 90px;
     margin-bottom: 60px;
+}
+
+.sawaliram-container .form-control {
+    border: 0;
+    background-color: #f1f1f1;
+}
+
+.sawaliram-container .form-control:focus {
+    box-shadow: 0 0 0 2px rgba(152, 152, 152, 0.3);
 }
 
 footer {
@@ -38,6 +71,11 @@ footer p {
     margin-bottom: 3px;
 }
 
+.grey-link {
+    color: #757575;
+    text-decoration: underline;
+}
+
 /* ----- Home styles ----- */
 
 h1.dashboard-home-greeting {
@@ -49,6 +87,8 @@ h1.dashboard-home-greeting {
 }
 
 .tasks-list a.task-card {
+    width: 100%;
+    min-height: 190px;
     text-decoration: none;
     color: black;
     text-align: center;
@@ -61,11 +101,13 @@ h1.dashboard-home-greeting {
 
 .tasks-list a.task-card:hover {
     box-shadow: 0 0 15px 0px rgba(150,150,150,.4);
+    position: relative;
+    top: -1px;
 }
 
 .tasks-list a.task-card h3 {
     font-size: 22px;
-    margin-top: 8px;
+    margin-top: 20px;
 }
 
 .tasks-list a.task-card p {
@@ -288,7 +330,7 @@ h4.task-section-sub-heading {
 
 .auth-container h1 {
     font-size: 28px;
-    margin-bottom: 20px;
+    margin-bottom: 35px;
 }
 
 .auth-container .login-form, .auth-container .signup-form {

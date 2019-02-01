@@ -8,7 +8,7 @@
 
 {% block content %}
 
-<h1 class="dashboard-home-greeting">Welcome to Sawaliram! What do you plan to do today?</h1>
+<h1 class="dashboard-home-greeting">Hello {{ request.user.first_name }} :)&nbsp;&nbsp;What do you plan to do today?</h1>
 
 <div class="row tasks-list">
     {% if request.user|has_group:"volunteers" %}
@@ -39,5 +39,17 @@
     </div>
     {% endif %}
 </div>
+
+<!-- <div class="row tasks-list">
+    {% if request.user|has_group:"admins" %}
+    <div class="col-12 col-sm-4">
+        <a href="{% url 'dashboard:view-questions-view' %}" class="task-card">
+            <img src="{% static 'task_icons/view_questions.png' %}" alt="Manage Users">
+            <h3>Manage Users</h3>
+            <p>Approve or reject user access requests</p>
+        </a>
+    </div>
+    {% endif %}
+</div> -->
 
 {% endblock %}
