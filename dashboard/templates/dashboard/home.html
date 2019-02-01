@@ -4,12 +4,14 @@
 {% block title %} Dashboard Home | Sawaliram {% endblock %}
 
 {% load static %}
+{% load has_group %}
 
 {% block content %}
 
 <h1 class="dashboard-home-greeting">Welcome to Sawaliram! What do you plan to do today?</h1>
 
 <div class="row tasks-list">
+    {% if request.user|has_group:"volunteers" %}
     <div class="col-12 col-sm-4">
         <a href="{% url 'dashboard:submit-questions-view' %}" class="task-card">
             <img src="{% static 'task_icons/submit_questions.png' %}" alt="Submit Questions">
@@ -17,6 +19,8 @@
             <p>Fill out a form to enter single or a batch of multiple questions</p>
         </a>
     </div>
+    {% endif %}
+    {% if request.user|has_group:"volunteers" %}
     <div class="col-12 col-sm-4">
         <a href="{% url 'dashboard:submit-excel-sheet-view' %}" class="task-card">
             <img src="{% static 'task_icons/submit_excel_sheet.png' %}" alt="Submit Excel Sheet">
@@ -24,6 +28,8 @@
             <p>Submit an Excel sheet with questions, with or without additional information</p>
         </a>
     </div>
+    {% endif %}
+    {% if request.user|has_group:"volunteers" %}
     <div class="col-12 col-sm-4">
         <a href="{% url 'dashboard:view-questions-view' %}" class="task-card">
             <img src="{% static 'task_icons/view_questions.png' %}" alt="View Questions">
@@ -31,6 +37,7 @@
             <p>View questions and their available answers and related information</p>
         </a>
     </div>
+    {% endif %}
 </div>
 
 {% endblock %}
