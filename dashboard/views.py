@@ -4,6 +4,7 @@ import random
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group
 from django.http import HttpResponse
 import pandas as pd
 from dashboard.models import Question, User
@@ -98,6 +99,9 @@ def signup_user(request):
 		user.organisation = organisation
 		user.access_requested = access_requested
 		user.save()
+
+		volunteers = Group.objects.get(name='volunteers')
+		volunteers.user_set.add(user)
 
 		login(request, user)
 		return redirect('dashboard:dashboard_home')
