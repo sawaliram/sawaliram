@@ -32,18 +32,25 @@ body {
 }
 
 .navbar .logout-button {
-    color: #ba0000;
+    color: #ffffff;
     background-color: #ffffff;
 }
 
 .navbar .logout-button:hover {
     background-color: #ba00001a;
+    color: #ba0000;
 }
 
-.gradient-button {
-    background-image: linear-gradient(to right, #56986E 55%, #A2DCAB );
+.navbar .logout-button i {
+    color: #ba0000;
+    margin-left: 5px;
+}
+
+.green-button {
     border: 0;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.20);
+    color: #FFFFFF;
+    font-weight: bold;
+    background-color: #56986E;
 }
 
 .sawaliram-container {

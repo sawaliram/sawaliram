@@ -22,7 +22,7 @@
                 <form action="{% url 'dashboard:logout-user' %}" method="POST">
                     {% csrf_token %}
                     <div class="d-flex flex-row-reverse">
-                        <button class="btn logout-button">Logout</button>
+                        <button class="btn logout-button">Logout <i class="fas fa-power-off"></i></button>
                     </div>
                 </form>
             {% endif %}
