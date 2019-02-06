@@ -15,6 +15,10 @@ body {
     background: #79BF93;
 }
 
+.btn {
+    transition: 0.3s;
+}
+
 .flex-grow {
     flex: 1;
  }
@@ -47,10 +51,15 @@ body {
 }
 
 .green-button {
-    border: 0;
+    border: 2px solid #55B377;
     color: #FFFFFF;
     font-weight: bold;
-    background-color: #56986E;
+    background-color: #5DC282;
+    text-transform: uppercase;
+}
+
+.green-button:hover {
+    background-color: #55B377;
 }
 
 .sawaliram-container {
@@ -104,6 +113,7 @@ h1.dashboard-home-greeting {
     border-radius: 3px;
     padding: 20px;
     padding-bottom: 5px;
+    transition: 0.3s;
 }
 
 .tasks-list a.task-card:hover {
