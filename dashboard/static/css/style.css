@@ -2,7 +2,8 @@
 /* ----- General styles ----- */
 
 body {
-    min-height: 100vh; 
+    min-height: 100vh;
+    font-family: 'Arvo', serif;
 }
 
 ::-moz-selection { /* Code for Firefox */
@@ -95,48 +96,87 @@ footer p {
 /* ----- Home styles ----- */
 
 h1.dashboard-home-greeting {
-    font-size: 25px;
+    font-size: 28px;
+    font-weight: 600;
 }
 
-.tasks-list {
-    margin-top: 30px;
+.task-list {
+    margin-top: 50px;
 }
 
-.tasks-list a.task-card {
-    width: 100%;
-    min-height: 190px;
-    text-decoration: none;
+.task-list .task-card {
+    /* width: 100%; */
+    /* min-height: 190px; */
+    /* text-decoration: none; */
     color: black;
-    text-align: center;
-    display: inline-block;
-    box-shadow: 0 0 5px rgba(150,150,150,.4);
-    border-radius: 3px;
-    padding: 20px;
-    padding-bottom: 5px;
+    text-align: left;
+    /* display: inline-block; */
+    /* box-shadow: 0 0 5px rgba(150,150,150,.4); */
+    border-radius: 5px;
+    /* padding: 20px; */
+    padding-bottom: 17px;
     transition: 0.3s;
+    margin-bottom: 30px;
+    border: 3px solid #e6e6e6;
 }
 
-.tasks-list a.task-card:hover {
-    box-shadow: 0 0 15px 0px rgba(150,150,150,.4);
-    position: relative;
-    top: -1px;
+.task-list .task-card a {
+    text-decoration: none;
 }
 
-.tasks-list a.task-card h3 {
-    font-size: 22px;
+.task-list .task-card:hover {
+    /* box-shadow: 0 0 15px 0px rgba(150,150,150,.4); */
+    /* position: relative; */
+    /* top: -1px; */
+    border-color: #55b37799;
+    text-decoration: none;
+}
+
+.task-list .task-card h3 {
+    font-size: 20px;
     margin-top: 20px;
+    margin-bottom: 4px;
+    font-weight: 600;
 }
 
-.tasks-list a.task-card p {
-    font-size: 14px;
+.task-list .task-card p {
+    font-size: 17px;
     color: #8e8e8e;
+    /* font-style: italic; */
+}
+
+.task-list .task-card .task-stat {
     font-style: italic;
+    color: #b5b5b5;
+    font-size: 15px;
+}
+
+.task-list .task-card .task-icon {
+    margin: 25px;
+    margin-right: 30px;
+}
+
+.task-list .task-card .sub-task-button {
+    color: #55B377;
+    margin-right: 10px;
+    background-color: #55b37724;
+    border: none;
+    padding: 7px 20px;
+}
+
+.task-list .task-card .sub-task-button i {
+    margin-right: 5px;
+}
+
+.task-list .task-card .sub-task-button:hover {
+    text-decoration: underline;
 }
 
 /* ----- Task pages styles ----- */
 
 h1.task-heading {
     font-size: 30px;
+    font-weight: 600;
 }
 
 h2.task-sub-heading {
@@ -165,6 +205,8 @@ h2.task-sub-heading {
 h3.task-section-heading {
     font-size: 22px;
     margin-bottom: 20px;
+    font-weight: 600;
+    color: #777777;
 }
 
 h4.task-section-sub-heading {

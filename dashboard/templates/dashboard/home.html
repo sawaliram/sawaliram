@@ -10,7 +10,7 @@
 
 <h1 class="dashboard-home-greeting">Hello {{ request.user.first_name }} :)&nbsp;&nbsp;What do you plan to do today?</h1>
 
-<div class="row tasks-list">
+<!-- <div class="row task-list">
     {% if request.user|has_group:"volunteers" %}
     <div class="col-12 col-sm-4">
         <a href="{% url 'dashboard:submit-questions-view' %}" class="task-card">
@@ -38,9 +38,9 @@
         </a>
     </div>
     {% endif %}
-</div>
+</div> -->
 
-<!-- <div class="row tasks-list">
+<!-- <div class="row task-list">
     {% if request.user|has_group:"admins" %}
     <div class="col-12 col-sm-4">
         <a href="{% url 'dashboard:view-questions-view' %}" class="task-card">
@@ -51,5 +51,101 @@
     </div>
     {% endif %}
 </div> -->
+
+<div class="task-list">
+
+    {% if request.user|has_group:"volunteers" %}
+        <a class="d-flex task-card" href="javascript:void(0)">
+            <div class="task-icon">
+                <img src="{% static 'task_icons/manage_users.png' %}" alt="Manage Users">
+            </div>
+            <div class="flex-grow-1">
+                <h3>Manage Users</h3>
+                <p>Approve or Reject access requests from users</p>
+                <span class="task-stat">2 Pending Requests</span>
+            </div>
+        </a>
+    {% endif %}
+
+    {% if request.user|has_group:"volunteers" %}
+        <a class="d-flex task-card" href="javascript:void(0)">
+            <div class="task-icon">
+                <img src="{% static 'task_icons/review_answers.png' %}" alt="Review Answers">
+            </div>
+            <div class="flex-grow-1">
+                <h3>Review Answers</h3>
+                <p>Review and edit the answer before publishing to the public site</p>
+                <span class="task-stat">735 Answers To Review</span>
+            </div>
+        </a>
+    {% endif %}
+
+    {% if request.user|has_group:"volunteers" %}
+        <a class="d-flex task-card" href="javascript:void(0)">
+            <div class="task-icon">
+                <img src="{% static 'task_icons/answer_questions.png' %}" alt="Answer Questions">
+            </div>
+            <div class="flex-grow-1">
+                <h3>Answer Questions</h3>
+                <p>Answer questions across subjects & in multiple languages</p>
+                <span class="task-stat">2,653 Unanswered Questions</span>
+            </div>
+        </a>
+    {% endif %}
+
+    {% if request.user|has_group:"volunteers" %}
+        <a class="d-flex task-card" href="javascript:void(0)">
+            <div class="task-icon">
+                <img src="{% static 'task_icons/translate_content.png' %}" alt="Translate Content">
+            </div>
+            <div class="flex-grow-1">
+                <h3>Translate Content</h3>
+                <p>Translate questions, answers, metadata, blogs and other content</p>
+                <span class="task-stat">15,908 items to be translated</span>
+            </div>
+        </a>
+    {% endif %}
+
+    {% if request.user|has_group:"volunteers" %}
+        <a class="d-flex task-card" href="javascript:void(0)">
+            <div class="task-icon">
+                <img src="{% static 'task_icons/edit_content.png' %}" alt="Edit Content">
+            </div>
+            <div class="flex-grow-1">
+                <h3>Edit Content</h3>
+                <p>Fix typos and grammatical errors in content and remove duplicate questions</p>
+                <span class="task-stat">15,908 items to be translated</span>
+            </div>
+        </a>
+    {% endif %}
+    
+    {% if request.user|has_group:"volunteers" %}
+        <div class="d-flex task-card">
+            <div class="task-icon">
+                <img src="{% static 'task_icons/submit_questions.png' %}" alt="Submit Questions">
+            </div>
+            <div class="flex-grow-1">
+                <h3>Submit Questions</h3>
+                <p>Submit Questions either by filling out a form manually or by uploading a filled sawaliram Excel template</p>
+                <a href="{% url 'dashboard:submit-questions-view' %}" class="btn btn-sm sub-task-button"><i class="far fa-hand-spock"></i> Enter Questions Manually</a>
+                <a href="{% url 'dashboard:submit-excel-sheet-view' %}" class="btn btn-sm sub-task-button"><i class="far fa-file-excel"></i> Upload Excel Sheet</a>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if request.user|has_group:"volunteers" %}
+        <a class="d-flex task-card" href="{% url 'dashboard:view-questions-view' %}">
+            <div class="task-icon">
+                <img src="{% static 'task_icons/view_questions.png' %}" alt="View Questions">
+            </div>
+            <div class="flex-grow-1">
+                <h3>View Questions</h3>
+                <p>View questions and their available answers and related information</p>
+                <span class="task-stat">13,784 Questions Submitted</span>
+            </div>
+        </a>
+    {% endif %}
+
+</div>
 
 {% endblock %}
