@@ -17,7 +17,7 @@
         {% block navbar %}
         <nav class="navbar fixed-top navbar-light shadow-sm">
             <a class="navbar-brand" href="{% url 'dashboard:dashboard_home' %}">
-                Sawaliram Dashboard
+                <span>Sawaliram</span> <span class="text-dashboard">Dashboard</span>
             </a>
             {% if user.is_authenticated %}
                 <form action="{% url 'dashboard:logout-user' %}" method="POST">

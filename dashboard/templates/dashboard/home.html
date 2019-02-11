@@ -10,51 +10,9 @@
 
 <h1 class="dashboard-home-greeting">Hello {{ request.user.first_name }} :)&nbsp;&nbsp;What do you plan to do today?</h1>
 
-<!-- <div class="row task-list">
-    {% if request.user|has_group:"volunteers" %}
-    <div class="col-12 col-sm-4">
-        <a href="{% url 'dashboard:submit-questions-view' %}" class="task-card">
-            <img src="{% static 'task_icons/submit_questions.png' %}" alt="Submit Questions">
-            <h3>Submit Questions</h3>
-            <p>Fill out a form to enter single or a batch of multiple questions</p>
-        </a>
-    </div>
-    {% endif %}
-    {% if request.user|has_group:"volunteers" %}
-    <div class="col-12 col-sm-4">
-        <a href="{% url 'dashboard:submit-excel-sheet-view' %}" class="task-card">
-            <img src="{% static 'task_icons/submit_excel_sheet.png' %}" alt="Submit Excel Sheet">
-            <h3>Submit Excel Sheet</h3>
-            <p>Submit an Excel sheet with questions, with or without additional information</p>
-        </a>
-    </div>
-    {% endif %}
-    {% if request.user|has_group:"volunteers" %}
-    <div class="col-12 col-sm-4">
-        <a href="{% url 'dashboard:view-questions-view' %}" class="task-card">
-            <img src="{% static 'task_icons/view_questions.png' %}" alt="View Questions">
-            <h3>View Questions</h3>
-            <p>View questions and their available answers and related information</p>
-        </a>
-    </div>
-    {% endif %}
-</div> -->
-
-<!-- <div class="row task-list">
-    {% if request.user|has_group:"admins" %}
-    <div class="col-12 col-sm-4">
-        <a href="{% url 'dashboard:view-questions-view' %}" class="task-card">
-            <img src="{% static 'task_icons/view_questions.png' %}" alt="Manage Users">
-            <h3>Manage Users</h3>
-            <p>Approve or reject user access requests</p>
-        </a>
-    </div>
-    {% endif %}
-</div> -->
-
 <div class="task-list">
 
-    {% if request.user|has_group:"volunteers" %}
+    {% if request.user|has_group:"admins" %}
         <a class="d-flex task-card" href="javascript:void(0)">
             <div class="task-icon">
                 <img src="{% static 'task_icons/manage_users.png' %}" alt="Manage Users">
@@ -62,7 +20,7 @@
             <div class="flex-grow-1">
                 <h3>Manage Users</h3>
                 <p>Approve or Reject access requests from users</p>
-                <span class="task-stat">2 Pending Requests</span>
+                <span class="task-stat">2 pending requests</span>
             </div>
         </a>
     {% endif %}
@@ -75,7 +33,7 @@
             <div class="flex-grow-1">
                 <h3>Review Answers</h3>
                 <p>Review and edit the answer before publishing to the public site</p>
-                <span class="task-stat">735 Answers To Review</span>
+                <span class="task-stat">735 answers to review</span>
             </div>
         </a>
     {% endif %}
@@ -88,7 +46,7 @@
             <div class="flex-grow-1">
                 <h3>Answer Questions</h3>
                 <p>Answer questions across subjects & in multiple languages</p>
-                <span class="task-stat">2,653 Unanswered Questions</span>
+                <span class="task-stat">2,653 unanswered questions</span>
             </div>
         </a>
     {% endif %}
@@ -107,20 +65,21 @@
     {% endif %}
 
     {% if request.user|has_group:"volunteers" %}
-        <a class="d-flex task-card" href="javascript:void(0)">
+        <div class="d-flex task-card task-with-sub-tasks">
             <div class="task-icon">
                 <img src="{% static 'task_icons/edit_content.png' %}" alt="Edit Content">
             </div>
             <div class="flex-grow-1">
                 <h3>Edit Content</h3>
                 <p>Fix typos and grammatical errors in content and remove duplicate questions</p>
-                <span class="task-stat">15,908 items to be translated</span>
+                <a href="javascript:void(0)" class="btn btn-sm sub-task-button"><i class="far fa-hand-spock"></i> Correct Content</a>
+                <a href="javascript:void(0)" class="btn btn-sm sub-task-button"><i class="far fa-hand-spock"></i> Remove Duplicates</a>
             </div>
-        </a>
+        </div>
     {% endif %}
     
     {% if request.user|has_group:"volunteers" %}
-        <div class="d-flex task-card">
+        <div class="d-flex task-card task-with-sub-tasks">
             <div class="task-icon">
                 <img src="{% static 'task_icons/submit_questions.png' %}" alt="Submit Questions">
             </div>
