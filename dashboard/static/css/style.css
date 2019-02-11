@@ -26,6 +26,7 @@ body {
 
 .navbar {
     background-color: #fff;
+    border-bottom: 1px solid #e2e2e2;
 }
 
 .navbar .navbar-brand {
@@ -137,11 +138,12 @@ h1.dashboard-home-greeting {
 }
 
 .task-list .task-card:hover {
-    /* box-shadow: 0 0 15px 0px rgba(150,150,150,.4); */
-    /* position: relative; */
-    /* top: -1px; */
     border-color: #55b37799;
     text-decoration: none;
+}
+
+.task-list .task-card:hover .task-stat {
+    color: #55B377;
 }
 
 .task-list .task-card h3 {
@@ -160,6 +162,7 @@ h1.dashboard-home-greeting {
     font-style: italic;
     color: #b5b5b5;
     font-size: 15px;
+    transition: 1s;
 }
 
 .task-list .task-card .task-icon {
@@ -181,7 +184,8 @@ h1.dashboard-home-greeting {
 }
 
 .task-list .task-card .sub-task-button:hover {
-    text-decoration: underline;
+    /* text-decoration: underline; */
+    box-shadow: 0 0 0 2px #55b377ad;
 }
 
 .task-list .task-card.task-with-sub-tasks {
