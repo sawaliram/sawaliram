@@ -32,6 +32,7 @@ body {
 .navbar .navbar-brand {
     color: #629781;
     font-weight: 600;
+    font-size: 18px;
 }
 
 .navbar .navbar-brand:hover {
@@ -42,19 +43,37 @@ body {
     color: #bbbbbb;
 }
 
-.navbar .logout-button {
-    color: #ffffff;
-    background-color: #ffffff;
+.navbar .user-button {
+    margin-right: 10px;
 }
 
-.navbar .logout-button:hover {
-    background-color: #ba00001a;
-    color: #ba0000;
+.navbar .user-button,
+.navbar .logout-button,
+.navbar .logout-button i {
+    background-color: white;
+    color: #909090;
+}
+
+.navbar .user-button:hover {
+    background-color: #55b37724;
+    color: #55B377;
+}
+
+.navbar .user-button i {
+    margin-right: 3px;
+}
+
+.navbar .logout-button {
+    color: white;
 }
 
 .navbar .logout-button i {
-    color: #ba0000;
-    margin-left: 5px;
+    margin-left: 3px;
+}
+
+.navbar .logout-button:hover,
+.navbar .logout-button:hover i {
+    color: #c11b1b;
 }
 
 .green-button {
@@ -117,20 +136,16 @@ h1.dashboard-home-greeting {
 }
 
 .task-list .task-card {
-    /* width: 100%; */
-    /* min-height: 190px; */
-    /* text-decoration: none; */
     color: black;
+    max-width: 1000px;
     text-align: left;
-    /* display: inline-block; */
-    /* box-shadow: 0 0 5px rgba(150,150,150,.4); */
     border-radius: 5px;
-    /* padding: 20px; */
     padding-bottom: 17px;
     transition: 0.3s;
+    margin: auto;
     margin-bottom: 30px;
     border: 3px solid #e6e6e6;
-    border-style: dashed;
+    border-style: dotted;
 }
 
 .task-list .task-card a {

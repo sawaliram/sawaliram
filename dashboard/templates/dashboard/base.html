@@ -19,14 +19,19 @@
             <a class="navbar-brand" href="{% url 'dashboard:dashboard_home' %}">
                 <span>Sawaliram</span> <span class="text-dashboard">Dashboard</span>
             </a>
-            {% if user.is_authenticated %}
+            <div class="d-flex flex-row-reverse">
                 <form action="{% url 'dashboard:logout-user' %}" method="POST">
                     {% csrf_token %}
-                    <div class="d-flex flex-row-reverse">
-                        <button class="btn logout-button">Logout <i class="fas fa-power-off"></i></button>
-                    </div>
+                    <button class="btn logout-button">
+                        Logout
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
                 </form>
-            {% endif %}
+                <a class="btn user-button" href="javascript:void(0)">
+                    <i class="far fa-user-circle"></i>
+                    {{ request.user.first_name }} {{ request.user.last_name }} 
+                </a>
+            </div>
         </nav>
         {% endblock %}
 
