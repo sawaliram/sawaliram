@@ -72,8 +72,8 @@
             <div class="flex-grow-1">
                 <h3>Edit Content</h3>
                 <p>Fix typos and grammatical errors in content and remove duplicate questions</p>
-                <a href="javascript:void(0)" class="btn btn-sm sub-task-button"><i class="fas fa-pencil-alt"></i> Correct Content</a>
-                <a href="javascript:void(0)" class="btn btn-sm sub-task-button"><i class="far fa-clone"></i> Remove Duplicates</a>
+                <a href="javascript:void(0)" class="btn btn-sm green-button sub-task-button"><i class="fas fa-pencil-alt"></i> Correct Content</a>
+                <a href="javascript:void(0)" class="btn btn-sm green-button sub-task-button"><i class="far fa-clone"></i> Remove Duplicates</a>
             </div>
         </div>
     {% endif %}
@@ -86,8 +86,8 @@
             <div class="flex-grow-1">
                 <h3>Submit Questions</h3>
                 <p>Submit Questions either by filling out a form manually or by uploading a filled sawaliram Excel template</p>
-                <a href="{% url 'dashboard:submit-questions-view' %}" class="btn btn-sm sub-task-button"><i class="far fa-hand-spock"></i> Enter Questions Manually</a>
-                <a href="{% url 'dashboard:submit-excel-sheet-view' %}" class="btn btn-sm sub-task-button"><i class="far fa-file-excel"></i> Upload Excel Sheet</a>
+                <a href="{% url 'dashboard:submit-questions-view' %}" class="btn btn-sm green-button sub-task-button"><i class="far fa-hand-spock"></i> Enter Questions Manually</a>
+                <a href="{% url 'dashboard:submit-excel-sheet-view' %}" class="btn btn-sm green-button sub-task-button"><i class="far fa-file-excel"></i> Upload Excel Sheet</a>
             </div>
         </div>
     {% endif %}

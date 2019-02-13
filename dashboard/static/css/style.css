@@ -29,7 +29,8 @@ body {
     border-bottom: 1px solid #e2e2e2;
 }
 
-.navbar .navbar-brand {
+.navbar .navbar-brand,
+.auth-container h1 {
     color: #629781;
     font-weight: 600;
     font-size: 18px;
@@ -39,7 +40,8 @@ body {
     color: #629781;
 }
 
-.navbar .navbar-brand .text-dashboard {
+.navbar .navbar-brand .text-dashboard,
+.auth-container h1 .text-dashboard {
     color: #bbbbbb;
 }
 
@@ -77,15 +79,15 @@ body {
 }
 
 .green-button {
-    border: 2px solid #55B377;
-    color: #FFFFFF;
     font-weight: bold;
-    background-color: #5DC282;
     text-transform: uppercase;
+    color: #55B377;
+    background-color: #55b37724;
 }
 
 .green-button:hover {
-    background-color: #55B377;
+    box-shadow: 0 0 0 2px #55b377ad;
+    color: #55B377;
 }
 
 .sawaliram-container {
@@ -95,11 +97,13 @@ body {
 
 .sawaliram-container .form-control {
     border: 0;
-    background-color: #f1f1f1;
+    border-radius: 0;
+    border-bottom: 1px solid grey;
 }
 
 .sawaliram-container .form-control:focus {
-    box-shadow: 0 0 0 2px rgba(152, 152, 152, 0.3);
+    box-shadow: none;
+    border-bottom: 2px solid #444;
 }
 
 footer {
@@ -186,21 +190,16 @@ h1.dashboard-home-greeting {
 }
 
 .task-list .task-card .sub-task-button {
-    color: #55B377;
     margin-right: 10px;
-    background-color: #55b37724;
     border: none;
     padding: 7px 20px;
     margin-top: 5px;
+    text-transform: none;
+    font-weight: normal;
 }
 
 .task-list .task-card .sub-task-button i {
     margin-right: 5px;
-}
-
-.task-list .task-card .sub-task-button:hover {
-    /* text-decoration: underline; */
-    box-shadow: 0 0 0 2px #55b377ad;
 }
 
 .task-list .task-card.task-with-sub-tasks {
@@ -416,14 +415,19 @@ h4.task-section-sub-heading {
 }
 
 .auth-container {
-    width: 40%;
-    padding: 100px 0;
+    width: 35%;
+    /* padding: 100px 0; */
     text-align: center;
-    margin: auto;
+    /* margin: auto; */
+    margin: 0;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .auth-container h1 {
-    font-size: 28px;
+    font-size: 25px;
     margin-bottom: 35px;
 }
 
@@ -443,11 +447,19 @@ h4.task-section-sub-heading {
     text-align: left;
 }
 
-.auth-container .signup-form .access-request-checkbox {
+.auth-container .signup-form .organisation-dropdown {
     margin-top: 30px;
+}
+
+.auth-container .signup-form .access-request-checkbox {
+    margin-top: 45px;
     margin-bottom: 15px;
 }
 
 .auth-container .signup-form .other-organisation-textbox {
     display: none;
+}
+
+.auth-container .auth-submit-button {
+    margin-top: 35px;
 }

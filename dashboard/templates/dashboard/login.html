@@ -10,7 +10,7 @@
 {% block content %}
 
 <div class="auth-container">
-    <h1>Login to Sawaliram Dashboard</h1>
+    <h1><span>Sawaliram</span> <span class="text-dashboard">Dashboard</span></h1>
 
     {% if error %}
         <p class="error-message">{{ error }}</p>
@@ -25,10 +25,10 @@
         <div class="form-group">
             <input type="password" name="password" class="form-control" placeholder="Password" required>
         </div>
-        <button type="submit" class="btn btn-block green-button">Login</button>
+        <button type="submit" class="btn btn-block green-button auth-submit-button">Login</button>
     </form>
 
-    <a class="text-muted signup-link" href="{% url 'dashboard:signup-view' %}">Are you a new user? Signup here!</a>
+    <a class="grey-link" href="{% url 'dashboard:signup-view' %}">Are you a new user? Signup here!</a>
 </div>
 
 {% endblock %}

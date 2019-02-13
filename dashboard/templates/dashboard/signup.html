@@ -10,7 +10,7 @@
 {% block content %}
 
 <div class="auth-container">
-    <h1>Sign-up to contribute to Sawaliram</h1>
+    <h1><span>Sawaliram</span> <span class="text-dashboard">Dashboard</span></h1>
 
     {% if error %}
         <p class="error-message">{{ error }}</p>
@@ -39,7 +39,7 @@
             <input type="password" name="re-password" class="form-control" placeholder="Re-enter password" required>
         </div>
 
-        <div class="form-group">
+        <div class="form-group organisation-dropdown">
             <label for="organisationDropDown">Organisation</label>
             <select class="form-control" name="organisation" id="organisationDropDown" required>
                 <option value="tcis">TIFR Centre for Interdisciplinary Sciences (TCIS)</option>
@@ -63,7 +63,7 @@
         </div>
 
         <br>
-        <button type="submit" class="btn btn-block green-button">Create Profile</button>
+        <button type="submit" class="btn btn-block green-button auth-submit-button">Create Profile</button>
     </form>
 
     <a class="text-muted signin-link" href="{% url 'dashboard:login-view' %}">Already have an account? Sign-in here!</a>

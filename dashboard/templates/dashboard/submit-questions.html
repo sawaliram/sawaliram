@@ -30,8 +30,7 @@
 
     <div class="published-information">
         <div class="form-group">
-            <label for="publishedSource">Name of publication <span class="required-field-text">(required)</span></label>
-            <input type="text" class="form-control" name="published-source" id="publishedSource">
+            <input type="text" class="form-control" name="published-source" id="publishedSource" placeholder="Name of publication">
             <small class="form-text text-muted">Name of the publication in which the question appeared</small>
         </div>
 
@@ -43,8 +42,7 @@
     </div>
 
     <div class="form-group">
-        <label for="schoolName">School Name</label>
-        <input type="text" class="form-control" name="school-name" id="schoolName">
+        <input type="text" class="form-control" name="school-name" id="schoolName" placeholder="School Name">
     </div>
 
     <div class="form-group">
@@ -76,20 +74,17 @@
     </div>
 
     <div class="form-group">
-        <label for="mediumLanguage">Medium of instruction</label>
-        <input type="text" class="form-control" name="medium-language" id="mediumLanguage">
+        <input type="text" class="form-control" name="medium-language" id="mediumLanguage" placeholder="Medium of instruction">
         <small class="form-text text-muted">Language in which classes are taught in the school</small>
     </div>
 
     <div class="form-group">
-        <label for="area">Area <span class="required-field-text not-required-if-published">(required)</span></label>
-        <input type="text" class="form-control" name="area" id="area" required>
+        <input type="text" class="form-control" name="area" id="area" placeholder="Area*" required>
         <small class="form-text text-muted">The address of the student’s school or residence (locality/village-town-city/district). May be entered in local language.</small>
     </div>
 
     <div class="form-group">
-        <label for="state">State <span class="required-field-text not-required-if-published">(required)</span></label>
-        <input type="text" class="form-control" name="state" id="state" required>
+        <input type="text" class="form-control" name="state" id="state" placeholder="State*" required>
         <small class="form-text text-muted">The state in India where the school/residence is located (may be entered in local language)</small>
     </div>
 
@@ -105,12 +100,12 @@
         </div>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="question-format" id="questionFormatPost" value="sent in by post">
-            <label class="form-check-label" for="questionFormatPost">Sent in by post</label>
+            <label class="form-check-label" for="questionFormatPost">Received by post</label>
         </div>
     </div>
 
     <div class="form-group">
-        <label for="area">Context <span class="required-field-text not-required-if-published">(required)</span></label>
+        <label for="area">Context*</label>
         <select class="form-control" name="context" id="context" required>
             <option>In class</option>
             <option>During or after an activity or field visit</option>
@@ -121,14 +116,12 @@
     </div>
 
     <div class="form-group">
-        <label for="contributorName">Contributor Name</label>
-        <input type="text" class="form-control" name="contributor-name" id="contributorName">
+        <input type="text" class="form-control" name="contributor-name" id="contributorName" placeholder="Contributor Name">
         <small class="form-text text-muted">Name of the person who received/entered the question</small>
     </div>
 
     <div class="form-group">
-        <label for="contributorRole">Contributor Role</label>
-        <input type="text" class="form-control" name="contributor-role" id="contributorRole">
+        <input type="text" class="form-control" name="contributor-role" id="contributorRole" placeholder="Contributor Role*">
         <small class="form-text text-muted">Role of the person who received/entered the question, eg: teacher, volunteer, AFSP, project officer, etc</small>
     </div>
 
@@ -142,32 +135,27 @@
         </div>
         <div class="card-body">
             <div class="form-group">
-                <label for="question_text">Question <span class="required-field-text">(required)</span></label>
-                <textarea class="form-control" name="question-text" id="question_text" required></textarea>
+                <textarea class="form-control" name="question-text" id="question_text" placeholder="Question*" required></textarea>
                 <small class="form-text text-muted">The question asked by a student, in its original language</small>
             </div>
 
             <div class="form-group">
-                <label for="question_language">Question language <span class="required-field-text">(required)</span></label>
-                <input type="text" class="form-control" name="question-language" id="question_language" required>
+                <input type="text" class="form-control" name="question-language" id="question_language" placeholder="Question language*" required>
                 <small class="form-text text-muted">The language in which the question was originally asked</small>
             </div>
 
             <div class="form-group">
-                <label for="question_text_english">English translation of question</label>
-                <textarea class="form-control" name="question-text-english" id="question_text_english"></textarea>
+                <textarea class="form-control" name="question-text-english" id="question_text_english" placeholder="English translation of question"></textarea>
                 <small class="form-text text-muted">Translation of the question in English. Leave blank if the original question is in English</small>
             </div>
         
             <div class="form-group">
-                <label for="student_name">Student name</label>
-                <input type="text" class="form-control" name="student-name" id="student_name">
+                <input type="text" class="form-control" name="student-name" id="student_name" placeholder="Student name">
                 <small class="form-text text-muted">Name(s) of the student(s) who asked the question (may be entered in the local language). If multiple students have asked the same question, enter their names with comma-separation, eg: Geeta, Ali, Mary.</small>
             </div>
         
             <div class="form-group">
-                <label for="student_class">Student class</label>
-                <input type="text" class="form-control" name="student-class" id="student_class">
+                <input type="text" class="form-control" name="student-class" id="student_class" placeholder="Student class">
                 <small class="form-text text-muted">The class of the student(s) in Arabic numerals (1-12). Avoid ordinals like 3rd or 4th. If the class of that student is not known but the group had students from multiple classes, enter the classes with comma-separation, Eg: 7, 8, 9, 10</small>
             </div>
 
@@ -178,8 +166,7 @@
             </div>
 
             <div class="form-group">
-                <label for="notes">Notes</label>
-                <textarea class="form-control" name="notes" id="notes"></textarea>
+                <textarea class="form-control" name="notes" id="notes" placeholder="Notes"></textarea>
                 <small class="form-text text-muted">Space for additional details or information points not recorded in any other field. Use semicolon (;) as a separator for more than one point</small>
             </div>
     
