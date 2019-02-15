@@ -417,18 +417,6 @@ h4.task-section-sub-heading {
     margin-bottom: 40px;
 }
 
-.auth-container {
-    width: 35%;
-    /* padding: 100px 0; */
-    text-align: center;
-    /* margin: auto; */
-    margin: 0;
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 .auth-container h1 {
     font-size: 25px;
     margin-bottom: 35px;
@@ -444,6 +432,22 @@ h4.task-section-sub-heading {
 
 .auth-container .error-message {
     color: #b90000;
+}
+
+.auth-container.login-container {
+    width: 35%;
+    text-align: center;
+    margin: 0;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.auth-container.signup-container {
+    width: 75%;
+    text-align: center;
+    margin: auto;
 }
 
 .auth-container .signup-form {
