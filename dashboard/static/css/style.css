@@ -249,9 +249,12 @@ h4.task-section-sub-heading {
 }
 
 /* submit-questions */
+.question-submission-form {
+    color: #6f6f6f;
+}
 
 .question-submission-form .form-group {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 .required-field-text {
