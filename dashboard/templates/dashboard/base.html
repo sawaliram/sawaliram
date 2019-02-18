@@ -23,13 +23,13 @@
                 <form action="{% url 'dashboard:logout-user' %}" method="POST">
                     {% csrf_token %}
                     <button class="btn logout-button">
-                        Logout
+                        <span class="navbar-button-text">Logout</span>
                         <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </form>
                 <a class="btn user-button" href="javascript:void(0)">
                     <i class="far fa-user-circle"></i>
-                    {{ request.user.first_name }} {{ request.user.last_name }} 
+                    <span class="navbar-button-text">{{ request.user.first_name }} {{ request.user.last_name }}</span> 
                 </a>
             </div>
         </nav>

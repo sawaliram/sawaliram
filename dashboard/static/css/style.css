@@ -6,7 +6,7 @@ body {
     font-family: 'Arvo', serif;
 }
 
-::-moz-selection { /* Code for Firefox */
+::-moz-selection { /* For Firefox */
     color: #ffffff;
     background: #79BF93;
 }
@@ -14,6 +14,24 @@ body {
 ::selection {
     color: #ffffff;
     background: #79BF93;
+}
+
+.label {
+    color: #444;
+}
+
+::placeholder /* Chrome, Firefox, Opera, Safari 10.1+ */,
+:-ms-input-placeholder /* Internet Explorer 10-11 */,
+::-ms-input-placeholder /* Microsoft Edge */ {
+    color: #444;
+}
+
+::placeholder {
+    opacity: 1; /* Firefox */
+}
+
+form .form-text {
+    color: #949494;
 }
 
 .btn {
@@ -36,6 +54,12 @@ body {
     font-size: 18px;
 }
 
+@media (max-width: 576px) {
+    .navbar .navbar-brand {
+        font-size: 15px;
+    }
+}
+
 .navbar .navbar-brand:hover {
     color: #629781;
 }
@@ -47,6 +71,12 @@ body {
 
 .navbar .user-button {
     margin-right: 10px;
+}
+
+@media (max-width: 576px) {
+    .navbar .user-button {
+        margin-right: 0;
+    }
 }
 
 .navbar .user-button,
@@ -78,6 +108,12 @@ body {
     color: #c11b1b;
 }
 
+@media (max-width: 576px) {
+    .navbar .navbar-button-text {
+        display: none;
+    }
+}
+
 .green-button {
     font-weight: bold;
     text-transform: uppercase;
@@ -93,6 +129,14 @@ body {
 .sawaliram-container {
     margin-top: 90px;
     margin-bottom: 60px;
+}
+
+@media (max-width: 576px) {
+    .sawaliram-container {
+        margin-top: 80px;
+        margin-bottom: 10px;
+        font-size: 13px;
+    }
 }
 
 .sawaliram-container .form-control {
@@ -111,6 +155,13 @@ footer {
     padding: 20px;
     padding-bottom: 50px; 
     color: #757575;
+}
+
+@media (max-width: 576px) {
+    footer {
+        padding-bottom: 20px;
+        font-size: 13px;
+    }
 }
 
 footer p {
@@ -135,8 +186,20 @@ h1.dashboard-home-greeting {
     text-align: center;
 }
 
+@media (max-width: 576px) {
+    h1.dashboard-home-greeting {
+        font-size: 20px;
+    }
+}
+
 .task-list {
     margin-top: 50px;
+}
+
+@media (max-width: 576px) {
+    .task-list {
+        margin-top: 35px;
+    }
 }
 
 .task-list .task-card {
@@ -150,6 +213,13 @@ h1.dashboard-home-greeting {
     margin-bottom: 30px;
     border: 3px solid #e6e6e6;
     border-style: dotted;
+}
+
+@media (max-width: 576px) {
+    .task-list .task-card {
+        padding: 15px;
+        margin-bottom: 25px;
+    }
 }
 
 .task-list .task-card a {
@@ -172,9 +242,24 @@ h1.dashboard-home-greeting {
     font-weight: 600;
 }
 
+@media (max-width: 576px) {
+    .task-list .task-card h3 {
+        font-size: 17px;
+        margin-top: 0;
+        margin-bottom: 4px;
+    }
+}
+
 .task-list .task-card p {
     font-size: 17px;
     color: #8e8e8e;
+}
+
+@media (max-width: 576px) {
+    .task-list .task-card p {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
 }
 
 .task-list .task-card .task-stat {
@@ -184,9 +269,26 @@ h1.dashboard-home-greeting {
     transition: 1s;
 }
 
+@media (max-width: 576px) {
+    .task-list .task-card .task-stat { 
+        font-size: 13px;
+    }
+}
+
 .task-list .task-card .task-icon {
     margin: 25px;
     margin-right: 30px;
+}
+
+@media (max-width: 576px) {
+    .task-list .task-card .task-icon {
+        margin: 0;
+        margin-right: 20px;
+    }
+
+    .task-list .task-card .task-icon img {
+        width: 45px;
+    }
 }
 
 .task-list .task-card .sub-task-button {
@@ -198,6 +300,16 @@ h1.dashboard-home-greeting {
     font-weight: normal;
 }
 
+@media (max-width: 576px) {
+    .task-list .task-card .sub-task-button {
+        margin-right: 0;
+        margin-top: 10px;
+        width: 100%;
+        padding: 7px 10px;
+        font-size: 12px;
+    }
+}
+
 .task-list .task-card .sub-task-button i {
     margin-right: 5px;
 }
@@ -206,21 +318,28 @@ h1.dashboard-home-greeting {
     padding-bottom: 25px;
 }
 
+@media (max-width: 576px) {
+    .task-list .task-card.task-with-sub-tasks {
+        padding-bottom: 20px;
+    }
+}
+
 /* ----- Task pages styles ----- */
 
 h1.task-heading {
     font-size: 30px;
     font-weight: 600;
+    margin-bottom: 40px;
+    color: #545454;
+    text-align: center;
 }
 
-h2.task-sub-heading {
-    font-size: 20px;
-    font-weight: normal;
-    color: #757575;
-}
-
-.task-hr {
-    margin-bottom: 35px;
+@media (max-width: 576px) {
+    h1.task-heading {
+        font-size: 20px;
+        margin-bottom: 30px;
+        text-align: left;
+    }
 }
 
 .task-info {
@@ -243,6 +362,12 @@ h3.task-section-heading {
     color: #777777;
 }
 
+@media (max-width: 576px) {
+    h3.task-section-heading {
+        font-size: 17px;
+    }
+}
+
 h4.task-section-sub-heading {
     font-size: 18px;
     margin-bottom: 20px;
@@ -255,6 +380,12 @@ h4.task-section-sub-heading {
 
 .question-submission-form .form-group {
     margin-bottom: 40px;
+}
+
+@media (max-width: 576px) {
+    .question-submission-form .form-group {
+        margin-bottom: 25px;
+    }
 }
 
 .required-field-text {
@@ -448,6 +579,13 @@ h4.task-section-sub-heading {
     width: 75%;
     text-align: center;
     margin: auto;
+}
+
+@media (max-width: 576px) {
+    .auth-container.login-container,
+    .auth-container.signup-container {
+        width: 85%;
+    }
 }
 
 .auth-container .signup-form {
