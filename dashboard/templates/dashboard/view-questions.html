@@ -67,7 +67,7 @@
                     <i class="fas fa-map-marker-alt"></i>
                     <span class="meta-value">
                         {% if question.area %}
-                            {{ question.area.rstrip }}{% endif %}{% if question.state %}, {{ question.state }}
+                            {{ question.area.rstrip }} {% if question.state %}, {{ question.state }} {% endif %}
                         {% elif question.state %}
                             {{ question.state }}
                         {% endif %}
