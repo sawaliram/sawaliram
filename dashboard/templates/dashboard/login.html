@@ -18,7 +18,7 @@
 
     <form class="login-form" action="{% url 'dashboard:login-user' %}" method="POST">
         {% csrf_token %}
-
+        <input type="hidden" name="next" value="{{ next_page }}" />
         <div class="form-group">
             <input type="email" name="email" class="form-control" placeholder="Email" required>
         </div>

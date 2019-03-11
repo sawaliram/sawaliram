@@ -12,7 +12,12 @@ from pprint import pprint
 
 def get_login_view(request):
 	"""Return the login view."""
-	return render(request, 'dashboard/login.html')
+	# in case 'next' is an empty string: leaving it as '' would give errors
+	next_page = request.GET.get('next', '') or 'dashboard:dashboard_home'
+
+	return render(request, 'dashboard/login.html', {
+		'next_page': next_page
+	})
 
 def get_signup_view(request):
 	"""Return the signup view."""
@@ -61,13 +66,18 @@ def login_user(request):
 	"""Log the user in"""
 	email = request.POST.get('email')
 	password = request.POST.get('password')
+	# in case 'next' is an empty string: leaving it as '' would give errors.
+	next_page = request.POST.get('next', '') or 'dashboard:dashboard_home'
 	user = authenticate(request, email=email, password=password)
 
 	if user is not None:
 		login(request, user)
-		return redirect(request.POST.get('next', 'dashboard:dashboard_home'))
+		return redirect(next_page)
 	else:
-		return render(request, 'dashboard/login.html', {'error': 'Incorrect login info! Please try again'}) 
+		return render(request, 'dashboard/login.html', {
+		  'error': 'Incorrect login info! Please try again',
+		  'next_page': next_page,
+		})
 
 def logout_user(request):
 	"""Log out the user"""
