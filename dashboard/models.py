@@ -86,3 +86,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 		Returns the first_name
 		"""
 		return self.first_name
+
+	def is_staff(self):
+		"""
+		Determines whether the user is allowed access to the admin interface
+		"""
+		return self.is_superuser
