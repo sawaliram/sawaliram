@@ -143,6 +143,7 @@ def submit_questions(request):
 		if request.POST['question-asked-on']:
 			question.question_asked_on = request.POST['question-asked-on']
 
+		question.submitted_by = request.user
 		question.save()
 
 	context = {
@@ -191,6 +192,7 @@ def submit_excel_sheet(request):
 				else:
 					setattr(question, column_name_mapping[column], row[column].strip() if isinstance(row[column], str) else row[column])
 
+		question.submitted_by = request.user
 		question.save()				
 	
 	return render(request, 'dashboard/excel-submitted-successfully.html')
