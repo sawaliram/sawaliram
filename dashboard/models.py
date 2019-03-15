@@ -34,6 +34,10 @@ class Question(models.Model):
 	created_on = models.DateTimeField(auto_now_add=True)
 	updated_on = models.DateTimeField(auto_now=True)
 
+	submitted_by = models.ForeignKey('User',
+		related_name='submitted_questions',
+		on_delete=models.PROTECT)
+
 	def __str__(self):
 		return self.question_text
 
