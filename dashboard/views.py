@@ -1,12 +1,16 @@
 """Define the functions that handle various requests by returnig a view"""
 
 import random
+import logging
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 import pandas as pd
 from dashboard.models import Question, User
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_login_view(request):

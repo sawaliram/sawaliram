@@ -128,4 +128,32 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 if os.environ.get('environment') == 'heroku':
     import django_heroku
     django_heroku.settings(locals())
-    
+
+# Logging
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/sawaliram.log',
+            'maxBytes': 1024*1024*5,  # 5MB,
+            'backupCount': 10,  # no. of old logfiles to keep
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'dashboard': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
