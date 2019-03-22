@@ -13,6 +13,6 @@ class Command(BaseCommand):
 
         # groups
         volunteers = Group.objects.get_or_create(name='volunteers')
-        moderators = Group.objects.get_or_create(name='moderators')
+        editors = Group.objects.get_or_create(name='editors')
         experts = Group.objects.get_or_create(name='experts')
         admins = Group.objects.get_or_create(name='admins')
