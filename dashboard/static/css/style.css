@@ -23,7 +23,7 @@ body {
 ::placeholder /* Chrome, Firefox, Opera, Safari 10.1+ */,
 :-ms-input-placeholder /* Internet Explorer 10-11 */,
 ::-ms-input-placeholder /* Microsoft Edge */ {
-    color: #444;
+    color: #949494;
 }
 
 ::placeholder {
@@ -327,7 +327,7 @@ h1.dashboard-home-greeting {
 /* ----- Task pages styles ----- */
 
 h1.task-heading {
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 600;
     margin-bottom: 40px;
     color: #545454;
