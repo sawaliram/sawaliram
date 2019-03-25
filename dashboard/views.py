@@ -5,8 +5,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
+from django.db.models import Max
 import pandas as pd
-from dashboard.models import Question, User
+from dashboard.models import QuestionArchive, Question, User
 
 
 def get_login_view(request):
@@ -135,7 +136,7 @@ def submit_questions(request):
     student_class_list = request.POST.getlist('student-class')
 
     for i in range(len(question_text_list)):
-        question = Question(
+        question = QuestionArchive(
             school=request.POST['school-name'],
             area=request.POST['area'],
             state=request.POST['state'],
@@ -164,11 +165,22 @@ def submit_questions(request):
             question.question_asked_on = request.POST['question-asked-on']
 
         question.submitted_by = request.user
+
+        max_submission_id = QuestionArchive.objects \
+                                           .all() \
+                                           .aggregate(Max('submission_id'))
+
+        if max_submission_id['submission_id__max'] is None:
+            question.submission_id = 1
+        else:
+            question.submission_id = max_submission_id['submission_id__max'] + 1
+
         question.save()
 
     context = {
         'number_of_questions_submitted': len(question_text_list),
     }
+
     return render(
         request,
         'dashboard/questions-submitted-successfully.html',
@@ -203,8 +215,18 @@ def submit_excel_sheet(request):
         'Contributor Role': 'contributor_role'
     }
 
+    submission_id = 0
+    max_submission_id = QuestionArchive.objects \
+                                       .all() \
+                                       .aggregate(Max('submission_id'))
+
+    if max_submission_id['submission_id__max'] is None:
+        submission_id = 1
+    else:
+        submission_id = max_submission_id['submission_id__max'] + 1
+
     for index, row in file.iterrows():
-        question = Question()
+        question = QuestionArchive()
 
         # only save the question if the question field is non-empty
         if not row['Question'] != row['Question']:
@@ -227,6 +249,7 @@ def submit_excel_sheet(request):
                             row[column].strip() if isinstance(row[column], str) else row[column])
 
             question.submitted_by = request.user
+            question.submission_id = submission_id
             question.save()
 
     return render(request, 'dashboard/excel-submitted-successfully.html')
