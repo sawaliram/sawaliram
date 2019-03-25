@@ -85,6 +85,30 @@ class Question(models.Model):
         return self.question_text
 
 
+class Answer(models.Model):
+    """Define the data model for answers in English"""
+
+    class Meta:
+        db_table = 'answer'
+
+    answer_text = models.CharField(max_length=1000)
+    question_id = models.ForeignKey(
+        'Question',
+        related_name='answers',
+        on_delete=models.PROTECT,
+        default='')
+    answered_by = models.ForeignKey(
+        'User',
+        related_name='submitted_answers',
+        on_delete=models.PROTECT,
+        default='')
+    approved_by = models.ForeignKey(
+        'User',
+        related_name='approved_answers',
+        on_delete=models.PROTECT,
+        default='')
+
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password):
         """
