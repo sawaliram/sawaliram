@@ -5,9 +5,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
-from django.db.models import Max
+from django.db.models import Max, Subquery
 import pandas as pd
-from dashboard.models import QuestionArchive, Question, User
+from dashboard.models import QuestionArchive, Question, User, Answer
 
 
 def get_login_view(request):
@@ -61,9 +61,22 @@ def get_view_questions_view(request):
     context = {
         'questions': questions,
         'states_list': states_list,
-        'states_to_filter_by': states_to_filter_by,
-    }
+        'states_to_filter_by': states_to_filter_by}
+
     return render(request, 'dashboard/view-questions.html', context)
+
+
+@login_required(login_url='login/')
+def get_answer_questions_list_view(request):
+    """Return the view with list of unanswered questions"""
+
+    unanswered_questions = Question.objects.filter(
+        id__in=Subquery(Answer.objects.all().values('question_id')))
+
+    context = {
+        'unanswered_questions': unanswered_questions}
+
+    return render(request, 'dashboard/answer_questions_list.html', context)
 
 
 def login_user(request):

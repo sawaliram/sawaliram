@@ -1,0 +1,61 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %} Answer Questions | Sawaliram {% endblock %}
+
+{% block content %}
+
+<h1 class="task-heading">View Questions</h1>
+
+<div id="questionsList">
+    {% if unanswered_questions %}
+        {% for question in unanswered_questions %}
+            <div class="card">
+                <div class="card-header" id="questionCard{{ forloop.counter }}">
+                    <h3>{{ forloop.counter }}. {{ question.question_text }}</h3>
+                </div>
+                <div class="card-body">
+                    {% if question.student_class or question.school or question.state or question.area %}
+                        <div class="highlighted-meta-area">
+                            {% if question.student_class %}
+                                <span class="highlighted-meta">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span class="meta-value">
+                                        Grade {{ question.student_class }}
+                                    </span>
+                                </span>
+                            {% endif %}
+
+                            {% if question.school %}
+                                <span class="highlighted-meta">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span class="meta-value">
+                                        {{ question.school }}
+                                        {% if question.curriculum_followed %}
+                                            ({{ question.curriculum_followed }})
+                                        {% endif %}
+                                    </span>
+                                </span>
+                            {% endif %}
+
+                            {% if question.area or question.state %}
+                                <span class="highlighted-meta">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span class="meta-value">
+                                        {% if question.area %}
+                                            {{ question.area.rstrip }} {% if question.state %}, {{ question.state }} {% endif %}
+                                        {% elif question.state %}
+                                            {{ question.state }}
+                                        {% endif %}
+                                    </span>    
+                                </span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty-result-text">No unanswered questions found. Try changing the filters.</p>
+    {% endif %}
+</div>
+{% endblock %}

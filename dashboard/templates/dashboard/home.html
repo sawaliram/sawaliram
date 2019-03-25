@@ -39,7 +39,7 @@
     {% endif %}
 
     {% if request.user|has_group:"volunteers" %}
-        <a class="d-flex task-card" href="javascript:void(0)">
+        <a class="d-flex task-card" href="{% url 'dashboard:answer-questions-list-view' %}">
             <div class="task-icon">
                 <img src="{% static 'task_icons/answer_questions.png' %}" alt="Answer Questions">
             </div>
