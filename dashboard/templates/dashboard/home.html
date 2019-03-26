@@ -25,6 +25,19 @@
         </a>
     {% endif %}
 
+    {% if request.user|has_group:"admins" %}
+        <a class="d-flex task-card" href="javascript:void(0)">
+            <div class="task-icon">
+                <img src="{% static 'task_icons/manage_data.png' %}" alt="Manage Data">
+            </div>
+            <div class="flex-grow-1">
+                <h3>Manage Data</h3>
+                <p>Download and curate submitted questions</p>
+                <span class="task-stat">3 submissions to be curated</span>
+            </div>
+        </a>
+    {% endif %}
+
     {% if request.user|has_group:"volunteers" %}
         <a class="d-flex task-card" href="javascript:void(0)">
             <div class="task-icon">
@@ -47,6 +60,18 @@
                 <h3>Answer Questions</h3>
                 <p>Answer questions across subjects & in multiple languages</p>
                 <span class="task-stat">2,653 unanswered questions</span>
+            </div>
+        </a>
+    {% endif %}
+
+    {% if request.user|has_group:"admins" %}
+        <a class="d-flex task-card" href="javascript:void(0)">
+            <div class="task-icon">
+                <img src="{% static 'task_icons/create_content.png' %}" alt="Create Content">
+            </div>
+            <div class="flex-grow-1">
+                <h3>Create Content</h3>
+                <p>Write blog posts</p>
             </div>
         </a>
     {% endif %}
