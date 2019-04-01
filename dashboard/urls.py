@@ -17,6 +17,8 @@ urlpatterns = [
     path('submit-excel-sheet', views.get_submit_excel_sheet_view, name='submit-excel-sheet-view'),
     path('view-questions', views.get_view_questions_view, name='view-questions-view'),
     path('answer-questions-list', views.get_answer_questions_list_view, name='answer-questions-list-view'),
+    path('manage-data', views.get_manage_data_view, name='manage-data-view'),
+    path('submit-curated-dataset', views.submit_curated_dataset, name='submit-curated-dataset'),
 
     # action URLs
     # these URLs perform an action, like submitting a question

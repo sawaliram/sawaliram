@@ -177,6 +177,10 @@ footer p {
     color: #629781;
 }
 
+.table thead {
+    color: #777777;
+}
+
 /* ----- Home styles ----- */
 
 h1.dashboard-home-greeting {
@@ -356,8 +360,8 @@ h1.task-heading {
 }
 
 h3.task-section-heading {
-    font-size: 22px;
-    margin-bottom: 20px;
+    font-size: 20px;
+    margin-bottom: 30px;
     font-weight: 600;
     color: #777777;
 }
@@ -504,9 +508,14 @@ h4.task-section-sub-heading {
     color: #545454;
 }
 
-#questionsList .empty-result-text {
+.empty-result-text {
     text-align: center;
     color: #4e4e4e;
+}
+
+/* manage-data */
+.uncurated-submissions-table {
+    margin-bottom: 45px;
 }
 
 /* ----- Action successfull pages styles ----- */
