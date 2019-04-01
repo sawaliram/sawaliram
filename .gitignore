@@ -106,8 +106,8 @@ venv.bak/
 # mac ignores
 .DS_Store
 
-# ignore static files dir
-staticfiles/
-
 # local ignores
 .vscode
+
+# dirs to ignore
+staticfiles/
