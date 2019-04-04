@@ -14,6 +14,7 @@ from dashboard.models import (
     User,
     Answer,
     UncuratedSubmission)
+from pprint import pprint
 
 
 def get_login_view(request):
@@ -76,13 +77,25 @@ def get_view_questions_view(request):
 def get_answer_questions_list_view(request):
     """Return the view with list of unanswered questions"""
 
-    unanswered_questions = Question.objects.filter(
+    unanswered_questions = Question.objects.exclude(
         id__in=Subquery(Answer.objects.all().values('question_id')))
 
     context = {
         'unanswered_questions': unanswered_questions}
 
-    return render(request, 'dashboard/answer_questions_list.html', context)
+    return render(request, 'dashboard/answer-questions-list.html', context)
+
+
+@login_required(login_url='login/')
+def get_answer_question_view(request, question_id):
+    """Return the view to answer a question"""
+
+    question_to_answer = Question.objects.get(pk=question_id)
+
+    context = {
+        'question': question_to_answer
+    }
+    return render(request, 'dashboard/answer-question.html', context)
 
 
 @login_required(login_url='login/')

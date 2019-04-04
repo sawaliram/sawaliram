@@ -1,0 +1,70 @@
+{% extends "dashboard/base.html" %}
+
+{% load static %}
+
+{% block head_scripts %}
+    <script src="{% static 'js/tinymce.min.js' %}"></script>
+    <script>
+        tinymce.init({
+            selector: '#rich-text-editor',
+            plugins: 'autosave charmap image wordcount',
+            menubar: false,
+            toolbar: 'undo redo | formatselect | bold italic underline | subscript superscript | charmap image | wordcount | restoredraft',
+            autosave_interval: "15s",
+            autosave_retention: '2880m',
+            image_dimensions: false,
+            height: 500
+        });
+    </script>
+{% endblock %}
+
+{% block title %} Answer Question | Sawaliram {% endblock %}
+
+{% block content %}
+
+<h1 class="question-text-heading">{{ question.question_text }}</h1>
+
+<div class="answer-question highlighted-meta-area">
+    {% if question.student_class %}
+        <span class="highlighted-meta">
+            <i class="fas fa-user-graduate"></i></i>
+            <span class="meta-value">
+                Grade {{ question.student_class }}
+            </span>
+        </span>
+    {% endif %}
+
+    {% if question.school %}
+        <span class="highlighted-meta">
+            <i class="fas fa-graduation-cap"></i>
+            <span class="meta-value">
+                {{ question.school }}
+                {% if question.curriculum_followed %}
+                    ({{ question.curriculum_followed }})
+                {% endif %}
+            </span>
+        </span>
+    {% endif %}
+
+    {% if question.area or question.state %}
+        <span class="highlighted-meta">
+            <i class="fas fa-map-marker-alt"></i>
+            <span class="meta-value">
+                {% if question.area %}
+                    {{ question.area.rstrip }} {% if question.state %}, {{ question.state }} {% endif %}
+                {% elif question.state %}
+                    {{ question.state }}
+                {% endif %}
+            </span>    
+        </span>
+    {% endif %}
+</div>
+
+<form action="" method="POST">
+    <textarea id="rich-text-editor" autofocus></textarea>
+
+    <br>
+    <button type="submit" class="btn btn-block green-button">Submit For Review</button>
+</form>
+
+{% endblock %}

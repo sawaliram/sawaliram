@@ -126,6 +126,17 @@ form .form-text {
     color: #55B377;
 }
 
+.grey-button {
+    background-color: #ececec;
+    color: #7d7d7d;
+    font-size: 14px;
+}
+
+.grey-button:hover {
+    background-color: #55b37724;
+    color: #55B377;
+}
+
 .sawaliram-container {
     margin-top: 90px;
     margin-bottom: 60px;
@@ -482,30 +493,33 @@ h4.task-section-sub-heading {
     font-size: 15px;
 }
 
-#questionsList .card .card-body .highlighted-meta-area {
+.highlighted-meta-area {
     margin-bottom: 13px;
 }
 
-#questionsList .card .card-body .highlighted-meta {
-    border: 1px solid;
-    border-radius: 3px;
-    margin-right: 10px;
+.highlighted-meta {
     padding: 2px;
     padding-right: 10px;
-    font-size: 14px;
+    font-size: 13px;
 }
 
-#questionsList .card .card-body .highlighted-meta i {
+.highlighted-meta:not(:last-child) {
+    border-right: 1px solid #b7b7b7;
+    margin-right: 10px;
+}
+
+.highlighted-meta i {
     font-size: 13px;
     margin: 0 5px;
+    color: #b7b7b7;
 }
 
 #questionsList .card .card-body .meta-phrase-section {
     margin-bottom: 13px;
 }
 
-#questionsList .card .card-body .meta-value {
-    color: #545454;
+.highlighted-meta .meta-value {
+    color: #777;
 }
 
 .empty-result-text {
@@ -516,6 +530,15 @@ h4.task-section-sub-heading {
 /* manage-data */
 .uncurated-submissions-table {
     margin-bottom: 45px;
+}
+
+/* answer-question */
+.question-text-heading {
+    font-size: 30px;
+}
+
+.answer-question.highlighted-meta-area {
+    margin-bottom: 30px;
 }
 
 /* ----- Action successfull pages styles ----- */

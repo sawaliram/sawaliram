@@ -18,7 +18,7 @@
                         <div class="highlighted-meta-area">
                             {% if question.student_class %}
                                 <span class="highlighted-meta">
-                                    <i class="fas fa-graduation-cap"></i>
+                                    <i class="fas fa-user-graduate"></i></i>
                                     <span class="meta-value">
                                         Grade {{ question.student_class }}
                                     </span>
@@ -51,6 +51,8 @@
                             {% endif %}
                         </div>
                     {% endif %}
+
+                    <a class="btn grey-button" href="{% url 'dashboard:answer-question' question.id %}">Answer Question</a>
                 </div>
             </div>
         {% endfor %}
