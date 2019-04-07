@@ -440,9 +440,15 @@ def submit_curated_dataset(request):
 
 def get_error_404_view(request, exception):
     """Return the custom 404 page."""
-    return render(request, 'dashboard/404.html')
+
+    response = render(request, 'dashboard/404.html')
+    response.status_code = 404  # Not Found
+    return response
 
 
 def get_work_in_progress_view(request):
     """Return work-in-progress view."""
-    return render(request, 'dashboard/work-in-progress.html')
+
+    response = render(request, 'dashboard/work-in-progress.html')
+    response.status_code = 501  # Not Implemented
+    return response
