@@ -148,6 +148,14 @@ LOGGING = {
             'backupCount': 10,  # no. of old logfiles to keep
             'formatter': 'standard',
         },
+        'sentry': {  # TODO: make this actually use Sentry
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/sentry.log',
+            'maxBytes': 1024*1024*5,  # 5MB
+            'backupCount': 10,  # no. of old logfiles to keep
+            'formatter': 'standard',
+        },
     },
     'loggers': {
         'dashboard': {
@@ -155,5 +163,20 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'django.request': {
+            'handlers': ['sentry'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        'django.security': {
+            'handlers': ['sentry'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        'django.server': {
+            'handlers': ['sentry'],
+            'level': 'WARNING',
+            'propagate': True,
+        }
     },
 }
