@@ -129,12 +129,12 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
-    def create_superuser(self, email):
+    def create_superuser(self, email, password):
         """
         Creates and saves a user as superuser
         """
         email = self.normalize_email(email)
-        user = self.create_user(email)
+        user = self.create_user(email, password)
         user.is_staff()
         user.is_superuser = True
         user.save()
