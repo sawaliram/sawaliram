@@ -15,6 +15,7 @@ from dashboard.models import (
     Answer,
     UncuratedSubmission)
 from pprint import pprint
+from django.http import HttpResponse
 
 
 def get_login_view(request):
@@ -236,11 +237,6 @@ def submit_questions(request):
         question_df = pd.DataFrame(question.__dict__, index=[0])
 
         question_df['Field of Interest'] = ''
-        question_df['Motivation'] = ''
-        question_df['Type of Information'] = ''
-        question_df['Source'] = ''
-        question_df['Curiosity Index'] = ''
-        question_df['Urban/Rural'] = ''
 
         # append the dataframe with the question to the overall dataframe
         submitted_questions_df = submitted_questions_df.append(question_df)
@@ -342,12 +338,6 @@ def submit_excel_sheet(request):
 
     # create Excel sheet with additional meta for curation
     file['Field of Interest'] = ''
-    file['Motivation'] = ''
-    file['Type of Information'] = ''
-    file['Source'] = ''
-    file['Curiosity Index'] = ''
-    file['Urban/Rural'] = ''
-    file['submission_id'] = submission_id
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -434,6 +424,18 @@ def submit_curated_dataset(request):
                                                     .get(submission_id=submission_id_of_curated_submission)
     uncurated_submission_entry.curated = True
     uncurated_submission_entry.save()
+
+    return render(request, 'dashboard/excel-submitted-successfully.html')
+
+
+def submit_answer(request):
+    """Save the submitted answer for review"""
+    new_answer = Answer()
+    new_answer.question_id = Question.objects.get(pk=request.POST['question_id'])
+    new_answer.answer_text = request.POST['rich-text-content']
+    new_answer.answered_by = request.user
+    new_answer.save()
+    # pprint(request.POST['rich-text-content'])
 
     return render(request, 'dashboard/excel-submitted-successfully.html')
 

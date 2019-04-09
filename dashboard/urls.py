@@ -19,7 +19,6 @@ urlpatterns = [
     path('answer-questions-list', views.get_answer_questions_list_view, name='answer-questions-list-view'),
     path('answer-questions/<int:question_id>/', views.get_answer_question_view, name='answer-question'),
     path('manage-data', views.get_manage_data_view, name='manage-data-view'),
-    path('submit-curated-dataset', views.submit_curated_dataset, name='submit-curated-dataset'),
 
     # action URLs
     # these URLs perform an action, like submitting a question
@@ -29,4 +28,7 @@ urlpatterns = [
     path('action/signup-user', views.signup_user, name='signup-user'),
     path('action/submit-questions', views.submit_questions, name='submit-questions'),
     path('action/submit-excel-sheet', views.submit_excel_sheet, name='submit-excel-sheet'),
+    path('action/submit-curated-dataset', views.submit_curated_dataset, name='submit-curated-dataset'),
+    path('action/submit-answer', views.submit_answer, name='submit-answer'),
+
 ]

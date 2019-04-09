@@ -1,6 +1,5 @@
 
 /* ----- General styles ----- */
-
 body {
     min-height: 100vh;
     font-family: 'Arvo', serif;
@@ -192,8 +191,11 @@ footer p {
     color: #777777;
 }
 
-/* ----- Home styles ----- */
+#editor .ql-editor {
+    min-height: 400px;
+}
 
+/* ----- Home styles ----- */
 h1.dashboard-home-greeting {
     font-size: 26px;
     font-weight: 600;
@@ -340,7 +342,6 @@ h1.dashboard-home-greeting {
 }
 
 /* ----- Task pages styles ----- */
-
 h1.task-heading {
     font-size: 28px;
     font-weight: 600;
@@ -386,6 +387,12 @@ h3.task-section-heading {
 h4.task-section-sub-heading {
     font-size: 18px;
     margin-bottom: 20px;
+}
+
+.task-notes {
+    text-align: center;
+    color: #8e8e8e;
+    font-size: 14px;
 }
 
 /* submit-questions */
@@ -542,7 +549,6 @@ h4.task-section-sub-heading {
 }
 
 /* ----- Action successfull pages styles ----- */
-
 .action-success-page-wrapper {
     text-align: center;
     margin-top: 160px;
@@ -569,7 +575,6 @@ h4.task-section-sub-heading {
 }
 
 /* ----- Standalone pages styles ----- */
-
 .error-page-wrapper {
     text-align: center;
     margin-top: 40px;

@@ -111,7 +111,8 @@ class Answer(models.Model):
         'User',
         related_name='approved_answers',
         on_delete=models.PROTECT,
-        default='')
+        default='',
+        null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 

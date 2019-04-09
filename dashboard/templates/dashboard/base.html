@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
 
-        {% block head_scripts %} {% endblock %}
+        {% block head_includes %} {% endblock %}
 
         <title>{% block title %} {% endblock %}</title>
     </head>
@@ -47,7 +47,7 @@
 
         <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         <script src="{% static 'js/script.js' %}"></script>
-
     </body>
 </html>

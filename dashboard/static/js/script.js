@@ -77,7 +77,25 @@ function toggleOtherOrganisationTextBox() {
     });
 }
 
+function setupQuillEditor() {
+
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: '#toolbar'
+        }
+    });
+
+    $('.rich-text-form').submit(function(e) {
+        $('[name="rich-text-content"]').val(quill.root.innerHTML);
+    });
+}
+
 addQuestion();
 displayNameOfSelectedFile();
 togglePublishedInformationFormGroups();
 toggleOtherOrganisationTextBox();
+
+if (window.location.pathname.includes('/dashboard/answer-questions/')) {
+    setupQuillEditor();
+}

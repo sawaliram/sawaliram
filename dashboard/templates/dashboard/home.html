@@ -38,6 +38,19 @@
         </a>
     {% endif %}
 
+    {% if request.user|has_group:"admins" %}
+        <a class="d-flex task-card" href="javascript:void(0)">
+            <div class="task-icon">
+                <img src="{% static 'task_icons/encode_data.png' %}" alt="Encode Data">
+            </div>
+            <div class="flex-grow-1">
+                <h3>Encode Data</h3>
+                <p>Encode the curated questions</p>
+                <span class="task-stat">4,000 questions to encode</span>
+            </div>
+        </a>
+    {% endif %}
+
     {% if request.user|has_group:"volunteers" %}
         <a class="d-flex task-card" href="javascript:void(0)">
             <div class="task-icon">
