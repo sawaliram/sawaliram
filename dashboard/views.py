@@ -2,6 +2,7 @@
 
 import random
 import os
+from django.core.cache import cache
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -30,7 +31,17 @@ def get_signup_view(request):
 @login_required(login_url='login/')
 def get_home_view(request):
     """Return the dashboard home view."""
-    context = {}
+    counts = {
+        'user_requests': cache.get('count.user.requests', 0),
+        'uncurated_submissions': cache.get('count.submission.uncurated', 0),
+        'unreviewed_answers': cache.get('count.answer.unreviewed', 0),
+        'unanswered_questions': cache.get('count.question.unanswered', 0),
+        'untranslated_content': cache.get('count.content.untranslated', 0),
+        'questions': cache.get('count.question', 0),
+    }
+    context = {
+        'counts': counts,
+    }
     return render(request, 'dashboard/home.html', context)
 
 

@@ -74,6 +74,15 @@ DATABASES = {
     }
 }
 
+# Caching
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'localhost:11211',
+    }
+}
+
 # Custom User Model
 AUTH_USER_MODEL = 'dashboard.User'
 
