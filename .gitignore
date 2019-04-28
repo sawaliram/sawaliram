@@ -72,6 +72,9 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+# Geany project file
+sawaliram.geany
+
 # pyenv
 .python-version
 
@@ -89,6 +92,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+Pipfile
+Pipfile.lock
 
 # Spyder project settings
 .spyderproject
@@ -109,5 +114,9 @@ venv.bak/
 # local ignores
 .vscode
 
+# helper script ignores
+set-environment.sh
+
 # dirs to ignore
 staticfiles/
+assets/submissions
