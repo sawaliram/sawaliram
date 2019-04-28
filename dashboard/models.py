@@ -148,6 +148,25 @@ class Answer(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+class AnswerComment(models.Model):
+    """Define the data model for comments on Answers"""
+
+    class Meta:
+        db_table = 'answer_comment'
+
+    text = models.TextField()
+
+    answer = models.ForeignKey(
+        'Answer',
+        related_name='comments',
+        on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        'User',
+        related_name='answer_comments',
+        on_delete=models.PROTECT)
+
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password):
