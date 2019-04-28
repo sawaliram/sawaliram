@@ -18,6 +18,8 @@ urlpatterns = [
     path('view-questions', views.get_view_questions_view, name='view-questions-view'),
     path('answer-questions-list', views.get_answer_questions_list_view, name='answer-questions-list-view'),
     path('answer-questions/<int:question_id>/', views.get_answer_question_view, name='answer-question'),
+    path('review-answers-list', views.get_review_answers_list_view, name='review-answers'),
+    path('answers/<int:answer_id>/review', views.get_review_answer_view, name='review-answer'),
     path('manage-data', views.get_manage_data_view, name='manage-data-view'),
 
     # action URLs
@@ -30,5 +32,7 @@ urlpatterns = [
     path('action/submit-excel-sheet', views.submit_excel_sheet, name='submit-excel-sheet'),
     path('action/submit-curated-dataset', views.submit_curated_dataset, name='submit-curated-dataset'),
     path('action/submit-answer', views.submit_answer, name='submit-answer'),
+    path('action/answers/<int:answer_id>/comment/add', views.submit_answer_comment, name='submit-answer-comment'),
+    path('action/answers/<int:answer_id>/approve', views.submit_answer_approval, name='submit-answer-approval'),
 
 ]

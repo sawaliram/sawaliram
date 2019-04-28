@@ -52,7 +52,7 @@
     {% endif %}
 
     {% if request.user|has_group:"volunteers" %}
-        <a class="d-flex task-card" href="javascript:void(0)">
+        <a class="d-flex task-card" href="{% url 'dashboard:review-answers' %}">
             <div class="task-icon">
                 <img src="{% static 'task_icons/review_answers.png' %}" alt="Review Answers">
             </div>

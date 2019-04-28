@@ -13,9 +13,16 @@ from dashboard.models import (
     Question,
     User,
     Answer,
+    AnswerComment,
     UncuratedSubmission)
 from pprint import pprint
-from django.http import HttpResponse
+from django.http import (
+    HttpResponse,
+    Http404,
+)
+from django.core.exceptions import (
+    PermissionDenied,
+)
 
 
 def get_login_view(request):
@@ -113,6 +120,33 @@ def get_manage_data_view(request):
 
     return render(request, 'dashboard/manage-data.html', context)
 
+
+@login_required(login_url='login/')
+def get_review_answers_list_view(request):
+    """Return the view with list of unreviewed answers"""
+
+    unreviewed_answers = Answer.objects \
+    .filter(approved_by__isnull=True) \
+    .select_related()
+	
+    context = {
+        'unreviewed_answers': unreviewed_answers,
+    }
+
+    return render(request, 'dashboard/answers/list-unreviewed.html', context)
+
+@login_required(login_url='login/')
+def get_review_answer_view(request, answer_id):
+    """Return the view to approve/comment on an answer"""
+
+    answer = Answer.objects.get(pk=answer_id)
+
+    context = {
+        'answer': answer,
+        'comments': answer.comments.all(),
+    }
+
+    return render(request, 'dashboard/answers/review.html', context)
 
 def login_user(request):
     """Log the user in"""
@@ -439,6 +473,45 @@ def submit_answer(request):
 
     return render(request, 'dashboard/excel-submitted-successfully.html')
 
+@login_required(login_url='login/')
+def submit_answer_comment(request, answer_id):
+    """Save the submitted comment to a particular answer"""
+
+    # TODO: Check permissions
+
+    try:
+        answer = Answer.objects.get(pk=answer_id)
+    except Answer.DoesNotExist:
+        raise Http404('Answer does not exist')
+
+    comment = AnswerComment()
+    comment.text = request.POST['comment-text']
+    comment.answer = answer
+    comment.author = request.user
+
+    comment.save()
+
+    return redirect('dashboard:review-answer', answer_id=answer_id)
+
+@login_required(login_url='login/')
+def submit_answer_approval(request, answer_id):
+    """Mark the answer as approved"""
+
+    # TODO: check permissions
+
+    try:
+        answer = Answer.objects.get(pk=answer_id,
+            approved_by__isnull=True)
+    except Answer.DoesNotExist:
+        raise Http404('Answer does not exist')
+
+    if request.user == answer.answered_by:
+        raise PermissionDenied('You cannot approve your own answer')
+
+    answer.approved_by = request.user
+    answer.save()
+
+    return redirect('dashboard:review-answers')
 
 def get_error_404_view(request, exception):
     """Return the custom 404 page."""
