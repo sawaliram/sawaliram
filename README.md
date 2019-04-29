@@ -29,6 +29,12 @@ In the root folder (where the requirements.txt file is), run this command to ins
 ```bash
 $ pip install -r requirements.txt
 ```
+
+You will also need to install [memcached](https://memcached.org) and [RabbitMQ](https://rabbitmq.com) for caching and scheduling functionality. You can probably install them via your package manager using something like
+```bash
+$ sudo apt-get install rabbit-server memcached
+```
+
 **5. Add environment variables to your shell**  
 The project reads some values for the configuration from the environment variables. To permanently add variables to the shell environment, add this line to the ```.bash_profile``` file:
 ```sh
@@ -37,6 +43,15 @@ export sawaliram_debug_value='True'
 export sawaliram_db_password='your-password'
 export environment='dev'
 ```
+
+You can also add optional RabbitMQ configuration variables, like so:
+```sh
+export sawaliram_rabbitmq_username='you-username'
+export sawaliram_rabbitmq_password='your-password'
+export sawaliram_rabbitmq_host='your-hostname'
+```
+If you do not set these, then default values of `sawaliram`, `pass`, and `sawaliram` will be used instead.
+
 After saving the file, make sure you run ```$ source .bash_profile``` to save the changes to your existing bash session.
 
 **6. Initialize the database**  
@@ -51,5 +66,21 @@ To perform the remaining updation or configuration, run these commands:
 ```bash
 $ python manage.py createusergroups
 ```
+
+**8. Running the server**
+To run the test development server, use the command
+```bash
+$ python manage.py runserver
+```
+Similarly, the Celery task runner can be run using
+```bash
+$ celery -A core worker -l info -B # FOR DEVELOPMENT ONLY
+```
+For production settings, it is recommended to run the task scheduler and the task runner separately. The relevant comands are:
+```bash
+$ celery -A core worker -l info # Task runner
+$ celery -A core beat -l info # Task scheduler
+```
+All process mentioned in this section can be terminated using the `Ctrl+C` keyboard shortcut.
 
 You are now ready to write some code! Start by looking at the open issues on the repo.

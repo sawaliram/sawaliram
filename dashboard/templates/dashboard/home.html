@@ -20,7 +20,7 @@
             <div class="flex-grow-1">
                 <h3>Manage Users</h3>
                 <p>Approve or reject access requests from users</p>
-                <span class="task-stat">2 pending requests</span>
+                <span class="task-stat">{{ counts.user_requests }} pending requests</span>
             </div>
         </a>
     {% endif %}
@@ -33,7 +33,7 @@
             <div class="flex-grow-1">
                 <h3>Manage Data</h3>
                 <p>Download and curate submitted questions</p>
-                <span class="task-stat">3 submissions to be curated</span>
+                <span class="task-stat">{{ counts.uncurated_submissions }} submissions to be curated</span>
             </div>
         </a>
     {% endif %}
@@ -59,7 +59,7 @@
             <div class="flex-grow-1">
                 <h3>Review Answers</h3>
                 <p>Review and edit answers before publishing to the public site</p>
-                <span class="task-stat">735 answers to review</span>
+                <span class="task-stat">{{ counts.unreviewed_answers }} answers to review</span>
             </div>
         </a>
     {% endif %}
@@ -72,7 +72,7 @@
             <div class="flex-grow-1">
                 <h3>Answer Questions</h3>
                 <p>Answer questions across subjects & in multiple languages</p>
-                <span class="task-stat">2,653 unanswered questions</span>
+                <span class="task-stat">{{ counts.unanswered_questions }} unanswered questions</span>
             </div>
         </a>
     {% endif %}
@@ -97,7 +97,7 @@
             <div class="flex-grow-1">
                 <h3>Translate Content</h3>
                 <p>Translate questions, answers, metadata, blogs and other content</p>
-                <span class="task-stat">15,908 items to be translated</span>
+                <span class="task-stat">{{ counts.untranslated_content }} items to be translated</span>
             </div>
         </a>
     {% endif %}
@@ -138,7 +138,7 @@
             <div class="flex-grow-1">
                 <h3>View Questions</h3>
                 <p>View questions and their available answers and related information</p>
-                <span class="task-stat">13,784 Questions Submitted</span>
+                <span class="task-stat">{{ counts.questions }} Questions Submitted</span>
             </div>
         </a>
     {% endif %}

@@ -74,6 +74,23 @@ DATABASES = {
     }
 }
 
+# Caching
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'localhost:11211',
+    }
+}
+
+# Celery
+
+CELERY_BROKER_URL = 'amqp://%(user)s:%(password)s@localhost:5672/%(host)s'  % {
+    'user': os.environ.get('sawaliram_rabbitmq_username', 'sawaliram'),
+    'password': os.environ.get('sawaliram_rabbitmq_password', 'pass'),
+    'host': os.environ.get('sawaliram_rabbitmq_host', 'sawaliram')
+}
+
 # Custom User Model
 AUTH_USER_MODEL = 'dashboard.User'
 
