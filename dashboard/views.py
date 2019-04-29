@@ -508,6 +508,9 @@ def submit_answer_approval(request, answer_id):
     if request.user == answer.answered_by:
         raise PermissionDenied('You cannot approve your own answer')
 
+    if request.method != 'POST':
+        return redirect('dashboard:review-answer', answer_id=answer_id)
+
     answer.approved_by = request.user
     answer.save()
 

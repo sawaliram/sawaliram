@@ -101,6 +101,7 @@
 	</form>
 	{% if request.user != answer.answered_by %}
 		<form action="{% url 'dashboard:submit-answer-approval' answer.id %}" method="POST">
+            {% csrf_token %}
 			<button type="submit" class="btn btn-block green-button">Accept Answer</button>
 	    </form>
 	{% endif %}
