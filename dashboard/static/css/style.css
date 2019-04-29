@@ -136,6 +136,19 @@ form .form-text {
     color: #55B377;
 }
 
+.inline-button {
+    display: inline;
+    border: none;
+    background: inherit;
+    color: blue;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.inline-button:hover {
+    cursor: pointer;
+}
+
 .sawaliram-container {
     margin-top: 90px;
     margin-bottom: 60px;

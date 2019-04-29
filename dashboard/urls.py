@@ -34,5 +34,6 @@ urlpatterns = [
     path('action/submit-answer', views.submit_answer, name='submit-answer'),
     path('action/answers/<int:answer_id>/comment/add', views.submit_answer_comment, name='submit-answer-comment'),
     path('action/answers/<int:answer_id>/approve', views.submit_answer_approval, name='submit-answer-approval'),
+    path('action/answers/<int:answer_id>/comment/<int:comment_id>/delete', views.delete_answer_comment, name='delete-answer-comment'),
 
 ]

@@ -59,10 +59,22 @@
 		<h2>Comments</h2>
 		<hr />
 		{% for comment in comments %}
-		    <div>
-				<p><b>{{ comment.author.get_full_name }}</b> at {{ comment.created_on }}</p>
+		    {% if comment.author == request.user %}
+            <form action="{% url 'dashboard:delete-answer-comment' answer.id comment.id %}" method="GET">
+            {% else %}
+            <div>
+            {% endif %}
+				<p>
+                    <b>{{ comment.author.get_full_name }}</b>
+                    at {{ comment.created_on }}
+                    {% if comment.author == request.user %}(<button type="submit" class="inline-button">delete</button>){% endif %}
+                </p>
 				{{ comment.text|safe }}
-			</div>
+			{% if comment.author == request.user %}
+            </form>
+            {% else %}
+            </div>
+            {% endif %}
 			<hr />
 		{% endfor %}
 	    

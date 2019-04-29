@@ -516,6 +516,34 @@ def submit_answer_approval(request, answer_id):
 
     return redirect('dashboard:review-answers')
 
+@login_required(login_url='login/')
+def delete_answer_comment(request, answer_id, comment_id):
+    """Delete a previously published comment on an answer"""
+
+    try:
+        answer = Answer.objects.get(pk=answer_id)
+    except Answer.DoesNotexist:
+        raise Http404('Answer does not exist')
+
+    try:
+        comment = answer.comments.get(pk=comment_id)
+    except AnswerComment.DoesNotExist:
+        raise Http404('No matching comment')
+
+    if request.user != comment.author:
+        raise PermissionDenied('You are not authorised to delete that comment.')
+
+    print('We got: ' + request.method)
+    if request.method == 'POST':
+        comment.delete()
+    else:
+        context = {
+            'comment': comment,
+        }
+        return render(request, 'dashboard/answers/delete_comment.html', context)
+
+    return redirect('dashboard:review-answer', answer_id=answer.id)
+
 def get_error_404_view(request, exception):
     """Return the custom 404 page."""
     return render(request, 'dashboard/404.html')

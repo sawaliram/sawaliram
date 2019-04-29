@@ -1,0 +1,30 @@
+{% extends "dashboard/base.html" %}
+
+{% load static %}
+
+{% block head_includes %}
+    <link href="{% static 'css/quill.sawaliram.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %} Delete Comment | Sawaliram {% endblock %}
+
+{% block content %}
+
+<h1 class="question-text-heading">Are you sure you want to delete the following comment?</h1>
+<div>
+    {{ comment.text|safe }}
+    <p>
+        <em>
+            Commented on
+            <a href="{% url 'dashboard:review-answer' comment.answer.id %}">{{ comment.answer.question_id.question_text }}</a>
+            at {{ comment.created_on }}
+        </em>
+    </p>
+</div>
+<form action="{% url 'dashboard:delete-answer-comment' comment.answer.id comment.id %}" method="POST">
+    {% csrf_token %}
+    <a class="btn green-button" href="{% url 'dashboard:review-answer' comment.answer.id %}">Go back</a>
+    <button type="submit" class="btn grey-button">Delete comment</button>
+</form>
+
+{% endblock %}
