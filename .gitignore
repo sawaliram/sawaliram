@@ -111,3 +111,4 @@ venv.bak/
 
 # dirs to ignore
 staticfiles/
+assets/submissions/*
