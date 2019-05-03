@@ -14,7 +14,6 @@ from dashboard.models import (
     User,
     Answer,
     UncuratedSubmission)
-from pprint import pprint
 
 
 def get_login_view(request):
@@ -435,7 +434,6 @@ def submit_answer(request):
     new_answer.answer_text = request.POST['rich-text-content']
     new_answer.answered_by = request.user
     new_answer.save()
-    # pprint(request.POST['rich-text-content'])
 
     return render(request, 'dashboard/excel-submitted-successfully.html')
 
