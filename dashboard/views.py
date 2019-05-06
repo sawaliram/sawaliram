@@ -14,6 +14,7 @@ from dashboard.models import (
     User,
     Answer,
     UncuratedSubmission)
+from pprint import pprint
 
 
 def get_login_view(request):
@@ -233,26 +234,52 @@ def submit_questions(request):
         question_dict.pop('_state')
         question_dict.pop('created_on')
         question_dict.pop('updated_on')
+
+        # rename the keys to readable names of fields
+        question_dict['Question'] = question_dict.pop('question_text')
+        question_dict['Question Language'] = question_dict.pop('question_language')
+        question_dict['English translation of the question'] = question_dict.pop('question_text_english')
+        question_dict['How was the question originally asked?'] = question_dict.pop('question_format')
+        question_dict['Context'] = question_dict.pop('context')
+        question_dict['Date of asking the question'] = question_dict.pop('question_asked_on')
+        question_dict['Student Name'] = question_dict.pop('student_name')
+        question_dict['Gender'] = question_dict.pop('student_gender')
+        question_dict['Student Class'] = question_dict.pop('student_class')
+        question_dict['School Name'] = question_dict.pop('school')
+        question_dict['Curriculum followed'] = question_dict.pop('curriculum_followed')
+        question_dict['Medium of instruction'] = question_dict.pop('medium_language')
+        question_dict['Area'] = question_dict.pop('area')
+        question_dict['State'] = question_dict.pop('state')
+        question_dict['Published (Yes/No)'] = question_dict.pop('published')
+        question_dict['Publication Name'] = question_dict.pop('published_source')
+        question_dict['Publication Date'] = question_dict.pop('published_date')
+        question_dict['Notes'] = question_dict.pop('notes')
+        question_dict['Contributor Name'] = question_dict.pop('contributor')
+        question_dict['Contributor Role'] = question_dict.pop('contributor_role')
+
+        # create a dataframe using the dict
         question_df = pd.DataFrame(question_dict, index=[index+1])
 
+        # add field for adding the field of interest
         question_df['Field of Interest'] = ''
 
         # append the dataframe with the question to the overall dataframe
         submitted_questions_df = submitted_questions_df.append(question_df)
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    pprint(BASE_DIR)
 
     excel_filename = 'dataset_uc_' + request.user.first_name \
         + '_' + str(submission_id) + '.xlsx'
 
     writer = pd.ExcelWriter(
-        os.path.join(BASE_DIR, 'assets/submissions/' + excel_filename))
+        os.path.join(BASE_DIR, 'assets/submissions/uncurated/' + excel_filename))
     submitted_questions_df.to_excel(writer, 'Sheet 1')
     writer.save()
 
     # create an entry in UncuratedSubmission for the admins
     new_submission = UncuratedSubmission()
-    new_submission.submission_method = 'excel file'
+    new_submission.submission_method = 'manual entry'
     new_submission.submission_id = submission_id
     new_submission.number_of_questions = len(question_text_list)
     new_submission.excel_sheet = excel_filename
@@ -335,16 +362,16 @@ def submit_excel_sheet(request):
             question.submission_id = submission_id
             question.save()
 
-    # create Excel sheet with additional meta for curation
+    # add field for adding the field of interest
     excel_sheet['Field of Interest'] = ''
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    excel_filename = 'dataset_' + request.user.first_name \
+    excel_filename = 'uncurated_dataset_' + request.user.first_name \
         + '_' + str(submission_id) + '.xlsx'
 
     writer = pd.ExcelWriter(
-        os.path.join(BASE_DIR, 'assets/submissions/uncurated' + excel_filename))
+        os.path.join(BASE_DIR, 'assets/submissions/uncurated/' + excel_filename))
     excel_sheet.to_excel(writer, 'Sheet 1')
     writer.save()
 
@@ -365,35 +392,6 @@ def submit_curated_dataset(request):
     excel_sheet = pd.read_excel(request.FILES[request.POST['excel-file-name']])
     columns = list(excel_sheet)
 
-    column_name_mapping = {
-        'Question': 'question_text',
-        'Question Language': 'question_language',
-        'English translation of the question': 'question_text_english',
-        'How was the question originally asked?': 'question_format',
-        'Context': 'context',
-        'Date of asking the question': 'question_asked_on',
-        'Student Name': 'student_name',
-        'Gender': 'student_gender',
-        'Student Class': 'student_class',
-        'School Name': 'school',
-        'Curriculum followed': 'curriculum_followed',
-        'Medium of instruction': 'medium_language',
-        'Area': 'area',
-        'State': 'state',
-        'Published (Yes/No)': 'published',
-        'Publication Name': 'published_source',
-        'Publication Date': 'published_date',
-        'Notes': 'notes',
-        'Contributor Name': 'contributor',
-        'Contributor Role': 'contributor_role',
-        'Field of Interest': 'question_topic',
-        'Motivation': 'motivation',
-        'Type of Information': 'type_of_information',
-        'Source': 'source',
-        'Curiosity Index': 'curiosity_index',
-        'Urban/Rural': 'urban_or_rural',
-        'submission_id': 'submission_id'}
-
     for index, row in excel_sheet.iterrows():
         curated_question = Question()
 
@@ -406,12 +404,14 @@ def submit_curated_dataset(request):
                 if column == 'Published (Yes/No)':
                     setattr(
                         curated_question,
-                        column_name_mapping[column],
+                        # column_name_mapping[column],
+                        column,
                         True if row[column] == 'Yes' else False)
                 else:
                     setattr(
                         curated_question,
-                        column_name_mapping[column],
+                        # column_name_mapping[column],
+                        column,
                         row[column].strip() if isinstance(row[column], str) else row[column])
 
         curated_question.curated_by = request.user

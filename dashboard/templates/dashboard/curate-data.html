@@ -29,7 +29,7 @@
             <td>{{ submission.number_of_questions }}</td>
             <td>{{ submission.submission_method|title }}</td>
             <td>{{ submission.created_on }}</td>
-            <td><a class="grey-link" href="{% static 'submissions/'|add:submission.excel_sheet %}">Link</a></td>
+            <td><a class="grey-link" href="{% static 'submissions/uncurated/'|add:submission.excel_sheet %}">Link</a></td>
         </tr>    
     {% endfor %}
     </tbody>
