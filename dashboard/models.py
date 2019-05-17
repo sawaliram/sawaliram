@@ -71,12 +71,6 @@ class Question(models.Model):
     published_date = models.DateField(default=datetime.date.today)
     question_asked_on = models.DateField(null=True)
     notes = models.CharField(max_length=1000, default='')
-    field_of_interest = models.CharField(max_length=100, default='')
-    motivation = models.CharField(max_length=100, default='')
-    type_of_information = models.CharField(max_length=100, default='')
-    source = models.CharField(max_length=100, default='')
-    curiosity_index = models.CharField(max_length=100, default='')
-    urban_or_rural = models.CharField(max_length=100, default='')
     submission_id = models.CharField(max_length=100, default='')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -85,6 +79,24 @@ class Question(models.Model):
         related_name='curated_questions',
         on_delete=models.PROTECT,
         default='')
+    encoded_by = models.ForeignKey(
+        'User',
+        related_name='encoded_questions',
+        on_delete=models.PROTECT,
+        default='',
+        blank=True,
+        null=True)
+    # data members for encoding
+    field_of_interest = models.CharField(max_length=100, default='')
+    subject_of_session = models.CharField(max_length=100, default='')
+    question_topic_relation = models.CharField(max_length=100, default='')
+    motivation = models.CharField(max_length=100, default='')
+    type_of_information = models.CharField(max_length=100, default='')
+    source = models.CharField(max_length=100, default='')
+    curiosity_index = models.CharField(max_length=100, default='')
+    urban_or_rural = models.CharField(max_length=100, default='')
+    type_of_school = models.CharField(max_length=100, default='')
+    comments_on_coding_rationale = models.CharField(max_length=500, default='')
 
     def __str__(self):
         return self.question_text
@@ -183,12 +195,26 @@ class UncuratedSubmission(models.Model):
     submission_method = models.CharField(max_length=50)
     submission_id = models.IntegerField()
     number_of_questions = models.IntegerField()
-    excel_sheet = models.CharField(max_length=100)
+    excel_sheet_name = models.CharField(max_length=100)
     submitted_by = models.ForeignKey(
         'User',
         related_name='submissions',
         on_delete=models.PROTECT,
         default='')
     curated = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+
+class UnencodedSubmission(models.Model):
+    """Define the data model to store submissions pending for encoding"""
+
+    class Meta:
+        db_table = 'unencoded_submission'
+
+    submission_id = models.IntegerField(null=True)
+    number_of_questions = models.IntegerField()
+    excel_sheet_name = models.CharField(max_length=100)
+    encoded = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

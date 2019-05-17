@@ -13,7 +13,8 @@ from dashboard.models import (
     Question,
     User,
     Answer,
-    UncuratedSubmission)
+    UncuratedSubmission,
+    UnencodedSubmission)
 from pprint import pprint
 
 
@@ -113,8 +114,24 @@ def get_curate_data_view(request):
     return render(request, 'dashboard/curate-data.html', context)
 
 
+@login_required(login_url='login/')
+def get_encode_data_view(request):
+    """Return the encode data view"""
+
+    unencoded_submissions = UnencodedSubmission.objects \
+        .filter(encoded=False) \
+        .order_by('-created_on')
+
+    context = {
+        'unencoded_submissions': unencoded_submissions,
+        'excel_file_name': 'excel' + str(random.randint(1, 999)),}
+
+    return render(request, 'dashboard/encode-data.html', context)
+
+
 def login_user(request):
     """Log the user in"""
+
     email = request.POST.get('email')
     password = request.POST.get('password')
     user = authenticate(request, email=email, password=password)
@@ -131,12 +148,14 @@ def login_user(request):
 
 def logout_user(request):
     """Log out the user"""
+
     logout(request)
     return redirect('dashboard:dashboard_home')
 
 
 def signup_user(request):
     """Create a user"""
+
     if request.POST.get('password') != request.POST.get('re-password'):
         return render(
             request,
@@ -232,6 +251,7 @@ def submit_questions(request):
         # pop keys that won't go into the excel file
         question_dict = question.__dict__
         question_dict.pop('_state')
+        question_dict.pop('submitted_by_id')
         question_dict.pop('created_on')
         question_dict.pop('updated_on')
 
@@ -269,7 +289,7 @@ def submit_questions(request):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     pprint(BASE_DIR)
 
-    excel_filename = 'dataset_uc_' + request.user.first_name \
+    excel_filename = 'uncurated_dataset_' + request.user.first_name \
         + '_' + str(submission_id) + '.xlsx'
 
     writer = pd.ExcelWriter(
@@ -282,7 +302,7 @@ def submit_questions(request):
     new_submission.submission_method = 'manual entry'
     new_submission.submission_id = submission_id
     new_submission.number_of_questions = len(question_text_list)
-    new_submission.excel_sheet = excel_filename
+    new_submission.excel_sheet_name = excel_filename
     new_submission.submitted_by = request.user
     new_submission.save()
 
@@ -364,6 +384,7 @@ def submit_excel_sheet(request):
 
     # add field for adding the field of interest
     excel_sheet['Field of Interest'] = ''
+    excel_sheet['submission_id'] = submission_id
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -388,9 +409,33 @@ def submit_excel_sheet(request):
 
 
 def submit_curated_dataset(request):
-    """Save the curated questions"""
+    """Save the curated questions."""
     excel_sheet = pd.read_excel(request.FILES[request.POST['excel-file-name']])
     columns = list(excel_sheet)
+
+    column_name_mapping = {
+        'Question': 'question_text',
+        'Question Language': 'question_language',
+        'English translation of the question': 'question_text_english',
+        'How was the question originally asked?': 'question_format',
+        'Context': 'context',
+        'Date of asking the question': 'question_asked_on',
+        'Student Name': 'student_name',
+        'Gender': 'student_gender',
+        'Student Class': 'student_class',
+        'School Name': 'school',
+        'Curriculum followed': 'curriculum_followed',
+        'Medium of instruction': 'medium_language',
+        'Area': 'area',
+        'State': 'state',
+        'Published (Yes/No)': 'published',
+        'Publication Name': 'published_source',
+        'Publication Date': 'published_date',
+        'Notes': 'notes',
+        'Contributor Name': 'contributor',
+        'Contributor Role': 'contributor_role',
+        'id': 'id',
+        'submission_id': 'submission_id'}
 
     for index, row in excel_sheet.iterrows():
         curated_question = Question()
@@ -404,25 +449,99 @@ def submit_curated_dataset(request):
                 if column == 'Published (Yes/No)':
                     setattr(
                         curated_question,
-                        # column_name_mapping[column],
-                        column,
+                        column_name_mapping[column],
                         True if row[column] == 'Yes' else False)
                 else:
                     setattr(
                         curated_question,
-                        # column_name_mapping[column],
-                        column,
+                        column_name_mapping[column],
                         row[column].strip() if isinstance(row[column], str) else row[column])
 
         curated_question.curated_by = request.user
         curated_question.save()
 
     # set curated=True for related UncuratedSubmission entry
-    submission_id_of_curated_submission = list(excel_sheet['submission_id'])[0]
+    submission_id = list(excel_sheet['submission_id'])[0]
     uncurated_submission_entry = UncuratedSubmission.objects \
-                                                    .get(submission_id=submission_id_of_curated_submission)
+                                                    .get(submission_id=submission_id)
     uncurated_submission_entry.curated = True
     uncurated_submission_entry.save()
+
+    # drop columns not required for encoding
+    del excel_sheet['Question Language']
+    del excel_sheet['How was the question originally asked?']
+    del excel_sheet['Context']
+    del excel_sheet['Date of asking the question']
+    del excel_sheet['Student Name']
+    del excel_sheet['Gender']
+    del excel_sheet['Student Class']
+    del excel_sheet['Curriculum followed']
+    del excel_sheet['Medium of instruction']
+    del excel_sheet['Published (Yes/No)']
+    del excel_sheet['Publication Name']
+    del excel_sheet['Publication Date']
+    del excel_sheet['Contributor Name']
+    del excel_sheet['Contributor Role']
+
+    # add columns for encoding
+    excel_sheet['Subject of class/session'] = ''
+    excel_sheet['Question topic "R"elated or "U"nrelated to the topic or "S"ponteneous'] = ''
+    excel_sheet['Motivation for asking question'] = ''
+    excel_sheet['Type of information requested'] = ''
+    excel_sheet['Source'] = ''
+    excel_sheet['Curiosity index'] = ''
+    excel_sheet['Urban/Rural'] = ''
+    excel_sheet['Type of school'] = ''
+    excel_sheet['Comments for coding rationale'] = ''
+    excel_sheet['submission_id'] = submission_id
+
+    # create and save excel file for encoding
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    excel_filename = 'unencoded_dataset_' \
+        + str(submission_id) + '.xlsx'
+
+    writer = pd.ExcelWriter(os.path.join(
+            BASE_DIR, 'assets/submissions/unencoded/' + excel_filename))
+    excel_sheet.to_excel(writer, 'Sheet 1')
+    writer.save()
+
+    # create an UnencodedSubmission entry
+    unencoded_submission = UnencodedSubmission()
+    unencoded_submission.submission_id = submission_id
+    unencoded_submission.number_of_questions = len(excel_sheet.index)
+    unencoded_submission.excel_sheet_name = excel_filename
+    unencoded_submission.save()
+
+    return render(request, 'dashboard/excel-submitted-successfully.html')
+
+
+def submit_encoded_dataset(request):
+    """Save the encoding information to Question."""
+    excel_sheet = pd.read_excel(request.FILES[request.POST['excel-file-name']])
+
+    for index, row in excel_sheet.iterrows():
+        question = Question.objects.get(pk=row['id'])
+
+        question.submission_id = row['submission_id']
+        question.subject_of_session = row['Subject of class/session']
+        question.question_topic_relation = row['Question topic "R"elated or "U"nrelated to the topic or "S"ponteneous']
+        question.motivation = row['Motivation for asking question']
+        question.type_of_information = row['Type of information requested']
+        question.source = row['Source']
+        question.curiosity_index = row['Curiosity index']
+        question.urban_or_rural = row['Urban/Rural']
+        question.type_of_school = row['Type of school']
+        question.comments_on_coding_rationale = row['Comments for coding rationale']
+        question.encoded_by = request.user
+
+        question.save()
+
+    # set the UnencodedSubmission entry as curated
+    unencoded_submission_entry = UnencodedSubmission \
+        .objects.get(submission_id=list(excel_sheet['submission_id'])[0])
+    unencoded_submission_entry.encoded = True
+    unencoded_submission_entry.save()
 
     return render(request, 'dashboard/excel-submitted-successfully.html')
 

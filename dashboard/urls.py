@@ -19,6 +19,7 @@ urlpatterns = [
     path('answer-questions-list', views.get_answer_questions_list_view, name='answer-questions-list-view'),
     path('answer-questions/<int:question_id>/', views.get_answer_question_view, name='answer-question'),
     path('curate-data', views.get_curate_data_view, name='curate-data-view'),
+    path('encode-data', views.get_encode_data_view, name='encode-data-view'),
 
     # action URLs
     # these URLs perform an action, like submitting a question
@@ -29,6 +30,7 @@ urlpatterns = [
     path('action/submit-questions', views.submit_questions, name='submit-questions'),
     path('action/submit-excel-sheet', views.submit_excel_sheet, name='submit-excel-sheet'),
     path('action/submit-curated-dataset', views.submit_curated_dataset, name='submit-curated-dataset'),
+    path('action/submit-encoded-dataset', views.submit_encoded_dataset, name='submit-encoded-dataset'),
     path('action/submit-answer', views.submit_answer, name='submit-answer'),
 
 ]
