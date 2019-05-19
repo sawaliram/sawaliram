@@ -122,6 +122,7 @@ def login_user(request):
 
     if user is not None:
         login(request, user)
+        messages.success(request, "Welcome back, %s!" % user.get_full_name())
         return redirect(request.POST.get('next', 'dashboard:dashboard_home'))
     else:
         return render(
@@ -172,6 +173,8 @@ def signup_user(request):
         volunteers.user_set.add(user)
 
         login(request, user)
+
+        messages.success(request, "Your account has been created. Welcome to the team!")
         return redirect('dashboard:dashboard_home')
 
 
@@ -265,14 +268,14 @@ def submit_questions(request):
     new_submission.submitted_by = request.user
     new_submission.save()
 
-    context = {
-        'number_of_questions_submitted': len(question_text_list),
-    }
 
-    return render(
-        request,
-        'dashboard/questions-submitted-successfully.html',
-        context)
+    if len(question_text_list) == 1:
+        msg = 'Your question has been submitted successfully!'
+    else:
+        msg = 'Your questions have been submitted successfully!'
+
+    messages.success(request, msg)
+    return redirect('dashboard:dashboard_home')
 
 
 def submit_excel_sheet(request):
@@ -369,7 +372,8 @@ def submit_excel_sheet(request):
     new_submission.submitted_by = request.user
     new_submission.save()
 
-    return render(request, 'dashboard/excel-submitted-successfully.html')
+    messages.success(request, 'Your Excel sheet has been submitted successfully!')
+    return redirect('dashboard:dashboard_home')
 
 
 def submit_curated_dataset(request):
@@ -436,7 +440,8 @@ def submit_curated_dataset(request):
     uncurated_submission_entry.curated = True
     uncurated_submission_entry.save()
 
-    return render(request, 'dashboard/excel-submitted-successfully.html')
+    messages.success(request, 'Your curated dataset has been uploaded successfully')
+    return redirect('dashboard:dashboard_home')
 
 
 def get_error_404_view(request, exception):
