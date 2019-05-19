@@ -56,7 +56,7 @@
 	
 	<div id="answer">{{ answer.answer_text|safe }}</div>
 	
-	<div class="comment-thread" style="margin-top: 1em; margin-bottom: 1em; padding: 10px; background-color: #CFF09E;">
+	<div class="comment-thread">
 		<h2>Comments</h2>
 		<hr />
 		{% for comment in comments %}
@@ -79,7 +79,7 @@
 			<hr />
 		{% endfor %}
 	    
-	    <form action="{% url 'dashboard:submit-answer-comment' answer.id %}" id="comment-form" class="rich-text-form" method="POST" style="background-color: white;">
+	    <form action="{% url 'dashboard:submit-answer-comment' answer.id %}" id="comment-form" class="rich-text-form comment-form" method="POST">
 		    {% csrf_token %}
 		    <div id="toolbar">
 		        <span class="ql-formats">

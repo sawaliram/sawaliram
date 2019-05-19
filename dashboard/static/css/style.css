@@ -658,3 +658,18 @@ h4.task-section-sub-heading {
 .auth-container .auth-submit-button {
     margin-top: 35px;
 }
+
+.comment-thread {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: 10px;
+    background-color: #87b24d;
+}
+
+.comment-thread h2 {
+    color: #ffffff;
+}
+
+.comment-form {
+    background-color: #ffffff;
+}
