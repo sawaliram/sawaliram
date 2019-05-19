@@ -43,6 +43,14 @@ class QuestionArchive(models.Model):
         on_delete=models.PROTECT)
 
     def accept_question(self, acceptor):
+        """
+        Mark a question as approved, by the given acceptor (user).
+
+        This basically changes a question from unmoderated to moderated
+        by removing the QuestionArchive record and replacing it with
+        a Question one.
+        """
+
         q = Question()
         q.school = self.school
         q.area = self.area
