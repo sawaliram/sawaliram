@@ -114,6 +114,52 @@ form .form-text {
     }
 }
 
+.messages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.messages>ul {
+	max-width: 1000px;
+	list-style-type: none;
+	margin: 0;
+    padding: 0;
+    display: inline;
+    flex-grow: 1;
+}
+
+.messages>ul>li {
+	text-align: center;
+	background-color: #d3d3d3;
+	padding: 1rem;
+	flex-grow: 1;
+	margin: 0.3rem;
+}
+
+.messages>ul>li.debug {
+    background-color: #BFBFBF;
+}
+
+.messages>ul>li.info {
+    background-color: #ADD8E6;
+}
+
+.messages>ul>li.success {
+    background-color: #90EE90;
+}
+
+.messages>ul>li.warning {
+    background-color: #FFA500;
+    color: #FFFFFF;
+}
+
+.messages>ul>li.error {
+    background-color: #FF0000;
+    color: #FFFFFF;
+}
+
 .green-button {
     font-weight: bold;
     text-transform: uppercase;
