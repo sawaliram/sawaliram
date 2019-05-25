@@ -218,3 +218,19 @@ class UnencodedSubmission(models.Model):
     encoded = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+
+class TransalatedQuestion(models.Model):
+    """Define the data model to store transalated questions"""
+
+    class Meta:
+        db_table = 'transalated_question'
+
+    question_id = models.ForeignKey(
+        'Question',
+        related_name='translations',
+        on_delete=models.PROTECT,
+        default='')
+    question_text = models.CharField(max_length=1000)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
