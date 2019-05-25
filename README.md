@@ -4,6 +4,8 @@ Sawaliram is an online respository of questions asked by school students, collec
 Apart from the questions and their answers, the web platform will host blog posts, research papers and other resources (like links to relevant books and online media) related to education, pedagogy, questioning and related topics. The website aims to become an invaluable resource to students, teachers, parents, researchers, curriculum designers and other stakeholders.
 
 ## Setting up your development environment
+To find help with the setup procedure and to discuss all things related to the development, [join our Zulip server](https://sawaliram.zulipchat.com/join/eapx8841i41gyg6ildlpz2t1/).  
+  
 **1. Install an environment manager**  
 It is recommended to use an environment management tool like [virtualenv](https://virtualenv.pypa.io/en/stable/) to easily manage the project's requirements and avoid any conflicts with your system packages. If you are using virtualenv, run these commands to set up a development environment:
 ```sh
@@ -68,4 +70,4 @@ python manage.py runserver
 ```
 Visit localhost:8000 in your browser to see the Sawaliram homepage in all it's glory!
 
-You are now ready to write some code! Start by looking at the open issues labelled [good first issue](https://github.com/tifrh/sawaliram/labels/good%20first%20issue) on the repo.
+You are now ready to write some code! Start by looking at the open issues labelled [good first issue](https://github.com/tifrh/sawaliram/labels/good%20first%20issue), and leave a comment on the issue saying that you're working on it, so that there's no duplication of work. Happy coding!
