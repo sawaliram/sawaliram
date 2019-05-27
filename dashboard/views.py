@@ -14,7 +14,8 @@ from dashboard.models import (
     User,
     Answer,
     UncuratedSubmission,
-    UnencodedSubmission)
+    UnencodedSubmission,
+    TranslatedQuestion)
 from pprint import pprint
 
 
@@ -459,11 +460,13 @@ def submit_curated_dataset(request):
 
         curated_question.curated_by = request.user
         curated_question.save()
-        trans_question = TransalatedQuestion(
-            question_id=request.POST['id'],
-            question_text=request.POST['English translation of the question']
-        )
-        trans_question.save()
+        if row['English translation of the question']:
+            trans_question = TranslatedQuestion(
+                question_id=request.POST['id'],
+                question_text=request.POST['English translation of the question'],
+                language=request.POST['Question Language']
+            )
+            trans_question.save()
 
     # set curated=True for related UncuratedSubmission entry
     submission_id = list(excel_sheet['submission_id'])[0]
