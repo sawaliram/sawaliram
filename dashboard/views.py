@@ -460,7 +460,7 @@ def submit_curated_dataset(request):
 
         curated_question.curated_by = request.user
         curated_question.save()
-        if row['English translation of the question']:
+        if not row['English translation of the question'] != row['English translation of the question']:
             trans_question = TranslatedQuestion(
                 question_id=request.POST['id'],
                 question_text=request.POST['English translation of the question'],
