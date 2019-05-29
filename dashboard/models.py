@@ -221,10 +221,10 @@ class UnencodedSubmission(models.Model):
 
 
 class TranslatedQuestion(models.Model):
-    """Define the data model to store transalated questions"""
+    """Define the data model to store translated questions"""
 
     class Meta:
-        db_table = 'transalated_question'
+        db_table = 'translated_question'
 
     question_id = models.ForeignKey(
         'Question',
