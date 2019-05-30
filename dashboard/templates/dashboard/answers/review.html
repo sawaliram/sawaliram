@@ -64,7 +64,15 @@
 				<p>
                     <b>{{ comment.author.get_full_name }}</b>
                     at {{ comment.created_on }}
-                    {% if comment.author == request.user %}(<span class="delete-span"><button type="submit" class="inline-button delete-button">delete</button></span>){% endif %}
+                    {% if comment.author == request.user %}
+                    (
+					<button type="submit" class="inline-button delete-button">delete</button>
+					<span class="delete-comment-prompt" style="display: none;">
+						<button class="inline-button delete-cancel">cancel</button>
+						<button type="submit" class="inline-button delete-submit">delete</button>
+					</span>
+					)
+					{% endif %}
                 </p>
 				{{ comment.text|escape|render_linebreaks|safe }}
 			{% if comment.author == request.user %}
@@ -90,75 +98,4 @@
 	    </form>
 	{% endif %}
 {% endwith %}
-
-{% endblock %}
-
-{% block footer %}
-<script>
-function setupDeleteButtons() {
-	forms = document.getElementsByClassName('comment-delete-form');
-	for (i=0;i<forms.length;i++) {
-		button = forms[i].getElementsByClassName('delete-button')[0];
-		button.type = '';
-		var form_id = forms[i].id;
-        button.setAttribute('onclick', 'confirmDelete("' + form_id + '")'); // more JS-y method?
-		button.innerHTML = 'delete?';
-	}
-}
-
-function confirmDelete(form_id) {
-	console.log('Confirming delete for ' + form_id);
-	form = document.getElementById(form_id);
-	span = form.getElementsByClassName('delete-span')[0];
-	button = span.getElementsByClassName('delete-button')[0];
-	span.removeChild(button);
-
-	s1 = document.createElement('span');
-	s1.innerHTML = 'delete? ';
-	span.appendChild(s1);
-
-	b1 = document.createElement('button')
-	b1.innerHTML = 'cancel';
-    b1.setAttribute('onclick', 'cancelDelete("' + form_id + '")'); // TODO: more JS-y method?
-	b1.classList.add('inline-button');
-	span.appendChild(b1);
-
-	s2 = document.createElement('span');
-	s2.innerHTML = ' | ';
-	span.appendChild(s2);
-
-	b2 = document.createElement('button');
-	b2.innerHTML = 'confirm';
-	b2.type = 'submit';
-	b2.classList.add('inline-button');
-	span.appendChild(b2);
-
-	form.method = 'POST' // Warning: deletes without further confirmation!
-
-	return false; // prevents form from submitting
-}
-
-function cancelDelete(form_id) {
-	form = document.getElementById(form_id);
-	span = form.getElementsByClassName('delete-span')[0];
-
-	// Remove all children of span
-	span.innerHTML = ''; // TODO: more JS-y method?
-
-	button = document.createElement('button');
-	button.innerHTML = 'delete?';
-	button.type='submit';
-	button.classList.add('inline-button');
-	button.classList.add('delete-button');
-    button.setAttribute('onclick', 'confirmDelete("' + form_id + '")'); // TODO: more JS-y method?
-	span.appendChild(button);
-
-	form.method = 'GET' // just in case
-
-	return false; // prevents form from submitting
-}
-
-// Let's go!
-setupDeleteButtons();
-</script>
 {% endblock %}
