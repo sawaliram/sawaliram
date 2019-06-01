@@ -452,6 +452,13 @@ def submit_curated_dataset(request):
                         curated_question,
                         column_name_mapping[column],
                         True if row[column] == 'Yes' else False)
+                elif column == 'English translation of the question':
+                    trans_question = TranslatedQuestion(
+                        question_id=request.POST['id'],
+                        question_text=request.POST['English translation of the question'],
+                        language=request.POST['Question Language']
+                    )
+                    trans_question.save()
                 else:
                     setattr(
                         curated_question,
@@ -460,13 +467,6 @@ def submit_curated_dataset(request):
 
         curated_question.curated_by = request.user
         curated_question.save()
-        if not row['English translation of the question'] != row['English translation of the question']:
-            trans_question = TranslatedQuestion(
-                question_id=request.POST['id'],
-                question_text=request.POST['English translation of the question'],
-                language=request.POST['Question Language']
-            )
-            trans_question.save()
 
     # set curated=True for related UncuratedSubmission entry
     submission_id = list(excel_sheet['submission_id'])[0]
