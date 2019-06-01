@@ -456,7 +456,7 @@ def submit_curated_dataset(request):
                     trans_question = TranslatedQuestion(
                         question_id=row['id'],
                         question_text=row['English translation of the question'],
-                        language=request.POST['Question Language']
+                        language='english'
                     )
                     trans_question.save()
                 else:
