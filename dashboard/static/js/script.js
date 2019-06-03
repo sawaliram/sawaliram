@@ -107,20 +107,20 @@ if (window.location.pathname.includes('/dashboard/answer-questions/')) {
 */
 
 $(()=>{
-	$('.comment-delete-form button.delete-button')
+	$('.comment-delete-form')
+    .attr('method', 'POST')
+    .find('button.delete-button')
 	.html('delete?')
 	.click(function(e) {
 	    e.preventDefault();
 		$(this)
 		.css('font-weight', 'bold')
-		.parents('form.comment-delete-form').attr('method', 'POST').end()
 		.next('span.delete-comment-prompt').show();
 	});
 	$('.comment-delete-form button.delete-cancel').click(function(e) {
 		$(this)
 		.parents('span.delete-comment-prompt').hide()
 		.prev('button.delete-button').css('font-weight', 'inherit')
-		.parents('form.comment-delete-form').attr('method', 'GET');
 		e.preventDefault();
 	});
 });
