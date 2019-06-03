@@ -14,7 +14,8 @@ from dashboard.models import (
     User,
     Answer,
     UncuratedSubmission,
-    UnencodedSubmission)
+    UnencodedSubmission,
+    TranslatedQuestion)
 from pprint import pprint
 
 
@@ -451,6 +452,13 @@ def submit_curated_dataset(request):
                         curated_question,
                         column_name_mapping[column],
                         True if row[column] == 'Yes' else False)
+                elif column == 'English translation of the question':
+                    trans_question = TranslatedQuestion(
+                        question_id=row['id'],
+                        question_text=row['English translation of the question'],
+                        language='english'
+                    )
+                    trans_question.save()
                 else:
                     setattr(
                         curated_question,
