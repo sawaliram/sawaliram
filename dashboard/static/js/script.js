@@ -106,7 +106,7 @@ if (window.location.pathname.includes('/dashboard/answer-questions/')) {
  * actually delete the comment or not
 */
 
-$(()=>{
+function setupCommentDeleteButtons() {
 	$('.comment-delete-form')
     .attr('method', 'POST')
     .find('button.delete-button')
@@ -123,4 +123,4 @@ $(()=>{
 		.prev('button.delete-button').css('font-weight', 'inherit')
 		e.preventDefault();
 	});
-});
+}

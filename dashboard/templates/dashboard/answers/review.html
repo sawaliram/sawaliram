@@ -99,3 +99,10 @@
 	{% endif %}
 {% endwith %}
 {% endblock %}
+
+{% block footer %}
+<script>
+// Activate comment "delete" button confirmation action
+$(()=>{ setupCommentDeleteButtons(); });
+</script>
+{% endblock %}
