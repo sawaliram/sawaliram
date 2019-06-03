@@ -108,7 +108,7 @@ class Answer(models.Model):
     class Meta:
         db_table = 'answer'
 
-    answer_text = models.CharField(max_length=1000)
+    answer_text = models.TextField()
     question_id = models.ForeignKey(
         'Question',
         related_name='answers',

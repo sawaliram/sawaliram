@@ -16,7 +16,7 @@ $ source env/bin/activate
 This will activate an empty virtual environment. You can use ```deactivate``` to exit the environment.
 
 **2. Fork the project**  
-Click on the 'Fork' button on the top right corner of this page the create a 'copy' of this project for yourself. You will keep this fork updated with the 'upstream' repository, the one you're at now. You will also create branches on your own fork before sending a Pull Request to the upstream repo.  
+Click on the 'Fork' button on the top right corner of this page to create a 'copy' of this project for yourself, on your GitHub profile. You will keep this fork updated with the 'upstream' repository, the one you're at now. You will also create branches on your own fork before sending a Pull Request to the upstream repo.  
 
 **3. Set up a git repository for your system**  
 Run these commands to set up a local git repository and populate with the code you just forked:
