@@ -70,4 +70,4 @@ python manage.py runserver
 ```
 Visit localhost:8000 in your browser to see the Sawaliram homepage in all it's glory!
 
-You are now ready to write some code! Start by looking at the open issues labelled [good first issue](https://github.com/tifrh/sawaliram/labels/good%20first%20issue), and leave a comment on the issue saying that you're working on it, so that there's no duplication of work. Happy coding!
+You are now ready to write some code! Begin by reading our [contributing guide](https://github.com/tifrh/sawaliram/blob/master/contributinghttps://github.com/tifrh/sawaliram/blob/master/code_of_conduct.md.md) to help you get started!
