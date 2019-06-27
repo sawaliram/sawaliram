@@ -5,10 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         {% load static %}
+        <link rel="stylesheet" href="{% static 'css/reboot.css' %}">
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
 
         {% block head_includes %} {% endblock %}
 
@@ -16,26 +18,85 @@
     </head>
     <body class="d-flex flex-column">
 
-        {% block navbar %}
-        <nav class="navbar fixed-top navbar-light">
-            <a class="navbar-brand" href="{% url 'dashboard:dashboard_home' %}">
-                <span>Sawaliram</span> <span class="text-dashboard">Dashboard</span>
-            </a>
-            <div class="d-flex flex-row-reverse">
-                <form action="{% url 'dashboard:logout-user' %}" method="POST">
-                    {% csrf_token %}
-                    <button class="btn logout-button">
-                        <span class="navbar-button-text">Logout</span>
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
-                </form>
-                <a class="btn user-button" href="javascript:void(0)">
-                    <i class="far fa-user-circle"></i>
-                    <span class="navbar-button-text">{{ request.user.first_name }} {{ request.user.last_name }}</span> 
-                </a>
+        <div class="menu-background slow-transition"></div>
+
+        <nav class="navbar-menu slow-transition">
+            <button class="btn navbar-menu-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="navbar-menu-container">
+                <div class="row">
+                    <div class="col-sm">
+                        <img src="{% static 'icons/menu_research.png' %}" alt="Research">
+                        <a href="javascript:void(0)">Research</a>
+                    </div>
+                    <div class="col-sm">
+                        <img src="{% static 'icons/menu_blog.png' %}" alt="Blog">
+                        <a href="javascript:void(0)">Blog</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <img src="{% static 'icons/menu_resource.png' %}" alt="Resources">
+                        <a href="javascript:void(0)">Resources</a>
+                    </div>
+                    <div class="col-sm">
+                        <img src="{% static 'icons/menu_analytics.png' %}" alt="Analytics">
+                        <a href="javascript:void(0)">Analytics</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <img src="{% static 'icons/menu_about.png' %}" alt="About">
+                        <a href="javascript:void(0)">About</a>
+                    </div>
+                    <div class="col-sm">
+                        <img src="{% static 'icons/menu_team.png' %}" alt="Team">
+                        <a href="javascript:void(0)">Team</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <img src="{% static 'icons/menu_contact.png' %}" alt="Contact Us">
+                        <a href="javascript:void(0)">Contact Us</a>
+                    </div>
+                    <div class="col-sm">
+                        <img src="{% static 'icons/menu_get_involved.png' %}" alt="Get Involved">
+                        <a href="javascript:void(0)">Get Involved!</a>
+                    </div>
+                </div>
+                <div class="row auth-buttons-area">
+                    <div class="col-sm auth-button">
+                        <a href="javascript:void(0)">Login</a>
+                    </div>
+                    <div class="col-sm auth-button">
+                        <a href="javascript:void(0)">Sign Up</a>
+                    </div>
+                </div>
             </div>
         </nav>
-        {% endblock %}
+
+        <header class="navbar fixed-top navbar-light">
+            <a class="navbar-brand slow-transition" href="{% url 'dashboard:dashboard_home' %}">
+                <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo2.png' %}" alt="Sawaliram Home">
+            </a>
+            <div class="d-flex flex-row-reverse">
+                <i class="fas fa-bars navbar-element navbar-menu-toggle"></i>
+                <div class="dropdown navbar-element">
+                    <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="languageSelector">
+                        English
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="languageSelector">
+                        <a class="dropdown-item" href="#">हिंदी</a>
+                        <a class="dropdown-item" href="#">मराठी</a>
+                        <a class="dropdown-item" href="#">മലയാളം</a>
+                        <a class="dropdown-item" href="#">தமிழ்</a>
+                    </div>
+                </div>
+                <i class="fas fa-search navbar-icon navbar-element"></i>
+            </div>
+        </header>
 
         <div class="container sawaliram-container flex-grow">
             {% block content %} {% endblock %}
