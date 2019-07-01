@@ -1,4 +1,38 @@
 
+// ======== GENERAL FUNCTIONS ======== 
+// JS functions that must be called for every page
+
+function toggleNavbarMenu() {
+    $(document).ready(function() {
+        $('.navbar-menu-toggle').click(function() {
+            $('.navbar-menu').toggleClass('navbar-menu-open');
+            $('.menu-background').toggleClass('darken');
+        });
+        $('.menu-background, .navbar-menu-close').click(function() {
+            $('.navbar-menu').toggleClass('navbar-menu-open');
+            $('.menu-background').toggleClass('darken');
+        });
+    });
+}
+
+function resizeMainLogoOnScrollDown() {
+    $(window).scroll(function() {
+        if ($(window).scrollTop() > 100) {
+            $('#mainLogo').css('width', '190px');
+        }
+        else {
+            $('#mainLogo').css('width', '248px');
+        }
+    });
+}
+
+// ======== PAGE SPECIFIC FUNCTIONS ========
+// These functions are called only on specific pages
+
+// ======== OLDER SCRIPTS ========
+// These functions will either be phased out or moved
+// into the general or specific functions sections above
+
 function addQuestion() {
     $('.add-question-button').click(function(event) {
         event.preventDefault();
@@ -91,10 +125,17 @@ function setupQuillEditor() {
     });
 }
 
+// ======== CALL GENERAL FUNCTIONS ========
+
+toggleNavbarMenu();
+resizeMainLogoOnScrollDown();
+
 addQuestion();
 displayNameOfSelectedFile();
 togglePublishedInformationFormGroups();
 toggleOtherOrganisationTextBox();
+
+// ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
 if (window.location.pathname.includes('/dashboard/answer-questions/')) {
     setupQuillEditor();

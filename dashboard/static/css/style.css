@@ -1,18 +1,123 @@
+/* ======== GENERAL STYLES ======== */
+
+::-moz-selection { /* For Firefox */
+    color: #000000;
+    background: #FFBA4B;
+}
+
+::selection {
+    color: #000000;
+    background: #FFBA4B;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.darken {
+    position: fixed;
+    display: block;
+    background: rgba(0,0,0,0.5);
+    z-index: 1031;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.slow-transition {
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+/* ======== NAVBAR ======== */
+
+.navbar {
+    background-color: #FFFFFF;
+}
+
+.navbar .navbar-element {
+    font-size: 1.5rem;
+    margin-right: 1.2rem;
+}
+
+.navbar #languageSelector {
+    padding-top: 0;
+    font-size: 1.2rem;
+}
+
+.navbar #languageSelector:focus {
+    box-shadow: none;
+}
+
+.navbar .dropdown-menu {
+    min-width: 100%;
+    border-color: #dadada;
+    box-shadow: 0 3px 5px 1px rgba(0,0,0,.14);
+}
+
+.navbar .navbar-menu-toggle {
+    cursor: pointer;
+}
+
+.navbar-menu {
+    position: fixed;
+    top: 0;
+    width: 40%;
+    height: 100%;
+    background-color: #FFFFFF;
+    z-index: 1032;
+    margin: 0;
+    right: -40%;
+}
+.navbar-menu a {
+    color: #717171;
+}
+
+.navbar-menu a:hover {
+    color: #000000;
+}
+
+.navbar-menu .navbar-menu-close {
+    float: right;
+    font-size: 1.5rem;
+    margin-top: 15px;
+    margin-right: 15px;
+    font-size: 1.5rem;
+}
+
+.navbar-menu-container {
+    padding: 10rem 4rem;
+    font-size: 1.3rem;
+}
+
+.navbar-menu-container .row {
+    margin-bottom: 2.5rem;
+}
+
+.navbar-menu-container .row.auth-buttons-area {
+    margin-bottom: 0;
+    border-top: 1px solid #e4e4e4;
+    padding-top: 3rem;
+}
+
+.navbar-menu-container .row img {
+    margin-right: 1rem;
+}
+
+.navbar-menu-open {
+    right: 0;
+}
+
+/* ======== OLDER STYLES ======== */
 
 /* ----- General styles ----- */
 body {
     min-height: 100vh;
-    font-family: 'Arvo', serif;
-}
-
-::-moz-selection { /* For Firefox */
-    color: #ffffff;
-    background: #79BF93;
-}
-
-::selection {
-    color: #ffffff;
-    background: #79BF93;
+    font-family: 'Noto Sans', sans-serif;
 }
 
 .label {
@@ -39,78 +144,16 @@ form .form-text {
 
 .flex-grow {
     flex: 1;
- }
-
-.navbar {
-    background-color: #fff;
-    border-bottom: 1px solid #e2e2e2;
 }
 
-.navbar .navbar-brand,
 .auth-container h1 {
     color: #629781;
     font-weight: 600;
     font-size: 18px;
 }
 
-@media (max-width: 576px) {
-    .navbar .navbar-brand {
-        font-size: 15px;
-    }
-}
-
-.navbar .navbar-brand:hover {
-    color: #629781;
-}
-
-.navbar .navbar-brand .text-dashboard,
 .auth-container h1 .text-dashboard {
     color: #bbbbbb;
-}
-
-.navbar .user-button {
-    margin-right: 10px;
-}
-
-@media (max-width: 576px) {
-    .navbar .user-button {
-        margin-right: 0;
-    }
-}
-
-.navbar .user-button,
-.navbar .logout-button,
-.navbar .logout-button i {
-    background-color: white;
-    color: #909090;
-}
-
-.navbar .user-button:hover {
-    background-color: #55b37724;
-    color: #55B377;
-}
-
-.navbar .user-button i {
-    margin-right: 3px;
-}
-
-.navbar .logout-button {
-    color: white;
-}
-
-.navbar .logout-button i {
-    margin-left: 3px;
-}
-
-.navbar .logout-button:hover,
-.navbar .logout-button:hover i {
-    color: #c11b1b;
-}
-
-@media (max-width: 576px) {
-    .navbar .navbar-button-text {
-        display: none;
-    }
 }
 
 .green-button {
