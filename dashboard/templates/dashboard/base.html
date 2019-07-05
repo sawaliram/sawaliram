@@ -102,8 +102,49 @@
             {% block content %} {% endblock %}
         </div>
 
-        <footer>
-            <p>Found an issue with the dashboard? Tell me over chai or find me at <a class="grey-link" href="mailto:nitinpaul@tifrh.res.in" target="_blank">nitinpaul@tifrh.res.in</a></p>
+        <footer class="wavy-footer">
+            <div class="footer-content">
+                <div class="footer-col-left">
+                    <p>You can also volunteer to answer questions, translate, collect questions, or manage this site!</p>
+                    <button class="yellow-button">Get Involved!</button>
+                </div>
+                <div class="footer-col-right">
+                    <ul class="footer-links list-inline">
+                        <li class="list-inline-item"><a href="#">Team</a></li>
+                        <li class="list-inline-item"><a href="#">Contact</a></li>
+                        <li class="list-inline-item"><a href="#">Login</a></li>
+                        <li class="list-inline-item"><a href="#">FAQ</a></li>
+                    </ul>
+                    <ul class="list-inline footer-social">
+                        <li class="list-inline-item">
+                            <a href="#" class="footer-social-fb">
+                                <span class="fa-stack fa-2x">
+                                    <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                                    <i class="fab fa-facebook-f fa-stack-1x"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#" class="footer-social-insta">
+                                <span class="fa-stack fa-2x">
+                                    <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                                    <i class="fab fa-instagram fa-stack-1x"></i>
+                                </span>
+                            </a>
+                        </li><li class="list-inline-item">
+                            <a href="#" class="footer-social-twitter">
+                                <span class="fa-stack fa-2x">
+                                    <i class="fas fa-circle fa-stack-2x fa-inverse"></i>
+                                    <i class="fab fa-twitter fa-stack-1x"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-footer">
+                <p>Copyright &copy; Sawaliram/TIFR 2019. All rights reserved.</p>
+            </div>
         </footer>
 
         <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>

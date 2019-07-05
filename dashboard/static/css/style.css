@@ -688,3 +688,94 @@ h4.task-section-sub-heading {
 .auth-container .auth-submit-button {
     margin-top: 35px;
 }
+
+/*--------Wavy footer styles--------*/
+
+.wavy-footer {
+    padding: 0;
+    background-color: #414141;
+    color: white;
+}
+
+.wavy-footer::before {
+    display: block;
+    min-height: 3.68vw; /* ratio of height:width = 3.68% */
+    content: "";
+    background-color: #414141;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1438.6667 52.904713' preserveAspectRatio='none'%3E%3Crect x='0' y='0' width='1438.6667' height='52.904713' style='stroke: none; fill: %23ffffff;' /%3E%3Cpath d='M 0,52.904714 C 0,46.281852 8.0931875e-4,39.935474 8.0931875e-4,37.716835 0.36268987,37.676433 0.52754667,37.646685 1,37.584948 1.55,37.583848 19.787167,35.194225 41.52704,32.274695 215.66894,8.8885122 340.82565,0.0134522 496.66668,2.8198874e-5 634.26781,-0.0118418 696.01624,3.7157512 931.33335,26.239611 c 183.12845,17.528512 252.88075,21.994416 343.33335,21.981988 47.4555,-0.0065 79.5423,-1.17197 110.6667,-4.019616 17.4204,-1.593831 45.8464,-4.975999 50.3333,-5.988708 l 3,-0.677116 v 15.343155 0.0254 z' style='stroke: none; fill: %23414141;'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.wavy-footer .footer-content {
+    display: flex;
+    flex-direction: row;
+    padding: 1.5rem;
+}
+
+.wavy-footer .footer-col-left {
+    flex-basis: 60%;
+    max-width: 30em;
+    margin: auto;
+    text-align: left;
+}
+.wavy-footer .footer-col-right {
+    flex-basis: 40%;
+    padding: 2em;
+}
+
+.wavy-footer .yellow-button {
+    background-color: #feb740;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 1.5rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: #414141;
+}
+
+.footer-footer::before {
+    display: block;
+    min-height: 3.48vw; /* ratio of height:width = 3.48% */
+    content: "";
+    background-color: #000000;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1438.6667 50.132702' preserveAspectRatio='none'%3E%3Crect x='0' y='0' width='1438.6667' height='50.132702' style='stroke: none; fill: %23414141;' /%3E%3Cpath d='M 0,50.1327 C 0,20.90913 0,49.48618 0,20.2626 L 12.333334,18.73972 C 56.020259,13.3454 135.22538,9.98526 189.33334,11.2308 269.37283,13.07326 310.09031,15.11352 456.00001,24.59289 658.5459,37.75176 663.47934,37.94469 795.33335,37.8638 963.57612,37.7606 1091.9935,32.48677 1250,19.19168 1311.8561,13.98694 1421.7812,2.96616 1435,0.64409 L 1438.6667,0 c 0,35.97778 0,14.15493 0,50.1327' style='stroke: none; fill: %23000000;'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.footer-footer {
+    background-color: #000000;
+    font-size: 0.8rem;
+    color: #d6d6d6;
+    /* extend footer till bottom */
+    /* courtesy https://stackoverflow.com/a/18935218/1196444 */
+    box-shadow: 0 50vh 0 50vh #000000;
+}
+
+.footer-footer p {
+    margin: 0.6rem;
+}
+
+.footer-links a {
+    color: #ffffff;
+    padding: 0.3rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.footer-links a:hover {
+    background-color: #000000;
+}
+
+.footer-social a {
+    color: #000000
+}
+
+.footer-social-fb:hover {
+    color: #0000FF;
+}
+
+.footer-social-insta:hover {
+    color: #B100B1;
+}
+
+.footer-social-twitter:hover {
+    color: #1E90FF;
+}
