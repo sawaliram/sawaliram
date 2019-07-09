@@ -19,6 +19,7 @@ ALLOWED_HOSTS = ['.sawaliram.org', '10.10.9.33', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    'sawaliram_auth.apps.SawaliramAuthConfig',
     'dashboard.apps.DashboardConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -74,8 +75,9 @@ DATABASES = {
     }
 }
 
-# Custom User Model
-AUTH_USER_MODEL = 'dashboard.User'
+# Custom Auth System settings
+AUTH_USER_MODEL = 'sawaliram_auth.User'
+LOGIN_URL = '/user/login'
 
 
 # Password validation

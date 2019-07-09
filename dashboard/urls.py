@@ -8,8 +8,8 @@ urlpatterns = [
 
     path('', views.get_home_view, name='dashboard_home'),
 
-    path('login/', views.get_login_view, name='login-view'),
-    path('signup/', views.get_signup_view, name='signup-view'),
+    # path('login/', views.get_login_view, name='login-view'),
+    # path('signup/', views.get_signup_view, name='signup-view'),
 
     # task pages
     # these URLs point to a task page, like submit-questions
