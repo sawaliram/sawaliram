@@ -3,11 +3,13 @@
 from django.urls import path
 from . import views
 
-app_name = 'user'
+app_name = 'sawaliram_auth'
 
 urlpatterns = [
 
-    path('', views.LoginView.as_view(), name='auth_root'),
-    path('login', views.LoginView.as_view(), name='login'),
-    path('signup', views.SignUpView.as_view(), name='signup'),
+    path('', views.SigninView.as_view()),
+    path('signin', views.SigninView.as_view(), name='signin'),
+    path('signout', views.SignoutView.as_view(), name='signout'),
+    path('signup', views.SignupView.as_view(), name='signup'),
+    path('how-can-i-help', views.HowCanIHelpView.as_view(), name='how_can_i_help'),
 ]

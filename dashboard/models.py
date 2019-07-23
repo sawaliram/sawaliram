@@ -1,10 +1,6 @@
 """Define the data models for all Sawaliram content"""
 
 import datetime
-# from django.contrib.auth.models import (
-#     BaseUserManager,
-#     AbstractBaseUser,
-#     PermissionsMixin)
 from django.db import models
 
 

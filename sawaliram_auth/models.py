@@ -10,7 +10,7 @@ from django.db import models
 class UserManager(BaseUserManager):
     """Define the manager to handle user creation"""
 
-    def create_user(self, email, password):
+    def create_user(self, first_name, last_name, email, password):
         """
         Creates and saves a User with email and organisation
         """
@@ -19,6 +19,8 @@ class UserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email)
         user.set_password(password)
+        user.first_name = first_name
+        user.last_name = last_name
         user.save()
         return user
 
@@ -65,3 +67,21 @@ class User(AbstractBaseUser, PermissionsMixin):
         Return whether the user is allowed access to the admin interface
         """
         return self.is_superuser
+
+
+class VolunteerRequest(models.Model):
+    """Define the data model for a volunteer request by a user"""
+
+    class Meta:
+        db_table = 'volunteer_request'
+
+    user = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='volunteer_requests',
+        on_delete=models.PROTECT)
+    expert = models.BooleanField(default=False)
+    writer = models.BooleanField(default=False)
+    translator = models.BooleanField(default=False)
+    expert_application = models.TextField(null=True)
+    writer_application = models.TextField(null=True)
+    translator_application = models.TextField(null=True)

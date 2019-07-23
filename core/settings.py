@@ -77,7 +77,7 @@ DATABASES = {
 
 # Custom Auth System settings
 AUTH_USER_MODEL = 'sawaliram_auth.User'
-LOGIN_URL = '/user/login'
+LOGIN_URL = '/user/signin'
 
 
 # Password validation
@@ -130,4 +130,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 if os.environ.get('environment') == 'heroku':
     import django_heroku
     django_heroku.settings(locals())
-    

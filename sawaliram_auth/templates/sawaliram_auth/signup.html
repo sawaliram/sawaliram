@@ -1,0 +1,50 @@
+{% extends "sawaliram_auth/base.html" %}
+
+{% load static %}
+
+{% block title %} Sign-up | Sawaliram {% endblock %}
+
+{% block content %}
+
+<div class="row onboarding-form-section">
+    <div class="col-md onboarding-text-column">
+        <h1>Welcome to the Sawaliram family!</h1>
+        <p>
+            Hi there,<br>
+            Thanks for choosing to volunteer to help with answering, translating, collecting questions or amanging this site! Im sure you’ll enjoy thinking about the bizarre, deep, wonderful questions that children ask as much as I do.<br>
+            <br>
+            Warmly,<br>
+            Sawaliram
+        </p>
+        <p class="signin-message">
+            Already a member? <a href="{% url 'sawaliram_auth:signin' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="link-secondary">Sign in!</a>
+        </p>
+    </div>
+    <div class="col-md onboarding-form-column">
+        <form action="{% url 'sawaliram_auth:signup' %}" method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                {% if form.errors %}
+                    {% for error in field.errors %}
+                        <p class="error">{{ error|escape }}</p>
+                    {% endfor %}
+                {% endif %}
+                <span class="{% if field.errors %}error-field{% endif %}">
+                    {{ field}}
+                </span>
+            {% endfor %}
+            <p class="password-plaintext">
+                <span></span>
+                <i class="fas fa-eye-slash"></i>
+            </p>
+            <input class="btn btn-primary" type="submit" value="Sign-up">
+        </form>
+        <p class="alternate-login-options-heading"><span>or sign-up with</span></p>
+        <div class="social-login-section">
+            <button class="btn btn-secondary social-login"><i class="fab fa-facebook-f"></i> Facebook</button>
+            <button class="btn btn-secondary social-login"><i class="fab fa-google"></i> Google</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

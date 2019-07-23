@@ -26,6 +26,60 @@ function resizeMainLogoOnScrollDown() {
     });
 }
 
+function highlightSelectedVolunteerOption() {
+    $('.volunteer-option input:checkbox').change(function() {
+        if(this.checked) {
+            $(this).parent('.volunteer-option').addClass('selected');
+        }
+        else {
+            $(this).parent('.volunteer-option').removeClass('selected');
+        }
+    });
+}
+
+function openVolunteerOptionDialog() {
+    $('.volunteer-option input:checkbox').change(function() {
+        if(this.checked) {
+            $(this).parent('.volunteer-option').find('.volunteer-dialog textarea').prop('required', true);
+            $(this).parent('.volunteer-option').find('.volunteer-dialog').show(300);
+        }
+        else {
+            $(this).parent('.volunteer-option').find('.volunteer-dialog textarea').prop('required', false);
+            $(this).parent('.volunteer-option').find('.volunteer-dialog').hide(300);
+        }
+    });
+}
+
+function togglePlaintextPassword() {
+    $('.password-plaintext i').click(function() {
+        if ($(this).hasClass('fa-eye-slash')) {
+            $(this).removeClass('fa-eye-slash');
+            $(this).addClass('fa-eye');
+        }
+        else {
+            $(this).removeClass('fa-eye');
+            $(this).addClass('fa-eye-slash');
+        }
+
+        $('.password-plaintext').toggleClass('hidden');
+    });
+}
+
+function copyPasswordToPlaintextArea() {
+    // $(document).ready(function() {
+    //     $('.password-field').change(function() {
+    //         console.log("Test");
+    //         console.log($(this).text());
+    //         $('.password-plaintext span').text($(this).text());
+    //     });
+    // });
+    $('.password-field').on('input', function() {
+        // console.log($(this).val());
+        $('.password-plaintext span').text($(this).val());
+    });
+}
+
+
 // ======== PAGE SPECIFIC FUNCTIONS ========
 // These functions are called only on specific pages
 
@@ -130,6 +184,9 @@ function setupQuillEditor() {
 toggleNavbarMenu();
 resizeMainLogoOnScrollDown();
 
+togglePlaintextPassword();
+copyPasswordToPlaintextArea();
+
 addQuestion();
 displayNameOfSelectedFile();
 togglePublishedInformationFormGroups();
@@ -139,4 +196,9 @@ toggleOtherOrganisationTextBox();
 
 if (window.location.pathname.includes('/dashboard/answer-questions/')) {
     setupQuillEditor();
+}
+
+if (window.location.pathname.includes('/user/how-can-i-help')) {
+    highlightSelectedVolunteerOption();
+    openVolunteerOptionDialog();
 }
