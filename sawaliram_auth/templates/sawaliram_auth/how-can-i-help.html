@@ -1,0 +1,57 @@
+{% extends "sawaliram_auth/base.html" %}
+
+{% load static %}
+
+{% block title %} How Can I Help | Sawaliram {% endblock %}
+
+{% block content %}
+
+<div class="row onboarding-form-section">
+    <div class="col-md onboarding-text-column">
+        <h1>How can you help Sawaliram?</h1>
+        <p>
+            All our volunteers are able to submit questions to our repository! Apart from submitting questions, we would also love it if you can help answer the questions, write articles to be featured on our website and help us translate the questions, answers and blogs to and from multiple languages so that everyone can make use of this valuable resource!<br>
+            <br>
+            Welcome to Team Sawaliram!
+        </p>
+        <p class="signin-message">
+            Already a member? <a href="{% url 'sawaliram_auth:signin' %}" class="link-secondary">Sign in!</a>
+        </p>
+    </div>
+    <div class="col-md onboarding-form-column">
+        <form action="{% url 'sawaliram_auth:how_can_i_help' %}" method="POST">
+            {% csrf_token %}
+            <div class="volunteer-option selected">
+                <input type="checkbox" checked disabled value="volunteer"> <label for="">Submit Questions</label>
+                <p class="small">Any volunteer can submit questions to our repository!</p>
+            </div>
+            <div class="volunteer-option">
+                <input type="checkbox" name="volunteer-request" value="expert"> <label for="">Answer Questions</label>
+                <p class="small">Answer questions from students and help review answers from other volunteers</p>
+                <div class="volunteer-dialog">
+                    <p class="small">Tell us why you can do this:</p>
+                    <textarea name="expert-entry-submission" rows="7" maxlength="500"></textarea>
+                </div>
+            </div>
+            <div class="volunteer-option">
+                <input type="checkbox" name="volunteer-request" value="writer"> <label for="">Write Articles</label>
+                <p class="small">Write articles for the Sawaliram website on education</p>
+                <div class="volunteer-dialog">
+                    <p class="small">Tell us why you can do this:</p>
+                    <textarea name="writer-entry-submission" rows="7" maxlength="500"></textarea>
+                </div>
+            </div>
+            <div class="volunteer-option">
+                <input type="checkbox" name="volunteer-request" value="translator"> <label for="">Translate Content</label>
+                <p class="small">Help translate questions, answers and articles to Hindi, Marathi, Tamil and more</p>
+                <div class="volunteer-dialog">
+                    <p class="small">Tell us why you can do this:</p>
+                    <textarea name="translator-entry-submission" rows="7" maxlength="500"></textarea>
+                </div>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Get started!">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

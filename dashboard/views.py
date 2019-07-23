@@ -2,47 +2,39 @@
 
 import random
 import os
-from django.shortcuts import render, redirect
+from pprint import pprint
+
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import Group
 from django.db.models import Max, Subquery
-import pandas as pd
+from sawaliram_auth.decorators import volunteer_permission_required
+
 from dashboard.models import (
     QuestionArchive,
     Question,
-    User,
     Answer,
     UncuratedSubmission,
     UnencodedSubmission,
     TranslatedQuestion)
-from pprint import pprint
+
+import pandas as pd
 
 
-def get_login_view(request):
-    """Return the login view."""
-    return render(request, 'dashboard/login.html')
-
-
-def get_signup_view(request):
-    """Return the signup view."""
-    return render(request, 'dashboard/signup.html')
-
-
-@login_required(login_url='login/')
+@login_required
+@volunteer_permission_required
 def get_home_view(request):
     """Return the dashboard home view."""
     context = {}
     return render(request, 'dashboard/home.html', context)
 
 
-@login_required(login_url='login/')
+@login_required
 def get_submit_questions_view(request):
     """Return the view for submitting questions."""
     return render(request, 'dashboard/submit-questions.html')
 
 
-@login_required(login_url='login/')
+@login_required
 def get_submit_excel_sheet_view(request):
     """Return the view for submitting Excel sheet."""
     context = {
@@ -51,7 +43,7 @@ def get_submit_excel_sheet_view(request):
     return render(request, 'dashboard/submit-excel-sheet.html', context)
 
 
-@login_required(login_url='login/')
+@login_required
 def get_view_questions_view(request):
     """Return the 'View Questions' view after applying filters, if any."""
     questions_superset = Question.objects.all().order_by('-created_on')
@@ -75,7 +67,7 @@ def get_view_questions_view(request):
     return render(request, 'dashboard/view-questions.html', context)
 
 
-@login_required(login_url='login/')
+@login_required
 def get_answer_questions_list_view(request):
     """Return the view with list of unanswered questions"""
 
@@ -88,7 +80,7 @@ def get_answer_questions_list_view(request):
     return render(request, 'dashboard/answer-questions-list.html', context)
 
 
-@login_required(login_url='login/')
+@login_required
 def get_answer_question_view(request, question_id):
     """Return the view to answer a question"""
 
@@ -100,7 +92,7 @@ def get_answer_question_view(request, question_id):
     return render(request, 'dashboard/answer-question.html', context)
 
 
-@login_required(login_url='login/')
+@login_required
 def get_curate_data_view(request):
     """Return the curate data view"""
 
@@ -115,7 +107,7 @@ def get_curate_data_view(request):
     return render(request, 'dashboard/curate-data.html', context)
 
 
-@login_required(login_url='login/')
+@login_required
 def get_encode_data_view(request):
     """Return the encode data view"""
 
@@ -128,70 +120,6 @@ def get_encode_data_view(request):
         'excel_file_name': 'excel' + str(random.randint(1, 999)),}
 
     return render(request, 'dashboard/encode-data.html', context)
-
-
-def login_user(request):
-    """Log the user in"""
-
-    email = request.POST.get('email')
-    password = request.POST.get('password')
-    user = authenticate(request, email=email, password=password)
-
-    if user is not None:
-        login(request, user)
-        return redirect(request.POST.get('next', 'dashboard:dashboard_home'))
-    else:
-        return render(
-            request,
-            'dashboard/login.html',
-            {'error': 'Incorrect login info! Please try again'})
-
-
-def logout_user(request):
-    """Log out the user"""
-
-    logout(request)
-    return redirect('dashboard:dashboard_home')
-
-
-def signup_user(request):
-    """Create a user"""
-
-    if request.POST.get('password') != request.POST.get('re-password'):
-        return render(
-            request,
-            'dashboard/signup.html',
-            {'error': 'Passwords do not match! Please try again'})
-
-    email = request.POST.get('email').strip()
-    email_exists = User.objects.filter(email=email).exists()
-
-    if email_exists:
-        return render(
-            request,
-            'dashboard/signup.html',
-            {'error': 'Email already exists! Try logging in!'})
-    else:
-        password = request.POST.get('password').strip()
-        organisation = request.POST.get('organisation').strip()
-        access_requested = ','.join(request.POST.getlist('access_request'))
-
-        user = User.objects.create_user(email, password)
-        user.first_name = request.POST.get('first_name').strip()
-        user.last_name = request.POST.get('last_name').strip()
-
-        if organisation == 'other':
-            organisation = request.POST.get('other-org')
-
-        user.organisation = organisation
-        user.access_requested = access_requested
-        user.save()
-
-        volunteers = Group.objects.get(name='volunteers')
-        volunteers.user_set.add(user)
-
-        login(request, user)
-        return redirect('dashboard:dashboard_home')
 
 
 def submit_questions(request):

@@ -6,10 +6,7 @@ app_name = 'dashboard'
 
 urlpatterns = [
 
-    path('', views.get_home_view, name='dashboard_home'),
-
-    path('login/', views.get_login_view, name='login-view'),
-    path('signup/', views.get_signup_view, name='signup-view'),
+    path('', views.get_home_view, name='home'),
 
     # task pages
     # these URLs point to a task page, like submit-questions
@@ -24,9 +21,6 @@ urlpatterns = [
     # action URLs
     # these URLs perform an action, like submitting a question
     # they are generally called from a form action
-    path('action/login-user', views.login_user, name='login-user'),
-    path('action/logout-user', views.logout_user, name='logout-user'),
-    path('action/signup-user', views.signup_user, name='signup-user'),
     path('action/submit-questions', views.submit_questions, name='submit-questions'),
     path('action/submit-excel-sheet', views.submit_excel_sheet, name='submit-excel-sheet'),
     path('action/submit-curated-dataset', views.submit_curated_dataset, name='submit-curated-dataset'),

@@ -1,10 +1,6 @@
 """Define the data models for all Sawaliram content"""
 
 import datetime
-from django.contrib.auth.models import (
-    BaseUserManager,
-    AbstractBaseUser,
-    PermissionsMixin)
 from django.db import models
 
 
@@ -38,7 +34,7 @@ class QuestionArchive(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     submission_id = models.IntegerField(null=False)
     submitted_by = models.ForeignKey(
-        'User',
+        'sawaliram_auth.User',
         related_name='submitted_questions',
         on_delete=models.PROTECT)
 
@@ -75,12 +71,12 @@ class Question(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     curated_by = models.ForeignKey(
-        'User',
+        'sawaliram_auth.User',
         related_name='curated_questions',
         on_delete=models.PROTECT,
         default='')
     encoded_by = models.ForeignKey(
-        'User',
+        'sawaliram_auth.User',
         related_name='encoded_questions',
         on_delete=models.PROTECT,
         default='',
@@ -115,75 +111,18 @@ class Answer(models.Model):
         on_delete=models.PROTECT,
         default='')
     answered_by = models.ForeignKey(
-        'User',
+        'sawaliram_auth.User',
         related_name='submitted_answers',
         on_delete=models.PROTECT,
         default='')
     approved_by = models.ForeignKey(
-        'User',
+        'sawaliram_auth.User',
         related_name='approved_answers',
         on_delete=models.PROTECT,
         default='',
         null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-
-
-class UserManager(BaseUserManager):
-    def create_user(self, email, password):
-        """
-        Creates and saves a User with email and organisation
-        """
-        if not email:
-            raise ValueError("Email must be provided to create a user")
-        email = self.normalize_email(email)
-        user = self.model(email=email)
-        user.set_password(password)
-        user.save()
-        return user
-
-    def create_superuser(self, email, password):
-        """
-        Creates and saves a user as superuser
-        """
-        email = self.normalize_email(email)
-        user = self.create_user(email, password)
-        user.is_staff()
-        user.is_superuser = True
-        user.save()
-        return user
-
-
-class User(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
-    email = models.EmailField(unique=True)
-    is_active = models.BooleanField(default=True)
-    organisation = models.CharField(max_length=200, default='')
-    access_requested = models.CharField(max_length=200, default='')
-
-    objects = UserManager()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-
-    def get_full_name(self):
-        """
-        Returns the first_name (we're not storing last names)
-        """
-        return self.first_name
-
-    def get_short_name(self):
-        """
-        Returns the first_name
-        """
-        return self.first_name
-
-    def is_staff(self):
-        """
-        Determines whether the user is allowed access to the admin interface
-        """
-        return self.is_superuser
 
 
 class UncuratedSubmission(models.Model):
@@ -197,7 +136,7 @@ class UncuratedSubmission(models.Model):
     number_of_questions = models.IntegerField()
     excel_sheet_name = models.CharField(max_length=100)
     submitted_by = models.ForeignKey(
-        'User',
+        'sawaliram_auth.User',
         related_name='submissions',
         on_delete=models.PROTECT,
         default='')
