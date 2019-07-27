@@ -15,3 +15,4 @@ class Command(BaseCommand):
         experts = Group.objects.get_or_create(name='experts')
         admins = Group.objects.get_or_create(name='admins')
         writers = Group.objects.get_or_create(name='writers')
+        translators = Group.objects.get_or_create(name='translators')

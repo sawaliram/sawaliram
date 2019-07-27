@@ -16,7 +16,7 @@
 
         <title>{% block title %} {% endblock %}</title>
     </head>
-    <body class="d-flex flex-column">
+    <body class="d-flex flex-column {% if dashboard == 'True' %}dashboard{% endif %}">
 
         <div class="menu-background slow-transition"></div>
 
