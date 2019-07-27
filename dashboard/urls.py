@@ -6,7 +6,7 @@ app_name = 'dashboard'
 
 urlpatterns = [
 
-    path('', views.get_home_view, name='home'),
+    path('', views.DashboardHome.as_view(), name='home'),
 
     # task pages
     # these URLs point to a task page, like submit-questions

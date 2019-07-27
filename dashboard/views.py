@@ -6,9 +6,11 @@ from pprint import pprint
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.db.models import Max, Subquery
-from sawaliram_auth.decorators import volunteer_permission_required
+from django.views import View
 
+from sawaliram_auth.decorators import volunteer_permission_required
 from dashboard.models import (
     QuestionArchive,
     Question,
@@ -20,12 +22,26 @@ from dashboard.models import (
 import pandas as pd
 
 
-@login_required
-@volunteer_permission_required
-def get_home_view(request):
-    """Return the dashboard home view."""
-    context = {}
-    return render(request, 'dashboard/home.html', context)
+# @login_required
+# @volunteer_permission_required
+# def get_home_view(request):
+#     """Return the dashboard home view."""
+#     context = {
+#         'dashboard': 'True'
+#     }
+#     return render(request, 'dashboard/home.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class DashboardHome(View):
+
+    def get(self, request):
+        """Return the dashboard home view."""
+        context = {
+            'dashboard': 'True'
+        }
+        return render(request, 'dashboard/home.html', context)
 
 
 @login_required
