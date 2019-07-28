@@ -12,6 +12,12 @@ body.dashboard {
     margin-top: 12rem;
 }
 
+@media (max-width: 576px) {
+    .sawaliram-container {
+        margin-top: 8rem;
+    }
+}
+
 ::-moz-selection { /* For Firefox */
     color: #000000;
     background: #FFBA4B;
@@ -116,16 +122,72 @@ input:focus {
 
 .navbar {
     background-color: #FFFFFF;
+    padding: 0;
+    padding-top: 0.5rem;
+}
+
+.navbar .navbar-brand {
+    flex: none;
+    padding-left: 2rem;
+}
+
+.navbar .navbar-brand img {
+    width: 250px;
+}
+
+@media (max-width: 576px) {
+    .navbar .navbar-brand {
+        margin-right: 0;
+        padding-left: 0.5rem;
+    }
+
+    .navbar .navbar-brand img {
+        width: 150px;
+    }
+}
+
+@media (max-width: 360px) {
+    .navbar .navbar-brand img {
+        width: 130px;
+    }
+}
+
+.navbar .navbar-options {
+    display: flex;
+    align-items: center;
+    flex: 1 1;
+    justify-content: flex-end;
+    padding-right: 2rem;
+}
+
+@media (max-width: 576px) {
+    .navbar .navbar-options {
+        padding-right: 0.5rem;
+    }
 }
 
 .navbar .navbar-element {
     font-size: 1.5rem;
-    margin-right: 1.2rem;
+}
+
+@media (max-width: 576px) {
+    .navbar .navbar-element {
+        font-size: 0.9rem;
+        margin-right: 1rem;
+    }
 }
 
 .navbar #languageSelector {
     padding-top: 0;
+    padding-bottom: 0;
     font-size: 1.2rem;
+}
+
+@media (max-width: 576px) {
+    .navbar #languageSelector {
+        font-size: 0.9rem;
+        padding: 0;
+    }
 }
 
 .navbar #languageSelector:focus {
@@ -142,6 +204,12 @@ input:focus {
     cursor: pointer;
 }
 
+@media (max-width: 576px) {
+    .navbar .navbar-menu-toggle {
+        font-size: 1.2rem;
+    }
+}
+
 .navbar-menu {
     position: fixed;
     top: 0;
@@ -152,6 +220,14 @@ input:focus {
     margin: 0;
     right: -40%;
 }
+
+@media (max-width: 992px) {
+    .navbar-menu {
+        width: 100%;
+        right: -100%;
+    }
+}
+
 .navbar-menu a {
     color: #717171;
 }
@@ -163,9 +239,17 @@ input:focus {
 .navbar-menu .navbar-menu-close {
     float: right;
     font-size: 1.5rem;
-    margin-top: 15px;
-    margin-right: 15px;
-    font-size: 1.5rem;
+    margin-top: 1rem;
+    margin-right: 1rem;
+}
+
+@media (max-width: 576px) {
+    .navbar-menu .navbar-menu-close {
+        font-size: 1.2rem;
+        margin-top: 1.2rem;
+        margin-right: 1.4rem;
+        padding: 0;
+    }
 }
 
 .navbar-menu-container {
@@ -177,6 +261,21 @@ input:focus {
     margin-bottom: 2.5rem;
 }
 
+@media (max-width: 576px) {
+    .navbar-menu-container {
+        padding: 3rem 4rem;
+        font-size: 1.2rem;
+    }
+
+    .navbar-menu-container .row {
+        margin-bottom: 0;
+    }
+
+    .navbar-menu-container .row .col-sm {
+        margin-bottom: 1.5rem;
+    }
+}
+
 .navbar-menu-container .row.auth-buttons-area {
     margin-bottom: 0;
     border-top: 1px solid #e4e4e4;
@@ -185,10 +284,194 @@ input:focus {
 
 .navbar-menu-container .row img {
     margin-right: 1rem;
+    height: 32px;
+    width: 32px;
 }
 
 .navbar-menu-open {
     right: 0;
+}
+
+.navbar .page-title-bar {
+    flex: 1 1 100%;
+    height: 4rem;
+    background-color: #87B24D;
+    padding: 0;
+    padding-left: 2rem;
+    margin-top: 0.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width: 576px) {
+    .navbar .page-title-bar {
+        height: 2.8rem;
+        padding-left: 0;
+    }
+}
+
+.navbar .page-title-bar .page-title {
+    color: #ffffff;
+    font-size: 1rem;
+    margin: 0;
+}
+
+@media (max-width: 576px) {
+    .navbar .page-title-bar .page-title {
+        font-size: 0.8rem;
+        margin: 0.8rem;
+    }
+}
+
+.navbar .page-title-bar .user-menu-button {
+    color: #ffffff;
+    background-color: #87B24D;
+    height: 100%;
+    border-radius: 0;
+}
+
+@media (max-width: 576px) {
+    .navbar .page-title-bar .user-menu-button {
+        padding: 0;
+        padding-right: 1rem;
+        font-size: 0.8rem;
+    }
+    .navbar .page-title-bar .user-menu-button .user-name {
+        display: none;
+    }
+}
+
+.navbar .page-title-bar .user-menu-button:hover {
+    background-color: #96c15c;
+}
+
+.navbar .page-title-bar .user-menu-button img {
+    margin-left: 0.5rem;
+}
+
+@media (max-width: 576px) {
+    .navbar .page-title-bar .user-menu-button img {
+        margin-left: 0.3rem;
+        height: 30px;
+        width: 30px;
+    }
+}
+
+.user-menu {
+    position: fixed;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    background-color: #FFFFFF;
+    z-index: 1032;
+    margin: 0;
+    right: -30%;
+}
+
+@media (max-width: 576px) {
+    .user-menu {
+        width: 100%;
+        right: -100%;
+    }
+}
+
+.user-menu.open {
+    right: 0;
+}
+
+.user-menu button.user-menu-close {
+    float: right;
+    margin-top: 1rem;
+}
+
+.user-menu .user-menu-container {
+    margin-top: 7rem;
+}
+
+@media (max-width: 576px) {
+    .user-menu .user-menu-container {
+        margin-top: 5rem;
+    }
+}
+
+.user-menu .user-menu-container .user-menu-profile {
+    text-align: center;
+}
+
+@media (max-width: 576px) {
+    .user-menu .user-menu-container .user-menu-profile img {
+        height: 70px;
+        width: 70px;
+    }
+}
+
+.user-menu .user-menu-container .user-menu-profile .user-name {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+@media (max-width: 576px) {
+    .user-menu .user-menu-container .user-menu-profile .user-name {
+        font-size: 0.9rem;
+    }
+}
+
+.user-menu .user-menu-container .user-menu-profile button.edit-profile {
+    padding: 0.2rem 1rem;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 576px) {
+    .user-menu .user-menu-container .user-menu-profile button.edit-profile {
+        font-size: 0.7rem;
+    }
+}
+
+.user-menu .user-menu-container .user-menu-items {
+    margin-top: 2rem;
+}
+
+@media (max-width: 576px) {
+    .user-menu .user-menu-container .user-menu-items {
+        margin-top: 1.5rem;
+    }
+}
+
+.user-menu .user-menu-container .user-menu-items a {
+    display: block;
+    width: 60%;
+    margin: auto;
+    color: #000000;
+    padding: 0.6rem 0;
+}
+
+@media (max-width: 576px) {
+    .user-menu .user-menu-container .user-menu-items a {
+        font-size: 0.9rem;
+    }
+}
+
+.user-menu .user-menu-container .user-menu-items a:not(:last-child) {
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.user-menu .user-menu-container .user-menu-items a img {
+    margin-right: 0.5rem;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+}
+
+@media (max-width: 576px) {
+    .user-menu .user-menu-container .user-menu-items a img {
+        height: 35px;
+        width: 35px;
+    }
+}
+
+.user-menu .user-menu-container .user-menu-items a:hover img {
+    border-color: #9B63A8;
 }
 
 /* ======== DASHBOARD_HOME ======== */

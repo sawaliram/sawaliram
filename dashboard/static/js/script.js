@@ -5,13 +5,34 @@
 function toggleNavbarMenu() {
     $(document).ready(function() {
         $('.navbar-menu-toggle').click(function() {
-            $('.navbar-menu').toggleClass('navbar-menu-open');
-            $('.menu-background').toggleClass('darken');
+            $('.navbar-menu').addClass('navbar-menu-open');
+            $('.menu-background').addClass('darken');
         });
-        $('.menu-background, .navbar-menu-close').click(function() {
-            $('.navbar-menu').toggleClass('navbar-menu-open');
-            $('.menu-background').toggleClass('darken');
+        $('.navbar-menu-close').click(function() {
+            $('.navbar-menu').removeClass('navbar-menu-open');
+            $('.menu-background').removeClass('darken');
         });
+    });
+}
+
+function toggleUserMenu() {
+    $(document).ready(function() {
+        $('.user-menu-button').click(function() {
+            $('.user-menu').addClass('open');
+            $('.menu-background').addClass('darken');
+        });
+        $('.user-menu-close').click(function() {
+            $('.user-menu').removeClass('open');
+            $('.menu-background').removeClass('darken');
+        });
+    });
+}
+
+function closeMenusOnClickingDarkbackground() {
+    $('.menu-background').click(function() {
+        $('.navbar-menu').removeClass('navbar-menu-open');
+        $('.user-menu').removeClass('open');
+        $(this).toggleClass('darken');
     });
 }
 
@@ -21,7 +42,7 @@ function resizeMainLogoOnScrollDown() {
             $('#mainLogo').css('width', '190px');
         }
         else {
-            $('#mainLogo').css('width', '248px');
+            $('#mainLogo').css('width', '250px');
         }
     });
 }
@@ -66,15 +87,7 @@ function togglePlaintextPassword() {
 }
 
 function copyPasswordToPlaintextArea() {
-    // $(document).ready(function() {
-    //     $('.password-field').change(function() {
-    //         console.log("Test");
-    //         console.log($(this).text());
-    //         $('.password-plaintext span').text($(this).text());
-    //     });
-    // });
     $('.password-field').on('input', function() {
-        // console.log($(this).val());
         $('.password-plaintext span').text($(this).val());
     });
 }
@@ -182,7 +195,12 @@ function setupQuillEditor() {
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
-resizeMainLogoOnScrollDown();
+toggleUserMenu();
+closeMenusOnClickingDarkbackground();
+
+if (window.matchMedia("(min-width: 576px)").matches) {
+    resizeMainLogoOnScrollDown();
+}
 
 togglePlaintextPassword();
 copyPasswordToPlaintextArea();

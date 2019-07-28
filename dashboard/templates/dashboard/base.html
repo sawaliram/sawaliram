@@ -76,12 +76,51 @@
             </div>
         </nav>
 
+        <nav class="user-menu slow-transition">
+            <button class="btn user-menu-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="user-menu-container">
+                <div class="user-menu-profile">
+                    <img src="{% static 'user/default.png' %}" alt="Profile Picture">
+                    <p class="user-name">{{ request.user.get_full_name }}</p>
+                    <button class="btn btn-secondary edit-profile">Edit Profile</button>
+                </div>
+                <div class="user-menu-items">
+                    <a href="javascript:void(0)">
+                        <img class="slow-transition" src="{% static 'icons/menu_settings.png' %}" alt="User Settings">
+                        Settings
+                    </a>
+                    <a href="javascript:void(0)">
+                        <img class="slow-transition" src="{% static 'icons/menu_drafts.png' %}" alt="User Drafts">
+                        Drafts
+                    </a>
+                    <a href="javascript:void(0)">
+                        <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="User Notifications">
+                        Notifications
+                    </a>
+                    <a href="javascript:void(0)">
+                        <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="User Submissions">
+                        Submissions
+                    </a>
+                    <a href="javascript:void(0)">
+                        <img class="slow-transition" src="{% static 'icons/menu_bookmarks.png' %}" alt="User Bookmarks">
+                        Bookmarks
+                    </a>
+                    <a href="{% url 'sawaliram_auth:signout' %}">
+                        <img class="slow-transition" src="{% static 'icons/menu_signout.png' %}" alt="User Signout">
+                        Signout
+                    </a>
+                </div>
+            </div>
+        </nav>
+
         <header class="navbar fixed-top navbar-light">
             <a class="navbar-brand slow-transition" href="{% url 'dashboard:home' %}">
-                <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo2.png' %}" alt="Sawaliram Home">
+                <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo.png' %}" alt="Sawaliram Home">
             </a>
-            <div class="d-flex flex-row-reverse">
-                <i class="fas fa-bars navbar-element navbar-menu-toggle"></i>
+            <div class="navbar-options">
+                <i class="fas fa-search navbar-icon navbar-element"></i>
                 <div class="dropdown navbar-element">
                     <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="languageSelector">
                         English
@@ -94,7 +133,16 @@
                         <a class="dropdown-item" href="#">தமிழ்</a>
                     </div>
                 </div>
-                <i class="fas fa-search navbar-icon navbar-element"></i>
+                <i class="fas fa-bars navbar-element navbar-menu-toggle"></i>
+            </div>
+            <div class="page-title-bar">
+                <p class="page-title">{{ page_title }}</p>
+                {% if user.is_authenticated %}
+                    <button class="btn user-menu-button">
+                        <span class="user-name">{{ user.get_full_name }}</span>
+                        <img src="{% static 'user/menu_default.png' %}" alt="User Profile Picture">
+                    </button>
+                {% endif %}
             </div>
         </header>
 
