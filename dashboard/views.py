@@ -39,7 +39,8 @@ class DashboardHome(View):
     def get(self, request):
         """Return the dashboard home view."""
         context = {
-            'dashboard': 'True'
+            'dashboard': 'True',
+            'page_title': 'Dashboard Home'
         }
         return render(request, 'dashboard/home.html', context)
 
