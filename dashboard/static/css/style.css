@@ -599,10 +599,136 @@ h1.dashboard-home-greeting {
     }
 }
 
-/* .task-card .task-help button { 
+/* ======== FOOTER ======== */
+
+footer {
+    margin-top: 4rem;
+}
+
+footer .footer-main {
+    color: #ffffff;
+    background-color: #414141;
+    padding: 4rem 0;
+}
+
+@media (max-width: 576px) {
+    footer .footer-main {
+        font-size: 0.9rem;
+    } 
+}
+
+footer .footer-main .footer-column {
+    padding: 0 8rem;
+}
+
+footer .footer-main .footer-column:last-child {
+    border-left: 1px solid #292929;
+    padding: 0 4rem;
+}
+
+@media (max-width: 576px) {
+    footer .footer-main .footer-column:last-child {
+        border-left: none;
+        margin-top: 2rem;
+    } 
+}
+
+@media (max-width: 576px) {
+    footer .footer-main .footer-column,
+    footer .footer-main .footer-column:last-child {
+        padding: 0 2rem;
+    } 
+}
+
+footer .footer-main .footer-column button.get-involved {
     font-size: 0.8rem;
-    padding: 0.2rem 0.5rem;
-} */
+    background-color: #FEB740;
+    color: #414141;
+    padding: 0.5rem 1rem;
+}
+
+footer .footer-main .footer-column .footer-links {
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 576px) {
+    footer .footer-main .footer-column .footer-links {
+        margin-bottom: 1rem;
+    } 
+}
+
+footer .footer-main .footer-column .footer-links a {
+    color: #ffffff;
+}
+
+footer .footer-main .footer-column .footer-links a:not(:last-child) {
+    margin-right: 2rem;
+}
+
+footer .footer-main .footer-column a.social-media {
+    color: #414141;
+    background-color: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+
+@media (max-width: 576px) {
+    footer .footer-main .footer-column a.social-media {
+        font-size: 1rem;
+    } 
+}
+
+footer .footer-main .footer-column a.social-media:not(:last-child) {
+    margin-right: 0.7rem;
+}
+
+footer .footer-main .footer-column a.social-media.facebook {
+    padding: 0.4rem 1rem;
+}
+
+footer .footer-main .footer-column a.social-media.facebook:hover {
+    color: #4267b2;
+}
+
+footer .footer-main .footer-column a.social-media.youtube {
+    padding: 0.4rem 0.7rem;
+}
+
+footer .footer-main .footer-column a.social-media.youtube:hover {
+    color: #c4302b;
+}
+
+footer .footer-main .footer-column a.social-media.twitter {
+    padding: 0.4rem 0.7rem;
+}
+
+footer .footer-main .footer-column a.social-media.twitter:hover {
+    color: #38a1f3;
+}
+
+@media (max-width: 576px) {
+    footer .footer-main .footer-column a.social-media.facebook {
+        padding: 0.3rem 0.8rem;
+    }
+    
+    footer .footer-main .footer-column a.social-media.youtube {
+        padding: 0.3rem 0.5rem;
+    }
+    
+    footer .footer-main .footer-column a.social-media.twitter {
+        padding: 0.3rem 0.5rem;
+    }
+}
+
+
+footer .footer-base {
+    color: #c3c3c3;
+    background-color: #000000;
+    padding: 1rem 0;
+    font-size: 0.8rem;
+    text-align: center;
+}
 
 /* ======== SAWALIRAM_AUTH ======== */
 
@@ -833,7 +959,7 @@ form .form-text {
     color: #55B377;
 }
 
-footer {
+/* footer {
     text-align: center;
     padding: 20px;
     padding-bottom: 50px; 
@@ -849,7 +975,7 @@ footer {
 
 footer p {
     margin-bottom: 3px;
-}
+} */
 
 .grey-link {
     color: #757575;
