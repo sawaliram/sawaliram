@@ -14,7 +14,7 @@ SECRET_KEY = os.environ.get('sawaliram_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('sawaliram_debug_value') == 'True'
 
-ALLOWED_HOSTS = ['.sawaliram.org', '10.10.9.33', 'localhost']
+ALLOWED_HOSTS = ['10.10.9.33', '117.198.100.10', '.sawaliram.org', 'localhost']
 
 # Application definition
 
