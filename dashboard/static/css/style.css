@@ -229,10 +229,6 @@ input:focus {
 }
 
 .navbar-menu a {
-    color: #717171;
-}
-
-.navbar-menu a:hover {
     color: #000000;
 }
 
