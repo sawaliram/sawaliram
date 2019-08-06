@@ -1,7 +1,7 @@
 /* ======== GENERAL STYLES ======== */
 
 body {
-    font-family: 'Noto Sans', sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
 }
 
 body.dashboard {
@@ -14,7 +14,7 @@ body.dashboard {
 
 @media (max-width: 576px) {
     .sawaliram-container {
-        margin-top: 8rem;
+        margin-top: 7rem;
     }
 }
 
@@ -30,6 +30,10 @@ body.dashboard {
 
 a:hover {
     text-decoration: none;
+}
+
+i {
+    margin-right: 0.2rem;
 }
 
 textarea,
@@ -53,8 +57,23 @@ input:focus {
 
 .btn {
     border-radius: 20px;
-    padding: 0.5rem 2rem;
+    padding: 0.4rem 1.3rem;
     background-color: #ffffff;
+}
+
+@media (max-width: 576px) {
+    .btn {
+        padding: 0.3rem 1.1rem;
+        font-size: 0.8rem;
+    }
+}
+
+.btn:disabled,
+.btn:disabled:hover {
+    background-color: #d0d0d0;
+    color: #777;
+    border-color: #b9b9b9;
+    cursor: not-allowed;
 }
 
 .btn-primary {
@@ -118,6 +137,27 @@ input:focus {
     transition: all 0.5s;
 }
 
+/* ---- Tabs ---- */
+
+.nav.nav-pills .nav-link {
+    color: #696969;
+    border-radius: 0;
+    background-color: #ffffff00;
+}
+
+.nav.nav-pills .nav-link:hover {
+    background-color: #e2e2e2;
+}
+
+.nav.nav-pills .nav-link.active {
+    color: #87B24D;
+    border-bottom: 2px solid;
+}
+
+.nav.nav-pills .nav-link.active:hover {
+    background-color: #87b24d26;
+}
+
 /* ======== NAVBAR ======== */
 
 .navbar {
@@ -162,7 +202,7 @@ input:focus {
 
 @media (max-width: 576px) {
     .navbar .navbar-options {
-        padding-right: 0.5rem;
+        padding-right: 0;
     }
 }
 
@@ -405,7 +445,7 @@ input:focus {
 .user-menu .user-menu-container .user-menu-profile .user-name {
     margin-top: 1rem;
     margin-bottom: 0.5rem;
-    text-transform: uppercase;
+    font-weight: bold;
 }
 
 @media (max-width: 576px) {
@@ -512,13 +552,19 @@ h1.dashboard-home-greeting {
     }
 }
 
+.task-card .task-image-wrapper {
+    height: 100px;
+    width: 100px;
+}
+
 .task-card img {
     height: 100px;
     width: 100px;
 }
 
 @media (max-width: 576px) {
-    .task-card img {
+    .task-card .task-image-wrapper,
+    .task-card .task-image-wrapper img {
         height: 80px;
         width: 80px;
     }
@@ -548,6 +594,7 @@ h1.dashboard-home-greeting {
 .task-card .task-details a {
     color: #000;
     font-size: 1.2rem;
+    font-weight: bold;
 }
 
 @media (max-width: 576px) {
@@ -592,6 +639,145 @@ h1.dashboard-home-greeting {
 @media (max-width: 576px) {
     .task-card .task-details .task-stat {
         position: static;
+    }
+}
+
+/* ======== TASK PAGES GENERAL STYLES ======== */
+
+.task-help-button-wrapper {
+    text-align: right;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 576px) {
+    .task-help-button-wrapper {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.task-page-help {
+    background-color: #f2f2f2;
+    padding: 0.1rem 0.8rem;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 576px) {
+    .task-page-help {
+        padding: 0.1rem 0.6rem;
+        font-size: 0.6rem;
+    }
+}
+
+.task-page-help:hover {
+    background-color: #9B63A8;
+}
+
+.alert.task-success-message {
+    background-color: #A7DF5C94;
+}
+
+/* ======== SUBMIT QUESTIONS ======== */
+
+.submit-questions-help {
+    background-color: #eaeaea;
+    padding: 2.2rem;
+    border-radius: 8px;
+}
+
+@media (max-width: 576px) {
+    .submit-questions-help {
+        padding: 1rem;
+    }
+
+    .submit-questions-help p {
+        font-size: 0.9rem;
+    }
+}
+
+.submit-questions-help button.download-excel-template {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+}
+
+@media (max-width: 576px) {
+    .submit-questions-help button.download-excel-template {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.8rem;
+    }
+}
+
+.excel-file-selection-panel {
+    position: relative;
+    background-color: #eaeaea;
+    border: 2px dashed #c6c6c6;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.excel-file-selection-panel input {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.excel-file-selection-panel .excel-file-label {
+    width: 100%;
+    text-align: center;
+    padding: 2rem 2rem;
+    color: #757575;
+    cursor: pointer;
+}
+
+
+.excel-file-selection-panel i.green {
+    color: #008000;
+}
+
+.excel-file-selection-panel i.red {
+    color: red;
+}
+
+.excel-file-selection-panel .validation-errors {
+    width: 60%;
+    margin: auto;
+}
+
+@media (max-width: 576px) {
+    .excel-file-selection-panel .validation-errors {
+        width: 90%;
+    }
+}
+
+.excel-file-selection-panel .validation-errors h5 {
+    text-align: center;
+}
+
+@media (max-width: 576px) {
+    .excel-file-selection-panel .validation-errors h5 {
+        font-size: 0.9rem;
+    }
+}
+
+.excel-file-selection-panel .validation-errors h5 i.fa-cog {
+    color: #9B63A8;
+}
+
+.excel-file-selection-panel .validation-errors .error-list-row {
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    color: #757575;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 576px) {
+    .excel-file-selection-panel .validation-errors .error-list-row {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .excel-file-selection-panel .validation-errors .error-list-row p {
+        margin-bottom: 0;
     }
 }
 
@@ -955,24 +1141,6 @@ form .form-text {
     color: #55B377;
 }
 
-/* footer {
-    text-align: center;
-    padding: 20px;
-    padding-bottom: 50px; 
-    color: #757575;
-}
-
-@media (max-width: 576px) {
-    footer {
-        padding-bottom: 20px;
-        font-size: 13px;
-    }
-}
-
-footer p {
-    margin-bottom: 3px;
-} */
-
 .grey-link {
     color: #757575;
     text-decoration: underline;
@@ -988,129 +1156,6 @@ footer p {
 
 #editor .ql-editor {
     min-height: 400px;
-}
-
-/* ----- Task pages styles ----- */
-h1.task-heading {
-    font-size: 28px;
-    font-weight: 600;
-    margin-bottom: 40px;
-    color: #545454;
-    text-align: center;
-}
-
-@media (max-width: 576px) {
-    h1.task-heading {
-        font-size: 20px;
-        margin-bottom: 30px;
-        text-align: left;
-    }
-}
-
-.task-info {
-    background-color: #f7f7f7;
-    border-radius: 3px;
-    color: #7a7a7a;
-    padding: 10px;
-    margin-bottom: 20px;
-}
-
-.task-info a {
-    color: #7a7a7a;
-    text-decoration: underline;
-}
-
-h3.task-section-heading {
-    font-size: 20px;
-    margin-bottom: 30px;
-    font-weight: 600;
-    color: #777777;
-}
-
-@media (max-width: 576px) {
-    h3.task-section-heading {
-        font-size: 17px;
-    }
-}
-
-h4.task-section-sub-heading {
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-
-.task-notes {
-    text-align: center;
-    color: #8e8e8e;
-    font-size: 14px;
-}
-
-/* submit-questions */
-.question-submission-form {
-    color: #6f6f6f;
-}
-
-.question-submission-form .form-group {
-    margin-bottom: 40px;
-}
-
-@media (max-width: 576px) {
-    .question-submission-form .form-group {
-        margin-bottom: 25px;
-    }
-}
-
-.required-field-text {
-    color: #a0a0a0;
-    font-style: italic;
-}
-
-.published-information {
-    display: none;
-}
-
-.question-card {
-    margin-bottom: 25px;
-}
-
-.delete-question-button {
-    position: absolute;
-    right: 15px;
-    top: 11px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #a7a7a7;
-    display: none;
-}
-
-.delete-question-button:hover {
-    color: #dc3545;
-}
-
-.add-question-button {
-    background-color: #eaeaea;
-    color: #444;
-}
-
-.add-question-button:hover {
-    background-color: #e2e2e2;
-}
-
-.btn.add-question-button:focus {
-    box-shadow: none;
-}
-
-/* submit-excel-sheet */
-.first-excel-data-type-radio-button {
-    margin-bottom: 10px;
-}
-
-.custom-file-input {
-    cursor: pointer;
-}
-
-.template-download-message {
-    margin-bottom: 30px;
 }
 
 /* view-questions */
@@ -1195,30 +1240,4 @@ h4.task-section-sub-heading {
 
 .answer-question.highlighted-meta-area {
     margin-bottom: 30px;
-}
-
-/* ----- Action successfull pages styles ----- */
-.action-success-page-wrapper {
-    text-align: center;
-    margin-top: 160px;
-    margin-bottom: 20px;
-}
-
-.action-success-page-wrapper i {
-    font-size: 35px;
-    color: green;
-}
-
-.action-success-page-wrapper h1 {
-    font-size: 32px;
-    margin-top: 15px;
-}
-
-.action-success-page-wrapper p {
-    color: #757575;
-}
-
-.action-success-page-wrapper a {
-    color: #3a3a3a;
-    text-decoration: underline;
 }

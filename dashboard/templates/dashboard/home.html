@@ -14,7 +14,9 @@
 
     {% if request.user|has_group:"admins" %}
         <div class="task-card">
-            <img src="{% static 'icons/manage_users.png' %}" alt="Manage Users">
+            <div class="task-image-wrapper">
+                <img src="{% static 'icons/manage_users.png' %}" alt="Manage Users">
+            </div>
             <div class="task-details">
                 <div class="task-title">
                     <a href="javascript:void(0)">Manage Users</a>
@@ -28,7 +30,9 @@
 
     {% if request.user|has_group:"admins" %}
         <div class="task-card">
-            <img src="{% static 'icons/manage_content.png' %}" alt="Manage Content">
+            <div class="task-image-wrapper">
+                <img src="{% static 'icons/manage_content.png' %}" alt="Manage Content">
+            </div>
             <div class="task-details">
                 <div class="task-title">
                     <a href="javascript:void(0)">Manage Content</a>
@@ -42,7 +46,9 @@
 
     {% if request.user|has_group:"experts" %}
         <div class="task-card">
-            <img src="{% static 'icons/answer_questions.png' %}" alt="Answer Questions">
+            <div class="task-image-wrapper">
+                <img src="{% static 'icons/answer_questions.png' %}" alt="Answer Questions">
+            </div>
             <div class="task-details">
                 <div class="task-title">
                     <a href="javascript:void(0)">Answer Questions</a>
@@ -56,7 +62,9 @@
 
     {% if request.user|has_group:"experts" %}
         <div class="task-card">
-            <img src="{% static 'icons/review_answers.png' %}" alt="Review Answers">
+            <div class="task-image-wrapper">
+                <img src="{% static 'icons/review_answers.png' %}" alt="Review Answers">
+            </div>
             <div class="task-details">
                 <div class="task-title">
                     <a href="javascript:void(0)">Review Answers</a>
@@ -70,7 +78,9 @@
 
     {% if request.user|has_group:"writers" %}
         <div class="task-card">
-            <img src="{% static 'icons/write_articles.png' %}" alt="Write Articles">
+            <div class="task-image-wrapper">
+                <img src="{% static 'icons/write_articles.png' %}" alt="Write Articles">
+            </div>
             <div class="task-details">
                 <div class="task-title">
                     <a href="javascript:void(0)">Write Articles</a>
@@ -83,7 +93,9 @@
 
     {% if request.user|has_group:"translators" %}
         <div class="task-card">
-            <img src="{% static 'icons/translate_content.png' %}" alt="Translate Content">
+            <div class="task-image-wrapper">
+                <img src="{% static 'icons/translate_content.png' %}" alt="Translate Content">
+            </div>
             <div class="task-details">
                 <div class="task-title">
                     <a href="javascript:void(0)">Translate Content</a>
@@ -97,10 +109,12 @@
 
     {% if request.user|has_group:"volunteers" %}
         <div class="task-card">
-            <img src="{% static 'icons/submit_questions.png' %}" alt="Submit Questions">
+            <div class="task-image-wrapper">
+                <img src="{% static 'icons/submit_questions.png' %}" alt="Submit Questions">
+            </div>
             <div class="task-details">
                 <div class="task-title">
-                    <a href="javascript:void(0)">Submit Questions</a>
+                    <a href="{% url 'dashboard:submit-questions' %}">Submit Questions</a>
                     <button class="btn btn-secondary-hollow task-help">Help?</button>
                 </div>
                 <p class="task-description">Submit questions either manually by filling them out in a form or by uploading a filled out Excel sheet</p>
@@ -111,7 +125,9 @@
 
     {% if request.user|has_group:"volunteers" %}
         <div class="task-card">
-            <img src="{% static 'icons/view_questions.png' %}" alt="View Questions">
+            <div class="task-image-wrapper">
+                <img src="{% static 'icons/view_questions.png' %}" alt="View Questions">
+            </div>
             <div class="task-details">
                 <div class="task-title">
                     <a href="javascript:void(0)">View Questions</a>

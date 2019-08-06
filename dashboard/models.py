@@ -4,6 +4,19 @@ import datetime
 from django.db import models
 
 
+class Dataset(models.Model):
+    """Define the data model for submitted datasets"""
+
+    question_count = models.CharField(max_length=100)
+    submitted_by = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='submitted_datasets',
+        on_delete=models.PROTECT)
+    status = models.CharField(max_length=100)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+
 class QuestionArchive(models.Model):
     """Define the data model for raw submissions by volunteers"""
 
@@ -30,13 +43,12 @@ class QuestionArchive(models.Model):
     published_date = models.DateField(default=datetime.date.today)
     question_asked_on = models.DateField(null=True)
     notes = models.CharField(max_length=1000, default='')
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    submission_id = models.IntegerField(null=False)
     submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
-        related_name='submitted_questions',
+        related_name='archived_questions',
         on_delete=models.PROTECT)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.question_text

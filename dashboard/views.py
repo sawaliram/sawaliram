@@ -2,13 +2,15 @@
 
 import random
 import os
-from pprint import pprint
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.models import Max, Subquery
 from django.views import View
+from django.http import HttpResponse
+from django.contrib import messages
 
 from sawaliram_auth.decorators import volunteer_permission_required
 from dashboard.models import (
@@ -17,19 +19,10 @@ from dashboard.models import (
     Answer,
     UncuratedSubmission,
     UnencodedSubmission,
-    TranslatedQuestion)
+    TranslatedQuestion,
+    Dataset)
 
 import pandas as pd
-
-
-# @login_required
-# @volunteer_permission_required
-# def get_home_view(request):
-#     """Return the dashboard home view."""
-#     context = {
-#         'dashboard': 'True'
-#     }
-#     return render(request, 'dashboard/home.html', context)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -45,19 +38,139 @@ class DashboardHome(View):
         return render(request, 'dashboard/home.html', context)
 
 
-@login_required
-def get_submit_questions_view(request):
-    """Return the view for submitting questions."""
-    return render(request, 'dashboard/submit-questions.html')
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class SubmitQuestionsView(View):
+
+    def get(self, request):
+        """Return the submit questions view."""
+        context = {
+            'dashboard': 'True',
+            'page_title': 'Submit Questions'
+        }
+        return render(request, 'dashboard/submit-questions.html', context)
+
+    def post(self, request):
+        """Save dataset to archive and return success message"""
+
+        # save the questions in the archive
+        excel_sheet = pd.read_excel(request.FILES.get('excel_file'))
+        columns = list(excel_sheet)
+
+        column_name_mapping = {
+            'Question': 'question_text',
+            'Question Language': 'question_language',
+            'English translation of the question': 'question_text_english',
+            'How was the question originally asked?': 'question_format',
+            'Context': 'context',
+            'Date of asking the question': 'question_asked_on',
+            'Student Name': 'student_name',
+            'Gender': 'student_gender',
+            'Student Class': 'student_class',
+            'School Name': 'school',
+            'Curriculum followed': 'curriculum_followed',
+            'Medium of instruction': 'medium_language',
+            'Area': 'area',
+            'State': 'state',
+            'Published (Yes/No)': 'published',
+            'Publication Name': 'published_source',
+            'Publication Date': 'published_date',
+            'Notes': 'notes',
+            'Contributor Name': 'contributor',
+            'Contributor Role': 'contributor_role'
+        }
+
+        for index, row in excel_sheet.iterrows():
+            question = QuestionArchive()
+
+            # only save the question if the question field is non-empty
+            if not row['Question'] != row['Question']:
+
+                for column in columns:
+                    column = column.strip()
+
+                    # check if the value is not nan
+                    if not row[column] != row[column]:
+
+                        if column == 'Published (Yes/No)':
+                            setattr(
+                                question,
+                                column_name_mapping[column],
+                                True if row[column] == 'Yes' else False)
+                        else:
+                            setattr(
+                                question,
+                                column_name_mapping[column],
+                                row[column].strip() if isinstance(row[column], str) else row[column])
+
+                question.submitted_by = request.user
+                question.save()
+
+        # create an entry for the dataset
+        dataset = Dataset()
+        dataset.question_count = len(excel_sheet.index)
+        dataset.submitted_by = request.user
+        dataset.status = 'raw'
+        dataset.save()
+
+        # create raw file for archiving
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        raw_filename = 'dataset_' + str(dataset.id) + '_raw.xlsx'
+        writer = pd.ExcelWriter(
+            os.path.join(BASE_DIR, 'assets/submissions/raw/' + raw_filename))
+        excel_sheet.to_excel(writer, 'Sheet 1')
+        writer.save()
+
+        # create file for curation
+        excel_sheet['Field of Interest'] = ''
+        excel_sheet['dataset_id'] = dataset.id
+        uncurated_filename = 'dataset_' + str(dataset.id) + '_uncurated.xlsx'
+        writer = pd.ExcelWriter(
+            os.path.join(BASE_DIR, 'assets/submissions/uncurated/' + uncurated_filename))
+        excel_sheet.to_excel(writer, 'Sheet 1')
+        writer.save()
+
+        messages.success(request, 'Thank you for the questions! We will get to work preparing the questions to be answered and translated.')
+        context = {
+            'dashboard': 'True',
+            'page_title': 'Submit Questions'
+        }
+        return render(request, 'dashboard/submit-questions.html', context)
 
 
-@login_required
-def get_submit_excel_sheet_view(request):
-    """Return the view for submitting Excel sheet."""
-    context = {
-        'excel_file_name': 'excel' + str(random.randint(1, 999)),
-    }
-    return render(request, 'dashboard/submit-excel-sheet.html', context)
+@method_decorator(csrf_exempt, name='dispatch')
+class ValidateExcelSheet(View):
+
+    def post(self, request):
+        """Validate excel sheet and return status/errors"""
+        excel_sheet = pd.read_excel(request.FILES.get('excel_file'))
+
+        file_errors = {}
+
+        for index, row in excel_sheet.iterrows():
+            row_errors = []
+
+            if row['Question'] != row['Question']:
+                row_errors.append('Question field cannot be empty')
+            if row['Question Language'] != row['Question Language']:
+                row_errors.append('Question Language field cannot be empty')
+            if row['Context'] != row['Context']:
+                row_errors.append('Context field cannot be empty')
+            if row['Published (Yes/No)'] == 'Yes' and row['Publication Name'] != row['Publication Name']:
+                row_errors.append('If the question was published, you must mention the publication name')
+            if row['Contributor Name'] != row['Contributor Name']:
+                row_errors.append('You must mention the name of the contributor')
+
+            if row_errors:
+                # Adding 2 to compensate for 0 indexing and header row in excel template
+                file_errors['Row #' + str(index + 2)] = row_errors
+
+        if file_errors:
+            response = render(request, 'dashboard/includes/excel-validation-errors.html', {'errors': file_errors})
+        else:
+            response = 'validated'
+
+        return HttpResponse(response)
 
 
 @login_required
@@ -137,221 +250,6 @@ def get_encode_data_view(request):
         'excel_file_name': 'excel' + str(random.randint(1, 999)),}
 
     return render(request, 'dashboard/encode-data.html', context)
-
-
-def submit_questions(request):
-    """Save the submitted question(s) to the database."""
-    question_text_list = request.POST.getlist('question-text')
-    question_language_list = request.POST.getlist('question-language')
-    question_text_english_list = request.POST.getlist('question-text-english')
-    student_name_list = request.POST.getlist('student-name')
-    student_class_list = request.POST.getlist('student-class')
-
-    # create an empty dataframe to generate Excel file
-    submitted_questions_df = pd.DataFrame()
-
-    submission_id = 0
-    max_submission_id = QuestionArchive.objects \
-                                       .all() \
-                                       .aggregate(Max('submission_id'))
-    if max_submission_id['submission_id__max'] is None:
-        submission_id = 1
-    else:
-        submission_id = max_submission_id['submission_id__max'] + 1
-
-    for index, value in enumerate(question_text_list):
-        question = QuestionArchive(
-            school=request.POST['school-name'],
-            area=request.POST['area'],
-            state=request.POST['state'],
-            question_format=request.POST['question-format'],
-            contributor=request.POST['contributor-name'],
-            contributor_role=request.POST['contributor-role'],
-            context=request.POST['context'],
-            curriculum_followed=request.POST['curriculum-followed'],
-            medium_language=request.POST['medium-language'],
-            question_text=value,
-            question_language=question_language_list[index],
-            question_text_english=question_text_english_list[index],
-            student_name=student_name_list[index],
-            notes=request.POST['notes']
-        )
-
-        if student_class_list[index]:
-            question.student_class = student_class_list[index]
-
-        if request.POST['published'] == 'Yes':
-            question.published = True
-            question.published_source = request.POST['published-source']
-            question.published_date = request.POST['published-date']
-        else:
-            question.published = False
-
-        if request.POST['question-asked-on']:
-            question.question_asked_on = request.POST['question-asked-on']
-
-        question.submitted_by = request.user
-        question.submission_id = submission_id
-        question.save()
-
-        # pop keys that won't go into the excel file
-        question_dict = question.__dict__
-        question_dict.pop('_state')
-        question_dict.pop('submitted_by_id')
-        question_dict.pop('created_on')
-        question_dict.pop('updated_on')
-
-        # rename the keys to readable names of fields
-        question_dict['Question'] = question_dict.pop('question_text')
-        question_dict['Question Language'] = question_dict.pop('question_language')
-        question_dict['English translation of the question'] = question_dict.pop('question_text_english')
-        question_dict['How was the question originally asked?'] = question_dict.pop('question_format')
-        question_dict['Context'] = question_dict.pop('context')
-        question_dict['Date of asking the question'] = question_dict.pop('question_asked_on')
-        question_dict['Student Name'] = question_dict.pop('student_name')
-        question_dict['Gender'] = question_dict.pop('student_gender')
-        question_dict['Student Class'] = question_dict.pop('student_class')
-        question_dict['School Name'] = question_dict.pop('school')
-        question_dict['Curriculum followed'] = question_dict.pop('curriculum_followed')
-        question_dict['Medium of instruction'] = question_dict.pop('medium_language')
-        question_dict['Area'] = question_dict.pop('area')
-        question_dict['State'] = question_dict.pop('state')
-        question_dict['Published (Yes/No)'] = question_dict.pop('published')
-        question_dict['Publication Name'] = question_dict.pop('published_source')
-        question_dict['Publication Date'] = question_dict.pop('published_date')
-        question_dict['Notes'] = question_dict.pop('notes')
-        question_dict['Contributor Name'] = question_dict.pop('contributor')
-        question_dict['Contributor Role'] = question_dict.pop('contributor_role')
-
-        # create a dataframe using the dict
-        question_df = pd.DataFrame(question_dict, index=[index+1])
-
-        # add field for adding the field of interest
-        question_df['Field of Interest'] = ''
-
-        # append the dataframe with the question to the overall dataframe
-        submitted_questions_df = submitted_questions_df.append(question_df)
-
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    pprint(BASE_DIR)
-
-    excel_filename = 'uncurated_dataset_' + request.user.first_name \
-        + '_' + str(submission_id) + '.xlsx'
-
-    writer = pd.ExcelWriter(
-        os.path.join(BASE_DIR, 'assets/submissions/uncurated/' + excel_filename))
-    submitted_questions_df.to_excel(writer, 'Sheet 1')
-    writer.save()
-
-    # create an entry in UncuratedSubmission for the admins
-    new_submission = UncuratedSubmission()
-    new_submission.submission_method = 'manual entry'
-    new_submission.submission_id = submission_id
-    new_submission.number_of_questions = len(question_text_list)
-    new_submission.excel_sheet_name = excel_filename
-    new_submission.submitted_by = request.user
-    new_submission.save()
-
-    context = {
-        'number_of_questions_submitted': len(question_text_list),
-    }
-
-    return render(
-        request,
-        'dashboard/questions-submitted-successfully.html',
-        context)
-
-
-def submit_excel_sheet(request):
-    """Parse the excel sheet and save the data to the database."""
-    excel_sheet = pd.read_excel(request.FILES[request.POST['excel-file-name']])
-    columns = list(excel_sheet)
-
-    column_name_mapping = {
-        'Question': 'question_text',
-        'Question Language': 'question_language',
-        'English translation of the question': 'question_text_english',
-        'How was the question originally asked?': 'question_format',
-        'Context': 'context',
-        'Date of asking the question': 'question_asked_on',
-        'Student Name': 'student_name',
-        'Gender': 'student_gender',
-        'Student Class': 'student_class',
-        'School Name': 'school',
-        'Curriculum followed': 'curriculum_followed',
-        'Medium of instruction': 'medium_language',
-        'Area': 'area',
-        'State': 'state',
-        'Published (Yes/No)': 'published',
-        'Publication Name': 'published_source',
-        'Publication Date': 'published_date',
-        'Notes': 'notes',
-        'Contributor Name': 'contributor',
-        'Contributor Role': 'contributor_role'}
-
-    submission_id = 0
-    max_submission_id = QuestionArchive.objects \
-                                       .all() \
-                                       .aggregate(Max('submission_id'))
-
-    if max_submission_id['submission_id__max'] is None:
-        submission_id = 1
-    else:
-        submission_id = max_submission_id['submission_id__max'] + 1
-
-    number_of_questions_submitted = len(excel_sheet.index)
-
-    for index, row in excel_sheet.iterrows():
-        question = QuestionArchive()
-
-        # only save the question if the question field is non-empty
-        if not row['Question'] != row['Question']:
-
-            for column in columns:
-                column = column.strip()
-
-                # check if the value is not nan
-                if not row[column] != row[column]:
-
-                    if column == 'Published (Yes/No)':
-                        setattr(
-                            question,
-                            column_name_mapping[column],
-                            True if row[column] == 'Yes' else False)
-                    else:
-                        setattr(
-                            question,
-                            column_name_mapping[column],
-                            row[column].strip() if isinstance(row[column], str) else row[column])
-
-            question.submitted_by = request.user
-            question.submission_id = submission_id
-            question.save()
-
-    # add field for adding the field of interest
-    excel_sheet['Field of Interest'] = ''
-    excel_sheet['submission_id'] = submission_id
-
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    excel_filename = 'uncurated_dataset_' + request.user.first_name \
-        + '_' + str(submission_id) + '.xlsx'
-
-    writer = pd.ExcelWriter(
-        os.path.join(BASE_DIR, 'assets/submissions/uncurated/' + excel_filename))
-    excel_sheet.to_excel(writer, 'Sheet 1')
-    writer.save()
-
-    # create an entry in UncuratedSubmission for the admins
-    new_submission = UncuratedSubmission()
-    new_submission.submission_method = 'excel file'
-    new_submission.submission_id = submission_id
-    new_submission.number_of_questions = number_of_questions_submitted
-    new_submission.excel_sheet = excel_filename
-    new_submission.submitted_by = request.user
-    new_submission.save()
-
-    return render(request, 'dashboard/excel-submitted-successfully.html')
 
 
 def submit_curated_dataset(request):
