@@ -1,6 +1,8 @@
 
 {% extends "dashboard/base.html" %}
 
+{% load static %}
+
 {% block title %} Submit Questions | Sawaliram {% endblock %}
 
 {% block content %}
@@ -26,9 +28,9 @@
 <div class="submit-questions-help">
     <p>The easiest way to submit questions to Sawaliram is by downloading the Excel Template below, collecting questions over a period of time from the students and submit the filled Excel sheet on this page. The Excel sheet has pre-filled column headers that indicate the information that needs to be filled out. It will also validate your entries, making sure the data is correct. If any errors still manage to slip through, your Excel sheet will be checked again before uploading it and any mistakes will be clearly pointed out for you to correct!</p>
 
-    <button class="btn btn-secondary download-excel-template">
+    <a href="{% static 'files/sawaliram_template.xlsx' %}" class="btn btn-secondary download-excel-template">
         <i class="fas fa-download"></i> Download Excel Template
-    </button>
+    </a>
 </div>
 
 <form id="submitQuestionsForm" action="{% url 'dashboard:submit-questions' %}" enctype="multipart/form-data" method="POST">

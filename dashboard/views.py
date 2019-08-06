@@ -143,11 +143,44 @@ class ValidateExcelSheet(View):
 
     def post(self, request):
         """Validate excel sheet and return status/errors"""
-        excel_sheet = pd.read_excel(request.FILES.get('excel_file'))
+        excel_file = pd.read_excel(request.FILES.get('excel_file'))
 
         file_errors = {}
+        general_errors = []
+        standard_columns = [
+            'Question',
+            'Question Language',
+            'English translation of the question',
+            'How was the question originally asked?',
+            'Context',
+            'Date of asking the question',
+            'Student Name',
+            'Gender',
+            'Student Class',
+            'School Name',
+            'Curriculum followed',
+            'Medium of instruction',
+            'Area',
+            'State',
+            'Published (Yes/No)',
+            'Publication Name',
+            'Publication Date',
+            'Notes',
+            'Contributor Name',
+            'Contributor Role'
+        ]
 
-        for index, row in excel_sheet.iterrows():
+        if len(list(excel_file)) != 20:
+            general_errors.append('The columns of the Excel template are modified! Please use the standard template!')
+
+        for column in list(excel_file):
+            if column not in standard_columns:
+                general_errors.append('"' + column + '" is not a standard column. Please use the standard template!')
+
+        if general_errors:
+            file_errors['Problem(s) with the template:'] = general_errors
+
+        for index, row in excel_file.iterrows():
             row_errors = []
 
             if row['Question'] != row['Question']:
@@ -162,8 +195,8 @@ class ValidateExcelSheet(View):
                 row_errors.append('You must mention the name of the contributor')
 
             if row_errors:
-                # Adding 2 to compensate for 0 indexing and header row in excel template
-                file_errors['Row #' + str(index + 2)] = row_errors
+                # Adding 1 to compensate for 0 indexing
+                file_errors['Row #' + str(index + 1)] = row_errors
 
         if file_errors:
             response = render(request, 'dashboard/includes/excel-validation-errors.html', {'errors': file_errors})

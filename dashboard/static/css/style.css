@@ -694,13 +694,13 @@ h1.dashboard-home-greeting {
     }
 }
 
-.submit-questions-help button.download-excel-template {
+.submit-questions-help .download-excel-template {
     font-size: 0.8rem;
     padding: 0.5rem 1rem;
 }
 
 @media (max-width: 576px) {
-    .submit-questions-help button.download-excel-template {
+    .submit-questions-help .download-excel-template {
         font-size: 0.7rem;
         padding: 0.3rem 0.8rem;
     }
@@ -718,6 +718,7 @@ h1.dashboard-home-greeting {
     height: 100%;
     width: 100%;
     position: absolute;
+    cursor: pointer;
 }
 
 .excel-file-selection-panel .excel-file-label {
@@ -768,6 +769,16 @@ h1.dashboard-home-greeting {
     color: #757575;
     padding: 0.5rem 1rem;
     margin-bottom: 1rem;
+}
+
+.excel-file-selection-panel .validation-errors .error-list-row:last-child {
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 576px) {
+    .excel-file-selection-panel .validation-errors .error-list-row:last-child {
+        margin-bottom: 1.5rem;
+    }
 }
 
 @media (max-width: 576px) {
