@@ -96,84 +96,67 @@ function copyPasswordToPlaintextArea() {
 // ======== PAGE SPECIFIC FUNCTIONS ========
 // These functions are called only on specific pages
 
-// ======== OLDER SCRIPTS ========
-// These functions will either be phased out or moved
-// into the general or specific functions sections above
-
-function addQuestion() {
-    $('.add-question-button').click(function(event) {
-        event.preventDefault();
-
-        var last_question_card = $('.question-card').last();
-        var new_question_card = last_question_card.clone();
-        var last_question_number = parseInt(last_question_card.find('.question-number').text());
-
-        new_question_card.find('.question-number').text(last_question_number + 1);
-        new_question_card.find('.delete-question-button').css('display', 'block');
-
-        new_question_card.insertAfter(last_question_card);
-        deleteQuestion();
+function disableSubmitQuestionsButtonOnPageLoad() {
+    $(document).ready(function() {
+        $('.submit-questions').prop('disabled', true);
     });
 }
 
-function deleteQuestion() {
-    $('.delete-question-button').click(function(event) {
-        
-        $(this).closest('.question-card').hide('normal', function() {
-            $(this).closest('.question-card').remove();
-        });
-
-        reserializeQuestionCards();
-    });
-}
-
-function reserializeQuestionCards() {
-    var serial_number = 1;
-
-    $('.question-card').each(function() {
-        $(this).find('.question-number').text(serial_number);
-        serial_number++;
-    });
-}
-
-function displayNameOfSelectedFile() {
-    
+function processSelectedExcelSheet() {
     $('#excelFileBrowser').change(function() {
+
+        // remove browser inserted string from filename
         var file_name = $(this).val().replace('C:\\fakepath\\', '');
-        $(this).next('.custom-file-label').text(file_name);
-    });
-}
 
-function togglePublishedInformationFormGroups() {
+        // check if file has valid extension
+        if (file_name.split('.').pop() == 'xlsx') {
+            $('.excel-file-label i').removeClass('red');
+            $('.excel-file-label i').addClass('green');
+            $('.excel-file-label span').text(file_name);
 
-    $('input[type=radio][name=published]').change(function() {
-        if (this.value == 'True') {
-            $('input[type=text][name=published-source]').prop('required', true);
-            $('.published-information').show(300);
-            $('input[type=text][name=area]').removeAttr('required');
-            $('input[type=text][name=state]').removeAttr('required');
-            $('select[name=context]').removeAttr('required');
-            $('.not-required-if-published').hide(300);
+            $('.validation-errors h5').html(
+                '<i class="fas fa-cog fa-spin"></i> Checking for errors...'
+            )
+            $('.validation-errors h5').css('margin-bottom', '2rem');
+
+            var form_data = new FormData();
+            var excel_file = $('#excelFileBrowser')[0].files[0];
+            form_data.append('excel_file', excel_file)
+
+            // validate the excel file
+            $.ajax({
+                url: 'validate',
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response == 'validated') {
+                        $('.validation-errors h5').html(
+                            '<i class="far fa-check-circle green"></i> No errors found. Great job!'
+                        )
+                        $('.validation-errors h5').css('margin-bottom', '2rem');
+                        $('.submit-questions').prop('disabled', false)
+                    }
+                    else {  
+                        $('.validation-errors h5').html(
+                            '<i class="far fa-times-circle red"></i> We found some errors in your excel file:'
+                        )
+                        $('.validation-errors .error-list').html(response)
+                    }
+                },
+                error: function(response) {
+                    $('.validation-errors h5').html(
+                        '<i class="far fa-times-circle red"></i> We are not able to read this file. Please get in touch with us to get help!'
+                    )
+                    $('.validation-errors h5').css('margin-bottom', '2rem');
+                }
+            });
         }
         else {
-            $('input[type=text][name=published-source]').removeAttr('required');
-            $('.published-information').hide(300);
-            $('input[type=text][name=area]').prop('required', true);
-            $('input[type=text][name=state]').prop('required', true);
-            $('select[name=context]').prop('required', true);
-            $('.not-required-if-published').show(300);
-        }
-    });
-}
-
-function toggleOtherOrganisationTextBox() {
-
-    $('#organisationDropDown').change(function() {
-        if (this.value == 'other') {
-            $('.other-organisation-textbox').show(300)
-        }
-        else {
-            $('.other-organisation-textbox').hide(300)
+            $('.excel-file-label i').removeClass('green');
+            $('.excel-file-label i').addClass('red');
+            $('.excel-file-label span').text("Invalid File Format! Click to select another file");
         }
     });
 }
@@ -205,12 +188,12 @@ if (window.matchMedia("(min-width: 576px)").matches) {
 togglePlaintextPassword();
 copyPasswordToPlaintextArea();
 
-addQuestion();
-displayNameOfSelectedFile();
-togglePublishedInformationFormGroups();
-toggleOtherOrganisationTextBox();
-
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
+
+if (window.location.pathname.includes('/dashboard/question/submit')) {
+    disableSubmitQuestionsButtonOnPageLoad();
+    processSelectedExcelSheet();
+}
 
 if (window.location.pathname.includes('/dashboard/answer-questions/')) {
     setupQuillEditor();
