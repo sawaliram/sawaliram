@@ -1117,10 +1117,6 @@ button.social-login i {
     color: #949494;
 }
 
-::placeholder {
-    opacity: 1; /* Firefox */
-}
-
 form .form-text {
     color: #949494;
 }

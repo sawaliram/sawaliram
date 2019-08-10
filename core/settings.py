@@ -19,6 +19,7 @@ ALLOWED_HOSTS = ['10.10.9.33', '117.198.100.10', '.sawaliram.org', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    'public_website.apps.PublicWebsiteConfig',
     'sawaliram_auth.apps.SawaliramAuthConfig',
     'dashboard.apps.DashboardConfig',
     'django.contrib.admin',
