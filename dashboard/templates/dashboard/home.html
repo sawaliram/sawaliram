@@ -35,7 +35,7 @@
             </div>
             <div class="task-details">
                 <div class="task-title">
-                    <a href="javascript:void(0)">Manage Content</a>
+                    <a href="{% url 'dashboard:manage-content' %}">Manage Content</a>
                     <button class="btn btn-secondary-hollow task-help">Help?</button>
                 </div>
                 <p class="task-description">Manage submitted datasets and review article submissions</p>
@@ -117,7 +117,7 @@
                     <a href="{% url 'dashboard:submit-questions' %}">Submit Questions</a>
                     <button class="btn btn-secondary-hollow task-help">Help?</button>
                 </div>
-                <p class="task-description">Submit questions either manually by filling them out in a form or by uploading a filled out Excel sheet</p>
+                <p class="task-description">Submit questions by filling out our Excel template</p>
                 <p class="task-stat">4,580 Questions Submitted</p>
             </div>
         </div>

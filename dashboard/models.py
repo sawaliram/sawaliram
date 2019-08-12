@@ -79,7 +79,7 @@ class Question(models.Model):
     published_date = models.DateField(default=datetime.date.today)
     question_asked_on = models.DateField(null=True)
     notes = models.CharField(max_length=1000, default='')
-    submission_id = models.CharField(max_length=100, default='')
+    dataset_id = models.CharField(max_length=100, default='')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     curated_by = models.ForeignKey(

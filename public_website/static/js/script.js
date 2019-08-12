@@ -96,9 +96,9 @@ function copyPasswordToPlaintextArea() {
 // ======== PAGE SPECIFIC FUNCTIONS ========
 // These functions are called only on specific pages
 
-function disableSubmitQuestionsButtonOnPageLoad() {
+function disableSubmitExcelButtonOnPageLoad() {
     $(document).ready(function() {
-        $('.submit-questions').prop('disabled', true);
+        $('.submit-excel').prop('disabled', true);
     });
 }
 
@@ -125,7 +125,7 @@ function processSelectedExcelSheet() {
 
             // validate the excel file
             $.ajax({
-                url: 'validate',
+                url: $(this).data('url'),
                 type: 'POST',
                 data: form_data,
                 contentType: false,
@@ -136,14 +136,14 @@ function processSelectedExcelSheet() {
                             '<i class="far fa-check-circle green"></i> No errors found. Great job!'
                         )
                         $('.validation-errors h5').css('margin-bottom', '2rem');
-                        $('.submit-questions').prop('disabled', false)
+                        $('.submit-excel').prop('disabled', false)
                     }
                     else {  
                         $('.validation-errors h5').html(
                             '<i class="far fa-times-circle red"></i> We found some errors in your excel file:'
                         )
                         $('.validation-errors .error-list').html(response)
-                        $('.submit-questions').prop('disabled', true)
+                        $('.submit-excel').prop('disabled', true)
                     }
                 },
                 error: function(response) {
@@ -151,7 +151,7 @@ function processSelectedExcelSheet() {
                         '<i class="far fa-times-circle red"></i> We are not able to read this file. Please get in touch with us to get help!'
                     )
                     $('.validation-errors h5').css('margin-bottom', '2rem');
-                    $('.submit-questions').prop('disabled', true)
+                    $('.submit-excel').prop('disabled', true)
                 }
             });
         }
@@ -159,7 +159,7 @@ function processSelectedExcelSheet() {
             $('.excel-file-label i').removeClass('green');
             $('.excel-file-label i').addClass('red');
             $('.excel-file-label span').text("Invalid File Format! Click to select another file");
-            $('.submit-questions').prop('disabled', true)
+            $('.submit-excel').prop('disabled', true)
         }
     });
 }
@@ -193,8 +193,8 @@ copyPasswordToPlaintextArea();
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
-if (window.location.pathname.includes('/dashboard/question/submit')) {
-    disableSubmitQuestionsButtonOnPageLoad();
+if (window.location.pathname.includes('/dashboard/question/submit') || window.location.pathname.includes('/dashboard/manage-content')) {
+    disableSubmitExcelButtonOnPageLoad();
     processSelectedExcelSheet();
 }
 
