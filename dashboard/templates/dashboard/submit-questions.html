@@ -33,20 +33,20 @@
     </a>
 </div>
 
-<form id="submitQuestionsForm" action="{% url 'dashboard:submit-questions' %}" enctype="multipart/form-data" method="POST">
+<form action="{% url 'dashboard:submit-questions' %}" enctype="multipart/form-data" method="POST">
     {% csrf_token %}
     <div class="excel-file-selection-panel">
-        <input type="file" class="custom-file-input" id="excelFileBrowser" name="excel_file" required>
+        <input type="file" class="custom-file-input" id="excelFileBrowser" name="excel_file" data-url="validate-new" required>
         <label class="excel-file-label" for="excelFileBrowser">
             <i class="fas fa-file-excel"></i> 
-            <span>Select your excel sheet</span>
+            <span>Click to select your excel sheet</span>
         </label>
         <div class="validation-errors">
             <h5></h5>
             <div class="error-list"></div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary submit-questions" disabled>Submit</button>
+    <button type="submit" class="btn btn-primary submit-excel" disabled>Submit</button>
 </form>
 
 {% endblock %}

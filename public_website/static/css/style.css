@@ -158,6 +158,21 @@ input:focus {
     background-color: #87b24d26;
 }
 
+.tab-content {
+    padding-top: 2rem;
+    min-height: 15rem;
+}
+
+@media (max-width: 576px) {
+    .tab-content {
+        padding-top: 1rem;
+    }
+}
+
+.tab-content .tab-content-subheading {
+    font-size: 1rem;
+}
+
 /* ======== NAVBAR ======== */
 
 .navbar {
@@ -672,8 +687,13 @@ h1.dashboard-home-greeting {
     background-color: #9B63A8;
 }
 
-.alert.task-success-message {
+.alert.success {
     background-color: #A7DF5C94;
+}
+
+.alert.error {
+    color: #721c24;
+    background-color: #f8d7da;
 }
 
 /* ======== SUBMIT QUESTIONS ======== */
@@ -789,6 +809,59 @@ h1.dashboard-home-greeting {
 
     .excel-file-selection-panel .validation-errors .error-list-row p {
         margin-bottom: 0;
+    }
+}
+
+/* ======== MANAGE CONTENT ======== */
+
+.dataset-list {
+    padding-left: 0;
+    margin-bottom: 2rem;
+}
+
+.dataset-list li:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.dataset-list li .card-body .card-title {
+    font-size: 1.1rem;
+}
+
+@media (max-width: 576px) {
+    .dataset-list li .card-body .card-title {
+        font-size: 1rem;
+    }   
+}
+
+.dataset-list li .card-body .card-title .question-count {
+    color: #9b9b9b;
+    font-size: 1rem;
+    margin-left: 0.6rem;
+}
+
+@media (max-width: 576px) {
+    .dataset-list li .card-body .card-title .question-count {
+        font-size: 0.9rem;
+    }   
+}
+
+.dataset-list li .card-body .dataset-details {
+    color: #797979;
+}
+
+@media (max-width: 576px) {
+    .dataset-list li .card-body .dataset-details {
+        font-size: 0.8rem;
+    }  
+}
+
+.dataset-list li .card-body .card-link {
+    padding: 0.2rem 1rem;
+}
+
+@media (max-width: 576px) {
+    #datasets-tab .excel-file-selection-panel {
+        margin-top: 1rem;
     }
 }
 
@@ -1107,60 +1180,6 @@ button.social-login i {
 
 /* ----- General styles ----- */
 
-.label {
-    color: #444;
-}
-
-::placeholder /* Chrome, Firefox, Opera, Safari 10.1+ */,
-:-ms-input-placeholder /* Internet Explorer 10-11 */,
-::-ms-input-placeholder /* Microsoft Edge */ {
-    color: #949494;
-}
-
-form .form-text {
-    color: #949494;
-}
-
-.flex-grow {
-    flex: 1;
-}
-
-.green-button {
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #55B377;
-    background-color: #55b37724;
-}
-
-.green-button:hover {
-    box-shadow: 0 0 0 2px #55b377ad;
-    color: #55B377;
-}
-
-.grey-button {
-    background-color: #ececec;
-    color: #7d7d7d;
-    font-size: 14px;
-}
-
-.grey-button:hover {
-    background-color: #55b37724;
-    color: #55B377;
-}
-
-.grey-link {
-    color: #757575;
-    text-decoration: underline;
-}
-
-.grey-link:hover {
-    color: #629781;
-}
-
-.table thead {
-    color: #777777;
-}
-
 #editor .ql-editor {
     min-height: 400px;
 }
@@ -1233,11 +1252,6 @@ form .form-text {
 .empty-result-text {
     text-align: center;
     color: #4e4e4e;
-}
-
-/* manage-data */
-.submissions-table {
-    margin-bottom: 45px;
 }
 
 /* answer-question */

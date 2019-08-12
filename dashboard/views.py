@@ -11,6 +11,7 @@ from django.db.models import Subquery
 from django.views import View
 from django.http import HttpResponse
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 
 from sawaliram_auth.decorators import volunteer_permission_required
 from dashboard.models import (
@@ -36,6 +37,74 @@ class DashboardHome(View):
             'page_title': 'Dashboard Home'
         }
         return render(request, 'dashboard/home.html', context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ValidateNewExcelSheet(View):
+
+    def post(self, request):
+        """Validate excel sheet and return status/errors"""
+        excel_file = pd.read_excel(request.FILES.get('excel_file'))
+
+        file_errors = {}
+        general_errors = []
+        standard_columns = [
+            'Question',
+            'Question Language',
+            'English translation of the question',
+            'How was the question originally asked?',
+            'Context',
+            'Date of asking the question',
+            'Student Name',
+            'Gender',
+            'Student Class',
+            'School Name',
+            'Curriculum followed',
+            'Medium of instruction',
+            'Area',
+            'State',
+            'Published (Yes/No)',
+            'Publication Name',
+            'Publication Date',
+            'Notes',
+            'Contributor Name',
+            'Contributor Role'
+        ]
+
+        if len(list(excel_file)) != 20:
+            general_errors.append('The columns of the Excel template are modified. Please use the standard template!')
+
+        for column in list(excel_file):
+            if column not in standard_columns:
+                general_errors.append('"' + column + '" is not a standard column. Please use the standard template!')
+
+        if general_errors:
+            file_errors['Problem(s) with the template:'] = general_errors
+
+        for index, row in excel_file.iterrows():
+            row_errors = []
+
+            if row['Question'] != row['Question']:
+                row_errors.append('Question field cannot be empty')
+            if row['Question Language'] != row['Question Language']:
+                row_errors.append('Question Language field cannot be empty')
+            if row['Context'] != row['Context']:
+                row_errors.append('Context field cannot be empty')
+            if row['Published (Yes/No)'] == 'Yes' and row['Publication Name'] != row['Publication Name']:
+                row_errors.append('If the question was published, you must mention the publication name')
+            if row['Contributor Name'] != row['Contributor Name']:
+                row_errors.append('You must mention the name of the contributor')
+
+            if row_errors:
+                # Adding 1 to compensate for 0 indexing
+                file_errors['Row #' + str(index + 1)] = row_errors
+
+        if file_errors:
+            response = render(request, 'dashboard/includes/excel-validation-errors.html', {'errors': file_errors})
+        else:
+            response = 'validated'
+
+        return HttpResponse(response)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -139,8 +208,7 @@ class SubmitQuestionsView(View):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class ValidateExcelSheet(View):
-
+class ValidateCuratedExcelSheet(View):
     def post(self, request):
         """Validate excel sheet and return status/errors"""
         excel_file = pd.read_excel(request.FILES.get('excel_file'))
@@ -167,11 +235,13 @@ class ValidateExcelSheet(View):
             'Publication Date',
             'Notes',
             'Contributor Name',
-            'Contributor Role'
+            'Contributor Role',
+            'Field of Interest',
+            'dataset_id'
         ]
 
-        if len(list(excel_file)) != 20:
-            general_errors.append('The columns of the Excel template are modified! Please use the standard template!')
+        if len(list(excel_file)) != 22:
+            general_errors.append('The columns of the Excel template are modified. Please use the standard template!')
 
         for column in list(excel_file):
             if column not in standard_columns:
@@ -193,6 +263,8 @@ class ValidateExcelSheet(View):
                 row_errors.append('If the question was published, you must mention the publication name')
             if row['Contributor Name'] != row['Contributor Name']:
                 row_errors.append('You must mention the name of the contributor')
+            if row['Field of Interest'] != row['Field of Interest']:
+                row_errors.append('Field of Interest cannot be empty')
 
             if row_errors:
                 # Adding 1 to compensate for 0 indexing
@@ -204,6 +276,121 @@ class ValidateExcelSheet(View):
             response = 'validated'
 
         return HttpResponse(response)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class ManageContentView(View):
+    def get(self, request):
+
+        datasets = Dataset.objects.all().order_by('-created_on')
+
+        context = {
+            'dashboard': 'True',
+            'page_title': 'Manage Content',
+            'datasets': datasets
+        }
+        return render(request, 'dashboard/manage-content.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class CurateDataset(View):
+    def post(self, request):
+        """Save the data to Question table"""
+
+        excel_sheet = pd.read_excel(request.FILES.get('excel_file'))
+        columns = list(excel_sheet)
+
+        column_name_mapping = {
+            'Question': 'question_text',
+            'Question Language': 'question_language',
+            'English translation of the question': 'question_text_english',
+            'How was the question originally asked?': 'question_format',
+            'Context': 'context',
+            'Date of asking the question': 'question_asked_on',
+            'Student Name': 'student_name',
+            'Gender': 'student_gender',
+            'Student Class': 'student_class',
+            'School Name': 'school',
+            'Curriculum followed': 'curriculum_followed',
+            'Medium of instruction': 'medium_language',
+            'Area': 'area',
+            'State': 'state',
+            'Published (Yes/No)': 'published',
+            'Publication Name': 'published_source',
+            'Publication Date': 'published_date',
+            'Notes': 'notes',
+            'Contributor Name': 'contributor',
+            'Contributor Role': 'contributor_role',
+            'Field of Interest': 'field_of_interest',
+            'dataset_id': 'dataset_id',
+        }
+
+        # verify the dataset_id
+        dataset_id = list(excel_sheet['dataset_id'])[0]
+
+        try:
+            dataset = Dataset.objects.get(id=dataset_id)
+        except ObjectDoesNotExist:
+            messages.error(request, 'We could not find that dataset by ID. Make sure you did not edit any other field except "Field of Interest"')
+
+            datasets = Dataset.objects.all().order_by('-created_on')
+            context = {
+                'dashboard': 'True',
+                'page_title': 'Manage Content',
+                'datasets': datasets
+            }
+            return render(request, 'dashboard/manage-content.html', context)
+
+        if dataset.status == 'curated':
+            messages.error(request, 'This dataset is already curated. Make sure you are uploading the correct file.')
+
+            datasets = Dataset.objects.all().order_by('-created_on')
+            context = {
+                'dashboard': 'True',
+                'page_title': 'Manage Content',
+                'datasets': datasets
+            }
+            return render(request, 'dashboard/manage-content.html', context)
+
+        for index, row in excel_sheet.iterrows():
+            question = Question()
+
+            for column in columns:
+                column = column.strip()
+
+                # check if the value is not nan
+                if not row[column] != row[column]:
+
+                    if column == 'Published (Yes/No)':
+                        setattr(
+                            question,
+                            column_name_mapping[column],
+                            True if row[column] == 'Yes' else False)
+                    else:
+                        setattr(
+                            question,
+                            column_name_mapping[column],
+                            row[column].strip() if isinstance(row[column], str) else row[column])
+
+            question.curated_by = request.user
+            question.save()
+
+        # update status of the dataset
+        dataset.status = 'curated'
+        dataset.save()
+
+        # return to Manage Content and show success message
+        messages.success(request, 'Questions saved successfully! These will now be available for answering and translation.')
+
+        datasets = Dataset.objects.all().order_by('-created_on')
+        context = {
+            'dashboard': 'True',
+            'page_title': 'Manage Content',
+            'datasets': datasets
+        }
+        return render(request, 'dashboard/manage-content.html', context)
 
 
 @login_required
@@ -256,21 +443,6 @@ def get_answer_question_view(request, question_id):
 
 
 @login_required
-def get_curate_data_view(request):
-    """Return the curate data view"""
-
-    uncurated_submissions = UncuratedSubmission.objects \
-        .filter(curated=False) \
-        .order_by('-created_on')
-
-    context = {
-        'uncurated_submissions': uncurated_submissions,
-        'excel_file_name': 'excel' + str(random.randint(1, 999)),}
-
-    return render(request, 'dashboard/curate-data.html', context)
-
-
-@login_required
 def get_encode_data_view(request):
     """Return the encode data view"""
 
@@ -280,127 +452,10 @@ def get_encode_data_view(request):
 
     context = {
         'unencoded_submissions': unencoded_submissions,
-        'excel_file_name': 'excel' + str(random.randint(1, 999)),}
+        'excel_file_name': 'excel' + str(random.randint(1, 999)),
+    }
 
     return render(request, 'dashboard/encode-data.html', context)
-
-
-def submit_curated_dataset(request):
-    """Save the curated questions."""
-    excel_sheet = pd.read_excel(request.FILES[request.POST['excel-file-name']])
-    columns = list(excel_sheet)
-
-    column_name_mapping = {
-        'Question': 'question_text',
-        'Question Language': 'question_language',
-        'English translation of the question': 'question_text_english',
-        'How was the question originally asked?': 'question_format',
-        'Context': 'context',
-        'Date of asking the question': 'question_asked_on',
-        'Student Name': 'student_name',
-        'Gender': 'student_gender',
-        'Student Class': 'student_class',
-        'School Name': 'school',
-        'Curriculum followed': 'curriculum_followed',
-        'Medium of instruction': 'medium_language',
-        'Area': 'area',
-        'State': 'state',
-        'Published (Yes/No)': 'published',
-        'Publication Name': 'published_source',
-        'Publication Date': 'published_date',
-        'Notes': 'notes',
-        'Contributor Name': 'contributor',
-        'Contributor Role': 'contributor_role',
-        'id': 'id',
-        'submission_id': 'submission_id'}
-
-    for index, row in excel_sheet.iterrows():
-        curated_question = Question()
-
-        for column in columns:
-            column = column.strip()
-
-            # check if the value is not nan
-            if not row[column] != row[column]:
-
-                if column == 'Published (Yes/No)':
-                    setattr(
-                        curated_question,
-                        column_name_mapping[column],
-                        True if row[column] == 'Yes' else False)
-                else:
-                    setattr(
-                        curated_question,
-                        column_name_mapping[column],
-                        row[column].strip() if isinstance(row[column], str) else row[column])
-
-        curated_question.curated_by = request.user
-        curated_question.save()
-
-        # save the english translation from the
-        # curated dataset to TranslatedQuestion
-        if not row['English translation of the question'] != row['English translation of the question']:
-            english_translation = TranslatedQuestion(
-                question_id=Question.objects.get(pk=row['id']),
-                question_text=row['English translation of the question'],
-                language='english'
-            )
-            english_translation.save()
-
-    # set curated=True for related UncuratedSubmission entry
-    submission_id = list(excel_sheet['submission_id'])[0]
-    uncurated_submission_entry = UncuratedSubmission.objects \
-                                                    .get(submission_id=submission_id)
-    uncurated_submission_entry.curated = True
-    uncurated_submission_entry.save()
-
-    # drop columns not required for encoding
-    del excel_sheet['Question Language']
-    del excel_sheet['How was the question originally asked?']
-    del excel_sheet['Context']
-    del excel_sheet['Date of asking the question']
-    del excel_sheet['Student Name']
-    del excel_sheet['Gender']
-    del excel_sheet['Student Class']
-    del excel_sheet['Curriculum followed']
-    del excel_sheet['Medium of instruction']
-    del excel_sheet['Published (Yes/No)']
-    del excel_sheet['Publication Name']
-    del excel_sheet['Publication Date']
-    del excel_sheet['Contributor Name']
-    del excel_sheet['Contributor Role']
-
-    # add columns for encoding
-    excel_sheet['Subject of class/session'] = ''
-    excel_sheet['Question topic "R"elated or "U"nrelated to the topic or "S"ponteneous'] = ''
-    excel_sheet['Motivation for asking question'] = ''
-    excel_sheet['Type of information requested'] = ''
-    excel_sheet['Source'] = ''
-    excel_sheet['Curiosity index'] = ''
-    excel_sheet['Urban/Rural'] = ''
-    excel_sheet['Type of school'] = ''
-    excel_sheet['Comments for coding rationale'] = ''
-    excel_sheet['submission_id'] = submission_id
-
-    # create and save excel file for encoding
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    excel_filename = 'unencoded_dataset_' \
-        + str(submission_id) + '.xlsx'
-
-    writer = pd.ExcelWriter(os.path.join(
-            BASE_DIR, 'assets/submissions/unencoded/' + excel_filename))
-    excel_sheet.to_excel(writer, 'Sheet 1')
-    writer.save()
-
-    # create an UnencodedSubmission entry
-    unencoded_submission = UnencodedSubmission()
-    unencoded_submission.submission_id = submission_id
-    unencoded_submission.number_of_questions = len(excel_sheet.index)
-    unencoded_submission.excel_sheet_name = excel_filename
-    unencoded_submission.save()
-
-    return render(request, 'dashboard/excel-submitted-successfully.html')
 
 
 def submit_encoded_dataset(request):
