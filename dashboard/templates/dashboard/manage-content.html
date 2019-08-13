@@ -6,74 +6,76 @@
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-        {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+<div class="narrow-container">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="task-help-button-wrapper">
+        <button class="btn btn-secondary-hollow task-help task-page-help">Help?</button>
     </div>
-    {% endfor %}
-{% endif %}
-
-<div class="task-help-button-wrapper">
-    <button class="btn btn-secondary-hollow task-help task-page-help">Help?</button>
-</div>
-
-<nav>
-    <div class="nav nav-pills" role="tablist">
-        <a class="nav-item nav-link active" data-toggle="tab" href="#datasets-tab" role="tab" aria-controls="datasets-tab" aria-selected="true">
-            Datasets
-        </a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#articles-tab" role="tab" aria-controls="articles-tab" aria-selected="true">
-            Articles
-        </a>
-    </div>
-</nav>
-<div class="tab-content">
-    <div class="tab-pane fade show active" id="datasets-tab" role="tabpanel" aria-labelledby="datasets-tab">
-        <ul class="dataset-list">
-            {% for dataset in datasets %}
-            <li class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Dataset #{{ dataset.id }} <span class="badge {% if dataset.status == 'new' %}badge-primary{% elif dataset.status == 'curated' %}badge-warning{% else %}badge-success{% endif %}">{{ dataset.status }}</span> <span class="question-count">({{ dataset.question_count }} Question{{ dataset.question_count|pluralize }})</span></h5>
-                    <p class="dataset-details">Submitted by <b>{{ dataset.submitted_by.get_full_name }}</b> on <b>{{ dataset.created_on|date:"jS F, Y" }}</b></p>
-                    {% if dataset.status == 'new' %}
+    
+    <nav>
+        <div class="nav nav-pills" role="tablist">
+            <a class="nav-item nav-link active" data-toggle="tab" href="#datasets-tab" role="tab" aria-controls="datasets-tab" aria-selected="true">
+                Datasets
+            </a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#articles-tab" role="tab" aria-controls="articles-tab" aria-selected="true">
+                Articles
+            </a>
+        </div>
+    </nav>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="datasets-tab" role="tabpanel" aria-labelledby="datasets-tab">
+            <ul class="dataset-list">
+                {% for dataset in datasets %}
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Dataset #{{ dataset.id }} <span class="badge {% if dataset.status == 'new' %}badge-primary{% elif dataset.status == 'curated' %}badge-warning{% else %}badge-success{% endif %}">{{ dataset.status }}</span> <span class="question-count">({{ dataset.question_count }} Question{{ dataset.question_count|pluralize }})</span></h5>
+                        <p class="dataset-details">Submitted by <b>{{ dataset.submitted_by.get_full_name }}</b> on <b>{{ dataset.created_on|date:"jS F, Y" }}</b></p>
+                        {% if dataset.status == 'new' %}
+                            {% with dataset_id=dataset.id|stringformat:"s" %}
+                            <a href="{% static 'submissions/uncurated/dataset_'|add:dataset_id|add:'_uncurated.xlsx' %}" class="card-link btn btn-primary">Curate</a>
+                            {% endwith %}
+                        {% elif dataset.status == 'curated' %}
+                        <a href="#" class="card-link btn btn-primary">Encode</a>
+                        {% endif %}
                         {% with dataset_id=dataset.id|stringformat:"s" %}
-                        <a href="{% static 'submissions/uncurated/dataset_'|add:dataset_id|add:'_uncurated.xlsx' %}" class="card-link btn btn-primary">Curate</a>
+                        <a href="{% static 'submissions/raw/dataset_'|add:dataset_id|add:'_raw.xlsx' %}" class="card-link btn btn-secondary-hollow"><i class="fas fa-download"></i> Download Raw File</a>
                         {% endwith %}
-                    {% elif dataset.status == 'curated' %}
-                    <a href="#" class="card-link btn btn-primary">Encode</a>
-                    {% endif %}
-                    {% with dataset_id=dataset.id|stringformat:"s" %}
-                    <a href="{% static 'submissions/raw/dataset_'|add:dataset_id|add:'_raw.xlsx' %}" class="card-link btn btn-secondary-hollow"><i class="fas fa-download"></i> Download Raw File</a>
-                    {% endwith %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <h4 class="tab-content-subheading">Upload Curated Dataset:</h4>
+            <form action="{% url 'dashboard:curate-dataset' %}" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <div class="excel-file-selection-panel">
+                    <input type="file" class="custom-file-input" id="excelFileBrowser" name="excel_file" data-url="question/validate-curated" required>
+                    <label class="excel-file-label" for="excelFileBrowser">
+                        <i class="fas fa-file-excel"></i> 
+                        <span>Click to select your excel sheet</span>
+                    </label>
+                    <div class="validation-errors">
+                        <h5></h5>
+                        <div class="error-list"></div>
+                    </div>
                 </div>
-            </li>
-            {% endfor %}
-        </ul>
-        <h4 class="tab-content-subheading">Upload Curated Dataset:</h4>
-        <form action="{% url 'dashboard:curate-dataset' %}" enctype="multipart/form-data" method="POST">
-            {% csrf_token %}
-            <div class="excel-file-selection-panel">
-                <input type="file" class="custom-file-input" id="excelFileBrowser" name="excel_file" data-url="question/validate-curated" required>
-                <label class="excel-file-label" for="excelFileBrowser">
-                    <i class="fas fa-file-excel"></i> 
-                    <span>Click to select your excel sheet</span>
-                </label>
-                <div class="validation-errors">
-                    <h5></h5>
-                    <div class="error-list"></div>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary submit-excel" disabled>Submit</button>
-        </form>
-    </div>
-    <div class="tab-pane fade" id="articles-tab" role="tabpanel" aria-labelledby="articles-tab">
-        <p class="empty-tab-message">
-            No articles have been submitted yet!
-        </p>
+                <button type="submit" class="btn btn-primary submit-excel" disabled>Submit</button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="articles-tab" role="tabpanel" aria-labelledby="articles-tab">
+            <p class="empty-tab-message">
+                No articles have been submitted yet!
+            </p>
+        </div>
     </div>
 </div>
 

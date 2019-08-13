@@ -18,9 +18,7 @@ from dashboard.models import (
     QuestionArchive,
     Question,
     Answer,
-    UncuratedSubmission,
     UnencodedSubmission,
-    TranslatedQuestion,
     Dataset)
 
 import pandas as pd
@@ -33,7 +31,7 @@ class DashboardHome(View):
     def get(self, request):
         """Return the dashboard home view."""
         context = {
-            'dashboard': 'True',
+            'grey_background': 'True',
             'page_title': 'Dashboard Home'
         }
         return render(request, 'dashboard/home.html', context)
@@ -114,7 +112,7 @@ class SubmitQuestionsView(View):
     def get(self, request):
         """Return the submit questions view."""
         context = {
-            'dashboard': 'True',
+            'grey_background': 'True',
             'page_title': 'Submit Questions'
         }
         return render(request, 'dashboard/submit-questions.html', context)
@@ -201,7 +199,7 @@ class SubmitQuestionsView(View):
 
         messages.success(request, 'Thank you for the questions! We will get to work preparing the questions to be answered and translated.')
         context = {
-            'dashboard': 'True',
+            'grey_background': 'True',
             'page_title': 'Submit Questions'
         }
         return render(request, 'dashboard/submit-questions.html', context)
@@ -286,7 +284,7 @@ class ManageContentView(View):
         datasets = Dataset.objects.all().order_by('-created_on')
 
         context = {
-            'dashboard': 'True',
+            'grey_background': 'True',
             'page_title': 'Manage Content',
             'datasets': datasets
         }
@@ -337,7 +335,7 @@ class CurateDataset(View):
 
             datasets = Dataset.objects.all().order_by('-created_on')
             context = {
-                'dashboard': 'True',
+                'grey_background': 'True',
                 'page_title': 'Manage Content',
                 'datasets': datasets
             }
@@ -348,7 +346,7 @@ class CurateDataset(View):
 
             datasets = Dataset.objects.all().order_by('-created_on')
             context = {
-                'dashboard': 'True',
+                'grey_background': 'True',
                 'page_title': 'Manage Content',
                 'datasets': datasets
             }
@@ -386,7 +384,7 @@ class CurateDataset(View):
 
         datasets = Dataset.objects.all().order_by('-created_on')
         context = {
-            'dashboard': 'True',
+            'grey_background': 'True',
             'page_title': 'Manage Content',
             'datasets': datasets
         }
