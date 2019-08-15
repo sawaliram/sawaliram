@@ -2,6 +2,7 @@
 
 import random
 import os
+import urllib
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -12,6 +13,7 @@ from django.views import View
 from django.http import HttpResponse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
 
 from sawaliram_auth.decorators import volunteer_permission_required
 from dashboard.models import (
@@ -391,28 +393,67 @@ class CurateDataset(View):
         return render(request, 'dashboard/manage-content.html', context)
 
 
-@login_required
-def get_view_questions_view(request):
-    """Return the 'View Questions' view after applying filters, if any."""
-    questions_superset = Question.objects.all().order_by('-created_on')
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class ViewQuestionsView(View):
+    def get(self, request):
 
-    states_list = questions_superset.order_by() \
-                                    .values_list('state') \
-                                    .distinct('state') \
-                                    .values('state')
+        questions_set = Question.objects.all()
 
-    questions = questions_superset
-    states_to_filter_by = request.GET.getlist('states')
+        # get values for filter
+        subjects = questions_set.order_by() \
+                                .values_list('field_of_interest', flat=True) \
+                                .distinct('field_of_interest') \
+                                .values('field_of_interest')
 
-    if states_to_filter_by:
-        questions = questions.filter(state__in=states_to_filter_by)
+        states = questions_set.order_by() \
+                              .values_list('state') \
+                              .distinct('state') \
+                              .values('state')
 
-    context = {
-        'questions': questions,
-        'states_list': states_list,
-        'states_to_filter_by': states_to_filter_by}
+        curriculums = questions_set.order_by() \
+                                   .values_list('curriculum_followed') \
+                                   .distinct('curriculum_followed') \
+                                   .values('curriculum_followed')
 
-    return render(request, 'dashboard/view-questions.html', context)
+        # apply filters if any
+        subjects_to_filter_by = request.GET.getlist('subject')
+        if subjects_to_filter_by:
+            questions_set = questions_set.filter(field_of_interest__in=subjects_to_filter_by)
+
+        states_to_filter_by = request.GET.getlist('state')
+        if states_to_filter_by:
+            questions_set = questions_set.filter(state__in=states_to_filter_by)
+
+        curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
+
+        if curriculums_to_filter_by:
+            questions_set = questions_set.filter(curriculum_followed__in=curriculums_to_filter_by)
+
+        # sort the results if sort-by parameter exists
+        # default: newest
+        sort_by = request.GET.get('sort-by', 'newest')
+
+        if sort_by == 'newest':
+            questions_set = questions_set.order_by('-created_on')
+
+        paginator = Paginator(questions_set, 15)
+
+        page = request.GET.get('page', 1)
+        questions = paginator.get_page(page)
+        context = {
+            'grey_background': 'True',
+            'page_title': 'View Questions',
+            'questions': questions,
+            'subjects': subjects,
+            'states': states,
+            'curriculums': curriculums,
+            'subjects_to_filter_by': subjects_to_filter_by,
+            'states_to_filter_by': states_to_filter_by,
+            'curriculums_to_filter_by': curriculums_to_filter_by,
+            'result_size': questions_set.count()
+        }
+        return render(request, 'dashboard/view-questions.html', context)
 
 
 @login_required

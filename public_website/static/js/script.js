@@ -164,6 +164,75 @@ function processSelectedExcelSheet() {
     });
 }
 
+function setupSearchResultsPagination() {
+    $('.page-button').click(function() {
+        var current_params = new URLSearchParams(location.search);
+        current_params.set('page', $(this).data('page'));
+        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
+    });
+}
+
+function setupSearchResultsSort() {
+    $('.sort-by-option').click(function() {
+        var current_params = new URLSearchParams(location.search);
+        current_params.set('sort-by', $(this).data('sort'));
+        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
+    });
+}
+
+function setupSearchResultsFilter() {
+    $('.category-option').click(function() {
+        var current_params = new URLSearchParams(location.search);
+
+        if ($(this).hasClass('active')) {
+            var new_params_list = []
+            for (const value of current_params.entries()) {
+                if (value[1] == $(this).data('value')) {
+                    if (value[0] != $(this).data('param')) {
+                        new_params_list.push(value);
+                    }
+                }
+                else {
+                    new_params_list.push(value);
+                }
+            }
+            new_params = new URLSearchParams(new_params_list);
+
+            if (new_params.toString() == '') {
+                location.href = window.location.origin + window.location.pathname + new_params.toString();
+            }
+            else {
+                location.href = window.location.origin + window.location.pathname + '?' + new_params.toString();
+            }
+        }
+        else {
+            current_params.append($(this).data('param'), $(this).data('value'));
+            location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
+        }
+    });
+}
+
+function setupSearchResultsClearAll() {
+    $('.clear-all').click(function() {
+        var current_params = new URLSearchParams(location.search);
+        var new_params_list = []
+
+        for (const value of current_params.entries()) {
+            if ((value[0] == 'page') || (value[0] == 'sort-by')) {
+                new_params_list.push(value);
+            }
+        }
+        new_params = new URLSearchParams(new_params_list);
+
+        if (new_params.toString() == '') {
+            location.href = window.location.origin + window.location.pathname + new_params.toString();
+        }
+        else {
+            location.href = window.location.origin + window.location.pathname + '?' + new_params.toString();
+        }
+    });
+}
+
 function setupQuillEditor() {
 
     var quill = new Quill('#editor', {
@@ -205,4 +274,11 @@ if (window.location.pathname.includes('/dashboard/answer-questions/')) {
 if (window.location.pathname.includes('/user/how-can-i-help')) {
     highlightSelectedVolunteerOption();
     openVolunteerOptionDialog();
+}
+
+if (window.location.pathname.includes('/dashboard/view-questions')) {
+    setupSearchResultsPagination();
+    setupSearchResultsSort();
+    setupSearchResultsFilter();
+    setupSearchResultsClearAll();
 }
