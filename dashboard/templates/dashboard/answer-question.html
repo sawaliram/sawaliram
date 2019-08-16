@@ -11,49 +11,54 @@
 {# TODO: add breadcrumb, after implemented in base.html #}
 
 {% block extra_header %}
-<hr />
-<div class="answer-question highlighted-meta-area">
-    <h1 class="question-text-heading">{{ question.question_text }}</h1>
-    {% if question.student_class %}
-        <span class="highlighted-meta">
-            <i class="fas fa-user-graduate"></i></i>
-            <span class="meta-value">
-                Grade {{ question.student_class }}
-            </span>
-        </span>
-    {% endif %}
-
-    {% if question.school %}
-        <span class="highlighted-meta">
-            <i class="fas fa-graduation-cap"></i>
-            <span class="meta-value">
-                {{ question.school }}
-                {% if question.curriculum_followed %}
-                    ({{ question.curriculum_followed }})
-                {% endif %}
-            </span>
-        </span>
-    {% endif %}
-
-    {% if question.area or question.state %}
-        <span class="highlighted-meta">
-            <i class="fas fa-map-marker-alt"></i>
-            <span class="meta-value">
-                {% if question.area %}
-                    {{ question.area.rstrip }} {% if question.state %}, {{ question.state }} {% endif %}
-                {% elif question.state %}
-                    {{ question.state }}
-                {% endif %}
-            </span>    
-        </span>
-    {% endif %}
-    {# TODO: "Previous" and "Next" buttons #}
+<div class="navbar-extra row justify-content-end">
+	<div>
+		<button class="btn btn-secondary-hollow">&lt; Prev</button>
+		<button class="btn btn-secondary-hollow">Next &gt;</button>
+	</div>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="buffer" style="margin-top: 10rem;"></div>
+<div class="buffer" style="margin-top: 1rem;"></div>
+	<div class="answer-question highlighted-meta-area">
+	    <h1 class="question-text-heading">{{ question.question_text }}</h1>
+	    {% if question.student_class %}
+	        <span class="highlighted-meta">
+	            <i class="fas fa-user-graduate"></i></i>
+	            <span class="meta-value">
+	                Grade {{ question.student_class }}
+	            </span>
+	        </span>
+	    {% endif %}
+	
+	    {% if question.school %}
+	        <span class="highlighted-meta">
+	            <i class="fas fa-graduation-cap"></i>
+	            <span class="meta-value">
+	                {{ question.school }}
+	                {% if question.curriculum_followed %}
+	                    ({{ question.curriculum_followed }})
+	                {% endif %}
+	            </span>
+	        </span>
+	    {% endif %}
+	
+	    {% if question.area or question.state %}
+	        <span class="highlighted-meta">
+	            <i class="fas fa-map-marker-alt"></i>
+	            <span class="meta-value">
+	                {% if question.area %}
+	                    {{ question.area.rstrip }} {% if question.state %}, {{ question.state }} {% endif %}
+	                {% elif question.state %}
+	                    {{ question.state }}
+	                {% endif %}
+	            </span>
+	        </span>
+	    {% endif %}
 
+	    {# TODO: "Previous" and "Next" buttons #}
+	</div>
 <form action="{% url 'dashboard:submit-answer' %}" class="rich-text-form input-area" method="POST">
     {% csrf_token %}
 

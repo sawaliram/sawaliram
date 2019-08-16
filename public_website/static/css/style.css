@@ -553,6 +553,11 @@ input:focus {
     border-color: #9B63A8;
 }
 
+.navbar-extra {
+    width: 100%;
+    padding: 0.5rem;
+}
+
 /* ======== DASHBOARD_HOME ======== */
 
 h1.dashboard-home-greeting {
@@ -1268,15 +1273,21 @@ button.social-login i {
     font-size: 13px;
 }
 
+.highlighted-meta-area {
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem 0;
+}
+
 .highlighted-meta:not(:last-child) {
-    border-right: 1px solid #b7b7b7;
+    border-right: 1px solid #000000;
     margin-right: 10px;
 }
 
 .highlighted-meta i {
     font-size: 13px;
     margin: 0 5px;
-    color: #b7b7b7;
 }
 
 #questionsList .card .card-body .meta-phrase-section {
@@ -1284,7 +1295,7 @@ button.social-login i {
 }
 
 .highlighted-meta .meta-value {
-    color: #777;
+    color: #000;
 }
 
 .empty-result-text {
@@ -1305,6 +1316,8 @@ button.social-login i {
     color: white;
     width: 100%;
     border-top: 1px solid #f2f2f2;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .navbar .highlighted-meta-area .meta-value,
