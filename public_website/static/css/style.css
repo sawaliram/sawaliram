@@ -1312,4 +1312,20 @@ button.social-login i {
 {
     color: #ffffff;
 }
+
+/*----- Answer Questions -----*/
+
+.input-area {
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border-radius: 0.8rem;
+    padding: 1em;
+}
+
+.input-area .ql-container.ql-snow,
+.input-area .ql-toolbar.ql-snow
+{
+	border: none;
 }

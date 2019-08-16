@@ -8,11 +8,10 @@
 
 {% block title %} Answer Question | Sawaliram {% endblock %}
 
-{% block content %}
-
-<h1 class="question-text-heading">{{ question.question_text }}</h1>
-
+{% block extra_header %}
+<hr />
 <div class="answer-question highlighted-meta-area">
+    <h1 class="question-text-heading">{{ question.question_text }}</h1>
     {% if question.student_class %}
         <span class="highlighted-meta">
             <i class="fas fa-user-graduate"></i></i>
@@ -47,11 +46,18 @@
         </span>
     {% endif %}
 </div>
+{% endblock %}
 
-<form action="{% url 'dashboard:submit-answer' %}" class="rich-text-form" method="POST">
+{% block content %}
+<div class="buffer" style="margin-top: 10rem;"></div>
+
+<form action="{% url 'dashboard:submit-answer' %}" class="rich-text-form input-area" method="POST">
     {% csrf_token %}
 
-    <div id="toolbar">
+    <div id="editor" data-placeholder="Type your answer here..."></div>
+
+    <hr />
+    <div id="toolbar" class="row justify-content-end">
         <span class="ql-formats">
             <button class="ql-bold"></button>
             <button class="ql-italic"></button>
@@ -75,19 +81,21 @@
             <button class="ql-formula"></button>
         </span>
     </div>
+    <hr />
 
-    <div id="editor"></div>
-
-    <br>
-    <div class="task-notes">
-        <i class="fas fa-exclamation-circle"></i> Once submitted, your answer will be reviewed by another subject expert, who may approve your answer or suggest changes to it. 
+    <div class="submit-toolbar row">
+		<div class="col-sm">
+		    <input type="hidden" name="question_id" value="{{ question.id }}">
+		    <input type="hidden" name="rich-text-content" value="" />
+		    <button type="submit" class="btn btn-primary">Submit For Review</button>
+		    <button type="submit" class="btn btn-primary btn-primary-hollow" name="mode" value="draft" >Save Draft</button>
+		</div>
+		<div class="col-sm">
+			<a class="btn btn-plain float-right" data-toggle="tooltip" data-placement="left" title="Once submitted, your answer will be reviewed by another subject expert, who may approve your answer or suggest changes to it.">
+			  <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+			</a>
     </div>
-
-    <input type="hidden" name="question_id" value="{{ question.id }}">
-    <input type="hidden" name="rich-text-content" value="" />
-
-    <br>
-    <button type="submit" class="btn btn-block green-button">Submit For Review</button>
+	</div>
 </form>
 
 {% endblock %}

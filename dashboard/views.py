@@ -435,7 +435,9 @@ def get_answer_question_view(request, question_id):
     question_to_answer = Question.objects.get(pk=question_id)
 
     context = {
-        'question': question_to_answer
+        'question': question_to_answer,
+        'grey_background': 'True',
+        'page_title': 'Answer Question',
     }
     return render(request, 'dashboard/answer-question.html', context)
 
