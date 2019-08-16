@@ -1262,10 +1262,6 @@ button.social-login i {
     font-size: 15px;
 }
 
-.highlighted-meta-area {
-    margin-bottom: 13px;
-}
-
 .highlighted-meta {
     padding: 2px;
     padding-right: 10px;
@@ -1301,6 +1297,19 @@ button.social-login i {
     font-size: 30px;
 }
 
-.answer-question.highlighted-meta-area {
-    margin-bottom: 30px;
+/*-- Highlighted Meta on Menubar --*/
+
+.navbar .highlighted-meta-area {
+    padding: 2rem;
+    background-color: #87b24d;
+    color: white;
+    width: 100%;
+    border-top: 1px solid #f2f2f2;
+}
+
+.navbar .highlighted-meta-area .meta-value,
+.navbar .highlighted-meta-area i
+{
+    color: #ffffff;
+}
 }
