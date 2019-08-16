@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
         Creates and saves a user as superuser
         """
         email = self.normalize_email(email)
-        user = self.create_user(email, password)
+        user = self.create_user('Super', 'User', email, password)
         user.is_staff()
         user.is_superuser = True
         user.save()
