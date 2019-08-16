@@ -56,6 +56,14 @@
 	            </span>
 	        </span>
 	    {% endif %}
+	    {% if question.question_asked_on %}
+	        <span class="highlighted-meta">
+	            <i class="fas fa-calendar"></i>
+	            <span class="meta-value">
+	                {{ question.question_asked_on }}
+	            </span>
+	        </span>
+	    {% endif %}
 
 	    {# TODO: "Previous" and "Next" buttons #}
 	</div>
