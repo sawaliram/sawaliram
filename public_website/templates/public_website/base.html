@@ -144,6 +144,9 @@
                     </button>
                 {% endif %}
             </div>
+            {% block extra_header %}
+                {# page-specific header/breadcrumbs can go here #}
+            {% endblock %}
         </header>
 
         <div class="container sawaliram-container flex-grow">
