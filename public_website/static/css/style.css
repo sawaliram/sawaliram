@@ -105,6 +105,17 @@ input:focus {
     border-color: #759a42;
 }
 
+.btn-primary-hollow {
+    color: #87B24D;
+    background-color: #ffffff;
+    border: 1px solid #87B24D;
+}
+
+.btn-primary-hollow:hover {
+    color: #ffffff;
+    background-color: #87B24D;
+}
+
 .btn-secondary {
     background-color: #9B63A8;
     border-color: #9B63A8;
