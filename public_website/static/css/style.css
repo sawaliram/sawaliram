@@ -1348,3 +1348,9 @@ button.social-login i {
 {
 	border: none;
 }
+
+#toolbar {
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 0.5rem;
+}
