@@ -50,6 +50,46 @@ class QuestionArchive(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    def accept_question(self, acceptor):
+        """
+        Mark a question as approved, by the given acceptor (user).
+
+        This basically changes a question from unmoderated to moderated
+        by removing the QuestionArchive record and replacing it with
+        a Question one.
+        """
+
+        q = Question()
+        q.school = self.school
+        q.area = self.area
+        q.state = self.state
+        q.student_name = self.student_name
+        q.student_gender = self.student_gender
+        q.student_class = self.student_class
+        q.question_text = self.question_text
+        q.question_text_english = self.question_text_english
+        q.question_format = self.question_format
+        q.question_language = self.question_language
+        q.contributor = self.contributor
+        q.contributor_role = self.contributor_role
+        q.context = self.context
+        q.medium_language = self.medium_language
+        q.curriculum_followed = self.curriculum_followed
+        q.published = self.published
+        q.published_source = self.published_source
+        q.published_date = self.published_date
+        q.question_asked_on = self.question_asked_on
+        q.notes = self.notes
+        q.created_on = self.created_on
+        q.updated_on = self.updated_on
+        q.submitted_by = self.submitted_by
+        q.curated_by = acceptor
+        try:
+            q.save()
+            self.delete()
+        except Exception as e:
+            print('Error accepting question: %s' % e)
+
     def __str__(self):
         return self.question_text
 

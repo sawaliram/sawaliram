@@ -1,4 +1,4 @@
-{% extends "dashboard/base.html" %}
+{% extends "public_website/base.html" %}
 
 {% load static %}
 
@@ -8,50 +8,86 @@
 
 {% block title %} Answer Question | Sawaliram {% endblock %}
 
-{% block content %}
+{# TODO: add breadcrumb, after implemented in base.html #}
 
-<h1 class="question-text-heading">{{ question.question_text }}</h1>
-
-<div class="answer-question highlighted-meta-area">
-    {% if question.student_class %}
-        <span class="highlighted-meta">
-            <i class="fas fa-user-graduate"></i></i>
-            <span class="meta-value">
-                Grade {{ question.student_class }}
-            </span>
-        </span>
-    {% endif %}
-
-    {% if question.school %}
-        <span class="highlighted-meta">
-            <i class="fas fa-graduation-cap"></i>
-            <span class="meta-value">
-                {{ question.school }}
-                {% if question.curriculum_followed %}
-                    ({{ question.curriculum_followed }})
-                {% endif %}
-            </span>
-        </span>
-    {% endif %}
-
-    {% if question.area or question.state %}
-        <span class="highlighted-meta">
-            <i class="fas fa-map-marker-alt"></i>
-            <span class="meta-value">
-                {% if question.area %}
-                    {{ question.area.rstrip }} {% if question.state %}, {{ question.state }} {% endif %}
-                {% elif question.state %}
-                    {{ question.state }}
-                {% endif %}
-            </span>    
-        </span>
-    {% endif %}
+{% block extra_header %}
+<div class="navbar-extra row justify-content-end">
+	<div>
+		<button class="btn btn-secondary-hollow">&lt; Prev</button>
+		<button class="btn btn-secondary-hollow">Next &gt;</button>
+	</div>
 </div>
+{% endblock %}
 
-<form action="{% url 'dashboard:submit-answer' %}" class="rich-text-form" method="POST">
+{% block content %}
+<div class="buffer" style="margin-top: 1rem;"></div>
+	<div class="answer-question highlighted-meta-area">
+	    <h1 class="question-text-heading">{{ question.question_text }}</h1>
+	    {% if question.student_class %}
+	        <span class="highlighted-meta">
+	            <i class="fas fa-user-graduate"></i></i>
+	            <span class="meta-value">
+	                Grade {{ question.student_class }}
+	            </span>
+	        </span>
+	    {% endif %}
+	
+	    {% if question.school %}
+	        <span class="highlighted-meta">
+	            <i class="fas fa-graduation-cap"></i>
+	            <span class="meta-value">
+	                {{ question.school }}
+	                {% if question.curriculum_followed %}
+	                    ({{ question.curriculum_followed }})
+	                {% endif %}
+	            </span>
+	        </span>
+	    {% endif %}
+	
+	    {% if question.area or question.state %}
+	        <span class="highlighted-meta">
+	            <i class="fas fa-map-marker-alt"></i>
+	            <span class="meta-value">
+	                {% if question.area %}
+	                    {{ question.area.rstrip }} {% if question.state %}, {{ question.state }} {% endif %}
+	                {% elif question.state %}
+	                    {{ question.state }}
+	                {% endif %}
+	            </span>
+	        </span>
+	    {% endif %}
+	    {% if question.question_asked_on %}
+	        <span class="highlighted-meta">
+	            <i class="fas fa-calendar"></i>
+	            <span class="meta-value">
+	                {{ question.question_asked_on }}
+	            </span>
+	        </span>
+	    {% endif %}
+
+	    {# TODO: "Previous" and "Next" buttons #}
+	</div>
+{% if messages %}
+<div class="messages">
+    <div class="alert alert-success alert-dismissible fade show task-success-message" role="alert">
+        {% for message in messages %}
+        <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            <i class="far fa-check-circle"></i>
+            {{ message }}
+        </span>
+        {% endfor %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+{% endif %}
+<form action="{% url 'dashboard:answer-question' question_id=question.id %}" class="rich-text-form input-area" method="POST">
     {% csrf_token %}
 
-    <div id="toolbar">
+    <div id="editor" data-placeholder="Type your answer here..."></div>
+
+    <div id="toolbar" class="row justify-content-end">
         <span class="ql-formats">
             <button class="ql-bold"></button>
             <button class="ql-italic"></button>
@@ -75,19 +111,16 @@
             <button class="ql-formula"></button>
         </span>
     </div>
+    {# TODO: Make editor more like Gmail's (as copied in design) #}
 
-    <div id="editor"></div>
-
-    <br>
-    <div class="task-notes">
-        <i class="fas fa-exclamation-circle"></i> Once submitted, your answer will be reviewed by another subject expert, who may approve your answer or suggest changes to it. 
-    </div>
-
-    <input type="hidden" name="question_id" value="{{ question.id }}">
-    <input type="hidden" name="rich-text-content" value="" />
-
-    <br>
-    <button type="submit" class="btn btn-block green-button">Submit For Review</button>
+    <div class="submit-toolbar row">
+		<div class="col-sm">
+		    <input type="hidden" name="question_id" value="{{ question.id }}">
+		    <input type="hidden" name="rich-text-content" value="" />
+		    <button type="submit" class="btn btn-primary">Submit For Review</button>
+		    <button type="submit" class="btn btn-primary btn-primary-hollow" name="mode" value="draft" disabled>Save Draft</button>
+		</div>
+	</div>
 </form>
 
 {% endblock %}

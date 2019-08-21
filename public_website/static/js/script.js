@@ -233,18 +233,29 @@ function setupSearchResultsClearAll() {
     });
 }
 
-function setupQuillEditor() {
-
+function setupQuillEditor({ placeholder = null } = {}) {
     var quill = new Quill('#editor', {
         theme: 'snow',
         modules: {
-            toolbar: '#toolbar'
-        }
+            toolbar: '#toolbar',
+        },
+        placeholder: placeholder,
     });
+    // var quill = new Quill('#editor', {
+    //     theme: 'snow',
+    //     modules: {
+    //         toolbar: '#toolbar',
+    //     },
+    //     placeholder: placeholder,
+    // });
 
     $('.rich-text-form').submit(function(e) {
         $('[name="rich-text-content"]').val(quill.root.innerHTML);
     });
+}
+
+function activateTooltips() {
+  $('[data-toggle="tooltip"]').tooltip()
 }
 
 // ======== CALL GENERAL FUNCTIONS ========
@@ -267,8 +278,10 @@ if (window.location.pathname.includes('/dashboard/question/submit') || window.lo
     processSelectedExcelSheet();
 }
 
-if (window.location.pathname.includes('/dashboard/answer-questions/')) {
-    setupQuillEditor();
+var pattern = new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)")
+if (pattern.test(window.location.pathname)) {
+    setupQuillEditor({ placeholder: 'Type your answer here...' });
+    activateTooltips();
 }
 
 if (window.location.pathname.includes('/users/how-can-i-help')) {

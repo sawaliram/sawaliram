@@ -114,6 +114,17 @@ input:focus {
     border-color: #759a42;
 }
 
+.btn-primary-hollow {
+    color: #87B24D;
+    background-color: #ffffff;
+    border: 1px solid #87B24D;
+}
+
+.btn-primary-hollow:hover {
+    color: #ffffff;
+    background-color: #87B24D;
+}
+
 .btn-secondary {
     background-color: #9B63A8;
     border-color: #9B63A8;
@@ -567,6 +578,13 @@ input:focus {
     border-color: #9B63A8;
 }
 
+.navbar-extra {
+    width: calc(100vw + 2rem);
+    padding: 0.5rem;
+    padding-right: 2rem;
+    box-shadow: 0 0.7rem 1rem -1rem;
+}
+
 /* ======== DASHBOARD_HOME ======== */
 
 h1.dashboard-home-greeting {
@@ -927,6 +945,12 @@ h1.dashboard-home-greeting {
     .excel-file-selection-panel .validation-errors .error-list-row p {
         margin-bottom: 0;
     }
+}
+
+.messages {
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* ======== MANAGE CONTENT ======== */
@@ -1563,25 +1587,27 @@ button.social-login i {
     font-size: 15px;
 }
 
-.highlighted-meta-area {
-    margin-bottom: 13px;
-}
-
 .highlighted-meta {
     padding: 2px;
     padding-right: 10px;
     font-size: 13px;
 }
 
+.highlighted-meta-area {
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem 0;
+}
+
 .highlighted-meta:not(:last-child) {
-    border-right: 1px solid #b7b7b7;
+    border-right: 1px solid #000000;
     margin-right: 10px;
 }
 
 .highlighted-meta i {
     font-size: 13px;
     margin: 0 5px;
-    color: #b7b7b7;
 }
 
 #questionsList .card .card-body .meta-phrase-section {
@@ -1589,7 +1615,7 @@ button.social-login i {
 }
 
 .highlighted-meta .meta-value {
-    color: #777;
+    color: #000;
 }
 
 .empty-result-text {
@@ -1602,6 +1628,43 @@ button.social-login i {
     font-size: 30px;
 }
 
-.answer-question.highlighted-meta-area {
-    margin-bottom: 30px;
+/*-- Highlighted Meta on Menubar --*/
+
+.navbar .highlighted-meta-area {
+    padding: 2rem;
+    background-color: #87b24d;
+    color: white;
+    width: 100%;
+    border-top: 1px solid #f2f2f2;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.navbar .highlighted-meta-area .meta-value,
+.navbar .highlighted-meta-area i
+{
+    color: #ffffff;
+}
+
+/*----- Answer Questions -----*/
+
+.input-area {
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border-radius: 0.8rem;
+    padding: 1em;
+}
+
+.input-area .ql-container.ql-snow,
+.input-area .ql-toolbar.ql-snow
+{
+	border: none;
+}
+
+#toolbar {
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 0.5rem;
 }
