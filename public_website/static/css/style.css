@@ -554,8 +554,10 @@ input:focus {
 }
 
 .navbar-extra {
-    width: 100%;
+    width: calc(100vw + 2rem);
     padding: 0.5rem;
+    padding-right: 2rem;
+    box-shadow: 0 0.7rem 1rem -1rem;
 }
 
 /* ======== DASHBOARD_HOME ======== */
