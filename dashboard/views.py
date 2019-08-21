@@ -3,7 +3,7 @@
 import random
 import os
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -496,7 +496,11 @@ def submit_answer(request):
     new_answer.answered_by = request.user
     new_answer.save()
 
-    return render(request, 'dashboard/excel-submitted-successfully.html')
+    messages.success(request, ('Thank you for submitting your answer! '
+        'Your answer reviewed by another subject expert, who may '
+        'approve your answer or suggest changes to it.'))
+    return redirect('dashboard:answer-question',
+        question_id=new_answer.question_id.id)
 
 
 def get_error_404_view(request, exception):

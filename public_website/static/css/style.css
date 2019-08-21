@@ -854,6 +854,12 @@ h1.dashboard-home-greeting {
     }
 }
 
+.messages {
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /* ======== MANAGE CONTENT ======== */
 
 .dataset-list {
