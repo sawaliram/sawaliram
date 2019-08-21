@@ -225,6 +225,8 @@ class SubmitAnswerView(View):
 
         question_to_answer = Question.objects.get(pk=question_id)
 
+        # TODO allow saving of drafts
+
         new_answer = Answer()
         new_answer.question_id = question_to_answer
         new_answer.answer_text = request.POST['rich-text-content']
