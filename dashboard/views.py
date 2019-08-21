@@ -26,6 +26,8 @@ from dashboard.models import (
 import pandas as pd
 
 
+# Dashboard Home
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class DashboardHome(View):
@@ -39,73 +41,7 @@ class DashboardHome(View):
         return render(request, 'dashboard/home.html', context)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class ValidateNewExcelSheet(View):
-
-    def post(self, request):
-        """Validate excel sheet and return status/errors"""
-        excel_file = pd.read_excel(request.FILES.get('excel_file'))
-
-        file_errors = {}
-        general_errors = []
-        standard_columns = [
-            'Question',
-            'Question Language',
-            'English translation of the question',
-            'How was the question originally asked?',
-            'Context',
-            'Date of asking the question',
-            'Student Name',
-            'Gender',
-            'Student Class',
-            'School Name',
-            'Curriculum followed',
-            'Medium of instruction',
-            'Area',
-            'State',
-            'Published (Yes/No)',
-            'Publication Name',
-            'Publication Date',
-            'Notes',
-            'Contributor Name',
-            'Contributor Role'
-        ]
-
-        if len(list(excel_file)) != 20:
-            general_errors.append('The columns of the Excel template are modified. Please use the standard template!')
-
-        for column in list(excel_file):
-            if column not in standard_columns:
-                general_errors.append('"' + column + '" is not a standard column. Please use the standard template!')
-
-        if general_errors:
-            file_errors['Problem(s) with the template:'] = general_errors
-
-        for index, row in excel_file.iterrows():
-            row_errors = []
-
-            if row['Question'] != row['Question']:
-                row_errors.append('Question field cannot be empty')
-            if row['Question Language'] != row['Question Language']:
-                row_errors.append('Question Language field cannot be empty')
-            if row['Context'] != row['Context']:
-                row_errors.append('Context field cannot be empty')
-            if row['Published (Yes/No)'] == 'Yes' and row['Publication Name'] != row['Publication Name']:
-                row_errors.append('If the question was published, you must mention the publication name')
-            if row['Contributor Name'] != row['Contributor Name']:
-                row_errors.append('You must mention the name of the contributor')
-
-            if row_errors:
-                # Adding 1 to compensate for 0 indexing
-                file_errors['Row #' + str(index + 1)] = row_errors
-
-        if file_errors:
-            response = render(request, 'dashboard/includes/excel-validation-errors.html', {'errors': file_errors})
-        else:
-            response = 'validated'
-
-        return HttpResponse(response)
-
+# Submit Questions
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
@@ -208,6 +144,91 @@ class SubmitQuestionsView(View):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
+class ValidateNewExcelSheet(View):
+
+    def post(self, request):
+        """Validate excel sheet and return status/errors"""
+        excel_file = pd.read_excel(request.FILES.get('excel_file'))
+
+        file_errors = {}
+        general_errors = []
+        standard_columns = [
+            'Question',
+            'Question Language',
+            'English translation of the question',
+            'How was the question originally asked?',
+            'Context',
+            'Date of asking the question',
+            'Student Name',
+            'Gender',
+            'Student Class',
+            'School Name',
+            'Curriculum followed',
+            'Medium of instruction',
+            'Area',
+            'State',
+            'Published (Yes/No)',
+            'Publication Name',
+            'Publication Date',
+            'Notes',
+            'Contributor Name',
+            'Contributor Role'
+        ]
+
+        if len(list(excel_file)) != 20:
+            general_errors.append('The columns of the Excel template are modified. Please use the standard template!')
+
+        for column in list(excel_file):
+            if column not in standard_columns:
+                general_errors.append('"' + column + '" is not a standard column. Please use the standard template!')
+
+        if general_errors:
+            file_errors['Problem(s) with the template:'] = general_errors
+
+        for index, row in excel_file.iterrows():
+            row_errors = []
+
+            if row['Question'] != row['Question']:
+                row_errors.append('Question field cannot be empty')
+            if row['Question Language'] != row['Question Language']:
+                row_errors.append('Question Language field cannot be empty')
+            if row['Context'] != row['Context']:
+                row_errors.append('Context field cannot be empty')
+            if row['Published (Yes/No)'] == 'Yes' and row['Publication Name'] != row['Publication Name']:
+                row_errors.append('If the question was published, you must mention the publication name')
+            if row['Contributor Name'] != row['Contributor Name']:
+                row_errors.append('You must mention the name of the contributor')
+
+            if row_errors:
+                # Adding 1 to compensate for 0 indexing
+                file_errors['Row #' + str(index + 1)] = row_errors
+
+        if file_errors:
+            response = render(request, 'dashboard/includes/excel-validation-errors.html', {'errors': file_errors})
+        else:
+            response = 'validated'
+
+        return HttpResponse(response)
+
+
+# Manage Content
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class ManageContentView(View):
+    def get(self, request):
+
+        datasets = Dataset.objects.all().order_by('-created_on')
+
+        context = {
+            'grey_background': 'True',
+            'page_title': 'Manage Content',
+            'datasets': datasets
+        }
+        return render(request, 'dashboard/manage-content.html', context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
 class ValidateCuratedExcelSheet(View):
     def post(self, request):
         """Validate excel sheet and return status/errors"""
@@ -276,21 +297,6 @@ class ValidateCuratedExcelSheet(View):
             response = 'validated'
 
         return HttpResponse(response)
-
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(volunteer_permission_required, name='dispatch')
-class ManageContentView(View):
-    def get(self, request):
-
-        datasets = Dataset.objects.all().order_by('-created_on')
-
-        context = {
-            'grey_background': 'True',
-            'page_title': 'Manage Content',
-            'datasets': datasets
-        }
-        return render(request, 'dashboard/manage-content.html', context)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -393,6 +399,8 @@ class CurateDataset(View):
         return render(request, 'dashboard/manage-content.html', context)
 
 
+# View Questions
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class ViewQuestionsView(View):
@@ -455,6 +463,8 @@ class ViewQuestionsView(View):
         }
         return render(request, 'dashboard/view-questions.html', context)
 
+
+# Legacy Functions
 
 @login_required
 def get_answer_questions_list_view(request):

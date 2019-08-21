@@ -78,7 +78,7 @@ DATABASES = {
 
 # Custom Auth System settings
 AUTH_USER_MODEL = 'sawaliram_auth.User'
-LOGIN_URL = '/user/signin'
+LOGIN_URL = '/users/signin'
 
 
 # Password validation

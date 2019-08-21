@@ -12,4 +12,7 @@ urlpatterns = [
     path('signout', views.SignoutView.as_view(), name='signout'),
     path('signup', views.SignupView.as_view(), name='signup'),
     path('how-can-i-help', views.HowCanIHelpView.as_view(), name='how_can_i_help'),
+    path('manage-users', views.ManageUsersView.as_view(), name='manage-users'),
+    path('update-permissions', views.UpdateUserPermissions.as_view(), name='update-permissions'),
+    path('grant-permission', views.GrantOrDenyUserPermission.as_view(), name='grant-permission')
 ]

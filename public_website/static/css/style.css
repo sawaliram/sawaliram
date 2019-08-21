@@ -13,13 +13,9 @@ body.grey-background {
     margin-bottom: 4rem;
 }
 
-.narrow-container {
-    margin: auto;
-}
-
-@media (min-width: 1200px) {
-    .narrow-container {
-        max-width: 1140px;
+@media (max-width: 576px) {
+    .sawaliram-container {
+        margin-top: 7rem;
     }
 }
 
@@ -31,9 +27,19 @@ body.grey-background {
     }
 }
 
-@media (max-width: 576px) {
-    .sawaliram-container {
-        margin-top: 7rem;
+.narrow-container {
+    margin: auto;
+}
+
+@media (min-width: 768px) {
+    .narrow-container {
+        max-width: 65%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .narrow-container {
+        max-width: 55%;
     }
 }
 
@@ -741,6 +747,72 @@ h1.dashboard-home-greeting {
     background-color: #f8d7da;
 }
 
+.sub-task-list {
+    padding-left: 0;
+    margin-bottom: 2rem;
+}
+
+.sub-task-list li:not(:last-child) {
+    margin-bottom: 1.5rem;
+}
+
+.sub-task-list li .card-body .card-title {
+    font-size: 1.1rem;
+}
+
+@media (max-width: 576px) {
+    .sub-task-list li .card-body .card-title {
+        font-size: 1rem;
+    }   
+}
+
+.sub-task-list li .card-body .card-title .question-count {
+    color: #9b9b9b;
+    font-size: 1rem;
+    margin-left: 0.6rem;
+}
+
+@media (max-width: 576px) {
+    .sub-task-list li .card-body .card-title .question-count {
+        font-size: 0.9rem;
+    }   
+}
+
+.sub-task-list li .card-body .sub-task-details {
+    color: #797979;
+}
+
+@media (max-width: 576px) {
+    .sub-task-list li .card-body .sub-task-details {
+        font-size: 0.8rem;
+    }  
+}
+
+.sub-task-list li .card-body .card-link {
+    padding: 0.2rem 1rem;
+    font-size: 0.8rem;
+}
+
+.sub-task-button {
+    padding: 0.2rem 1rem;
+    font-size: 0.9rem;
+}
+
+.sub-task-button:not(:last-child) {
+    margin-right: 0.4rem;
+}
+
+.empty-sub-task-card {
+    padding: 1.25rem;
+    border: 2px solid #a6a6a6;
+    border-radius: 5px;
+    color: #757575;
+}
+
+.empty-sub-task-card p {
+    margin-bottom: 0;
+}
+
 /* ======== SUBMIT QUESTIONS ======== */
 
 .submit-questions-help {
@@ -858,52 +930,6 @@ h1.dashboard-home-greeting {
 }
 
 /* ======== MANAGE CONTENT ======== */
-
-.dataset-list {
-    padding-left: 0;
-    margin-bottom: 2rem;
-}
-
-.dataset-list li:not(:last-child) {
-    margin-bottom: 1.5rem;
-}
-
-.dataset-list li .card-body .card-title {
-    font-size: 1.1rem;
-}
-
-@media (max-width: 576px) {
-    .dataset-list li .card-body .card-title {
-        font-size: 1rem;
-    }   
-}
-
-.dataset-list li .card-body .card-title .question-count {
-    color: #9b9b9b;
-    font-size: 1rem;
-    margin-left: 0.6rem;
-}
-
-@media (max-width: 576px) {
-    .dataset-list li .card-body .card-title .question-count {
-        font-size: 0.9rem;
-    }   
-}
-
-.dataset-list li .card-body .dataset-details {
-    color: #797979;
-}
-
-@media (max-width: 576px) {
-    .dataset-list li .card-body .dataset-details {
-        font-size: 0.8rem;
-    }  
-}
-
-.dataset-list li .card-body .card-link {
-    padding: 0.2rem 1rem;
-    font-size: 0.8rem;
-}
 
 @media (max-width: 576px) {
     #datasets-tab .excel-file-selection-panel {
@@ -1153,6 +1179,33 @@ h1.dashboard-home-greeting {
     .search-container .mobile-filter-controls button:not(:last-child) {
         border-right: 1px solid;
     }
+}
+
+/* ======== MANAGE USERS ======== */
+
+.sub-task-section-heading {
+    color: #939393;
+    margin-top: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+button.update-permissions {
+    display: block;
+    margin-top: 0.6rem;
+}
+
+button.grant-access {
+    color: #87B24D;
+    background-color: #E4FFBF;
+}
+
+button.deny-access {
+    color: #bd0606;
+    background-color: #ffd6d6;
+}
+
+#reviewVolunteerRequestForm {
+    margin-top: 1.5rem;
 }
 
 /* ======== FOOTER ======== */

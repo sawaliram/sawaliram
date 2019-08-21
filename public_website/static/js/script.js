@@ -271,7 +271,7 @@ if (window.location.pathname.includes('/dashboard/answer-questions/')) {
     setupQuillEditor();
 }
 
-if (window.location.pathname.includes('/user/how-can-i-help')) {
+if (window.location.pathname.includes('/users/how-can-i-help')) {
     highlightSelectedVolunteerOption();
     openVolunteerOptionDialog();
 }
