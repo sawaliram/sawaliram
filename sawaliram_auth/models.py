@@ -75,13 +75,12 @@ class VolunteerRequest(models.Model):
     class Meta:
         db_table = 'volunteer_request'
 
-    user = models.ForeignKey(
+    permission_requested = models.CharField(max_length=50)
+    request_text = models.TextField(null=True)
+    status = models.CharField(max_length=50, default='pending')
+    requested_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='volunteer_requests',
-        on_delete=models.PROTECT)
-    expert = models.BooleanField(default=False)
-    writer = models.BooleanField(default=False)
-    translator = models.BooleanField(default=False)
-    expert_application = models.TextField(null=True)
-    writer_application = models.TextField(null=True)
-    translator_application = models.TextField(null=True)
+        on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)

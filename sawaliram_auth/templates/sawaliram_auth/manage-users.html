@@ -1,0 +1,107 @@
+{% extends "public_website/base.html" %}
+
+{% load static %}
+
+{% block title %} Manage Users | Sawaliram {% endblock %}
+
+{% block content %}
+
+<div class="narrow-container">
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="task-help-button-wrapper">
+        <button class="btn btn-secondary-hollow task-help task-page-help">Help?</button>
+    </div>
+
+    <nav>
+        <div class="nav nav-pills" role="tablist">
+            <a class="nav-item nav-link active" data-toggle="tab" href="#users-tab" role="tab" aria-controls="users-tab" aria-selected="true">
+                All users {% if users.count > 0 %}({{ users.count }}){% endif %}
+            </a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#requests-tab" role="tab" aria-controls="requests-tab" aria-selected="true">
+                Access requests {% if pending_requests.count > 0 %}({{ pending_requests.count }}){% endif %}
+            </a>
+        </div>
+    </nav>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="users-tab" role="tabpanel" aria-labelledby="users-tab">
+            <ul class="sub-task-list">
+                {% for user in users %}
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
+                        <h6 class="sub-task-section-heading">Permissions</h6>
+                        <form action="{% url 'sawaliram_auth:update-permissions' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="user-id" value="{{ user.id }}">
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" value="admins" class="form-check-input" name="granted-permissions" {% if 'admins' in user.groups %}checked{% endif %}>
+                                <label class="form-check-label" for="adminPermission">Admin</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" value="experts" class="form-check-input" name="granted-permissions" {% if 'experts' in user.groups %}checked{% endif %}>
+                                <label class="form-check-label" for="expertPermission">Expert</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" value="writers" class="form-check-input" name="granted-permissions" {% if 'writers' in user.groups %}checked{% endif %}>
+                                <label class="form-check-label" for="writerPermission">Writer</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="checkbox" value="translators" class="form-check-input" name="granted-permissions" {% if 'translators' in user.groups %}checked{% endif %}>
+                                <label class="form-check-label" for="translatorPermission">Translator</label>
+                            </div>
+                            <button type="submit" class="btn btn-secondary sub-task-button update-permissions">Update permissions</button>
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="requests-tab" role="tabpanel" aria-labelledby="requests-tab">
+            {% if pending_requests.count == 0 %}
+                <div class="empty-sub-task-card">
+                    <p><i class="far fa-smile-beam"></i> No pending access requests!</p>   
+                </div>
+            {% else %}
+                {% for pending_request in pending_requests %}
+                <ul class="sub-task-list">
+                    <li class="card">
+                        <div class="card-body">
+                            <p class="sub-task-details">
+                                Requested by: <b>{{ pending_request.requested_by.get_full_name }} ({{ pending_request.requested_by.email }})</b>
+                            </p>
+                            <p class="sub-task-details">
+                                Access requested: <b>{{ pending_request.permission_requested|slice:"-1"|capfirst }}</b>
+                            </p>
+                            <p class="sub-task-details">
+                                "{{ pending_request.request_text }}"
+                            </p>
+                            <form id="reviewVolunteerRequestForm" action="{% url 'sawaliram_auth:grant-permission' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="permission" value="{{ pending_request.permission_requested }}">
+                                <input type="hidden" name="request-id" value="{{ pending_request.id }}">
+                                <input type="hidden" name="user-id" value="{{ pending_request.requested_by.id }}">
+                                <button class="btn sub-task-button grant-access" name="permission-action" type="submit" value="grant"><i class="fas fa-check"></i> Grant</button>
+                                <button class="btn sub-task-button deny-access" name="permission-action" type="submit" value="deny"><i class="fas fa-times"></i> Deny</button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
