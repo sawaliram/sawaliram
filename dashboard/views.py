@@ -205,6 +205,44 @@ class SubmitQuestionsView(View):
         return render(request, 'dashboard/submit-questions.html', context)
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class SubmitAnswerView(View):
+    def get(self, request, question_id):
+        """Return the view to answer a question"""
+
+        question_to_answer = Question.objects.get(pk=question_id)
+
+        context = {
+            'question': question_to_answer,
+            'grey_background': 'True',
+            'page_title': 'Answer Question',
+        }
+        return render(request, 'dashboard/answer-question.html', context)
+
+    def post(self, request, question_id):
+        """Save the submitted answer for review"""
+
+        question_to_answer = Question.objects.get(pk=question_id)
+
+        new_answer = Answer()
+        new_answer.question_id = question_to_answer
+        new_answer.answer_text = request.POST['rich-text-content']
+        new_answer.answered_by = request.user
+        new_answer.save()
+
+        messages.success(request, ('Thank you for submitting your answer! '
+            'Your answer reviewed by another subject expert, who may '
+            'approve your answer or suggest changes to it.'))
+
+
+        context = {
+            'question': question_to_answer,
+            'grey_background': 'True',
+            'page_title': 'Answer Question',
+        }
+        return render(request, 'dashboard/answer-question.html', context)
+
 @method_decorator(csrf_exempt, name='dispatch')
 class ValidateCuratedExcelSheet(View):
     def post(self, request):
@@ -429,20 +467,6 @@ def get_answer_questions_list_view(request):
 
 
 @login_required
-def get_answer_question_view(request, question_id):
-    """Return the view to answer a question"""
-
-    question_to_answer = Question.objects.get(pk=question_id)
-
-    context = {
-        'question': question_to_answer,
-        'grey_background': 'True',
-        'page_title': 'Answer Question',
-    }
-    return render(request, 'dashboard/answer-question.html', context)
-
-
-@login_required
 def get_encode_data_view(request):
     """Return the encode data view"""
 
@@ -486,21 +510,6 @@ def submit_encoded_dataset(request):
     unencoded_submission_entry.save()
 
     return render(request, 'dashboard/excel-submitted-successfully.html')
-
-
-def submit_answer(request):
-    """Save the submitted answer for review"""
-    new_answer = Answer()
-    new_answer.question_id = Question.objects.get(pk=request.POST['question_id'])
-    new_answer.answer_text = request.POST['rich-text-content']
-    new_answer.answered_by = request.user
-    new_answer.save()
-
-    messages.success(request, ('Thank you for submitting your answer! '
-        'Your answer reviewed by another subject expert, who may '
-        'approve your answer or suggest changes to it.'))
-    return redirect('dashboard:answer-question',
-        question_id=new_answer.question_id.id)
 
 
 def get_error_404_view(request, exception):

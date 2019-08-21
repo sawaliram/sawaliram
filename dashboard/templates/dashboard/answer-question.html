@@ -82,7 +82,7 @@
     </div>
 </div>
 {% endif %}
-<form action="{% url 'dashboard:submit-answer' %}" class="rich-text-form input-area" method="POST">
+<form action="{% url 'dashboard:answer-question' question_id=question.id %}" class="rich-text-form input-area" method="POST">
     {% csrf_token %}
 
     <div id="editor" data-placeholder="Type your answer here..."></div>
