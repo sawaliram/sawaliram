@@ -143,46 +143,6 @@ class SubmitQuestionsView(View):
         return render(request, 'dashboard/submit-questions.html', context)
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(volunteer_permission_required, name='dispatch')
-class SubmitAnswerView(View):
-    def get(self, request, question_id):
-        """Return the view to answer a question"""
-
-        question_to_answer = Question.objects.get(pk=question_id)
-
-        context = {
-            'question': question_to_answer,
-            'grey_background': 'True',
-            'page_title': 'Answer Question',
-        }
-        return render(request, 'dashboard/answer-question.html', context)
-
-    def post(self, request, question_id):
-        """Save the submitted answer for review"""
-
-        question_to_answer = Question.objects.get(pk=question_id)
-
-        # TODO allow saving of drafts
-
-        new_answer = Answer()
-        new_answer.question_id = question_to_answer
-        new_answer.answer_text = request.POST['rich-text-content']
-        new_answer.answered_by = request.user
-        new_answer.save()
-
-        messages.success(request, ('Thank you for submitting your answer! '
-            'Your answer reviewed by another subject expert, who may '
-            'approve your answer or suggest changes to it.'))
-
-
-        context = {
-            'question': question_to_answer,
-            'grey_background': 'True',
-            'page_title': 'Answer Question',
-        }
-        return render(request, 'dashboard/answer-question.html', context)
-
 @method_decorator(csrf_exempt, name='dispatch')
 class ValidateNewExcelSheet(View):
 
@@ -504,20 +464,112 @@ class ViewQuestionsView(View):
         return render(request, 'dashboard/view-questions.html', context)
 
 
+# Answer Questions
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class AnswerQuestionsView(View):
+
+    def get(self, request):
+        questions_set = Question.objects.exclude(id__in=Subquery(
+                                    Answer.objects.all().values('question_id')))
+
+        # get values for filter
+        subjects = questions_set.order_by() \
+                                .values_list('field_of_interest', flat=True) \
+                                .distinct('field_of_interest') \
+                                .values('field_of_interest')
+
+        states = questions_set.order_by() \
+                              .values_list('state') \
+                              .distinct('state') \
+                              .values('state')
+
+        curriculums = questions_set.order_by() \
+                                   .values_list('curriculum_followed') \
+                                   .distinct('curriculum_followed') \
+                                   .values('curriculum_followed')
+
+        # apply filters if any
+        subjects_to_filter_by = request.GET.getlist('subject')
+        if subjects_to_filter_by:
+            questions_set = questions_set.filter(field_of_interest__in=subjects_to_filter_by)
+
+        states_to_filter_by = request.GET.getlist('state')
+        if states_to_filter_by:
+            questions_set = questions_set.filter(state__in=states_to_filter_by)
+
+        curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
+
+        if curriculums_to_filter_by:
+            questions_set = questions_set.filter(curriculum_followed__in=curriculums_to_filter_by)
+
+        # sort the results if sort-by parameter exists
+        # default: newest
+        sort_by = request.GET.get('sort-by', 'newest')
+
+        if sort_by == 'newest':
+            questions_set = questions_set.order_by('-created_on')
+
+        paginator = Paginator(questions_set, 15)
+
+        page = request.GET.get('page', 1)
+        questions = paginator.get_page(page)
+
+        context = {
+            'grey_background': 'True',
+            'page_title': 'Answer Questions',
+            'questions': questions,
+            'subjects': subjects,
+            'states': states,
+            'curriculums': curriculums,
+            'subjects_to_filter_by': subjects_to_filter_by,
+            'states_to_filter_by': states_to_filter_by,
+            'curriculums_to_filter_by': curriculums_to_filter_by,
+            'result_size': questions_set.count()
+        }
+        return render(request, 'dashboard/answer-questions.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class SubmitAnswerView(View):
+    def get(self, request, question_id):
+        """Return the view to answer a question"""
+
+        question_to_answer = Question.objects.get(pk=question_id)
+
+        context = {
+            'question': question_to_answer,
+            'grey_background': 'True',
+            'page_title': 'Submit Answer',
+        }
+        return render(request, 'dashboard/submit-answer.html', context)
+
+    def post(self, request, question_id):
+        """Save the submitted answer for review"""
+
+        question_to_answer = Question.objects.get(pk=question_id)
+
+        # TODO allow saving of drafts
+
+        new_answer = Answer()
+        new_answer.question_id = question_to_answer
+        new_answer.answer_text = request.POST['rich-text-content']
+        new_answer.answered_by = request.user
+        new_answer.save()
+
+        messages.success(request, ('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!'))
+
+        context = {
+            'question': question_to_answer,
+            'grey_background': 'True',
+            'page_title': 'Submit Answer',
+        }
+        return render(request, 'dashboard/submit-answer.html', context)
+
+
 # Legacy Functions
-
-@login_required
-def get_answer_questions_list_view(request):
-    """Return the view with list of unanswered questions"""
-
-    unanswered_questions = Question.objects.exclude(
-        id__in=Subquery(Answer.objects.all().values('question_id')))
-
-    context = {
-        'unanswered_questions': unanswered_questions}
-
-    return render(request, 'dashboard/answer-questions-list.html', context)
-
 
 @login_required
 def get_encode_data_view(request):
