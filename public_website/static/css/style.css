@@ -831,6 +831,49 @@ h1.dashboard-home-greeting {
     margin-bottom: 0;
 }
 
+/* ---- Rich Text Editor ---- */
+.editor-container {
+    max-width: 65%;
+    margin: auto;
+    padding-top: 3rem;
+}
+
+.rich-text-form {
+    background: white;
+    border-radius: 0.2rem;
+    padding: 0.4em;
+    margin-top: 1.2rem;
+}
+
+.rich-text-form .ql-editor {
+    min-height: 20rem;
+}
+
+.rich-text-form  .ql-container.ql-snow {
+    border: none;
+}
+
+.rich-text-form .ql-toolbar.ql-snow {
+    border: none;
+}
+
+.rich-text-form .ql-editor.ql-blank::before {
+    font-style: normal;
+}
+
+.rich-text-form #toolbar {
+    border: none;
+    border-top: 1px solid lightgray;
+    padding: 0.8rem;
+    margin: 0 1rem 0rem 1rem;
+    text-align: right;
+}
+
+.rich-text-form #submitbar {
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+}
+
 /* ======== SUBMIT QUESTIONS ======== */
 
 .submit-questions-help {
@@ -1020,6 +1063,10 @@ h1.dashboard-home-greeting {
     border-bottom: 2px solid #ebebeb;
 }
 
+.search-container .filter-sidebar .filter-category .open-filter {
+    padding-left: 0; 
+}
+
 .search-container .filter-sidebar .filter-category .category-options-list {
     display: flex;
     flex-direction: row;
@@ -1033,12 +1080,14 @@ h1.dashboard-home-greeting {
     width: 48%;
     margin-bottom: 0.8rem;
     padding: 0.6rem;
+    color: #777777;
 }
 
 .search-container .filter-sidebar .filter-category .category-options-list button.category-option.active {
     font-weight: bold;
     box-shadow: 0 0 0 3px #FFBA4B;
     border: none;
+    color: #000;
 }
 
 @media (max-width: 992px) {
@@ -1130,6 +1179,11 @@ h1.dashboard-home-greeting {
         font-size: 1.3rem;
         margin-bottom: 1rem;
     }
+}
+
+.search-container .search-results ul.search-results-list li.search-result-item .item-info {
+    display: flex;
+    justify-content: space-between;
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta:not(:last-child) {
@@ -1230,6 +1284,24 @@ button.deny-access {
 
 #reviewVolunteerRequestForm {
     margin-top: 1.5rem;
+}
+
+/* ======== SUBMIT ANSWER ======== */
+
+.submit-answer-header h1 {
+    font-size: 1.7rem;
+}
+
+.submit-answer-header .question-meta {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.submit-answer-header .question-meta span:not(:last-child) {
+    border-right: 2px solid #acacac;
+    padding-right: 0.5rem;
+    margin-right: 0.6rem;
 }
 
 /* ======== FOOTER ======== */
@@ -1541,130 +1613,4 @@ button.social-login i {
 
 .onboarding-form-column .volunteer-option .volunteer-dialog textarea {
     border-radius: 5px;
-}
-
-/* ======== OLDER STYLES ======== */
-
-/* ----- General styles ----- */
-
-#editor .ql-editor {
-    min-height: 400px;
-}
-
-/* view-questions */
-/* .filter-area {
-    margin-bottom: 40px;
-}
-
-#filterForm .filter-form-section-label {
-    color: #888;
-}
-
-#questionsList .card {
-    border: none;
-    color: #b7b7b7;
-}
-
-#questionsList .card:not(:last-child) {
-    margin-bottom: 40px;
-}
-
-#questionsList .card .card-header {
-    padding: 0;
-    border-bottom: none;
-    background: none;
-}
-
-#questionsList .card .card-header h3 {
-    color: #444;
-    font-size: 18px;
-    margin-bottom: 5px;
-}
-
-#questionsList .card .card-body {
-    padding: 10px 15px;
-    padding-left: 0;
-    font-size: 15px;
-}
-
-.highlighted-meta {
-    padding: 2px;
-    padding-right: 10px;
-    font-size: 13px;
-}
-
-.highlighted-meta-area {
-    max-width: 50rem;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1rem 0;
-}
-
-.highlighted-meta:not(:last-child) {
-    border-right: 1px solid #000000;
-    margin-right: 10px;
-}
-
-.highlighted-meta i {
-    font-size: 13px;
-    margin: 0 5px;
-}
-
-#questionsList .card .card-body .meta-phrase-section {
-    margin-bottom: 13px;
-}
-
-.highlighted-meta .meta-value {
-    color: #000;
-}
-
-.empty-result-text {
-    text-align: center;
-    color: #4e4e4e;
-} */
-
-/* answer-question */
-.question-text-heading {
-    font-size: 30px;
-}
-
-/*-- Highlighted Meta on Menubar --*/
-
-.navbar .highlighted-meta-area {
-    padding: 2rem;
-    background-color: #87b24d;
-    color: white;
-    width: 100%;
-    border-top: 1px solid #f2f2f2;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.navbar .highlighted-meta-area .meta-value,
-.navbar .highlighted-meta-area i
-{
-    color: #ffffff;
-}
-
-/*----- Answer Questions -----*/
-
-.input-area {
-    max-width: 50rem;
-    margin-left: auto;
-    margin-right: auto;
-    background: white;
-    border-radius: 0.8rem;
-    padding: 1em;
-}
-
-.input-area .ql-container.ql-snow,
-.input-area .ql-toolbar.ql-snow
-{
-	border: none;
-}
-
-#toolbar {
-    border-top: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
-    margin-bottom: 0.5rem;
 }

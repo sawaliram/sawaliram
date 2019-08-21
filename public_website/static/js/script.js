@@ -241,13 +241,6 @@ function setupQuillEditor({ placeholder = null } = {}) {
         },
         placeholder: placeholder,
     });
-    // var quill = new Quill('#editor', {
-    //     theme: 'snow',
-    //     modules: {
-    //         toolbar: '#toolbar',
-    //     },
-    //     placeholder: placeholder,
-    // });
 
     $('.rich-text-form').submit(function(e) {
         $('[name="rich-text-content"]').val(quill.root.innerHTML);
@@ -289,7 +282,7 @@ if (window.location.pathname.includes('/users/how-can-i-help')) {
     openVolunteerOptionDialog();
 }
 
-if (window.location.pathname.includes('/dashboard/view-questions')) {
+if (window.location.pathname.includes('/dashboard/view-questions') || (window.location.pathname.includes('/dashboard/answer-questions'))) {
     setupSearchResultsPagination();
     setupSearchResultsSort();
     setupSearchResultsFilter();
