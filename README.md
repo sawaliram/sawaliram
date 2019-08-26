@@ -24,7 +24,7 @@ Run these commands to set up a local git repository and populate with the code y
 $ mkdir code
 $ cd code
 $ git init
-$ git remote add upstream https://github.com/tifrh/sawaliram.git
+$ git remote add upstream https://github.com/sawaliram/sawaliram.git
 $ git remote add origin https://github.com/your-username/sawaliram.git
 $ git pull origin master
 ```
