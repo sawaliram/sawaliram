@@ -1083,6 +1083,10 @@ h1.dashboard-home-greeting {
     color: #777777;
 }
 
+.search-container .filter-sidebar .filter-category .category-options-list button.category-option.long-title {
+    width: 100%;
+}
+
 .search-container .filter-sidebar .filter-category .category-options-list button.category-option.active {
     font-weight: bold;
     box-shadow: 0 0 0 3px #FFBA4B;

@@ -425,7 +425,7 @@ class ViewQuestionsView(View):
                                    .values('curriculum_followed')
 
         # apply filters if any
-        subjects_to_filter_by = request.GET.getlist('subject')
+        subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
         if subjects_to_filter_by:
             questions_set = questions_set.filter(field_of_interest__in=subjects_to_filter_by)
 
@@ -434,7 +434,6 @@ class ViewQuestionsView(View):
             questions_set = questions_set.filter(state__in=states_to_filter_by)
 
         curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
-
         if curriculums_to_filter_by:
             questions_set = questions_set.filter(curriculum_followed__in=curriculums_to_filter_by)
 
@@ -491,7 +490,7 @@ class AnswerQuestionsView(View):
                                    .values('curriculum_followed')
 
         # apply filters if any
-        subjects_to_filter_by = request.GET.getlist('subject')
+        subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
         if subjects_to_filter_by:
             questions_set = questions_set.filter(field_of_interest__in=subjects_to_filter_by)
 
