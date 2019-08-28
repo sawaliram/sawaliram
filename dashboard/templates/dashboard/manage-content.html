@@ -40,7 +40,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Dataset #{{ dataset.id }} <span class="badge {% if dataset.status == 'new' %}badge-primary{% elif dataset.status == 'curated' %}badge-warning{% else %}badge-success{% endif %}">{{ dataset.status }}</span> <span class="question-count">({{ dataset.question_count }} Question{{ dataset.question_count|pluralize }})</span></h5>
                         <p class="sub-task-details">Submitted by <b>{{ dataset.submitted_by.get_full_name }}</b> on <b>{{ dataset.created_on|date:"jS F, Y" }}</b></p>
-                        {% if dataset.status == 'raw' %}
+                        {% if dataset.status == 'new' %}
                             {% with dataset_id=dataset.id|stringformat:"s" %}
                             <a href="{% static 'submissions/uncurated/dataset_'|add:dataset_id|add:'_uncurated.xlsx' %}" class="btn btn-primary sub-task-button">Curate</a>
                             {% endwith %}
