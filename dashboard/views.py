@@ -24,6 +24,7 @@ from dashboard.models import (
     Dataset)
 
 import pandas as pd
+from pprint import pprint
 
 
 # Dashboard Home
@@ -409,10 +410,14 @@ class ViewQuestionsView(View):
         questions_set = Question.objects.all()
 
         # get values for filter
-        subjects = questions_set.order_by() \
-                                .values_list('field_of_interest', flat=True) \
-                                .distinct('field_of_interest') \
-                                .values('field_of_interest')
+        subjects = list(questions_set.order_by()
+                                     .values_list('field_of_interest', flat=True)
+                                     .distinct('field_of_interest')
+                                     .values_list('field_of_interest'))
+        # convert list of tuples to list of strings
+        subjects = [' '.join(item) for item in subjects]
+        # sort the list so that longer subjects appear at the bottom
+        subjects.sort(key=lambda s: len(s))
 
         states = questions_set.order_by() \
                               .values_list('state') \
@@ -474,10 +479,14 @@ class AnswerQuestionsView(View):
                                     Answer.objects.all().values('question_id')))
 
         # get values for filter
-        subjects = questions_set.order_by() \
-                                .values_list('field_of_interest', flat=True) \
-                                .distinct('field_of_interest') \
-                                .values('field_of_interest')
+        subjects = list(questions_set.order_by()
+                                     .values_list('field_of_interest', flat=True)
+                                     .distinct('field_of_interest')
+                                     .values_list('field_of_interest'))
+        # convert list of tuples to list of strings
+        subjects = [' '.join(item) for item in subjects]
+        # sort the list so that longer subjects appear at the bottom
+        subjects.sort(key=lambda s: len(s))
 
         states = questions_set.order_by() \
                               .values_list('state') \
