@@ -18,7 +18,7 @@
                 <button class="btn open-filter" data-target="#filterSubjects" aria-expanded="true" aria-controls="filter-subjects">Subjects</button>
                 <div class="category-options-list" id="filterSubjects">
                     {% for subject in subjects %}
-                    <button class="btn category-option {% if subject.field_of_interest in subjects_to_filter_by %}active{% endif %} {% if subject.field_of_interest|length > 11 %}long-title{% endif %}" data-param="subject" data-value="{{ subject.field_of_interest|urlencode }}">{{ subject.field_of_interest|capfirst }}</button>
+                    <button class="btn category-option {% if subject in subjects_to_filter_by %}active{% endif %} {% if subject|length > 11 %}long-title{% endif %}" data-param="subject" data-value="{{ subject|urlencode }}">{{ subject|capfirst }}</button>
                     {% endfor %}
                 </div>
             </div>
