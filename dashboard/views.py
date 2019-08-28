@@ -417,7 +417,7 @@ class ViewQuestionsView(View):
         # convert list of tuples to list of strings
         subjects = [' '.join(item) for item in subjects]
         # sort the list so that longer subjects appear at the bottom
-        subjects.sort(key=lambda s: len(s))
+        subjects.sort(key=lambda s: len(s), reverse=True)
 
         states = questions_set.order_by() \
                               .values_list('state') \
@@ -486,7 +486,7 @@ class AnswerQuestionsView(View):
         # convert list of tuples to list of strings
         subjects = [' '.join(item) for item in subjects]
         # sort the list so that longer subjects appear at the bottom
-        subjects.sort(key=lambda s: len(s))
+        subjects.sort(key=lambda s: len(s), reverse=True)
 
         states = questions_set.order_by() \
                               .values_list('state') \
