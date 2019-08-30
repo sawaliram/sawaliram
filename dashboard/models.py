@@ -176,6 +176,23 @@ class Answer(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+class AnswerDraft(models.Model):
+
+    class Meta:
+        db_table = 'answer_draft'
+
+    answer_text = models.TextField()
+    question_id = models.ForeignKey(
+        'Question',
+        related_name='draft_answers',
+        on_delete=models.PROTECT,
+        default='')
+    answered_by = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='draft_answers',
+        on_delete=models.PROTECT,
+        default='')
+    last_saved = models.DateTimeField(auto_now=True)
 
 class UncuratedSubmission(models.Model):
     """Define the data model to store submissions pending for curation"""

@@ -20,6 +20,7 @@ from dashboard.models import (
     QuestionArchive,
     Question,
     Answer,
+    AnswerDraft,
     UnencodedSubmission,
     Dataset)
 
@@ -552,6 +553,15 @@ class SubmitAnswerView(View):
             'grey_background': 'True',
             'page_title': 'Submit Answer',
         }
+
+        # Prefill draft answer, if any
+        try:
+            context['draft_answer'] = request.user.draft_answers.get(
+                question_id=question_to_answer)
+
+        except AnswerDraft.DoesNotExist:
+            pass
+
         return render(request, 'dashboard/submit-answer.html', context)
 
     def post(self, request, question_id):
@@ -559,21 +569,54 @@ class SubmitAnswerView(View):
 
         question_to_answer = Question.objects.get(pk=question_id)
 
-        # TODO allow saving of drafts
-
-        new_answer = Answer()
-        new_answer.question_id = question_to_answer
-        new_answer.answer_text = request.POST['rich-text-content']
-        new_answer.answered_by = request.user
-        new_answer.save()
-
-        messages.success(request, ('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!'))
-
         context = {
             'question': question_to_answer,
             'grey_background': 'True',
             'page_title': 'Submit Answer',
         }
+
+        # TODO allow saving of drafts
+        if request.POST.get('mode') == 'draft':
+            # Save draft
+
+            # Fetch or create draft
+            draft, createdp = request.user.draft_answers.get_or_create(
+                question_id=question_to_answer)
+
+            # Update values and save
+            draft.answer_text = request.POST.get('rich-text-content')
+            draft.save()
+
+            # Congratulate the user
+            messages.success(request, ('Your answer has been saved.'
+                'You can return to this page any time to '
+                'continue editing.'))
+
+            # Set draft in context to re-display
+            context['draft_answer'] = draft
+
+        else:
+            # Submit answer
+
+            # Create new answer object
+            answer = request.user.submitted_answers.create(
+                question_id=question_to_answer)
+
+            # Save new answer
+            answer.answer_text = request.POST.get('rich-text-content')
+            answer.save()
+
+            # Delete draft, if any
+            try:
+                draft =  request.user.draft_answers.get(
+                    question_id=question_to_answer).delete()
+            except AnswerDraft.DoesNotExist:
+                # No drafts to delete
+                pass
+
+            # Congratulate the user
+            messages.success(request, ('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!'))
+
         return render(request, 'dashboard/submit-answer.html', context)
 
 
