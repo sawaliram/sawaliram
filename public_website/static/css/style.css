@@ -146,6 +146,27 @@ input:focus {
     background-color: #9B63A8;
 }
 
+.btn-danger {
+    background-color: #C60000;
+    border-color: #C60000;
+}
+
+.btn-danger:hover {
+    background-color: #A40000;
+    border-color: #A40000;
+}
+
+.btn-danger-hollow {
+    color: #C60000;
+    background-color: #ffffff;
+    border: 1px solid #C60000;
+}
+
+.btn-danger-hollow:hover {
+    color: #ffffff;
+    background-color: #C60000;
+}
+
 .link-secondary {
     color: #9B63A8
 }

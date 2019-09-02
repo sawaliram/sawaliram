@@ -15,4 +15,11 @@ urlpatterns = [
     path('manage-content', views.ManageContentView.as_view(), name='manage-content'),
     path('view-questions', views.ViewQuestionsView.as_view(), name='view-questions'),
     path('answer-questions', views.AnswerQuestionsView.as_view(), name='answer-questions'),
+
+    path('review-answers-list', views.get_review_answers_list_view, name='review-answers'),
+    path('answers/<int:answer_id>/review', views.get_review_answer_view, name='review-answer'),
+    path('action/answers/<int:answer_id>/comment/add', views.submit_answer_comment, name='submit-answer-comment'),
+    path('action/answers/<int:answer_id>/approve', views.submit_answer_approval, name='submit-answer-approval'),
+    path('action/answers/<int:answer_id>/comment/<int:comment_id>/delete', views.delete_answer_comment, name='delete-answer-comment'),
+
 ]

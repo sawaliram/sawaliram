@@ -10,9 +10,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.models import Subquery
 from django.views import View
-from django.http import HttpResponse
+from django.http import (
+    HttpResponse,
+    Http404,
+)
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import (
+    ObjectDoesNotExist,
+    PermissionDenied,
+)
 from django.core.paginator import Paginator
 
 from sawaliram_auth.decorators import volunteer_permission_required
@@ -20,6 +26,7 @@ from dashboard.models import (
     QuestionArchive,
     Question,
     Answer,
+    AnswerComment,
     UnencodedSubmission,
     Dataset)
 
@@ -211,6 +218,33 @@ class ValidateNewExcelSheet(View):
 
         return HttpResponse(response)
 
+@login_required
+def get_review_answers_list_view(request):
+    """Return the view with list of unreviewed answers"""
+
+    unreviewed_answers = Answer.objects \
+    .filter(approved_by__isnull=True) \
+    .select_related()
+      
+    context = {
+        'unreviewed_answers': unreviewed_answers,
+    }
+
+    return render(request, 'dashboard/answers/list-unreviewed.html', context)
+
+
+@login_required
+def get_review_answer_view(request, answer_id):
+    """Return the view to approve/comment on an answer"""
+
+    answer = Answer.objects.get(pk=answer_id)
+
+    context = {
+        'answer': answer,
+        'comments': answer.comments.all(),
+    }
+
+    return render(request, 'dashboard/answers/review.html', context)
 
 # Manage Content
 
@@ -624,6 +658,76 @@ def submit_encoded_dataset(request):
 
     return render(request, 'dashboard/excel-submitted-successfully.html')
 
+@login_required
+def submit_answer_comment(request, answer_id):
+    """Save the submitted comment to a particular answer"""
+
+    # TODO: Check permissions
+
+    try:
+        answer = Answer.objects.get(pk=answer_id)
+    except Answer.DoesNotExist:
+        raise Http404('Answer does not exist')
+
+    comment = AnswerComment()
+    comment.text = request.POST['comment-text']
+    comment.answer = answer
+    comment.author = request.user
+
+    comment.save()
+
+    return redirect('dashboard:review-answer', answer_id=answer_id)
+
+@login_required
+def submit_answer_approval(request, answer_id):
+    """Mark the answer as approved"""
+
+    # TODO: check permissions
+
+    try:
+        answer = Answer.objects.get(pk=answer_id,
+            approved_by__isnull=True)
+    except Answer.DoesNotExist:
+        raise Http404('Answer does not exist')
+
+    if request.user == answer.answered_by:
+        raise PermissionDenied('You cannot approve your own answer')
+
+    if request.method != 'POST':
+        return redirect('dashboard:review-answer', answer_id=answer_id)
+
+    answer.approved_by = request.user
+    answer.save()
+
+    return redirect('dashboard:review-answers')
+
+@login_required
+def delete_answer_comment(request, answer_id, comment_id):
+    """Delete a previously published comment on an answer"""
+
+    try:
+        answer = Answer.objects.get(pk=answer_id)
+    except Answer.DoesNotexist:
+        raise Http404('Answer does not exist')
+
+    try:
+        comment = answer.comments.get(pk=comment_id)
+    except AnswerComment.DoesNotExist:
+        raise Http404('No matching comment')
+
+    if request.user != comment.author:
+        raise PermissionDenied('You are not authorised to delete that comment.')
+
+    print('We got: ' + request.method)
+    if request.method == 'POST':
+        comment.delete()
+    else:
+        context = {
+            'comment': comment,
+        }
+        return render(request, 'dashboard/answers/delete_comment.html', context)
+
+    return redirect('dashboard:review-answer', answer_id=answer.id)
 
 def get_error_404_view(request, exception):
     """Return the custom 404 page."""

@@ -251,6 +251,31 @@ function activateTooltips() {
   $('[data-toggle="tooltip"]').tooltip()
 }
 
+/*
+ * Comment delete buttons
+ * These show the user a confirmation note before deciding whether to
+ * actually delete the comment or not
+*/
+
+function setupCommentDeleteButtons() {
+	$('.comment-delete-form')
+    .attr('method', 'POST')
+    .find('button.delete-button')
+	.html('delete?')
+	.click(function(e) {
+	    e.preventDefault();
+		$(this)
+		.css('display', 'none')
+		.next('span.delete-comment-prompt').show();
+	});
+	$('.comment-delete-form button.delete-cancel').click(function(e) {
+		$(this)
+		.parents('span.delete-comment-prompt').hide()
+		.prev('button.delete-button').css('display', '')
+		e.preventDefault();
+	});
+}
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
