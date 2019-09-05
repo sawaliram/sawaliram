@@ -276,6 +276,14 @@ function setupCommentDeleteButtons() {
 	});
 }
 
+function setupCommentFormDisplayToggle() {
+    $('.comment-form').hide();
+    $('*[data-toggle="#comment-form"]')
+    .click(function(e) {
+        $('.comment-form').toggle();
+    });
+}
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
@@ -300,6 +308,12 @@ var pattern = new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)")
 if (pattern.test(window.location.pathname)) {
     setupQuillEditor({ placeholder: 'Type your answer here...' });
     activateTooltips();
+}
+
+var pattern = new RegExp("^/dashboard/answers/\\d+/review")
+if (pattern.test(window.location.pathname)) {
+    setupCommentFormDisplayToggle();
+    setupCommentDeleteButtons();
 }
 
 if (window.location.pathname.includes('/users/how-can-i-help')) {

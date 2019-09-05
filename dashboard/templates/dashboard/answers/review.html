@@ -5,71 +5,72 @@
 
 {% block title %} Review Answer | Sawaliram {% endblock %}
 
-{% block content %}
-
-{% with question=answer.question_id %}
-	<h1 class="question-text-heading">{{ question.question_text }}</h1>
-	
-	<div class="answer-question highlighted-meta-area">
-	    {% if question.student_class %}
-	        <span class="highlighted-meta">
-	            <i class="fas fa-user-graduate"></i></i>
-	            <span class="meta-value">
-	                Grade {{ question.student_class }}
-	            </span>
-	        </span>
-	    {% endif %}
-	
-	    {% if question.school %}
-	        <span class="highlighted-meta">
-	            <i class="fas fa-graduation-cap"></i>
-	            <span class="meta-value">
-	                {{ question.school }}
-	                {% if question.curriculum_followed %}
-	                    ({{ question.curriculum_followed }})
-	                {% endif %}
-	            </span>
-	        </span>
-	    {% endif %}
-	
-	    {% if question.area or question.state %}
-	        <span class="highlighted-meta">
-	            <i class="fas fa-map-marker-alt"></i>
-	            <span class="meta-value">
-	                {% if question.area %}
-	                    {{ question.area.rstrip }} {% if question.state %}, {{ question.state }} {% endif %}
-	                {% elif question.state %}
-	                    {{ question.state }}
-	                {% endif %}
-	            </span>    
-	        </span>
-	    {% endif %}
-	    <span class="highlighted-meta">
-			<i class="fas fa-user"></i>
-			<span class="meta-value">Answered by <a href="#">{{ answer.answered_by.get_full_name }}</a></span>
-	    </span>
+{% block extra_header %}
+<div class="navbar-extra row justify-content-end">
+	<div>
+		<button class="btn btn-secondary-hollow">&lt; Prev</button>
+		<button class="btn btn-secondary-hollow">Next &gt;</button>
 	</div>
-	
-	<div id="answer">{{ answer.answer_text|safe }}</div>
-	
-	<div class="comment-thread">
-		<h2>Comments</h2>
+</div>
+{% endblock %}
+
+{% block content %}
+{% with question=answer.question_id %}
+<div class="row">
+	<div class="col-6 answer-details">
+		<h1>{{ question.question_text }}</h1>
+		<div class="row">
+			<div class="col">
+				<b>Answer (A{{ answer.id }})</b>
+			</div>
+			<div class="col">
+				<span class="float-right">
+					&lt; A1 | A2 | A3 &gt;
+				</span>
+			</div>
+		</div>
 		<hr />
+		<div class="answer">{{ answer.answer_text|safe }}</div>
+		<hr />
+		{% if request.user != answer.answered_by %}
+			<form action="{% url 'dashboard:submit-answer-approval' answer.id %}" method="POST">
+	            {% csrf_token %}
+	      <span>Is it correct?</span>
+				<button type="submit" class="btn btn-primary btn-block">Publish</button>
+		    </form>
+		{% endif %}
+  </div>
+	<div class="col-6 comment-thread">
+		<div class="row">
+			<div class="col">
+				<h3>Replies</h3>
+			</div>
+			<div class="col">
+				<button class="btn btn-inline link-secondary float-right" data-toggle='#comment-form'>Write feedback</button>
+			</div>
+		</div>
+		
+		<form action="{% url 'dashboard:submit-answer-comment' answer.id %}" id="comment-form" class="rich-text-form comment-tile comment-form hidden" method="POST">
+			<p><b>{{ request.user.get_full_name }}</b></p>
+	    {% csrf_token %}
+	    <textarea name="comment-text" value=""></textarea>
+	    <button type="submit" class="btn btn-secondary">Add Comment</button>
+		</form>
+			
 		{% for comment in comments %}
 		    {% if comment.author == request.user %}
-            <form action="{% url 'dashboard:delete-answer-comment' answer.id comment.id %}" id="comment-delete-form-{{ comment.id }}" class="comment-delete-form" method="GET">
+            <form action="{% url 'dashboard:delete-answer-comment' answer.id comment.id %}" id="comment-delete-form-{{ comment.id }}" class="comment-tile comment-delete-form" method="GET">
             {% else %}
-            <div>
+            <div class="comment-tile">
             {% endif %}
 				<p>
                     <b>{{ comment.author.get_full_name }}</b>
-                    at {{ comment.created_on }}
                     {% if comment.author == request.user %}
                     (
-					<button type="submit" class="inline-button delete-button">delete</button>
+					<button type="submit" class="btn btn-inline delete-button">delete</button>
 					<span class="delete-comment-prompt" style="display: none;">
-						<button class="inline-button delete-cancel">cancel</button>
-						<button type="submit" class="inline-button delete-submit">delete</button>
+						<button class="btn btn-inline delete-cancel">cancel</button>
+						<button type="submit" class="btn btn-inline delete-submit">delete</button>
 					</span>
 					)
 					{% endif %}
@@ -81,28 +82,8 @@
             {% else %}
             </div>
             {% endif %}
-			<hr />
 		{% endfor %}
-	    
-	    <form action="{% url 'dashboard:submit-answer-comment' answer.id %}" id="comment-form" class="rich-text-form comment-form" method="POST">
-		    {% csrf_token %}
-		    <textarea name="comment-text" value=""></textarea>
-		    <button type="submit" class="btn btn-secondary btn-block">Add Comment</button>
-		</form>
 	</div>
-	</form>
-	{% if request.user != answer.answered_by %}
-		<form action="{% url 'dashboard:submit-answer-approval' answer.id %}" method="POST">
-            {% csrf_token %}
-			<button type="submit" class="btn btn-primary btn-block">Accept Answer</button>
-	    </form>
-	{% endif %}
+</div>
 {% endwith %}
-{% endblock %}
-
-{% block footer %}
-<script>
-// Activate comment "delete" button confirmation action
-setupCommentDeleteButtons();
-</script>
 {% endblock %}

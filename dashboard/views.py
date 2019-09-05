@@ -242,6 +242,7 @@ def get_review_answer_view(request, answer_id):
     context = {
         'answer': answer,
         'comments': answer.comments.all(),
+        'grey_background': 'True',
     }
 
     return render(request, 'dashboard/answers/review.html', context)

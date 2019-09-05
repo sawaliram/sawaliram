@@ -167,6 +167,19 @@ input:focus {
     background-color: #C60000;
 }
 
+.btn-inline {
+    text-decoration: underline;
+    background: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+}
+
+.btn-inline:hover {
+    text-decoration: none;
+}
+
 .link-secondary {
     color: #9B63A8
 }
@@ -1311,8 +1324,15 @@ button.deny-access {
     margin-top: 1.5rem;
 }
 
+/* ========== ANSWER ========== */
+
+.answer {
+    min-height: 10rem;
+}
+
 /* ======== SUBMIT ANSWER ======== */
 
+.answer-details h1,
 .submit-answer-header h1 {
     font-size: 1.7rem;
 }
@@ -1327,6 +1347,37 @@ button.deny-access {
     border-right: 2px solid #acacac;
     padding-right: 0.5rem;
     margin-right: 0.6rem;
+}
+
+/* ====== REVIEW ANSWER ===== */
+
+.answer-details {
+    padding-top: 3rem; /* for toolbar */
+    padding-left: 5rem;
+    background-color: #ffffff;
+}
+
+.comment-thread {
+    padding-top: 8rem; /* 5rem + 3rem for toolbar */
+    padding-right: 5rem;
+}
+
+.comment-thread h3 {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.comment-tile {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #fff;
+    border-top: 0.2rem solid #9B63A8;
+}
+
+.comment-form textarea {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 /* ======== FOOTER ======== */
