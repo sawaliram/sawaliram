@@ -57,7 +57,10 @@
         <ul class="search-results-list">
             {% for question in questions %}
             <li class="search-result-item">
-                <p class="item-number">#{{ question.id }} | Question</p>
+                <div class="search-result-item-header">
+                    <p class="item-number">#{{ question.id }} | Question</p>
+                    <button class="btn bookmark-button" data-content="question" data-id="{{ question.id }}"><i class="far fa-bookmark"></i> Bookmark</button>
+                </div>
                 <h3 class="item-title">{{ question.question_text }}</h3>
                 {% if question.school or question.state or question.area or question.question_asked_on %}
                     <div>

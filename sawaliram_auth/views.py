@@ -6,7 +6,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+from django.http import HttpResponse
 
 from sawaliram_auth.models import User, VolunteerRequest
 from sawaliram_auth.forms import SignInForm, SignUpForm
@@ -30,6 +32,7 @@ class SignupView(View):
             user = User.objects.create_user(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
+                organisation=form.cleaned_data['organisation'],
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password']
             )
@@ -179,3 +182,9 @@ class GrantOrDenyUserPermission(View):
 
         messages.success(request, user.first_name + ' ' + user.last_name + ' was granted ' + request.POST.get('permission') + ' access')
         return redirect('sawaliram_auth:manage-users')
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AddBookmark(View):
+    def post(self, request):
+        return HttpResponse(request.POST.get('content'))

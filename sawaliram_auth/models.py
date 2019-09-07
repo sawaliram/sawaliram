@@ -10,7 +10,7 @@ from django.db import models
 class UserManager(BaseUserManager):
     """Define the manager to handle user creation"""
 
-    def create_user(self, first_name, last_name, email, password):
+    def create_user(self, first_name, last_name, organisation, email, password):
         """
         Creates and saves a User with email and organisation
         """
@@ -21,6 +21,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.first_name = first_name
         user.last_name = last_name
+        user.organisation = organisation
         user.save()
         return user
 
@@ -81,6 +82,39 @@ class VolunteerRequest(models.Model):
     requested_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='volunteer_requests',
+        on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+
+class Bookmark(models.Model):
+    """Define the model for bookmarks saved by users"""
+
+    class Meta:
+        db_table = 'bookmarks'
+
+    content_type = models.CharField(max_length=50)
+    content_id = models.CharField(max_length=10)
+    user = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='bookmarks',
+        on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+
+class ProfileSettings(models.Model):
+    """Define the model for the user profile settings"""
+
+    class Meta:
+        db_table = 'profile_settings'
+
+    organisation_role = models.CharField(max_length=50)
+    intro_text = models.CharField(max_length=100)
+    username = models.CharField(max_length=50)
+    user_id = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='profile_settings',
         on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

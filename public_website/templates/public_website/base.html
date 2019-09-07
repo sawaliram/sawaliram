@@ -84,7 +84,7 @@
                 <div class="user-menu-profile">
                     <img src="{% static 'user/default.png' %}" alt="Profile Picture">
                     <p class="user-name">{{ request.user.get_full_name }}</p>
-                    <button class="btn btn-secondary edit-profile">Edit Profile</button>
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}" class="btn view-profile">View Profile</a>
                 </div>
                 <div class="user-menu-items">
                     <a href="javascript:void(0)">
@@ -137,10 +137,10 @@
             </div>
             <div class="page-title-bar">
                 <p class="page-title">{{ page_title }}</p>
-                {% if user.is_authenticated %}
+                {% if request.user.is_authenticated %}
                     <button class="btn user-menu-button">
-                        <span class="user-name">{{ user.get_full_name }}</span>
-                        <img src="{% static 'user/menu_default.png' %}" alt="User Profile Picture">
+                        <span class="user-name">{{ request.user.get_full_name }}</span>
+                        <img src="{% static 'user/default_menu.png' %}" alt="User Profile Picture">
                     </button>
                 {% endif %}
             </div>

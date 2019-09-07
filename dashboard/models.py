@@ -176,6 +176,7 @@ class Answer(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+
 class AnswerDraft(models.Model):
 
     class Meta:
@@ -193,6 +194,7 @@ class AnswerDraft(models.Model):
         on_delete=models.PROTECT,
         default='')
     last_saved = models.DateTimeField(auto_now=True)
+
 
 class UncuratedSubmission(models.Model):
     """Define the data model to store submissions pending for curation"""
