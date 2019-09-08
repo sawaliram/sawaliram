@@ -9,8 +9,8 @@ body.grey-background {
 }
 
 .sawaliram-container {
-    margin-top: 12rem;
-    margin-bottom: 4rem;
+    padding-top: 12rem;
+    padding-bottom: 4rem;
 }
 
 @media (max-width: 576px) {
