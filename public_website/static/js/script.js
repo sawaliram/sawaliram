@@ -321,7 +321,11 @@ if (window.location.pathname.includes('/users/how-can-i-help')) {
     openVolunteerOptionDialog();
 }
 
-if (window.location.pathname.includes('/dashboard/view-questions') || (window.location.pathname.includes('/dashboard/answer-questions'))) {
+if (
+    window.location.pathname.includes('/dashboard/view-questions') ||
+    window.location.pathname.includes('/dashboard/answer-questions') ||
+    window.location.pathname.includes('/dashboard/answers/unreviewed')
+   ) {
     setupSearchResultsPagination();
     setupSearchResultsSort();
     setupSearchResultsFilter();

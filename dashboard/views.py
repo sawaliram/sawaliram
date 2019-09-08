@@ -227,7 +227,8 @@ def get_review_answers_list_view(request):
     .select_related()
       
     context = {
-        'unreviewed_answers': unreviewed_answers,
+        'answers': unreviewed_answers,
+        'grey_background': 'True',
     }
 
     return render(request, 'dashboard/answers/list-unreviewed.html', context)
@@ -440,9 +441,25 @@ class CurateDataset(View):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class ViewQuestionsView(View):
-    def get(self, request):
 
-        questions_set = Question.objects.all()
+    def get_queryset(self, request):
+        '''
+        Returns the queryset to use with this view (can be overridden
+        by subclasses).
+        '''
+
+        return Question.objects.all()
+
+    def get_template(self, request):
+        '''
+        Returns the template to render at the end (can be overridden
+        by subclasses
+        '''
+
+        return 'dashboard/view-questions.html'
+
+    def get(self, request):
+        questions_set = self.get_queryset(request)
 
         # get values for filter
         subjects = list(questions_set.order_by()
@@ -500,7 +517,7 @@ class ViewQuestionsView(View):
             'curriculums_to_filter_by': curriculums_to_filter_by,
             'result_size': questions_set.count()
         }
-        return render(request, 'dashboard/view-questions.html', context)
+        return render(request, self.get_template(request), context)
 
 
 # Answer Questions
@@ -573,6 +590,20 @@ class AnswerQuestionsView(View):
         }
         return render(request, 'dashboard/answer-questions.html', context)
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class ListUnreviewedAnswersView(ViewQuestionsView):
+
+    def get_template(self, request):
+        return 'dashboard/answers/list-unreviewed.html'
+
+    def get_queryset(self, request):
+        return Question.objects.filter(
+            answers__approved_by__isnull=True,
+            answers__answered_by__isnull=False,
+        ).exclude(
+            answers__answered_by=request.user,
+        ).distinct()
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')

@@ -80,6 +80,14 @@ input:focus {
     box-shadow: 0 0 0 1px #87B24D;
 }
 
+.text-primary {
+    color: #87B24D !important;
+}
+
+.badge-primary {
+    background-color: #87B24D;
+}
+
 .btn {
     border-radius: 20px;
     padding: 0.4rem 1.3rem;
@@ -1210,6 +1218,12 @@ h1.dashboard-home-greeting {
     font-size: 1.5rem;
     display: inline-block;
     margin-bottom: 2rem;
+}
+
+.search-container .search-results ul.search-results-list li.search-result-item .item-subheading {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
 }
 
 @media (max-width: 576px) {
