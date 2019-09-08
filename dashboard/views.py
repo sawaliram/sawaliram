@@ -219,22 +219,6 @@ class ValidateNewExcelSheet(View):
         return HttpResponse(response)
 
 @login_required
-def get_review_answers_list_view(request):
-    """Return the view with list of unreviewed answers"""
-
-    unreviewed_answers = Answer.objects \
-    .filter(approved_by__isnull=True) \
-    .select_related()
-      
-    context = {
-        'answers': unreviewed_answers,
-        'grey_background': 'True',
-    }
-
-    return render(request, 'dashboard/answers/list-unreviewed.html', context)
-
-
-@login_required
 def get_review_answer_view(request, answer_id):
     """Return the view to approve/comment on an answer"""
 
