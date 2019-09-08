@@ -29,7 +29,7 @@
 						{% for a in answer.question_id.answers.all %}
 						{# TODO: truncate if list too long #}
 						<li class="nav-item">
-							<a class="nav-link{% if a.id == answer.id %} active{% endif %}" href="{% if a.id == answer.id %}#{% else %}{% url 'dashboard:review-answer' answer_id=a.id %}{% endif %}">
+							<a class="nav-link{% if a.id == answer.id %} active{% endif %}" href="{% if a.id == answer.id %}#{% else %}{% url 'dashboard:review-answer' question_id=question.id answer_id=a.id %}{% endif %}">
 							  A{{ a.id }}
 							</a>
 						</li>
@@ -41,7 +41,7 @@
 		<div class="answer">{{ answer.answer_text|safe }}</div>
 		<hr />
 		{% if request.user != answer.answered_by %}
-			<form action="{% url 'dashboard:submit-answer-approval' answer.id %}" method="POST">
+			<form action="{% url 'dashboard:approve-answer' question_id=question.id answer_id=answer.id %}" method="POST">
 	            {% csrf_token %}
 	      <span>Is it correct?</span>
 				<button type="submit" class="btn btn-primary btn-block">Publish</button>
@@ -58,7 +58,7 @@
 			</div>
 		</div>
 		
-		<form action="{% url 'dashboard:submit-answer-comment' answer.id %}" id="comment-form" class="rich-text-form comment-tile comment-form hidden" method="POST">
+		<form action="{% url 'dashboard:submit-answer-comment' question.id answer.id %}" id="comment-form" class="rich-text-form comment-tile comment-form hidden" method="POST">
 			<p><b>{{ request.user.get_full_name }}</b></p>
 	    {% csrf_token %}
 	    <textarea name="comment-text" value=""></textarea>
@@ -67,7 +67,7 @@
 			
 		{% for comment in comments %}
 		    {% if comment.author == request.user %}
-            <form action="{% url 'dashboard:delete-answer-comment' answer.id comment.id %}" id="comment-delete-form-{{ comment.id }}" class="comment-tile comment-delete-form" method="GET">
+            <form action="{% url 'dashboard:delete-answer-comment' question.id answer.id comment.id %}" id="comment-delete-form-{{ comment.id }}" class="comment-tile comment-delete-form" method="GET">
             {% else %}
             <div class="comment-tile">
             {% endif %}

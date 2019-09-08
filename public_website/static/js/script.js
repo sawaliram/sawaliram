@@ -310,7 +310,7 @@ if (pattern.test(window.location.pathname)) {
     activateTooltips();
 }
 
-var pattern = new RegExp("^/dashboard/answers/\\d+/review")
+var pattern = new RegExp("^/dashboard/question/\\d+/answers/\\d+/review")
 if (pattern.test(window.location.pathname)) {
     setupCommentFormDisplayToggle();
     setupCommentDeleteButtons();

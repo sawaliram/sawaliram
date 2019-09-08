@@ -218,20 +218,6 @@ class ValidateNewExcelSheet(View):
 
         return HttpResponse(response)
 
-@login_required
-def get_review_answer_view(request, answer_id):
-    """Return the view to approve/comment on an answer"""
-
-    answer = Answer.objects.get(pk=answer_id)
-
-    context = {
-        'answer': answer,
-        'comments': answer.comments.all(),
-        'grey_background': 'True',
-    }
-
-    return render(request, 'dashboard/answers/review.html', context)
-
 # Manage Content
 
 @method_decorator(login_required, name='dispatch')
@@ -627,6 +613,63 @@ class SubmitAnswerView(View):
         return render(request, 'dashboard/submit-answer.html', context)
 
 
+# Review Answer
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class ReviewAnswerView(View):
+
+    def get(self, request, question_id, answer_id):
+        """
+        Return the view to approve/comment on an answer
+        """
+
+        answer = Answer.objects.get(pk=answer_id)
+
+        context = {
+            'answer': answer,
+            'comments': answer.comments.all(),
+            'grey_background': 'True',
+        }
+
+        return render(request, 'dashboard/answers/review.html', context)
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class ApproveAnswerView(View):
+
+    def get(self, request, question_id, answer_id):
+        """
+        Redirect to ReviewAnswerView
+        """
+
+        return redirect('dashboard:review-answer',
+            question_id=question_id,
+            answer_id=answer_id)
+
+    def post(self, request, question_id, answer_id):
+        """Mark the answer as approved"""
+
+
+        try:
+            answer = Answer.objects.get(pk=answer_id,
+                approved_by__isnull=True)
+        except Answer.DoesNotExist:
+            raise Http404('Answer does not exist')
+
+        if request.user == answer.answered_by:
+            raise PermissionDenied('You cannot approve your own answer')
+
+        if request.method != 'POST':
+            return redirect('dashboard:review-answer',
+                question_id=question_id,
+                answer_id=answer_id)
+
+        answer.approved_by = request.user
+        answer.save()
+
+        return redirect('dashboard:review-answers')
+
 # Legacy Functions
 
 @login_required
@@ -674,76 +717,78 @@ def submit_encoded_dataset(request):
 
     return render(request, 'dashboard/excel-submitted-successfully.html')
 
-@login_required
-def submit_answer_comment(request, answer_id):
-    """Save the submitted comment to a particular answer"""
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class AnswerCommentView(View):
 
-    # TODO: Check permissions
+    def post(self, request, question_id, answer_id):
+        """
+        Save the submitted comment to a particular answer
+        """
 
-    try:
-        answer = Answer.objects.get(pk=answer_id)
-    except Answer.DoesNotExist:
-        raise Http404('Answer does not exist')
+        try:
+            answer = Answer.objects.get(pk=answer_id)
+        except Answer.DoesNotExist:
+            raise Http404('Answer does not exist')
 
-    comment = AnswerComment()
-    comment.text = request.POST['comment-text']
-    comment.answer = answer
-    comment.author = request.user
+        comment = AnswerComment()
+        comment.text = request.POST['comment-text']
+        comment.answer = answer
+        comment.author = request.user
 
-    comment.save()
+        comment.save()
 
-    return redirect('dashboard:review-answer', answer_id=answer_id)
+        return redirect('dashboard:review-answer',
+            question_id=question_id,
+            answer_id=answer_id)
 
-@login_required
-def submit_answer_approval(request, answer_id):
-    """Mark the answer as approved"""
+class AnswerCommentDeleteView(View):
 
-    # TODO: check permissions
+    def fetch_comment(self, question_id, answer_id, comment_id):
+        """
+        Return selected comment
+        """
 
-    try:
-        answer = Answer.objects.get(pk=answer_id,
-            approved_by__isnull=True)
-    except Answer.DoesNotExist:
-        raise Http404('Answer does not exist')
+        try:
+            answer = Answer.objects.get(pk=answer_id)
+        except Answer.DoesNotexist:
+            raise Http404('Answer does not exist')
+    
+        try:
+            comment = answer.comments.get(pk=comment_id)
+        except AnswerComment.DoesNotExist:
+            raise Http404('No matching comment')
 
-    if request.user == answer.answered_by:
-        raise PermissionDenied('You cannot approve your own answer')
+        return comment
 
-    if request.method != 'POST':
-        return redirect('dashboard:review-answer', answer_id=answer_id)
+    def get(self, request, question_id, answer_id, comment_id):
+        """
+        Confirm whether to delete a comment or not
+        """
 
-    answer.approved_by = request.user
-    answer.save()
+        comment = self.fetch_comment(question_id, answer_id, comment_id)
 
-    return redirect('dashboard:review-answers')
-
-@login_required
-def delete_answer_comment(request, answer_id, comment_id):
-    """Delete a previously published comment on an answer"""
-
-    try:
-        answer = Answer.objects.get(pk=answer_id)
-    except Answer.DoesNotexist:
-        raise Http404('Answer does not exist')
-
-    try:
-        comment = answer.comments.get(pk=comment_id)
-    except AnswerComment.DoesNotExist:
-        raise Http404('No matching comment')
-
-    if request.user != comment.author:
-        raise PermissionDenied('You are not authorised to delete that comment.')
-
-    print('We got: ' + request.method)
-    if request.method == 'POST':
-        comment.delete()
-    else:
         context = {
             'comment': comment,
         }
         return render(request, 'dashboard/answers/delete_comment.html', context)
 
-    return redirect('dashboard:review-answer', answer_id=answer.id)
+    def post(self, request, question_id, answer_id, comment_id):
+        """
+        Delete a previously published comment on an answer
+        """
+
+        comment = self.fetch_comment(question_id, answer_id, comment_id)
+
+        if request.user != comment.author:
+            raise PermissionDenied('You are not authorised to delete that comment.')
+
+        comment.delete()
+
+        return redirect('dashboard:review-answer',
+            question_id=question_id,
+            answer_id=answer_id)
+
 
 def get_error_404_view(request, exception):
     """Return the custom 404 page."""

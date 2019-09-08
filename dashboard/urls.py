@@ -16,10 +16,10 @@ urlpatterns = [
     path('view-questions', views.ViewQuestionsView.as_view(), name='view-questions'),
     path('answer-questions', views.AnswerQuestionsView.as_view(), name='answer-questions'),
     path('answers/unreviewed', views.ListUnreviewedAnswersView.as_view(), name='list-unreviewed-answers'),
+    path('question/<int:question_id>/answers/<int:answer_id>/review', views.ReviewAnswerView.as_view(), name='review-answer'),
+    path('question/<int:question_id>/answers/<int:answer_id>/approve', views.ApproveAnswerView.as_view(), name='approve-answer'),
 
-    path('answers/<int:answer_id>/review', views.get_review_answer_view, name='review-answer'),
-    path('action/answers/<int:answer_id>/comment/add', views.submit_answer_comment, name='submit-answer-comment'),
-    path('action/answers/<int:answer_id>/approve', views.submit_answer_approval, name='submit-answer-approval'),
-    path('action/answers/<int:answer_id>/comment/<int:comment_id>/delete', views.delete_answer_comment, name='delete-answer-comment'),
+    path('question/<int:question_id>/answers/<int:answer_id>/comment/add', views.AnswerCommentView.as_view(), name='submit-answer-comment'),
+    path('question/<int:question_id>/answers/<int:answer_id>/comment/<int:comment_id>/delete', views.AnswerCommentDeleteView.as_view(), name='delete-answer-comment'),
 
 ]

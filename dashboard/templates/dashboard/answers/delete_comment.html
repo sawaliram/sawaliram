@@ -16,14 +16,14 @@
     <p>
         <em>
             Commented on
-            <a href="{% url 'dashboard:review-answer' comment.answer.id %}">{{ comment.answer.question_id.question_text }}</a>
+            <a href="{% url 'dashboard:review-answer' question_id=comment.answer.question_id.id answer_id=comment.answer.id %}">{{ comment.answer.question_id.question_text }}</a>
             at {{ comment.created_on }}
         </em>
     </p>
 </div>
-<form action="{% url 'dashboard:delete-answer-comment' comment.answer.id comment.id %}" method="POST">
+<form action="{% url 'dashboard:delete-answer-comment' comment.answer.question_id.id comment.answer.id comment.id %}" method="POST">
     {% csrf_token %}
-    <a class="btn btn-primary" href="{% url 'dashboard:review-answer' comment.answer.id %}">Go back</a>
+    <a class="btn btn-primary" href="{% url 'dashboard:review-answer' question_id=comment.answer.question_id.id answer_id=comment.answer.id %}">Go back</a>
     <button type="submit" class="btn btn-danger-hollow">Delete comment</button>
 </form>
 
