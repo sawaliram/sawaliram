@@ -1342,6 +1342,10 @@ button.deny-access {
 
 .answer {
     min-height: 10rem;
+    max-height: calc(100vh - 30rem);
+    overflow-y: scroll;
+    scrollbar-color: #87B24D #FFFFFF;
+    scrollbar-width: thin;
 }
 
 /* ======== SUBMIT ANSWER ======== */
