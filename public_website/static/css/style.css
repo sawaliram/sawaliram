@@ -81,6 +81,8 @@ input:focus {
 }
 
 .btn {
+    display: inline-block;
+    width: unset;
     border-radius: 20px;
     padding: 0.4rem 1.3rem;
     background-color: #ffffff;
@@ -102,8 +104,6 @@ input:focus {
 }
 
 .btn-primary {
-    display: inline-block;
-    width: unset;
     background-color: #87B24D;
     border-color: #87B24D;
     color: #FFFFFF;
