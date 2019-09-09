@@ -176,6 +176,7 @@ class Answer(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+
 class AnswerDraft(models.Model):
 
     class Meta:
@@ -193,6 +194,28 @@ class AnswerDraft(models.Model):
         on_delete=models.PROTECT,
         default='')
     last_saved = models.DateTimeField(auto_now=True)
+
+
+class AnswerComment(models.Model):
+    """Define the data model for comments on Answers"""
+
+    class Meta:
+        db_table = 'answer_comment'
+
+    text = models.TextField()
+
+    answer = models.ForeignKey(
+        'Answer',
+        related_name='comments',
+        on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='answer_comments',
+        on_delete=models.PROTECT)
+
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
 
 class UncuratedSubmission(models.Model):
     """Define the data model to store submissions pending for curation"""

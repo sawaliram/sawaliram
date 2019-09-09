@@ -1,0 +1,97 @@
+{% extends "public_website/base.html" %}
+
+{% load static %}
+{% load render_linebreaks %}
+
+{% block title %} Review Answer | Sawaliram {% endblock %}
+
+{% block extra_header %}
+<div class="navbar-extra row justify-content-end">
+	<div>
+		<button class="btn btn-secondary-hollow">&lt; Prev</button>
+		<button class="btn btn-secondary-hollow">Next &gt;</button>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+{% with question=answer.question_id %}
+<div class="row">
+	<div class="col-6 answer-details">
+		<h1>{{ question.question_text }}</h1>
+		<div class="row">
+			<div class="col">
+				<b>Answered by {{ answer.answered_by.get_full_name }}</b>
+			</div>
+			<div class="col">
+				<span class="float-right">
+					<ul class="nav nav-pills">
+						{% for a in answer.question_id.answers.all %}
+						{# TODO: truncate if list too long #}
+						<li class="nav-item">
+							<a class="nav-link{% if a.id == answer.id %} active{% endif %}" href="{% if a.id == answer.id %}#{% else %}{% url 'dashboard:review-answer' question_id=question.id answer_id=a.id %}{% endif %}">
+							  A{{ a.id }}
+							</a>
+						</li>
+						{% endfor %}
+					</ul>
+				</span>
+			</div>
+		</div>
+		<div class="answer">{{ answer.answer_text|safe }}</div>
+		<hr />
+		{% if request.user != answer.answered_by %}
+			<form action="{% url 'dashboard:approve-answer' question_id=question.id answer_id=answer.id %}" method="POST">
+	            {% csrf_token %}
+	      <span>Is it correct?</span>
+				<button type="submit" class="btn btn-primary btn-block">Publish</button>
+		    </form>
+		{% endif %}
+  </div>
+	<div class="col-6 comment-thread">
+		<div class="row">
+			<div class="col">
+				<h3>Replies</h3>
+			</div>
+			<div class="col">
+				<button class="btn btn-inline link-secondary float-right" data-toggle='#comment-form'>Write feedback</button>
+			</div>
+		</div>
+		
+		<form action="{% url 'dashboard:submit-answer-comment' question.id answer.id %}" id="comment-form" class="rich-text-form comment-tile comment-form hidden" method="POST">
+			<p><b>{{ request.user.get_full_name }}</b></p>
+	    {% csrf_token %}
+	    <textarea name="comment-text" value=""></textarea>
+	    <button type="submit" class="btn btn-secondary">Add Comment</button>
+		</form>
+			
+		{% for comment in comments %}
+		    {% if comment.author == request.user %}
+            <form action="{% url 'dashboard:delete-answer-comment' question.id answer.id comment.id %}" id="comment-delete-form-{{ comment.id }}" class="comment-tile comment-delete-form" method="GET">
+            {% else %}
+            <div class="comment-tile">
+            {% endif %}
+				<p>
+                    <b>{{ comment.author.get_full_name }}</b>
+                    {% if comment.author == request.user %}
+                    (
+					<button type="submit" class="btn btn-inline delete-button">delete</button>
+					<span class="delete-comment-prompt" style="display: none;">
+						<button class="btn btn-inline delete-cancel">cancel</button>
+						<button type="submit" class="btn btn-inline delete-submit">delete</button>
+					</span>
+					)
+					{% endif %}
+                </p>
+				{{ comment.text|escape|render_linebreaks|safe }}
+			{% if comment.author == request.user %}
+			{% csrf_token %}
+            </form>
+            {% else %}
+            </div>
+            {% endif %}
+		{% endfor %}
+	</div>
+</div>
+{% endwith %}
+{% endblock %}

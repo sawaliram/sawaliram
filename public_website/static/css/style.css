@@ -80,6 +80,14 @@ input:focus {
     box-shadow: 0 0 0 1px #87B24D;
 }
 
+.text-primary {
+    color: #87B24D !important;
+}
+
+.badge-primary {
+    background-color: #87B24D;
+}
+
 .btn {
     border-radius: 20px;
     padding: 0.4rem 1.3rem;
@@ -144,6 +152,40 @@ input:focus {
 .btn-secondary-hollow:hover {
     color: #ffffff;
     background-color: #9B63A8;
+}
+
+.btn-danger {
+    background-color: #C60000;
+    border-color: #C60000;
+}
+
+.btn-danger:hover {
+    background-color: #A40000;
+    border-color: #A40000;
+}
+
+.btn-danger-hollow {
+    color: #C60000;
+    background-color: #ffffff;
+    border: 1px solid #C60000;
+}
+
+.btn-danger-hollow:hover {
+    color: #ffffff;
+    background-color: #C60000;
+}
+
+.btn-inline {
+    text-decoration: underline;
+    background: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+}
+
+.btn-inline:hover {
+    text-decoration: none;
 }
 
 .link-secondary {
@@ -1178,6 +1220,12 @@ h1.dashboard-home-greeting {
     margin-bottom: 2rem;
 }
 
+.search-container .search-results ul.search-results-list li.search-result-item .item-subheading {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
 @media (max-width: 576px) {
     .search-container .search-results ul.search-results-list li.search-result-item .item-title {
         font-size: 1.3rem;
@@ -1290,8 +1338,19 @@ button.deny-access {
     margin-top: 1.5rem;
 }
 
+/* ========== ANSWER ========== */
+
+.answer {
+    min-height: 10rem;
+    max-height: calc(100vh - 30rem);
+    overflow-y: scroll;
+    scrollbar-color: #87B24D #FFFFFF;
+    scrollbar-width: thin;
+}
+
 /* ======== SUBMIT ANSWER ======== */
 
+.answer-details h1,
 .submit-answer-header h1 {
     font-size: 1.7rem;
 }
@@ -1306,6 +1365,37 @@ button.deny-access {
     border-right: 2px solid #acacac;
     padding-right: 0.5rem;
     margin-right: 0.6rem;
+}
+
+/* ====== REVIEW ANSWER ===== */
+
+.answer-details {
+    padding-top: 3rem; /* for toolbar */
+    padding-left: 5rem;
+    background-color: #ffffff;
+}
+
+.comment-thread {
+    padding-top: 8rem; /* 5rem + 3rem for toolbar */
+    padding-right: 5rem;
+}
+
+.comment-thread h3 {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.comment-tile {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #fff;
+    border-top: 0.2rem solid #9B63A8;
+}
+
+.comment-form textarea {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 /* ======== FOOTER ======== */

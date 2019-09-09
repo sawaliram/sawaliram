@@ -10,9 +10,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.models import Subquery
 from django.views import View
-from django.http import HttpResponse
+from django.http import (
+    HttpResponse,
+    Http404,
+)
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import (
+    ObjectDoesNotExist,
+    PermissionDenied,
+)
 from django.core.paginator import Paginator
 
 from sawaliram_auth.decorators import volunteer_permission_required
@@ -21,6 +27,7 @@ from dashboard.models import (
     Question,
     Answer,
     AnswerDraft,
+    AnswerComment,
     UnencodedSubmission,
     Dataset)
 
@@ -211,7 +218,6 @@ class ValidateNewExcelSheet(View):
             response = 'validated'
 
         return HttpResponse(response)
-
 
 # Manage Content
 
@@ -406,9 +412,25 @@ class CurateDataset(View):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class ViewQuestionsView(View):
-    def get(self, request):
 
-        questions_set = Question.objects.all()
+    def get_queryset(self, request):
+        '''
+        Returns the queryset to use with this view (can be overridden
+        by subclasses).
+        '''
+
+        return Question.objects.all()
+
+    def get_template(self, request):
+        '''
+        Returns the template to render at the end (can be overridden
+        by subclasses
+        '''
+
+        return 'dashboard/view-questions.html'
+
+    def get(self, request):
+        questions_set = self.get_queryset(request)
 
         # get values for filter
         subjects = list(questions_set.order_by()
@@ -466,7 +488,7 @@ class ViewQuestionsView(View):
             'curriculums_to_filter_by': curriculums_to_filter_by,
             'result_size': questions_set.count()
         }
-        return render(request, 'dashboard/view-questions.html', context)
+        return render(request, self.get_template(request), context)
 
 
 # Answer Questions
@@ -539,6 +561,20 @@ class AnswerQuestionsView(View):
         }
         return render(request, 'dashboard/answer-questions.html', context)
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class ListUnreviewedAnswersView(ViewQuestionsView):
+
+    def get_template(self, request):
+        return 'dashboard/answers/list-unreviewed.html'
+
+    def get_queryset(self, request):
+        return Question.objects.filter(
+            answers__approved_by__isnull=True,
+            answers__answered_by__isnull=False,
+        ).exclude(
+            answers__answered_by=request.user,
+        ).distinct()
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
@@ -620,6 +656,63 @@ class SubmitAnswerView(View):
         return render(request, 'dashboard/submit-answer.html', context)
 
 
+# Review Answer
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class ReviewAnswerView(View):
+
+    def get(self, request, question_id, answer_id):
+        """
+        Return the view to approve/comment on an answer
+        """
+
+        answer = Answer.objects.get(pk=answer_id)
+
+        context = {
+            'answer': answer,
+            'comments': answer.comments.all(),
+            'grey_background': 'True',
+        }
+
+        return render(request, 'dashboard/answers/review.html', context)
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class ApproveAnswerView(View):
+
+    def get(self, request, question_id, answer_id):
+        """
+        Redirect to ReviewAnswerView
+        """
+
+        return redirect('dashboard:review-answer',
+            question_id=question_id,
+            answer_id=answer_id)
+
+    def post(self, request, question_id, answer_id):
+        """Mark the answer as approved"""
+
+
+        try:
+            answer = Answer.objects.get(pk=answer_id,
+                approved_by__isnull=True)
+        except Answer.DoesNotExist:
+            raise Http404('Answer does not exist')
+
+        if request.user == answer.answered_by:
+            raise PermissionDenied('You cannot approve your own answer')
+
+        if request.method != 'POST':
+            return redirect('dashboard:review-answer',
+                question_id=question_id,
+                answer_id=answer_id)
+
+        answer.approved_by = request.user
+        answer.save()
+
+        return redirect('dashboard:review-answers')
+
 # Legacy Functions
 
 @login_required
@@ -666,6 +759,78 @@ def submit_encoded_dataset(request):
     unencoded_submission_entry.save()
 
     return render(request, 'dashboard/excel-submitted-successfully.html')
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class AnswerCommentView(View):
+
+    def post(self, request, question_id, answer_id):
+        """
+        Save the submitted comment to a particular answer
+        """
+
+        try:
+            answer = Answer.objects.get(pk=answer_id)
+        except Answer.DoesNotExist:
+            raise Http404('Answer does not exist')
+
+        comment = AnswerComment()
+        comment.text = request.POST['comment-text']
+        comment.answer = answer
+        comment.author = request.user
+
+        comment.save()
+
+        return redirect('dashboard:review-answer',
+            question_id=question_id,
+            answer_id=answer_id)
+
+class AnswerCommentDeleteView(View):
+
+    def fetch_comment(self, question_id, answer_id, comment_id):
+        """
+        Return selected comment
+        """
+
+        try:
+            answer = Answer.objects.get(pk=answer_id)
+        except Answer.DoesNotexist:
+            raise Http404('Answer does not exist')
+    
+        try:
+            comment = answer.comments.get(pk=comment_id)
+        except AnswerComment.DoesNotExist:
+            raise Http404('No matching comment')
+
+        return comment
+
+    def get(self, request, question_id, answer_id, comment_id):
+        """
+        Confirm whether to delete a comment or not
+        """
+
+        comment = self.fetch_comment(question_id, answer_id, comment_id)
+
+        context = {
+            'comment': comment,
+        }
+        return render(request, 'dashboard/answers/delete_comment.html', context)
+
+    def post(self, request, question_id, answer_id, comment_id):
+        """
+        Delete a previously published comment on an answer
+        """
+
+        comment = self.fetch_comment(question_id, answer_id, comment_id)
+
+        if request.user != comment.author:
+            raise PermissionDenied('You are not authorised to delete that comment.')
+
+        comment.delete()
+
+        return redirect('dashboard:review-answer',
+            question_id=question_id,
+            answer_id=answer_id)
 
 
 def get_error_404_view(request, exception):
