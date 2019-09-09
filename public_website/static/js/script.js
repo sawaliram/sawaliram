@@ -251,6 +251,39 @@ function activateTooltips() {
   $('[data-toggle="tooltip"]').tooltip()
 }
 
+/*
+ * Comment delete buttons
+ * These show the user a confirmation note before deciding whether to
+ * actually delete the comment or not
+*/
+
+function setupCommentDeleteButtons() {
+	$('.comment-delete-form')
+    .attr('method', 'POST')
+    .find('button.delete-button')
+	.html('delete?')
+	.click(function(e) {
+	    e.preventDefault();
+		$(this)
+		.css('display', 'none')
+		.next('span.delete-comment-prompt').show();
+	});
+	$('.comment-delete-form button.delete-cancel').click(function(e) {
+		$(this)
+		.parents('span.delete-comment-prompt').hide()
+		.prev('button.delete-button').css('display', '')
+		e.preventDefault();
+	});
+}
+
+function setupCommentFormDisplayToggle() {
+    $('.comment-form').hide();
+    $('*[data-toggle="#comment-form"]')
+    .click(function(e) {
+        $('.comment-form').toggle();
+    });
+}
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
@@ -277,12 +310,22 @@ if (pattern.test(window.location.pathname)) {
     activateTooltips();
 }
 
+var pattern = new RegExp("^/dashboard/question/\\d+/answers/\\d+/review")
+if (pattern.test(window.location.pathname)) {
+    setupCommentFormDisplayToggle();
+    setupCommentDeleteButtons();
+}
+
 if (window.location.pathname.includes('/users/how-can-i-help')) {
     highlightSelectedVolunteerOption();
     openVolunteerOptionDialog();
 }
 
-if (window.location.pathname.includes('/dashboard/view-questions') || (window.location.pathname.includes('/dashboard/answer-questions'))) {
+if (
+    window.location.pathname.includes('/dashboard/view-questions') ||
+    window.location.pathname.includes('/dashboard/answer-questions') ||
+    window.location.pathname.includes('/dashboard/answers/unreviewed')
+   ) {
     setupSearchResultsPagination();
     setupSearchResultsSort();
     setupSearchResultsFilter();
