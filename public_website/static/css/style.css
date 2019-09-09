@@ -73,12 +73,16 @@ input[type=email] {
     margin-bottom: 1rem;
 }
 
-textarea,
+textarea {
+    border-radius: 5px;
+}
+
+/* textarea,
 input:focus {
     border-color: #87B24D;
     outline: none;
     box-shadow: 0 0 0 1px #87B24D;
-}
+} */
 
 .btn {
     border-radius: 20px;
@@ -1376,9 +1380,21 @@ button.deny-access {
     width: 70%;
 }
 
+.tab-content.user-profile-tab-content .tab-section:not(:last-child) {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #d2d2d2;
+    padding-bottom: 2rem;
+}
+
 h3.tab-subheading {
     font-size: 1.2rem;
     color: #535353;
+    margin-bottom: 0.3rem;
+}
+
+p.tab-section-intro {
+    color: #a6a6a6;
+    margin-bottom: 1.5rem;
 }
 
 /* ======== FOOTER ======== */

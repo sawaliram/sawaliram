@@ -16,4 +16,5 @@ urlpatterns = [
     path('update-permissions', views.UpdateUserPermissions.as_view(), name='update-permissions'),
     path('grant-permission', views.GrantOrDenyUserPermission.as_view(), name='grant-permission'),
     path('bookmark/add', views.AddBookmark.as_view(), name='add-bookmark'),
+    path('bookmark/remove', views.RemoveBookmark.as_view(), name='remove-bookmark'),
 ]

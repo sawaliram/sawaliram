@@ -94,10 +94,34 @@ class Bookmark(models.Model):
         db_table = 'bookmarks'
 
     content_type = models.CharField(max_length=50)
-    content_id = models.CharField(max_length=10)
+    question = models.ForeignKey(
+        'dashboard.Question',
+        related_name='bookmarks',
+        on_delete=models.PROTECT,
+        default='',
+        blank=True,
+        null=True)
     user = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='bookmarks',
+        on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+
+class Notification(models.Model):
+    """Define the model for user notifications"""
+
+    class Meta:
+        db_table = 'notifications'
+
+    notification_type = models.CharField(max_length=50)
+    title_text = models.CharField(max_length=50)
+    description_text = models.CharField(max_length=100)
+    target_url = models.CharField(max_length=50)
+    user = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='notifications',
         on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

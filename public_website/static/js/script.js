@@ -256,13 +256,27 @@ function setupBookmarkContentFunctionality() {
                 },
                 error: function(response) {
                     console.log(response);
-                }
+                },
             });
-
         }
         else {
             $(this).html('<i class="far fa-bookmark"></i> Bookmark');
             $(this).removeClass('bookmarked');
+
+            // remove bookmark
+            $.ajax({
+                url: location.origin + '/users/bookmark/remove',
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(response) {
+                    console.log(response);
+                },
+            });
         }
     });
 }

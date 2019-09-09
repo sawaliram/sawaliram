@@ -44,11 +44,11 @@
         <div class="tab-pane fade show active" id="settings-tab" role="tabpanel" aria-labelledby="settings-tab">
             <div class="tab-section">
                 <h3 class="tab-subheading">Intro</h3>
-                <p class="tab-section-intro">A short intro about yourself for the fellow users</p>
+                <p class="tab-section-intro">A short intro about yourself for your fellow users</p>
                 <form action="" method="POST">
                     {% csrf_token %}
                     <textarea name="intro-text" rows="3" maxlength="100"></textarea>
-                    <button class="btn btn-secondary">Update intro text</button>
+                    <button class="btn btn-secondary sub-task-button">Update intro text</button>
                 </form>
             </div>
             <div class="tab-section">
@@ -58,7 +58,7 @@
                     {% csrf_token %}
                     <input type="text" name="organisation-name" placeholder="Organisation name">
                     <input type="text" name="organisation-role" placeholder="Your role">
-                    <button class="btn btn-secondary">Update organisation info</button>
+                    <button class="btn btn-secondary sub-task-button">Update organisation info</button>
                 </form>
             </div>
             <div class="tab-section">
@@ -69,7 +69,7 @@
                     <input type="password" name="current-password" placeholder="Current password">
                     <input type="password" name="new-password" placeholder="New password">
                     <input type="password" name="confirm-new-password" placeholder="Confirm new password">
-                    <button class="btn btn-secondary">Update password</button>
+                    <button class="btn btn-secondary sub-task-button">Update password</button>
                 </form>
             </div>
         </div>
@@ -83,15 +83,14 @@
                     <p class="draft-preview">
                         {{ draft.answer_text }}
                     </p>
-                    <button class="btn btn-secondary">Continue writing</button>
-                    <button class="btn btn-secondary-hollow"><i class="far fa-trash-alt"></i> Delete</button>
+                    <button class="btn btn-secondary sub-task-button">Continue writing</button>
+                    <button class="btn btn-secondary-hollow sub-task-button"><i class="far fa-trash-alt"></i> Delete</button>
                 </li>
                 {% endfor %}
             </ul>
             {% endif %}
         </div>
         <div class="tab-pane fade" id="notifications-tab" role="tabpanel" aria-labelledby="notifications-tab">
-
         </div>
         <div class="tab-pane fade" id="submissions-tab" role="tabpanel" aria-labelledby="submissions-tab">
             {% if submitted_questions %}
@@ -120,7 +119,16 @@
             {% endif %}
         </div>
         <div class="tab-pane fade" id="bookmarks-tab" role="tabpanel" aria-labelledby="bookmarks-tab">
-            <h3 class="tab-subheading">Questions</h3>
+            {% if bookmarked_questions %}
+                <h3 class="tab-subheading">Questions</h3>
+                <ul class="card-list">
+                    {% for bookmark in bookmarked_questions %}
+                    <li>
+                        <h4>{{ bookmark.question }}</h4>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
     </div>
 </div>

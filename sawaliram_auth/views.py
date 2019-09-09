@@ -10,9 +10,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.http import HttpResponse
 
-from sawaliram_auth.models import User, VolunteerRequest
+from sawaliram_auth.models import User, VolunteerRequest, Bookmark
 from sawaliram_auth.forms import SignInForm, SignUpForm
 from sawaliram_auth.decorators import volunteer_permission_required
+from dashboard.models import Question
 
 
 class SignupView(View):
@@ -187,4 +188,22 @@ class GrantOrDenyUserPermission(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class AddBookmark(View):
     def post(self, request):
-        return HttpResponse(request.POST.get('content'))
+        new_bookmark = Bookmark(
+            content_type=request.POST.get('content'),
+            question=Question.objects.get(id=request.POST.get('id')),
+            user=request.user
+        )
+        new_bookmark.save()
+
+        return HttpResponse()
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class RemoveBookmark(View):
+    def post(self, request):
+        bookmark_to_remove = Bookmark.objects.get(
+            content_type=request.POST.get('content'),
+            question=request.POST.get('id'))
+        bookmark_to_remove.delete()
+
+        return HttpResponse()
