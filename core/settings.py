@@ -1,5 +1,7 @@
 
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -79,6 +81,12 @@ DATABASES = {
 # Custom Auth System settings
 AUTH_USER_MODEL = 'sawaliram_auth.User'
 LOGIN_URL = '/users/signin'
+
+# Sentry settings
+sentry_sdk.init(
+    dsn="https://06e228b93d3644cd83a7d6b4ff1e66a1@sentry.io/1434408",
+    integrations=[DjangoIntegration()]
+)
 
 
 # Password validation
