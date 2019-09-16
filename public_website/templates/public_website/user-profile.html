@@ -7,33 +7,43 @@
 {% block content %}
 
 <div class="wide-container">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    {% endif %}
     <div class="profile-header">
         <img src="{% static 'user/default.png' %}" alt="Profile Picture">
-        <h1 class="user-name">{{ selected_user.user_id.get_full_name }}</h1>
-        {% if selected_user.user_id.organisation %}
-            <p class="organisation">{% if selected_user.organisation_role %}{{ selected_user.organisation_role }} at {% endif %}{{ user.organisation }}</p>
+        <h1 class="user-name">{{ selected_user.get_full_name }}</h1>
+        {% if selected_user.organisation %}
+            <p class="organisation">{% if selected_user.organisation_role %}{{ selected_user.organisation_role }} at {% endif %}{{ selected_user.organisation }}</p>
         {% endif %}
     </div>
     
     <nav>
         <div class="nav nav-pills user-profile-nav" role="tablist">
-            <a class="nav-item nav-link active" data-toggle="tab" href="#settings-tab" role="tab" aria-controls="settings-tab" aria-selected="true">
+            <a class="nav-item nav-link active" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="true">
                 <img class="slow-transition" src="{% static 'icons/menu_settings.png' %}" alt="User Settings">
                 Settings
             </a>
-            <a class="nav-item nav-link" data-toggle="tab" href="#drafts-tab" role="tab" aria-controls="drafts-tab" aria-selected="true">
+            <a class="nav-item nav-link" data-toggle="tab" href="#drafts" role="tab" aria-controls="drafts" aria-selected="true">
                 <img class="slow-transition" src="{% static 'icons/menu_drafts.png' %}" alt="User Drafts">
                 Drafts
             </a>
-            <a class="nav-item nav-link" data-toggle="tab" href="#notifications-tab" role="tab" aria-controls="notifications-tab" aria-selected="true">
+            <a class="nav-item nav-link" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="true">
                 <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="User Notifications">
                 Notifications
             </a>
-            <a class="nav-item nav-link" data-toggle="tab" href="#submissions-tab" role="tab" aria-controls="submissions-tab" aria-selected="true">
+            <a class="nav-item nav-link" data-toggle="tab" href="#submissions" role="tab" aria-controls="submissions" aria-selected="true">
                 <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="User Submissions">
                 Submissions
             </a>
-            <a class="nav-item nav-link" data-toggle="tab" href="#bookmarks-tab" role="tab" aria-controls="bookmarks-tab" aria-selected="true">
+            <a class="nav-item nav-link" data-toggle="tab" href="#bookmarks" role="tab" aria-controls="bookmarks" aria-selected="true">
                 <img class="slow-transition" src="{% static 'icons/menu_bookmarks.png' %}" alt="User Bookmarks">
                 Bookmarks
             </a>
@@ -41,23 +51,14 @@
     </nav>
     
     <div class="tab-content user-profile-tab-content">
-        <div class="tab-pane fade show active" id="settings-tab" role="tabpanel" aria-labelledby="settings-tab">
-            <div class="tab-section">
-                <h3 class="tab-subheading">Intro</h3>
-                <p class="tab-section-intro">A short intro about yourself for your fellow users</p>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <textarea name="intro-text" rows="3" maxlength="100"></textarea>
-                    <button class="btn btn-secondary sub-task-button">Update intro text</button>
-                </form>
-            </div>
+        <div class="tab-pane fade show active" id="settings" role="tabpanel" aria-labelledby="settings">
             <div class="tab-section">
                 <h3 class="tab-subheading">Organisation</h3>
                 <p class="tab-section-intro">Details of your organisation and your role</p>
                 <form action="" method="POST">
                     {% csrf_token %}
-                    <input type="text" name="organisation-name" placeholder="Organisation name">
-                    <input type="text" name="organisation-role" placeholder="Your role">
+                    <input type="text" name="organisation-name" placeholder="Organisation name" {% if request.user.organisation %}value="{{ request.user.organisation }}"{% endif %}>
+                    <input type="text" name="organisation-role" placeholder="Your role" {% if request.user.organisation_role %}value="{{ request.user.organisation_role }}"{% endif %}>
                     <button class="btn btn-secondary sub-task-button">Update organisation info</button>
                 </form>
             </div>
@@ -66,68 +67,112 @@
                 <p class="tab-section-intro">Manage your password</p>
                 <form action="" method="POST">
                     {% csrf_token %}
-                    <input type="password" name="current-password" placeholder="Current password">
-                    <input type="password" name="new-password" placeholder="New password">
-                    <input type="password" name="confirm-new-password" placeholder="Confirm new password">
+                    <input type="password" name="current-password" placeholder="Current password" required>
+                    <input type="password" name="new-password" placeholder="New password" required>
+                    <input type="password" name="confirm-new-password" placeholder="Confirm new password" required>
                     <button class="btn btn-secondary sub-task-button">Update password</button>
                 </form>
             </div>
         </div>
-        <div class="tab-pane fade" id="drafts-tab" role="tabpanel" aria-labelledby="drafts-tab">
+        <div class="tab-pane fade" id="drafts" role="tabpanel" aria-labelledby="drafts">
             {% if answer_drafts %}
-            <h3 class="tab-subheading">Answers</h3>
-            <ul class="card-list">
-                {% for draft in answer_drafts %}
-                <li> 
-                    <h4>{{ draft.question_id }}</h4>
-                    <p class="draft-preview">
-                        {{ draft.answer_text }}
-                    </p>
-                    <button class="btn btn-secondary sub-task-button">Continue writing</button>
-                    <button class="btn btn-secondary-hollow sub-task-button"><i class="far fa-trash-alt"></i> Delete</button>
-                </li>
-                {% endfor %}
-            </ul>
+            <div class="tab-section">
+                <h3 class="tab-subheading">Answers</h3>
+                <ul class="card-list">
+                    {% for draft in answer_drafts %}
+                    <li> 
+                        <h4>{{ draft.question_id }}</h4>
+                        <p class="tab-section-intro">
+                            {{ draft.answer_text|striptags|truncatechars:140  }}
+                        </p>
+                        <button class="btn btn-secondary sub-task-button">Continue writing</button>
+                        <button class="btn btn-secondary-hollow sub-task-button delete"><i class="far fa-trash-alt"></i> Delete</button>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% else %}
+            <div class="empty-tab">
+                <h3><i class="far fa-meh"></i> No drafts</h3>
+            </div>
             {% endif %}
         </div>
-        <div class="tab-pane fade" id="notifications-tab" role="tabpanel" aria-labelledby="notifications-tab">
+        <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications">
+            <div class="empty-tab">
+                <h3><i class="far fa-meh"></i> No notifications</h3>
+            </div>
         </div>
-        <div class="tab-pane fade" id="submissions-tab" role="tabpanel" aria-labelledby="submissions-tab">
-            {% if submitted_questions %}
-            <h3 class="tab-subheading">Questions</h3>
-            <ul class="card-list">
-                {% for question in submitted_questions %}
-                <li>
-                    <h4>{{ question.question_count }} questions</h4>
-                    <p>Submitted on {{ question.created_on|date:"jS F, Y" }}</p>
-                </li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            {% if submitted_answers %}
-            <h3 class="tab-subheading">Answers</h3>
-            <ul class="card-list">
-                {% for answer in submitted_answers %}
-                <li>
-                    <h4>{{ answer.question_id }}</h4>
-                    <p class="draft-preview">
-                        {{ answer.answer_text }}
-                    </p>
-                </li>
-                {% endfor %}
-            </ul>
+        <div class="tab-pane fade" id="submissions" role="tabpanel" aria-labelledby="submissions">
+            {% if submitted_questions or submitted_answers %}
+                {% if submitted_questions %}
+                <div class="tab-section">
+                    <h3 class="tab-subheading">Questions</h3>
+                    <ul class="card-list">
+                        {% for question in submitted_questions %}
+                        <li>
+                            <h4>{{ question.question_count }} questions</h4>
+                            <p class="tab-section-intro">Submitted on {{ question.created_on|date:"jS F, Y" }}</p>
+                            {% if question.status == 'new' %}
+                            <p class="tab-section-status pending">
+                                Under review
+                            </p>
+                            {% elif question.status == 'curated' %}
+                            <p class="tab-section-status success">
+                                Ready to answer
+                            </p> 
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if submitted_answers %}
+                <div class="tab-section">
+                    <h3 class="tab-subheading">Answers</h3>
+                    <ul class="card-list">
+                        {% for answer in submitted_answers %}
+                        <li>
+                            <h4>{{ answer.question_id }}</h4>
+                            <p class="tab-section-intro">
+                                {{ answer.answer_text|striptags|truncatechars:140 }}
+                            </p>
+                            <p class="tab-section-status pending">
+                                Unreviewd
+                            </p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="empty-tab">
+                    <h3><i class="far fa-meh"></i> No submissions</h3>
+                </div>
             {% endif %}
         </div>
-        <div class="tab-pane fade" id="bookmarks-tab" role="tabpanel" aria-labelledby="bookmarks-tab">
+        <div class="tab-pane fade" id="bookmarks" role="tabpanel" aria-labelledby="bookmarks">
             {% if bookmarked_questions %}
+            <div class="tab-section">
                 <h3 class="tab-subheading">Questions</h3>
                 <ul class="card-list">
                     {% for bookmark in bookmarked_questions %}
                     <li>
                         <h4>{{ bookmark.question }}</h4>
+                        <div>
+                            <p class="tab-section-status pending">
+                                Unanswered
+                            </p>
+                        </div>
+                        <br>
+                        <button class="btn btn-secondary-hollow sub-task-button delete"><i class="far fa-trash-alt"></i> Delete</button>
                     </li>
                     {% endfor %}
                 </ul>
+            </div>
+            {% else %}
+                <div class="empty-tab">
+                    <h3><i class="far fa-meh"></i> No bookmarks</h3>
+                </div>
             {% endif %}
         </div>
     </div>

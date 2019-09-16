@@ -823,7 +823,18 @@ h1.dashboard-home-greeting {
 }
 
 .sub-task-button:not(:last-child) {
-    margin-right: 0.4rem;
+    margin-right: 1rem;
+}
+
+.sub-task-button.delete {
+    color: #b7b7b7;
+    background-color: #fff;
+    border-color: #fff;
+    padding: 0.2rem 0;
+}
+
+.sub-task-button.delete:hover {
+    color: #d50000a6;
 }
 
 .empty-sub-task-card {
@@ -1377,6 +1388,22 @@ button.deny-access {
 
 .tab-content.user-profile-tab-content {
     padding: 2rem 1rem;
+    min-height: 50vh;
+}
+
+.tab-content.user-profile-tab-content .empty-tab {
+    height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tab-content.user-profile-tab-content .empty-tab h3 {
+    font-size: 1.2rem;
+    color: #8c8c8c;
+}
+
+.tab-content.user-profile-tab-content .tab-section {
     width: 70%;
 }
 
@@ -1395,6 +1422,50 @@ h3.tab-subheading {
 p.tab-section-intro {
     color: #a6a6a6;
     margin-bottom: 1.5rem;
+}
+
+p.tab-section-status {
+    border: 1px solid;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    padding: 0 0.5rem;
+}
+
+p.tab-section-status.success {
+    color: #87B24D;
+    border-color: #87B24D;
+}
+
+p.tab-section-status.pending {
+    color: #9B63A8;
+    border-color: #9B63A8;
+}
+
+.tab-content.user-profile-tab-content .tab-section .card-list {
+    padding-left: 0;
+    margin-top: 1.5rem;
+}
+
+.tab-content.user-profile-tab-content .tab-section .card-list li {
+    list-style: none;
+    box-shadow: #eeecec 0rem 0rem 1rem 0rem;
+    padding: 1rem;
+    border: 1px solid #f2f2f2;
+    border-radius: 5px;
+}
+
+.tab-content.user-profile-tab-content .tab-section .card-list li:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.tab-content.user-profile-tab-content .tab-section .card-list li h4 {
+    font-size: 1.2rem;
+}
+
+.tab-content.user-profile-tab-content .tab-section .card-list li .text-preview {
+    font-size: 1.2rem;
 }
 
 /* ======== FOOTER ======== */

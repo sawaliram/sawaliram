@@ -45,6 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True)
     organisation = models.CharField(max_length=200, default='')
+    organisation_role = models.CharField(max_length=50, null=True, blank=True)
+    intro_text = models.CharField(max_length=300, null=True, blank=True)
 
     objects = UserManager()
 
@@ -126,19 +128,3 @@ class Notification(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
-
-class ProfileSettings(models.Model):
-    """Define the model for the user profile settings"""
-
-    class Meta:
-        db_table = 'profile_settings'
-
-    organisation_role = models.CharField(max_length=50)
-    intro_text = models.CharField(max_length=100)
-    username = models.CharField(max_length=50)
-    user_id = models.ForeignKey(
-        'sawaliram_auth.User',
-        related_name='profile_settings',
-        on_delete=models.CASCADE)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)

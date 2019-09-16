@@ -23,6 +23,7 @@ from dashboard.models import (
     AnswerDraft,
     UnencodedSubmission,
     Dataset)
+from sawaliram_auth.models import Bookmark
 
 import pandas as pd
 from pprint import pprint
@@ -117,7 +118,7 @@ class SubmitQuestionsView(View):
         dataset = Dataset()
         dataset.question_count = len(excel_sheet.index)
         dataset.submitted_by = request.user
-        dataset.status = 'raw'
+        dataset.status = 'new'
         dataset.save()
 
         # create raw file for archiving
@@ -454,6 +455,12 @@ class ViewQuestionsView(View):
 
         page = request.GET.get('page', 1)
         questions = paginator.get_page(page)
+
+        # get list of IDs of bookmarked items
+        bookmark_id_list = Bookmark.objects.filter(user_id=request.user.id) \
+                                           .values_list('question_id') \
+                                           .values('question_id')
+        bookmarks = [bookmark['question_id'] for bookmark in bookmark_id_list]
         context = {
             'grey_background': 'True',
             'page_title': 'View Questions',
@@ -464,7 +471,8 @@ class ViewQuestionsView(View):
             'subjects_to_filter_by': subjects_to_filter_by,
             'states_to_filter_by': states_to_filter_by,
             'curriculums_to_filter_by': curriculums_to_filter_by,
-            'result_size': questions_set.count()
+            'result_size': questions_set.count(),
+            'bookmarks': bookmarks
         }
         return render(request, 'dashboard/view-questions.html', context)
 
@@ -525,6 +533,12 @@ class AnswerQuestionsView(View):
         page = request.GET.get('page', 1)
         questions = paginator.get_page(page)
 
+        # get list of IDs of bookmarked items
+        bookmark_id_list = Bookmark.objects.filter(user_id=request.user.id) \
+                                           .values_list('question_id') \
+                                           .values('question_id')
+        bookmarks = [bookmark['question_id'] for bookmark in bookmark_id_list]
+
         context = {
             'grey_background': 'True',
             'page_title': 'Answer Questions',
@@ -535,7 +549,8 @@ class AnswerQuestionsView(View):
             'subjects_to_filter_by': subjects_to_filter_by,
             'states_to_filter_by': states_to_filter_by,
             'curriculums_to_filter_by': curriculums_to_filter_by,
-            'result_size': questions_set.count()
+            'result_size': questions_set.count(),
+            'bookmarks': bookmarks
         }
         return render(request, 'dashboard/answer-questions.html', context)
 

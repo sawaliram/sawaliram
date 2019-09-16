@@ -281,6 +281,19 @@ function setupBookmarkContentFunctionality() {
     });
 }
 
+function enableLinkingtoTabs() {
+    $(document).ready(function() {
+        var hash = document.location.hash;
+        if (hash) {
+            $('.nav a[href="'+hash+'"]').tab('show');
+        }
+
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            window.location.hash = e.target.hash;
+        });
+    });
+}
+
 function setupQuillEditor({ placeholder = null } = {}) {
     var quill = new Quill('#editor', {
         theme: 'snow',
@@ -311,6 +324,7 @@ if (window.matchMedia("(min-width: 576px)").matches) {
 
 togglePlaintextPassword();
 copyPasswordToPlaintextArea();
+enableLinkingtoTabs();
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
