@@ -124,7 +124,7 @@ class SubmitQuestionsView(View):
         dataset = Dataset()
         dataset.question_count = len(excel_sheet.index)
         dataset.submitted_by = request.user
-        dataset.status = 'raw'
+        dataset.status = 'new'
         dataset.save()
 
         # create raw file for archiving
