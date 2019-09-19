@@ -31,6 +31,10 @@ class SignUpForm(forms.Form):
         'placeholder': 'Last Name'}),
         label=''
     )
+    organisation = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': 'Organisation',
+        'list': 'organisationChoices'}),
+        label='',)
     email = forms.CharField(
         widget=forms.EmailInput(attrs={'placeholder': 'Email'}),
         validators=[check_email_availability],
