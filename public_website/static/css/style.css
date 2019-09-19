@@ -187,6 +187,10 @@ input:focus {
     cursor: pointer;
 }
 
+.inline-block {
+    display: inline-block;
+}
+
 /* ---- Tabs ---- */
 
 .nav.nav-pills .nav-link {
@@ -827,7 +831,7 @@ h1.dashboard-home-greeting {
 }
 
 .sub-task-button.delete {
-    color: #b7b7b7;
+    color: #7d7d7d;
     background-color: #fff;
     border-color: #fff;
     padding: 0.2rem 0;
@@ -853,6 +857,12 @@ h1.dashboard-home-greeting {
     max-width: 65%;
     margin: auto;
     padding-top: 2rem;
+}
+
+@media (max-width: 576px) {
+    .wide-container {
+        max-width: 100%;
+    }
 }
 
 .rich-text-form {
@@ -1348,13 +1358,38 @@ button.deny-access {
     margin-bottom: 3rem;
 }
 
+@media(max-width: 576px) {
+    .profile-header {
+        margin-bottom: 1rem;
+    }
+}
+
+@media(max-width: 576px) {
+    .profile-header img {
+        width: 70px;
+        height: 70px;
+    }
+}
+
 .profile-header .user-name {
     font-size: 1.7rem;
     margin-top: 0.8rem;
 }
 
+@media(max-width: 576px) {
+    .profile-header .user-name {
+        font-size: 1.2rem;
+    }
+}
+
 .profile-header .organisation {
     color: #555;
+}
+
+@media(max-width: 576px) {
+    .profile-header .organisation {
+        font-size: 0.9rem;
+    }
 }
 
 .nav.user-profile-nav {
@@ -1366,14 +1401,17 @@ button.deny-access {
     border: none;
 }
 
+@media (max-width: 576px) {
+    .nav.user-profile-nav .nav-link {
+        width: 100%;
+        font-size: 1.2rem;
+    }
+}
+
 .nav.user-profile-nav .nav-link img {
     margin-right: 0.4rem;
     border: 2px solid #fff;
     border-radius: 50%;
-}
-
-.nav.user-profile-nav .nav-link.active img {
-    border-color: #9B63A8;
 }
 
 .nav.user-profile-nav .nav-link:hover,
@@ -1386,9 +1424,19 @@ button.deny-access {
     border-bottom: none;
 }
 
+.nav.user-profile-nav .nav-link.active img {
+    border-color: #9B63A8;
+}
+
 .tab-content.user-profile-tab-content {
     padding: 2rem 1rem;
     min-height: 50vh;
+}
+
+@media(max-width: 576px) {
+    .tab-content.user-profile-tab-content {
+        padding: 2rem 0.8rem;
+    }
 }
 
 .tab-content.user-profile-tab-content .empty-tab {
@@ -1405,6 +1453,12 @@ button.deny-access {
 
 .tab-content.user-profile-tab-content .tab-section {
     width: 70%;
+}
+
+@media(max-width: 576px) {
+    .tab-content.user-profile-tab-content .tab-section {
+        width: 100%;
+    }
 }
 
 .tab-content.user-profile-tab-content .tab-section:not(:last-child) {

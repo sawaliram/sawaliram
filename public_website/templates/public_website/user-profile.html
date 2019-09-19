@@ -50,7 +50,7 @@
         </div>
     </nav>
     
-    <div class="tab-content user-profile-tab-content">
+    <div class="tab-content user-profile-tab-content accordion">
         <div class="tab-pane fade show active" id="settings" role="tabpanel" aria-labelledby="settings">
             <div class="tab-section">
                 <h3 class="tab-subheading">Organisation</h3>
@@ -78,6 +78,7 @@
             {% if answer_drafts %}
             <div class="tab-section">
                 <h3 class="tab-subheading">Answers</h3>
+                <p class="tab-section-intro">Your draft answers</p>
                 <ul class="card-list">
                     {% for draft in answer_drafts %}
                     <li> 
@@ -85,8 +86,12 @@
                         <p class="tab-section-intro">
                             {{ draft.answer_text|striptags|truncatechars:140  }}
                         </p>
-                        <button class="btn btn-secondary sub-task-button">Continue writing</button>
-                        <button class="btn btn-secondary-hollow sub-task-button delete"><i class="far fa-trash-alt"></i> Delete</button>
+                        <a href="{% url 'dashboard:submit-answer' question_id=draft.question_id.id %}" class="btn btn-secondary sub-task-button">Continue writing</a>
+                        <form class="inline-block" action="{% url 'sawaliram_auth:remove-draft' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="draft-id" value="{{ draft.id }}">
+                            <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                        </form>
                     </li>
                     {% endfor %}
                 </ul>
@@ -107,6 +112,7 @@
                 {% if submitted_questions %}
                 <div class="tab-section">
                     <h3 class="tab-subheading">Questions</h3>
+                    <p class="tab-section-intro">Questions submitted by you</p>
                     <ul class="card-list">
                         {% for question in submitted_questions %}
                         <li>
@@ -129,6 +135,7 @@
                 {% if submitted_answers %}
                 <div class="tab-section">
                     <h3 class="tab-subheading">Answers</h3>
+                    <p class="tab-section-intro">Answers submitted by you</p>
                     <ul class="card-list">
                         {% for answer in submitted_answers %}
                         <li>
@@ -154,6 +161,7 @@
             {% if bookmarked_questions %}
             <div class="tab-section">
                 <h3 class="tab-subheading">Questions</h3>
+                <p class="tab-section-intro">Questions you saved</p>
                 <ul class="card-list">
                     {% for bookmark in bookmarked_questions %}
                     <li>
@@ -164,7 +172,12 @@
                             </p>
                         </div>
                         <br>
-                        <button class="btn btn-secondary-hollow sub-task-button delete"><i class="far fa-trash-alt"></i> Delete</button>
+                        <form action="{% url 'sawaliram_auth:delete-bookmark' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="content-type" value="question">
+                            <input type="hidden" name="question-id" value="{{ bookmark.question.id }}">
+                            <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                        </form>
                     </li>
                     {% endfor %}
                 </ul>

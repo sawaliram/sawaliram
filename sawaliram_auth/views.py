@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from sawaliram_auth.models import User, VolunteerRequest, Bookmark
 from sawaliram_auth.forms import SignInForm, SignUpForm
 from sawaliram_auth.decorators import volunteer_permission_required
-from dashboard.models import Question
+from dashboard.models import Question, AnswerDraft
 
 
 class SignupView(View):
@@ -207,3 +207,25 @@ class RemoveBookmark(View):
         bookmark_to_remove.delete()
 
         return HttpResponse()
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class DeleteBookmark(View):
+    def post(self, request):
+        bookmark_to_remove = Bookmark.objects.get(
+            content_type=request.POST.get('content-type'),
+            question=request.POST.get('question-id'))
+        bookmark_to_remove.delete()
+        messages.success(request, 'Bookmark has been deleted!')
+        return redirect('public_website:user-profile', user_id=request.user.id)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class RemoveDraft(View):
+    def post(self, request):
+        draft_to_remove = AnswerDraft.objects.get(id=request.POST.get('draft-id'))
+        draft_to_remove.delete()
+        messages.success(request, 'Draft has been deleted!')
+        return redirect('public_website:user-profile', user_id=request.user.id)

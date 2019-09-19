@@ -3,7 +3,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth import login
+from django.contrib.auth.hashers import check_password, make_password
 
 from dashboard.models import AnswerDraft, Dataset, Answer
 from sawaliram_auth.models import User
@@ -45,11 +46,10 @@ class UserProfileView(View):
         if request.POST.get('organisation-name'):
             user.organisation = request.POST.get('organisation-name')
             user.save()
-            messages.success(request, ('Organisation name updated!'))
-        elif request.POST.get('organisation-role'):
-            user.organisation_role = request.POST.get('organisation-role')
-            user.save()
-            messages.success(request, ('Your role in your organisation has been updated!'))
+            if request.POST.get('organisation-role'):
+                user.organisation_role = request.POST.get('organisation-role')
+                user.save()
+            messages.success(request, ('Your organisation details have been updated!'))
         elif request.POST.get('current-password'):
             match_check_old = check_password(request.POST.get('current-password'), request.user.password)
             if match_check_old:
@@ -58,8 +58,9 @@ class UserProfileView(View):
                     if match_check_new:
                         messages.error(request, ('New password cannot be same as the current password'))
                     else:
-                        user.set_pasword(request.POST.get('new-password'))
+                        user.password = make_password(password=request.POST.get('new-password'))
                         user.save()
+                        login(request, user)
                         messages.success(request, ('Your password has been updated!'))
                 else:
                     messages.error(request, ('Make sure you entered the new password correctly both times'))
