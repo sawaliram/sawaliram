@@ -32,6 +32,7 @@ class UserProfileView(View):
         context = {
             'dashboard': 'False',
             'page_title': selected_user.first_name + "'s Profile",
+            'enable_breadcrumbs': 'Yes',
             'selected_user': selected_user,
             'answer_drafts': answer_drafts,
             'submitted_questions': submitted_questions,
