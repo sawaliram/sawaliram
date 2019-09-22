@@ -80,6 +80,11 @@
                             <p class="sub-task-details">
                                 Requested by: <b>{{ pending_request.requested_by.get_full_name }} ({{ pending_request.requested_by.email }})</b>
                             </p>
+                            {% if pending_request.requested_by.organisation %}
+                            <p class="sub-task-details">
+                                Organisation: <b>{{ pending_request.requested_by.organisation }}</b>
+                            </p>
+                            {% endif %}
                             <p class="sub-task-details">
                                 Access requested: <b>{{ pending_request.permission_requested|slice:"-1"|capfirst }}</b>
                             </p>

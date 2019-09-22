@@ -31,6 +31,14 @@
                 </div>
             </div>
             <div class="filter-category">
+                <button class="btn open-filter" data-target="#filterLanguages" aria-expanded="true" aria-controls="filter-languages">Languages</button>
+                <div class="category-options-list" id="filterLanguages">
+                    {% for language in languages %}
+                    <button class="btn category-option {% if language.question_language in languages_to_filter_by %}active{% endif %}" data-param="language" data-value="{{ language.question_language|urlencode }}">{{ language.question_language|capfirst }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="filter-category">
                 <button class="btn open-filter" data-target="#filterCurriculum" aria-expanded="true" aria-controls="filter-curriculum">Curriculum Followed</button>
                 <div class="category-options-list" id="filterCurriculum">
                     {% for curriculum in curriculums %}
@@ -86,11 +94,20 @@
                         </span>
                         {% endif %}
 
+                        {% if question.student_class %}
+                        <span class="highlighted-meta">
+                            <i class="fas fa-user-graduate"></i>
+                            <span class="meta-value">
+                                Class {{ question.student_class }}
+                            </span>
+                        </span>
+                        {% endif %}
+
                         {% if question.question_asked_on %}
                         <span class="highlighted-meta">
                             <i class="far fa-calendar-alt"></i>
                             <span class="meta-value">
-                                {{ question.question_asked_on }}
+                                {{ question.question_asked_on|date:"j F, Y" }}
                             </span>
                         </span>
                         {% endif %}

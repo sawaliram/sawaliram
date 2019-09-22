@@ -71,25 +71,6 @@ function openVolunteerOptionDialog() {
     });
 }
 
-function togglePlaintextPassword() {
-    $('.password-plaintext .toggle-password').click(function() {
-        if ($(this).html() == 'hide password') {
-            $(this).html('show password');
-        }
-        else {
-            $(this).html('hide password');
-        }
-
-        $('.password-plaintext').toggleClass('hidden');
-    });
-}
-
-function copyPasswordToPlaintextArea() {
-    $('.password-field').on('input', function() {
-        $('.password-plaintext .password-text').text($(this).val());
-    });
-}
-
 
 // ======== PAGE SPECIFIC FUNCTIONS ========
 // These functions are called only on specific pages
@@ -231,69 +212,6 @@ function setupSearchResultsClearAll() {
     });
 }
 
-function setupBookmarkContentFunctionality() {
-    $('.bookmark-button').click(function() {
-
-        var form_data = new FormData();
-        form_data.append('content', $(this).data('content'));
-        form_data.append('id', $(this).data('id'));
-
-        if ($(this).html() == '<i class="far fa-bookmark"></i> Bookmark') {
-
-            // change the button icon and text
-            $(this).html('<i class="fas fa-bookmark"></i> Bookmarked');
-            $(this).addClass('bookmarked');
-            
-            // save bookmark
-            $.ajax({
-                url: location.origin + '/users/bookmark/add',
-                type: 'POST',
-                data: form_data,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
-                },
-                error: function(response) {
-                    console.log(response);
-                },
-            });
-        }
-        else {
-            $(this).html('<i class="far fa-bookmark"></i> Bookmark');
-            $(this).removeClass('bookmarked');
-
-            // remove bookmark
-            $.ajax({
-                url: location.origin + '/users/bookmark/remove',
-                type: 'POST',
-                data: form_data,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
-                },
-                error: function(response) {
-                    console.log(response);
-                },
-            });
-        }
-    });
-}
-
-function enableLinkingtoTabs() {
-    $(document).ready(function() {
-        var hash = document.location.hash;
-        if (hash) {
-            $('.nav a[href="'+hash+'"]').tab('show');
-        }
-
-        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
-            window.location.hash = e.target.hash;
-        });
-    });
-}
-
 function setupQuillEditor({ placeholder = null } = {}) {
     var quill = new Quill('#editor', {
         theme: 'snow',
@@ -355,10 +273,6 @@ if (window.matchMedia("(min-width: 576px)").matches) {
     resizeMainLogoOnScrollDown();
 }
 
-togglePlaintextPassword();
-copyPasswordToPlaintextArea();
-enableLinkingtoTabs();
-
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
 if (window.location.pathname.includes('/dashboard/question/submit') || window.location.pathname.includes('/dashboard/manage-content')) {
@@ -392,5 +306,4 @@ if (
     setupSearchResultsSort();
     setupSearchResultsFilter();
     setupSearchResultsClearAll();
-    setupBookmarkContentFunctionality();
 }

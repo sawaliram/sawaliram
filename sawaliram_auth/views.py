@@ -130,6 +130,7 @@ class ManageUsersView(View):
             'users': users,
             'pending_requests': pending_requests,
             'page_title': 'Manage Users',
+            'enable_breadcrumbs': 'Yes',
             'grey_background': 'True'
         }
 
