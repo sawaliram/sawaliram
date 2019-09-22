@@ -263,11 +263,75 @@ function setupCommentFormDisplayToggle() {
     });
 }
 
+function setupBookmarkContentFunctionality() {
+    $('.bookmark-button').click(function() {
+
+        var form_data = new FormData();
+        form_data.append('content', $(this).data('content'));
+        form_data.append('id', $(this).data('id'));
+
+        if ($(this).html() == '<i class="far fa-bookmark"></i> Bookmark') {
+
+            // change the button icon and text
+            $(this).html('<i class="fas fa-bookmark"></i> Bookmarked');
+            $(this).addClass('bookmarked');
+
+            // save bookmark
+            $.ajax({
+                url: location.origin + '/users/bookmark/add',
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(response) {
+                    console.log(response);
+                },
+            });
+        }
+        else {
+            $(this).html('<i class="far fa-bookmark"></i> Bookmark');
+            $(this).removeClass('bookmarked');
+
+            // remove bookmark
+            $.ajax({
+                url: location.origin + '/users/bookmark/remove',
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(response) {
+                    console.log(response);
+                },
+            });
+        }
+    });
+}
+
+function enableLinkingtoTabs() {
+    $(document).ready(function() {
+        var hash = document.location.hash;
+        if (hash) {
+            $('.nav a[href="'+hash+'"]').tab('show');
+        }
+
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            window.location.hash = e.target.hash;
+        });
+    });
+}
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
 toggleUserMenu();
 closeMenusOnClickingDarkbackground();
+enableLinkingtoTabs();
 
 if (window.matchMedia("(min-width: 576px)").matches) {
     resizeMainLogoOnScrollDown();
@@ -306,4 +370,5 @@ if (
     setupSearchResultsSort();
     setupSearchResultsFilter();
     setupSearchResultsClearAll();
+    setupBookmarkContentFunctionality();
 }
