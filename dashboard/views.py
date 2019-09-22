@@ -46,7 +46,8 @@ class DashboardHome(View):
         """Return the dashboard home view."""
         context = {
             'grey_background': 'True',
-            'page_title': 'Dashboard Home'
+            'page_title': 'Dashboard Home',
+            'enable_breadcrumbs': 'Yes'
         }
         return render(request, 'dashboard/home.html', context)
 
@@ -61,7 +62,8 @@ class SubmitQuestionsView(View):
         """Return the submit questions view."""
         context = {
             'grey_background': 'True',
-            'page_title': 'Submit Questions'
+            'page_title': 'Submit Questions',
+            'enable_breadcrumbs': 'Yes',
         }
         return render(request, 'dashboard/submit-questions.html', context)
 
@@ -148,7 +150,8 @@ class SubmitQuestionsView(View):
         messages.success(request, 'Thank you for the questions! We will get to work preparing the questions to be answered and translated.')
         context = {
             'grey_background': 'True',
-            'page_title': 'Submit Questions'
+            'page_title': 'Submit Questions',
+            'enable_breadcrumbs': 'Yes',
         }
         return render(request, 'dashboard/submit-questions.html', context)
 
@@ -232,6 +235,7 @@ class ManageContentView(View):
         context = {
             'grey_background': 'True',
             'page_title': 'Manage Content',
+            'enable_breadcrumbs': 'Yes',
             'datasets': datasets
         }
         return render(request, 'dashboard/manage-content.html', context)
@@ -432,6 +436,7 @@ class ViewQuestionsView(View):
 
     def get(self, request):
         questions_set = self.get_queryset(request)
+        page_title = 'View Questions'
 
         # get values for filter
         subjects = list(questions_set.order_by()
@@ -453,6 +458,11 @@ class ViewQuestionsView(View):
                                    .distinct('curriculum_followed') \
                                    .values('curriculum_followed')
 
+        languages = questions_set.order_by() \
+                                 .values_list('question_language') \
+                                 .distinct('question_language') \
+                                 .values('question_language')
+
         # apply filters if any
         subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
         if subjects_to_filter_by:
@@ -465,6 +475,10 @@ class ViewQuestionsView(View):
         curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
         if curriculums_to_filter_by:
             questions_set = questions_set.filter(curriculum_followed__in=curriculums_to_filter_by)
+
+        languages_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('language')]
+        if languages_to_filter_by:
+            questions_set = questions_set.filter(question_language__in=languages_to_filter_by)
 
         # sort the results if sort-by parameter exists
         # default: newest
@@ -485,14 +499,17 @@ class ViewQuestionsView(View):
         bookmarks = [bookmark['question_id'] for bookmark in bookmark_id_list]
         context = {
             'grey_background': 'True',
-            'page_title': 'View Questions',
+            'page_title': page_title,
+            'enable_breadcrumbs': 'Yes',
             'questions': questions,
             'subjects': subjects,
             'states': states,
             'curriculums': curriculums,
+            'languages': languages,
             'subjects_to_filter_by': subjects_to_filter_by,
             'states_to_filter_by': states_to_filter_by,
             'curriculums_to_filter_by': curriculums_to_filter_by,
+            'languages_to_filter_by': languages_to_filter_by,
             'result_size': questions_set.count(),
             'bookmarks': bookmarks
         }
@@ -528,6 +545,10 @@ class AnswerQuestionsView(View):
                                    .values_list('curriculum_followed') \
                                    .distinct('curriculum_followed') \
                                    .values('curriculum_followed')
+        languages = questions_set.order_by() \
+                                 .values_list('question_language') \
+                                 .distinct('question_language') \
+                                 .values('question_language')
 
         # apply filters if any
         subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
@@ -539,9 +560,12 @@ class AnswerQuestionsView(View):
             questions_set = questions_set.filter(state__in=states_to_filter_by)
 
         curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
-
         if curriculums_to_filter_by:
             questions_set = questions_set.filter(curriculum_followed__in=curriculums_to_filter_by)
+
+        languages_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('language')]
+        if languages_to_filter_by:
+            questions_set = questions_set.filter(question_language__in=languages_to_filter_by)
 
         # sort the results if sort-by parameter exists
         # default: newest
@@ -564,13 +588,16 @@ class AnswerQuestionsView(View):
         context = {
             'grey_background': 'True',
             'page_title': 'Answer Questions',
+            'enable_breadcrumbs': 'Yes',
             'questions': questions,
             'subjects': subjects,
             'states': states,
             'curriculums': curriculums,
+            'languages': languages,
             'subjects_to_filter_by': subjects_to_filter_by,
             'states_to_filter_by': states_to_filter_by,
             'curriculums_to_filter_by': curriculums_to_filter_by,
+            'languages_to_filter_by': languages_to_filter_by,
             'result_size': questions_set.count(),
             'bookmarks': bookmarks
         }

@@ -149,7 +149,7 @@ input:focus {
 
 .btn-secondary-hollow {
     color: #9B63A8;
-    background-color: #ffffff;
+    background-color: #fff0;
     border: 1px solid #9B63A8;
 }
 
@@ -475,6 +475,11 @@ input:focus {
         font-size: 0.8rem;
         margin: 0.8rem;
     }
+}
+
+.navbar .page-title-bar .page-title a {
+    color: #ffffff;
+    text-decoration: underline;
 }
 
 .navbar .page-title-bar .user-menu-button {
@@ -961,13 +966,13 @@ h1.dashboard-home-greeting {
     }
 }
 
-.submit-questions-help .download-excel-template {
+.submit-questions-help .download-file {
     font-size: 0.8rem;
     padding: 0.5rem 1rem;
 }
 
 @media (max-width: 576px) {
-    .submit-questions-help .download-excel-template {
+    .submit-questions-help .download-file {
         font-size: 0.7rem;
         padding: 0.3rem 0.8rem;
     }
