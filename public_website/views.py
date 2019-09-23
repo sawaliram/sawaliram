@@ -27,8 +27,8 @@ class UserProfileView(View):
         answer_drafts = AnswerDraft.objects.filter(answered_by_id=user_id)
         submitted_questions = Dataset.objects.filter(submitted_by=user_id)
         submitted_answers = Answer.objects.filter(answered_by=user_id)
-        bookmarked_questions = request.user.bookmarks.filter(content_type='question')
-        bookmarked_articles = request.user.bookmarks.filter(content_type='article')
+        bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
+        bookmarked_articles = selected_user.bookmarks.filter(content_type='article')
         context = {
             'dashboard': 'False',
             'page_title': selected_user.first_name + "'s Profile",

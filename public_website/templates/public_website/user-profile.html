@@ -1,6 +1,6 @@
 {% extends "public_website/base.html" %}
 
-{% block title %} {{ request.user.first_name }}'s Profile | Sawaliram {% endblock %}
+{% block title %} {{ page_title }} | Sawaliram {% endblock %}
 
 {% load static %}
 
@@ -17,6 +17,7 @@
         </div>
         {% endfor %}
     {% endif %}
+
     <div class="profile-header">
         <img src="{% static 'user/default.png' %}" alt="Profile Picture">
         <h1 class="user-name">{{ selected_user.get_full_name }}</h1>
@@ -27,6 +28,7 @@
     
     <nav>
         <div class="nav nav-pills user-profile-nav" role="tablist">
+            {% if request.user.id == selected_user.id %}
             <a class="nav-item nav-link active" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="true">
                 <img class="slow-transition" src="{% static 'icons/menu_settings.png' %}" alt="User Settings">
                 Settings
@@ -39,26 +41,30 @@
                 <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="User Notifications">
                 Notifications
             </a>
-            <a class="nav-item nav-link" data-toggle="tab" href="#submissions" role="tab" aria-controls="submissions" aria-selected="true">
+            {% endif %}
+            <a class="nav-item nav-link {% if request.user.id != selected_user.id %}active{% endif%}" data-toggle="tab" href="#submissions" role="tab" aria-controls="submissions" aria-selected="true">
                 <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="User Submissions">
                 Submissions
             </a>
+            {% if request.user.id == selected_user.id %}
             <a class="nav-item nav-link" data-toggle="tab" href="#bookmarks" role="tab" aria-controls="bookmarks" aria-selected="true">
                 <img class="slow-transition" src="{% static 'icons/menu_bookmarks.png' %}" alt="User Bookmarks">
                 Bookmarks
             </a>
+            {% endif %}
         </div>
     </nav>
     
     <div class="tab-content user-profile-tab-content accordion">
+        {% if request.user.id == selected_user.id %}
         <div class="tab-pane fade show active" id="settings" role="tabpanel" aria-labelledby="settings">
             <div class="tab-section">
                 <h3 class="tab-subheading">Organisation</h3>
                 <p class="tab-section-intro">Details of your organisation and your role</p>
                 <form action="" method="POST">
                     {% csrf_token %}
-                    <input type="text" name="organisation-name" placeholder="Organisation name" {% if request.user.organisation %}value="{{ request.user.organisation }}"{% endif %}>
-                    <input type="text" name="organisation-role" placeholder="Your role" {% if request.user.organisation_role %}value="{{ request.user.organisation_role }}"{% endif %}>
+                    <input type="text" maxlength="50" name="organisation-role" placeholder="Your role" {% if request.user.organisation_role %}value="{{ request.user.organisation_role }}"{% endif %}>
+                    <input type="text" maxlength="200" name="organisation-name" placeholder="Organisation name" {% if request.user.organisation %}value="{{ request.user.organisation }}"{% endif %}>
                     <button class="btn btn-secondary sub-task-button">Update organisation info</button>
                 </form>
             </div>
@@ -107,7 +113,8 @@
                 <h3><i class="far fa-meh"></i> No notifications</h3>
             </div>
         </div>
-        <div class="tab-pane fade" id="submissions" role="tabpanel" aria-labelledby="submissions">
+        {% endif %}
+        <div class="tab-pane fade {% if request.user.id != selected_user.id %}show active{% endif %}" id="submissions" role="tabpanel" aria-labelledby="submissions">
             {% if submitted_questions or submitted_answers %}
                 {% if submitted_questions %}
                 <div class="tab-section">
@@ -157,6 +164,7 @@
                 </div>
             {% endif %}
         </div>
+        {% if request.user.id == selected_user.id %}
         <div class="tab-pane fade" id="bookmarks" role="tabpanel" aria-labelledby="bookmarks">
             {% if bookmarked_questions %}
             <div class="tab-section">
@@ -188,6 +196,7 @@
                 </div>
             {% endif %}
         </div>
+        {% endif %}
     </div>
 </div>
 
