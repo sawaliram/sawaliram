@@ -77,6 +77,7 @@
             </div>
         </nav>
 
+        {% if request.user.is_authenticated %}
         <nav class="user-menu slow-transition">
             <button class="btn user-menu-close">
                 <i class="fas fa-times"></i>
@@ -115,6 +116,7 @@
                 </div>
             </div>
         </nav>
+        {% endif %}
 
         <header class="navbar fixed-top navbar-light">
             <a class="navbar-brand slow-transition" href="{% url 'public_site:home' %}">

@@ -119,7 +119,7 @@
                 {% if submitted_questions %}
                 <div class="tab-section">
                     <h3 class="tab-subheading">Questions</h3>
-                    <p class="tab-section-intro">Questions submitted by you</p>
+                    <p class="tab-section-intro">Questions submitted by {% if request.user.id != selected_user.id %} {{ selected_user.first_name }}{% else %}you{% endif%}</p>
                     <ul class="card-list">
                         {% for question in submitted_questions %}
                         <li>
@@ -142,7 +142,7 @@
                 {% if submitted_answers %}
                 <div class="tab-section">
                     <h3 class="tab-subheading">Answers</h3>
-                    <p class="tab-section-intro">Answers submitted by you</p>
+                    <p class="tab-section-intro">Answers submitted by {% if request.user.id != selected_user.id %} {{ selected_user.first_name }}{% else %}you{% endif%}</p>
                     <ul class="card-list">
                         {% for answer in submitted_answers %}
                         <li>

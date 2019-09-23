@@ -5,6 +5,7 @@ from django.views import View
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password, make_password
+from django.http import Http404
 
 from dashboard.models import AnswerDraft, Dataset, Answer
 from sawaliram_auth.models import User
@@ -23,24 +24,28 @@ class HomeView(View):
 
 class UserProfileView(View):
     def get(self, request, user_id):
-        selected_user = User.objects.get(id=user_id)
-        answer_drafts = AnswerDraft.objects.filter(answered_by_id=user_id)
-        submitted_questions = Dataset.objects.filter(submitted_by=user_id)
-        submitted_answers = Answer.objects.filter(answered_by=user_id)
-        bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
-        bookmarked_articles = selected_user.bookmarks.filter(content_type='article')
-        context = {
-            'dashboard': 'False',
-            'page_title': selected_user.first_name + "'s Profile",
-            'enable_breadcrumbs': 'Yes',
-            'selected_user': selected_user,
-            'answer_drafts': answer_drafts,
-            'submitted_questions': submitted_questions,
-            'submitted_answers': submitted_answers,
-            'bookmarked_questions': bookmarked_questions,
-            'bookmarked_articles': bookmarked_articles,
-        }
-        return render(request, 'public_website/user-profile.html', context)
+
+        if not User.objects.filter(id=user_id).exists():
+            raise Http404
+        else:
+            selected_user = User.objects.get(id=user_id)
+            answer_drafts = AnswerDraft.objects.filter(answered_by_id=user_id)
+            submitted_questions = Dataset.objects.filter(submitted_by=user_id)
+            submitted_answers = Answer.objects.filter(answered_by=user_id)
+            bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
+            bookmarked_articles = selected_user.bookmarks.filter(content_type='article')
+            context = {
+                'dashboard': 'False',
+                'page_title': selected_user.first_name + "'s Profile",
+                'enable_breadcrumbs': 'Yes',
+                'selected_user': selected_user,
+                'answer_drafts': answer_drafts,
+                'submitted_questions': submitted_questions,
+                'submitted_answers': submitted_answers,
+                'bookmarked_questions': bookmarked_questions,
+                'bookmarked_articles': bookmarked_articles,
+            }
+            return render(request, 'public_website/user-profile.html', context)
 
     def post(self, request, user_id):
         user = User.objects.get(id=request.user.id)
