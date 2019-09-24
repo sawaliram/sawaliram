@@ -16,6 +16,8 @@ body.grey-background {
 @media (max-width: 576px) {
     .sawaliram-container {
         margin-top: 7rem;
+        padding-left: 0;
+        padding-right: 0;
     }
 }
 
@@ -156,6 +158,11 @@ input:focus {
 .btn-secondary-hollow:hover {
     color: #ffffff;
     background-color: #9B63A8;
+}
+
+.btn-yellow {
+    color: #000;
+    background-color: #FEB740;
 }
 
 .btn-danger {
@@ -640,6 +647,188 @@ input:focus {
     padding: 0.5rem;
     padding-right: 2rem;
     box-shadow: 0 0.7rem 1rem -1rem;
+}
+
+/* ======== HOME_PAGE ======== */
+
+#homePageCarousel {
+    width: 80%;
+    margin: auto;
+}
+
+@media (max-width: 576px) {
+    #homePageCarousel {
+        width: 100%;
+    }
+}
+
+#homePageCarousel .carousel-content  {
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 576px) {
+    #homePageCarousel .carousel-content  {
+        flex-direction: column;
+    }
+
+    #homePageCarousel .carousel-content img {
+        width: 80%;
+        margin-bottom: 2rem;
+    }
+}
+
+#homePageCarousel .carousel-content .carousel-text {
+    margin-left: 2rem;
+}
+
+@media (max-width: 576px) {
+    #homePageCarousel .carousel-content .carousel-text {
+        margin-left: 0;
+        width: 80%;
+    }
+}
+
+#homePageCarousel .carousel-content .carousel-text .carousel-header {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+@media (max-width: 576px) {
+    #homePageCarousel .carousel-content .carousel-text .carousel-header {
+        font-size: 1.4rem;
+    }
+}
+
+#homePageCarousel .carousel-indicators {
+    bottom: -50px;
+}
+
+#homePageCarousel .carousel-indicators li {
+    background-color: #000;
+}
+
+#homePageCarousel .carousel-indicators li.active {
+    background-color: #FEB740;
+}
+
+.home-search {
+    background-image: url('/static/illustrations/home_search_bg.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 400px;
+    margin: auto;
+    margin-top: 8rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 576px) {
+    .home-search {
+        flex-direction: column;
+        align-items: baseline;
+    }
+}
+
+.home-search .home-search-form {
+    width: 40%;
+}
+
+@media (max-width: 576px) {
+    .home-search .home-search-form {
+        width: 95%;
+        margin: 0 auto;
+        margin-top: 2rem;
+    }
+}
+
+.home-search .home-search-form .home-search-field {
+    border-radius: 5px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-right: none;
+    padding: 1rem;
+    height: 3rem;
+}
+
+.home-search .home-search-form .input-group-append .input-group-text {
+    background-color: #fff;
+    color: #87B24D;
+    font-size: 1.5rem;
+}
+
+.home-search .home-search-img1 {
+    position: absolute;
+    left: 14%;
+}
+
+@media (max-width: 576px) {
+    .home-search .home-search-img1 {
+        top: 15%;
+        left: 5%;
+        width: 120px;
+    }
+}
+
+.home-page-links {
+    width: 90%;
+    margin: auto;
+    margin-top: 8rem;
+}
+
+@media (max-width: 576px) {
+    .home-page-links {
+        width: 100%;
+        margin-top: 3rem;
+    }
+}
+
+.home-page-links .home-page-link-item {
+    text-align: center;
+}
+
+@media (max-width: 576px) {
+    .home-page-links .home-page-link-item:not(:last-child) {
+        margin-bottom: 5rem;
+    }
+}
+
+.home-page-links .home-page-link-item h2 {
+    font-size: 1.5rem;
+    margin-bottom: 2.5rem;
+    font-weight: bold;
+}
+
+@media (max-width: 576px) {
+    .home-page-links .home-page-link-item h2 {
+        margin-bottom: 1.5rem;
+    }
+}
+
+.home-page-links .home-page-link-item img {
+    margin-bottom: 2.5rem;
+}
+
+@media (max-width: 576px) {
+    .home-page-links .home-page-link-item img {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}
+
+.home-page-links .home-page-link-item p {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 576px) {
+    .home-page-links .home-page-link-item p {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
 }
 
 /* ======== DASHBOARD_HOME ======== */
