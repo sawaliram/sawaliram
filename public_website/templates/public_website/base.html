@@ -119,7 +119,7 @@
         {% endif %}
 
         <header class="navbar fixed-top navbar-light">
-            <a class="navbar-brand slow-transition" href="{% url 'public_site:home' %}">
+            <a class="navbar-brand slow-transition" href="{% url 'public_website:home' %}">
                 <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo.png' %}" alt="Sawaliram Home">
             </a>
             <div class="navbar-options">
@@ -138,6 +138,7 @@
                 </div>
                 <i class="fas fa-bars navbar-element navbar-menu-toggle"></i>
             </div>
+            {% if page_title != 'Home' %}
             <div class="page-title-bar">
                 <p class="page-title">
                     {% if enable_breadcrumbs == 'Yes' and page_title != 'Dashboard Home' %}
@@ -152,6 +153,7 @@
                     </button>
                 {% endif %}
             </div>
+            {% endif %}
             {% block extra_header %}
                 {# page-specific header/breadcrumbs can go here #}
             {% endblock %}
