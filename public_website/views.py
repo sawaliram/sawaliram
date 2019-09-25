@@ -74,3 +74,11 @@ class UserProfileView(View):
                 messages.error(request, ('The password you entered is incorrect'))
 
         return redirect('public_website:user-profile', user_id=request.user.id)
+
+
+class GetInvolvedView(View):
+    def get(self, request):
+        context = {
+            'page_title': 'Get Involved',
+        }
+        return render(request, 'public_website/get-involved.html', context)

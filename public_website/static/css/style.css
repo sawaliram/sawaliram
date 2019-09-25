@@ -26,6 +26,7 @@ body.grey-background {
         max-width: 100%;
         padding-left: 0;
         padding-right: 0;
+        min-height: 50vh;
     }
 }
 
@@ -161,6 +162,11 @@ input:focus {
 }
 
 .btn-yellow {
+    color: #000;
+    background-color: #FEB740;
+}
+
+.btn-yellow:hover {
     color: #000;
     background-color: #FEB740;
 }
@@ -829,6 +835,104 @@ input:focus {
         width: 100%;
         margin-bottom: 1rem;
     }
+}
+
+/* ======== GET_INVOLVED_PAGE ======== */
+
+.get-involved-header {
+    display: flex;
+    width: 80%;
+    margin: auto;
+    align-items: center;
+}
+
+@media (max-width: 576px) {
+    .get-involved-header {
+        flex-direction: column;
+    }
+
+    .get-involved-header img {
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+}
+
+.get-involved-header .header-text h2 {
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+
+@media (max-width: 576px) {
+    .get-involved-header .header-text h2 {
+        font-size: 1.2rem;
+    }
+}
+
+#getInvolvedList {
+    width: 60%;
+    margin: auto;
+    margin-top: 6rem;
+    margin-bottom: 8rem;
+}
+
+@media (max-width: 576px) {
+    #getInvolvedList {
+        width: 80%;
+        margin: 3rem auto;
+    }   
+}
+
+#getInvolvedList h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+@media (max-width: 576px) {
+    #getInvolvedList h2 {
+        font-size: 1.2rem;
+    }   
+}
+
+#getInvolvedList .card {
+    border: none;
+    border-top: 2px solid #D6D6D6;
+    border-radius: 0;
+}
+
+#getInvolvedList .card .card-header {
+    background-color: #fff;
+    border: none;
+    padding: 1rem 0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
+}
+
+#getInvolvedList .card .card-header h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0;
+}
+
+@media (max-width: 576px) {
+    #getInvolvedList .card .card-header h3 {
+        font-size: 1.1rem;
+    }   
+}
+
+#getInvolvedList .card .card-header i {
+    color: #9B63A8;
+}
+
+#getInvolvedList .card .card-body {
+    padding-left: 0;
+    padding-top: 0;
+    width: 90%;
+}
+
+#getInvolvedList .card .card-body p {
+    color: #797979;
 }
 
 /* ======== DASHBOARD_HOME ======== */
@@ -1842,13 +1946,6 @@ footer .footer-main .footer-column:last-child {
     footer .footer-main .footer-column:last-child {
         padding: 0 2rem;
     } 
-}
-
-footer .footer-main .footer-column button.get-involved {
-    font-size: 1rem;
-    background-color: #FEB740;
-    color: #414141;
-    padding: 0.5rem 1.2rem;
 }
 
 footer .footer-main .footer-column .footer-links {

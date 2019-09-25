@@ -1,0 +1,100 @@
+{% extends "public_website/base.html" %}
+
+{% block title %} Get Involved | Sawaliram {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="get-involved-header">
+    <img src="{% static 'illustrations/get-involved.png' %}" alt="Get Involved">
+    <div class="header-text">
+        <h2>Contribute to Sawaliram and help us grow!</h2>
+        <p>The proceeds will be used for translation and field volunteers</p>
+        <a href="javascript:void(0)" class="btn btn-yellow">Donate</a>
+    </div>
+</div>
+
+<div id="getInvolvedList">
+    <h2>More ways to join hands with us</h2>
+    <div class="card">
+        <div class="card-header" id="getInvolvedListHeadingOne" data-toggle="collapse" data-target="#getInvolvedListOne" aria-expanded="true" aria-controls="getInvolvedListOne">
+            <h3>
+            Are you a teacher, parent or an observer? Bring out the curious kid within you!
+            </h3>
+            <i class="fas fa-plus"></i>
+        </div>
+        <div id="getInvolvedListOne" class="collapse" aria-labelledby="getInvolvedListHeadingOne" data-parent="#getInvolvedList">
+            <div class="card-body">
+                <p>
+                As a teacher, parent or anyone interacting with children, you must have enjoyed and wondered about their active and inquisitive behaviour. Share your experiences by writing to us at mail.sawaliram@gmail.com or login to the Sawaliram dashboard to contribute questions, answers, articles or translations.
+                </p>
+                <a href="{% url 'dashboard:home' %}" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" id="getInvolvedListHeadingTwo" data-toggle="collapse" data-target="#getInvolvedListTwo" aria-expanded="true" aria-controls="getInvolvedListTwo">
+            <h3>
+            Natural or social scientist, or just an infovore? Share your learnings with Sawaliram!
+            </h3>
+            <i class="fas fa-plus"></i>
+        </div>
+        <div id="getInvolvedListTwo" class="collapse" aria-labelledby="getInvolvedListHeadingTwo" data-parent="#getInvolvedList">
+            <div class="card-body">
+                <p>
+                Children’s innocent questions teach us much about the world. Do join us in answering these questions, in a way that will encourage and nurture their curiosity. Your answers will be helpful to teachers, parents and volunteers on the field who are interacting with children. Do write to us at mail.sawaliram@gmail.com or login to the dashboard to contribute.
+                </p>
+                <a href="{% url 'dashboard:home' %}" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" id="getInvolvedListHeadingThree" data-toggle="collapse" data-target="#getInvolvedListThree" aria-expanded="true" aria-controls="getInvolvedListThree">
+            <h3>
+            How well can you juggle between languages? Try it with us.
+            </h3>
+            <i class="fas fa-plus"></i>
+        </div>
+        <div id="getInvolvedListThree" class="collapse" aria-labelledby="getInvolvedListHeadingThree" data-parent="#getInvolvedList">
+            <div class="card-body">
+                <p>
+                Curiosity is expressed best in our native tongue, and we must listen and talk with each other across languages. On Sawaliram’s multilingual website we are looking for people who could translate answers and other content into different Indian languages. As an open source platform you might also implement Sawaliram in your own country’s language(s). Do write to us at mail.sawaliram@gmail.com or login to the dashboard to contribute.
+                </p>
+                <a href="{% url 'dashboard:home' %}" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" id="getInvolvedListHeadingFour" data-toggle="collapse" data-target="#getInvolvedListFour" aria-expanded="true" aria-controls="getInvolvedListFour">
+            <h3>
+            Do you have a knack for racks of books (a library)?
+            </h3>
+            <i class="fas fa-plus"></i>
+        </div>
+        <div id="getInvolvedListFour" class="collapse" aria-labelledby="getInvolvedListHeadingFour" data-parent="#getInvolvedList">
+            <div class="card-body">
+                <p>
+                The Sawaliram database uses the Dewey Decimal Classification (DDC) system (23rd edition) to categorise children’s questions. We would appreciate your help in encoding the questions. Also you could help us locate resources to answer children’s questions, to carry out research, and to write articles on curiosity. Please write to us at mail.sawaliram@gmail.com.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" id="getInvolvedListHeadingFive" data-toggle="collapse" data-target="#getInvolvedListFive" aria-expanded="true" aria-controls="getInvolvedListFive">
+            <h3>
+            Are you a connoisseur of code? Do you love embarking on debugging journeys?
+            </h3>
+            <i class="fas fa-plus"></i>
+        </div>
+        <div id="getInvolvedListFive" class="collapse" aria-labelledby="getInvolvedListHeadingFive" data-parent="#getInvolvedList">
+            <div class="card-body">
+                <p>
+                This website is open source and built by the community. You can help us build and improve the next big platform that can reach out to students in their classrooms. Head over to our github repository to learn all about how to get started!
+                </p>
+                <a href="https://github.com/sawaliram/sawaliram" target="_blank" class="btn btn-primary"><i class="fab fa-github"></i> Github repo</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
