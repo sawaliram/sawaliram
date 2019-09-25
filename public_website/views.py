@@ -10,14 +10,22 @@ from django.http import Http404
 from dashboard.models import AnswerDraft, Dataset, Answer
 from sawaliram_auth.models import User
 
+import random
 from pprint import pprint
 
 
 class HomeView(View):
     def get(self, request):
+        banner_texts_list = [
+            'Leaves or Fruits <br> or Sprouting Shoots?',
+            'Sun or Stars <br> or Life on Mars?',
+            'Constellations <br> or the fate of nations?',
+            'Curly tresses <br> or yellow school buses?'
+        ]
         context = {
             'dashboard': 'False',
-            'page_title': 'Home'
+            'page_title': 'Home',
+            'first_banner_text': random.choice(banner_texts_list)
         }
         return render(request, 'public_website/home.html', context)
 

@@ -12,7 +12,7 @@
             <div class="carousel-content">
                 <img src="{% static 'illustrations/home_carousel1.png' %}">
                 <div class="carousel-text">
-                    <h1 class="carousel-header">What are children curious about?</h1>
+                    <h1 class="carousel-header">{{ first_banner_text|safe }}</h1>
                     <p class="carousel-paragraph">Meet Sawaliram, a curious crow who likes questions</p>
                     <button class="btn btn-yellow">Learn More</button>
                 </div>
