@@ -658,7 +658,7 @@ input:focus {
 /* ======== HOME_PAGE ======== */
 
 #homePageCarousel {
-    width: 80%;
+    width: 100%;
     margin: auto;
 }
 
@@ -671,15 +671,24 @@ input:focus {
 #homePageCarousel .carousel-content  {
     display: flex;
     align-items: center;
+    width: 80%;
+    margin: auto;
+}
+
+#homePageCarousel .carousel-content img {
+    height: 540px;
+    width: 540px;
 }
 
 @media (max-width: 576px) {
     #homePageCarousel .carousel-content  {
         flex-direction: column;
+        width: 90%;
     }
 
     #homePageCarousel .carousel-content img {
-        width: 80%;
+        height: 100%;
+        width: 100%;
         margin-bottom: 2rem;
     }
 }
@@ -729,6 +738,7 @@ input:focus {
     display: flex;
     align-items: center;
     justify-content: center;
+    max-width: 1213px;
 }
 
 @media (max-width: 576px) {
@@ -739,7 +749,7 @@ input:focus {
 }
 
 .home-search .home-search-form {
-    width: 40%;
+    width: 45%;
 }
 
 @media (max-width: 576px) {
@@ -767,7 +777,7 @@ input:focus {
 
 .home-search .home-search-img1 {
     position: absolute;
-    left: 14%;
+    left: 8%;
 }
 
 @media (max-width: 576px) {
@@ -819,7 +829,7 @@ input:focus {
 
 @media (max-width: 576px) {
     .home-page-links .home-page-link-item img {
-        width: 100%;
+        width: 80%;
         margin-bottom: 1rem;
     }
 }
@@ -832,7 +842,6 @@ input:focus {
 
 @media (max-width: 576px) {
     .home-page-links .home-page-link-item p {
-        width: 100%;
         margin-bottom: 1rem;
     }
 }

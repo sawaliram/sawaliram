@@ -17,10 +17,10 @@ from pprint import pprint
 class HomeView(View):
     def get(self, request):
         banner_texts_list = [
-            'Leaves or Fruits <br> or Sprouting Shoots?',
-            'Sun or Stars <br> or Life on Mars?',
-            'Constellations <br> or the fate of nations?',
-            'Curly tresses <br> or yellow school buses?'
+            'Leaves or Fruits or Sprouting Shoots?',
+            'Sun or Stars or Life on Mars?',
+            'Constellations or the fate of nations?',
+            'Curly tresses or yellow school buses?'
         ]
         context = {
             'dashboard': 'False',
