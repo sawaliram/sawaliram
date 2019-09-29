@@ -326,6 +326,18 @@ function enableLinkingtoTabs() {
     });
 }
 
+function changeHomePageBannerText() {
+    $('#homePageCarousel').on('slide.bs.carousel', function () {
+        var banner_texts_list = [
+            'Leaves or Fruits or Sprouting Shoots?',
+            'Sun or Stars or Life on Mars?',
+            'Constellations or the fate of nations?',
+            'Curly tresses or yellow school buses?'
+        ];
+        $('.first-banner-text').text(banner_texts_list[Math.floor(Math.random() * banner_texts_list.length)]);
+    });
+}
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
@@ -371,4 +383,8 @@ if (
     setupSearchResultsFilter();
     setupSearchResultsClearAll();
     setupBookmarkContentFunctionality();
+}
+
+if (location.pathname == '/') {
+    changeHomePageBannerText();
 }
