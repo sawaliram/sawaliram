@@ -107,6 +107,7 @@ class Question(models.Model):
     student_gender = models.CharField(max_length=100, default='')
     student_class = models.CharField(max_length=100, default='')
     question_text = models.CharField(max_length=1000)
+    question_text_english = models.CharField(max_length=1000, default='')
     question_format = models.CharField(max_length=100)
     question_language = models.CharField(max_length=100)
     contributor = models.CharField(max_length=100)
