@@ -81,7 +81,7 @@
                 </h3>
                 {% if result.question_language.lower != 'english' and result.question_text_english %}
                 <h4 class="item-sub-title">
-                    {{ result.question_text }}
+                    {{ result.question_text_english }}
                 </h4>
                 {% endif %}
                 {% if result.school or result.state or result.area or result.question_asked_on %}
