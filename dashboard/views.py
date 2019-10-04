@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from django.db.models import Subquery
+from django.db.models import Subquery, Q
 from django.views import View
 from django.http import (
     HttpResponse,
@@ -31,6 +31,8 @@ from dashboard.models import (
     UnencodedSubmission,
     Dataset)
 from sawaliram_auth.models import Bookmark
+from public_website.views import SearchView
+# from public_website import view as public_view
 
 import pandas as pd
 from pprint import pprint
@@ -412,211 +414,88 @@ class CurateDataset(View):
         return render(request, 'dashboard/manage-content.html', context)
 
 
-# View Questions
-
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
-class ViewQuestionsView(View):
-
+class ViewQuestionsView(SearchView):
     def get_queryset(self, request):
-        '''
-        Returns the queryset to use with this view (can be overridden
-        by subclasses).
-        '''
+        if 'q' in request.GET:
+            return Question.objects.filter(
+                    Q(question_text__icontains=request.GET.get('q')) |
+                    Q(question_text_english__icontains=request.GET.get('q')) |
+                    Q(school__icontains=request.GET.get('q')) |
+                    Q(area__icontains=request.GET.get('q')) |
+                    Q(state__icontains=request.GET.get('q')) |
+                    Q(field_of_interest__icontains=request.GET.get('q'))
+            )
+        else:
+            return Question.objects.all()
 
-        return Question.objects.all()
+    def get_page_title(self, request):
+        return 'View Questions'
 
-    def get_template(self, request):
-        '''
-        Returns the template to render at the end (can be overridden
-        by subclasses
-        '''
+    def get_enable_breadcrumbs(self, request):
+        return 'Yes'
 
-        return 'dashboard/view-questions.html'
-
-    def get(self, request):
-        questions_set = self.get_queryset(request)
-        page_title = 'View Questions'
-
-        # get values for filter
-        subjects = list(questions_set.order_by()
-                                     .values_list('field_of_interest', flat=True)
-                                     .distinct('field_of_interest')
-                                     .values_list('field_of_interest'))
-        # convert list of tuples to list of strings
-        subjects = [' '.join(item) for item in subjects]
-        # sort the list so that longer subjects appear at the bottom
-        subjects.sort(key=lambda s: len(s), reverse=True)
-
-        states = questions_set.order_by() \
-                              .values_list('state') \
-                              .distinct('state') \
-                              .values('state')
-
-        curriculums = questions_set.order_by() \
-                                   .values_list('curriculum_followed') \
-                                   .distinct('curriculum_followed') \
-                                   .values('curriculum_followed')
-
-        languages = questions_set.order_by() \
-                                 .values_list('question_language') \
-                                 .distinct('question_language') \
-                                 .values('question_language')
-
-        # apply filters if any
-        subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
-        if subjects_to_filter_by:
-            questions_set = questions_set.filter(field_of_interest__in=subjects_to_filter_by)
-
-        states_to_filter_by = request.GET.getlist('state')
-        if states_to_filter_by:
-            questions_set = questions_set.filter(state__in=states_to_filter_by)
-
-        curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
-        if curriculums_to_filter_by:
-            questions_set = questions_set.filter(curriculum_followed__in=curriculums_to_filter_by)
-
-        languages_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('language')]
-        if languages_to_filter_by:
-            questions_set = questions_set.filter(question_language__in=languages_to_filter_by)
-
-        # sort the results if sort-by parameter exists
-        # default: newest
-        sort_by = request.GET.get('sort-by', 'newest')
-
-        if sort_by == 'newest':
-            questions_set = questions_set.order_by('-created_on')
-
-        paginator = Paginator(questions_set, 15)
-
-        page = request.GET.get('page', 1)
-        questions = paginator.get_page(page)
-
-        # get list of IDs of bookmarked items
-        bookmark_id_list = Bookmark.objects.filter(user_id=request.user.id) \
-                                           .values_list('question_id') \
-                                           .values('question_id')
-        bookmarks = [bookmark['question_id'] for bookmark in bookmark_id_list]
-        context = {
-            'grey_background': 'True',
-            'page_title': page_title,
-            'enable_breadcrumbs': 'Yes',
-            'questions': questions,
-            'subjects': subjects,
-            'states': states,
-            'curriculums': curriculums,
-            'languages': languages,
-            'subjects_to_filter_by': subjects_to_filter_by,
-            'states_to_filter_by': states_to_filter_by,
-            'curriculums_to_filter_by': curriculums_to_filter_by,
-            'languages_to_filter_by': languages_to_filter_by,
-            'result_size': questions_set.count(),
-            'bookmarks': bookmarks
-        }
-        return render(request, self.get_template(request), context)
-
-
-# Answer Questions
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
-class AnswerQuestionsView(View):
-
-    def get(self, request):
-        questions_set = Question.objects.exclude(id__in=Subquery(
+class AnswerQuestions(SearchView):
+    def get_queryset(self, request):
+        if 'q' in request.GET:
+            query_set = Question.objects.exclude(id__in=Subquery(
+                                    Answer.objects.all().values('question_id')))
+            return query_set.filter(
+                    Q(question_text__icontains=request.GET.get('q')) |
+                    Q(question_text_english__icontains=request.GET.get('q')) |
+                    Q(school__icontains=request.GET.get('q')) |
+                    Q(area__icontains=request.GET.get('q')) |
+                    Q(state__icontains=request.GET.get('q')) |
+                    Q(field_of_interest__icontains=request.GET.get('q'))
+            )
+        else:
+            return Question.objects.exclude(id__in=Subquery(
                                     Answer.objects.all().values('question_id')))
 
-        # get values for filter
-        subjects = list(questions_set.order_by()
-                                     .values_list('field_of_interest', flat=True)
-                                     .distinct('field_of_interest')
-                                     .values_list('field_of_interest'))
-        # convert list of tuples to list of strings
-        subjects = [' '.join(item) for item in subjects]
-        # sort the list so that longer subjects appear at the bottom
-        subjects.sort(key=lambda s: len(s), reverse=True)
+    def get_page_title(self, request):
+        return 'Answer Questions'
 
-        states = questions_set.order_by() \
-                              .values_list('state') \
-                              .distinct('state') \
-                              .values('state')
+    def get_enable_breadcrumbs(self, request):
+        return 'Yes'
 
-        curriculums = questions_set.order_by() \
-                                   .values_list('curriculum_followed') \
-                                   .distinct('curriculum_followed') \
-                                   .values('curriculum_followed')
-        languages = questions_set.order_by() \
-                                 .values_list('question_language') \
-                                 .distinct('question_language') \
-                                 .values('question_language')
-
-        # apply filters if any
-        subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
-        if subjects_to_filter_by:
-            questions_set = questions_set.filter(field_of_interest__in=subjects_to_filter_by)
-
-        states_to_filter_by = request.GET.getlist('state')
-        if states_to_filter_by:
-            questions_set = questions_set.filter(state__in=states_to_filter_by)
-
-        curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
-        if curriculums_to_filter_by:
-            questions_set = questions_set.filter(curriculum_followed__in=curriculums_to_filter_by)
-
-        languages_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('language')]
-        if languages_to_filter_by:
-            questions_set = questions_set.filter(question_language__in=languages_to_filter_by)
-
-        # sort the results if sort-by parameter exists
-        # default: newest
-        sort_by = request.GET.get('sort-by', 'newest')
-
-        if sort_by == 'newest':
-            questions_set = questions_set.order_by('-created_on')
-
-        paginator = Paginator(questions_set, 15)
-
-        page = request.GET.get('page', 1)
-        questions = paginator.get_page(page)
-
-        # get list of IDs of bookmarked items
-        bookmark_id_list = Bookmark.objects.filter(user_id=request.user.id) \
-                                           .values_list('question_id') \
-                                           .values('question_id')
-        bookmarks = [bookmark['question_id'] for bookmark in bookmark_id_list]
-
-        context = {
-            'grey_background': 'True',
-            'page_title': 'Answer Questions',
-            'enable_breadcrumbs': 'Yes',
-            'questions': questions,
-            'subjects': subjects,
-            'states': states,
-            'curriculums': curriculums,
-            'languages': languages,
-            'subjects_to_filter_by': subjects_to_filter_by,
-            'states_to_filter_by': states_to_filter_by,
-            'curriculums_to_filter_by': curriculums_to_filter_by,
-            'languages_to_filter_by': languages_to_filter_by,
-            'result_size': questions_set.count(),
-            'bookmarks': bookmarks
-        }
-        return render(request, 'dashboard/answer-questions.html', context)
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
-class ListUnreviewedAnswersView(ViewQuestionsView):
-
-    def get_template(self, request):
-        return 'dashboard/answers/list-unreviewed.html'
-
+class ReviewAnswersList(SearchView):
     def get_queryset(self, request):
-        return Question.objects.filter(
-            answers__approved_by__isnull=True,
-            answers__answered_by__isnull=False,
-        ).exclude(
-            answers__answered_by=request.user,
-        ).distinct()
+        if 'q' in request.GET:
+            query_set = Question.objects.filter(
+                                answers__approved_by__isnull=True,
+                                answers__answered_by__isnull=False,
+                            ).exclude(
+                                answers__answered_by=request.user,
+                            ).distinct()
+            return query_set.filter(
+                    Q(question_text__icontains=request.GET.get('q')) |
+                    Q(question_text_english__icontains=request.GET.get('q')) |
+                    Q(school__icontains=request.GET.get('q')) |
+                    Q(area__icontains=request.GET.get('q')) |
+                    Q(state__icontains=request.GET.get('q')) |
+                    Q(field_of_interest__icontains=request.GET.get('q'))
+            )
+        else:
+            return Question.objects.filter(
+                            answers__approved_by__isnull=True,
+                            answers__answered_by__isnull=False,
+                        ).exclude(
+                            answers__answered_by=request.user,
+                        ).distinct()
+
+    def get_page_title(self, request):
+        return 'Review Answers'
+
+    def get_enable_breadcrumbs(self, request):
+        return 'Yes'
+
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')

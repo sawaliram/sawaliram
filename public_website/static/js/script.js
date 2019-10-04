@@ -71,6 +71,30 @@ function openVolunteerOptionDialog() {
     });
 }
 
+function setupNavbarSearchBar() {
+    $('.navbar-search-icon').click(function() {
+        if(($('.search-field').val() != '') && ($('.navbar-search-container').hasClass('active'))) {
+            $('.navbar-search-form').submit();
+        }
+        else {
+            $(this).toggleClass('active');
+            $('.navbar-search-container').toggleClass('active');
+            $('.navbar-search-form').toggleClass('active');
+            $('.navbar-search-form .search-field').focus();
+        }
+    });
+}
+
+function setupSearchResultsSearch() {
+    $('.search-results-search').submit(function(event) {
+        event.preventDefault();
+        var current_params = new URLSearchParams(location.search);
+        current_params.delete('q');
+        current_params.append('q', $('.search-results-search-field').val());
+        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
+    });
+}
+
 
 // ======== PAGE SPECIFIC FUNCTIONS ========
 // These functions are called only on specific pages
@@ -185,6 +209,7 @@ function setupSearchResultsFilter() {
             }
         }
         else {
+            current_params.delete('page');
             current_params.append($(this).data('param'), $(this).data('value'));
             location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
         }
@@ -197,7 +222,7 @@ function setupSearchResultsClearAll() {
         var new_params_list = []
 
         for (const value of current_params.entries()) {
-            if ((value[0] == 'page') || (value[0] == 'sort-by')) {
+            if ((value[0] == 'page') || (value[0] == 'sort-by') || (value[0] == 'q')) {
                 new_params_list.push(value);
             }
         }
@@ -326,24 +351,14 @@ function enableLinkingtoTabs() {
     });
 }
 
-function changeHomePageBannerText() {
-    $('#homePageCarousel').on('slide.bs.carousel', function () {
-        var banner_texts_list = [
-            'Leaves or Fruits or Sprouting Shoots?',
-            'Sun or Stars or Life on Mars?',
-            'Constellations or the fate of nations?',
-            'Curly tresses or yellow school buses?'
-        ];
-        $('.first-banner-text').text(banner_texts_list[Math.floor(Math.random() * banner_texts_list.length)]);
-    });
-}
-
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
 toggleUserMenu();
 closeMenusOnClickingDarkbackground();
 enableLinkingtoTabs();
+setupNavbarSearchBar();
+setupSearchResultsSearch();
 
 if (window.matchMedia("(min-width: 576px)").matches) {
     resizeMainLogoOnScrollDown();
@@ -376,15 +391,12 @@ if (window.location.pathname.includes('/users/how-can-i-help')) {
 if (
     window.location.pathname.includes('/dashboard/view-questions') ||
     window.location.pathname.includes('/dashboard/answer-questions') ||
-    window.location.pathname.includes('/dashboard/answers/unreviewed')
+    window.location.pathname.includes('/dashboard/review-answers') ||
+    window.location.pathname.includes('/search')
    ) {
     setupSearchResultsPagination();
     setupSearchResultsSort();
     setupSearchResultsFilter();
     setupSearchResultsClearAll();
     setupBookmarkContentFunctionality();
-}
-
-if (location.pathname == '/') {
-    changeHomePageBannerText();
 }
