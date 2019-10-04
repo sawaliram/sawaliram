@@ -6,11 +6,15 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password, make_password
 from django.http import Http404
+from django.db.models import Q
+from django.core.paginator import Paginator
 
-from dashboard.models import AnswerDraft, Dataset, Answer
-from sawaliram_auth.models import User
+from dashboard.models import AnswerDraft, Dataset, Answer, Question
+from sawaliram_auth.models import User, Bookmark
+# from dashboard.views import ViewQuestionsView
 
 import random
+import urllib
 from pprint import pprint
 
 
@@ -28,6 +32,145 @@ class HomeView(View):
             'first_banner_text': random.choice(banner_texts_list)
         }
         return render(request, 'public_website/home.html', context)
+
+
+class SearchView(View):
+    def get_queryset(self, request):
+        if 'q' in request.GET:
+            return Question.objects \
+                    .filter(
+                        Q(question_text__icontains=request.GET.get('q')) |
+                        Q(question_text_english__icontains=request.GET.get('q')) |
+                        Q(school__icontains=request.GET.get('q')) |
+                        Q(area__icontains=request.GET.get('q')) |
+                        Q(state__icontains=request.GET.get('q')) |
+                        Q(field_of_interest__icontains=request.GET.get('q'))
+                    )
+        else:
+            return Question.objects.all()
+
+    def get_template(self, request):
+        '''
+        Returns the template to render at the end (can be overridden
+        by subclasses
+        '''
+        return 'public_website/search.html'
+
+    def get_page_title(self, request):
+        """
+        Returns the page title for  breadcrumbs and <title> tag
+        """
+        return 'Search'
+
+    def get_enable_breadcrumbs(self, request):
+        """
+        Returns the setting to enable breadcrumbs
+        """
+        return 'No'
+
+    def get_search_query(self, request):
+        """
+        Returns the search query
+        """
+        if 'q' in request.GET:
+            return request.GET.get('q')
+        else:
+            return ""
+
+    def get(self, request):
+        result = self.get_queryset(request)
+
+        # get values for filter
+        subjects = [
+            'Chemistry',
+            'Biology',
+            'Physics',
+            'Mathematics',
+            'Arts & Recreation',
+            'Earth & Environment',
+            'History-Philosophy and Practice of Science',
+            'Humans & Society',
+            'Language & Literature',
+            'Technology & Applied Science',
+        ]
+
+        available_subjects = list(result.order_by()
+                                        .values_list('field_of_interest', flat=True)
+                                        .distinct('field_of_interest')
+                                        .values_list('field_of_interest'))
+        # convert list of tuples to list of strings
+        available_subjects = [''.join(item) for item in available_subjects]
+
+        states = result.order_by() \
+                       .values_list('state') \
+                       .distinct('state') \
+                       .values('state')
+
+        curriculums = result.order_by() \
+                            .values_list('curriculum_followed') \
+                            .distinct('curriculum_followed') \
+                            .values('curriculum_followed')
+
+        languages = result.order_by() \
+                          .values_list('question_language') \
+                          .distinct('question_language') \
+                          .values('question_language')
+
+        # apply filters if any
+        subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
+        if subjects_to_filter_by:
+            result = result.filter(field_of_interest__in=subjects_to_filter_by)
+
+        states_to_filter_by = request.GET.getlist('state')
+        if states_to_filter_by:
+            result = result.filter(state__in=states_to_filter_by)
+
+        curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
+        if curriculums_to_filter_by:
+            result = result.filter(curriculum_followed__in=curriculums_to_filter_by)
+
+        languages_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('language')]
+        if languages_to_filter_by:
+            result = result.filter(question_language__in=languages_to_filter_by)
+
+        # sort the results if sort-by parameter exists
+        # default: newest
+        sort_by = request.GET.get('sort-by', 'newest')
+
+        if sort_by == 'newest':
+            result = result.order_by('-created_on')
+
+        paginator = Paginator(result, 15)
+
+        page = request.GET.get('page', 1)
+        result_page_one = paginator.get_page(page)
+
+        # get list of IDs of bookmarked items
+        bookmark_id_list = Bookmark.objects.filter(user_id=request.user.id) \
+                                           .values_list('question_id') \
+                                           .values('question_id')
+        bookmarks = [bookmark['question_id'] for bookmark in bookmark_id_list]
+
+        context = {
+            'grey_background': 'True',
+            'page_title': self.get_page_title(request),
+            'enable_breadcrumbs': self.get_enable_breadcrumbs(request),
+            'results': result_page_one,
+            'result_size': result.count(),
+            'subjects': subjects,
+            'available_subjects': available_subjects,
+            'states': states,
+            'curriculums': curriculums,
+            'languages': languages,
+            'subjects_to_filter_by': subjects_to_filter_by,
+            'states_to_filter_by': states_to_filter_by,
+            'curriculums_to_filter_by': curriculums_to_filter_by,
+            'languages_to_filter_by': languages_to_filter_by,
+            'bookmarks': bookmarks,
+            'search_query': self.get_search_query(request),
+            'sort_by': sort_by
+        }
+        return render(request, self.get_template(request), context)
 
 
 class UserProfileView(View):

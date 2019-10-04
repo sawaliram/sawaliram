@@ -123,7 +123,12 @@
                 <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo.png' %}" alt="Sawaliram Home">
             </a>
             <div class="navbar-options">
-                <i class="fas fa-search navbar-icon navbar-element"></i>
+                <span class="navbar-search-container navbar-element slow-transition">
+                    <form action="{% url 'public_website:search' %}" class="navbar-search-form slow-transition" method="GET">
+                        <input type="text" class="search-field" name="q" placeholder="Drop your question here">
+                    </form>
+                    <i class="fas fa-search navbar-icon navbar-search-icon"></i>
+                </span>
                 <div class="dropdown navbar-element">
                     <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="languageSelector">
                         English

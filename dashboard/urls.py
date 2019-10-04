@@ -14,8 +14,8 @@ urlpatterns = [
     path('question/<int:question_id>/answer/new', views.SubmitAnswerView.as_view(), name='submit-answer'),
     path('manage-content', views.ManageContentView.as_view(), name='manage-content'),
     path('view-questions', views.ViewQuestionsView.as_view(), name='view-questions'),
-    path('answer-questions', views.AnswerQuestionsView.as_view(), name='answer-questions'),
-    path('answers/unreviewed', views.ListUnreviewedAnswersView.as_view(), name='list-unreviewed-answers'),
+    path('answer-questions', views.AnswerQuestions.as_view(), name='answer-questions'),
+    path('review-answers', views.ReviewAnswersList.as_view(), name='review-answers-list'),
     path('question/<int:question_id>/answers/<int:answer_id>/review', views.ReviewAnswerView.as_view(), name='review-answer'),
     path('question/<int:question_id>/answers/<int:answer_id>/approve', views.ApproveAnswerView.as_view(), name='approve-answer'),
 
