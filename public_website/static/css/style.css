@@ -2146,6 +2146,10 @@ p.tab-section-status.pending {
     margin-bottom: 1rem;
 }
 
+.tab-content.user-profile-tab-content .tab-section .card-list li h4 {
+    font-size: 1.2rem;
+}
+
 .tab-content.user-profile-tab-content .tab-section .card-list li a.task-link {
     font-size: 1.2rem;
     color: #000;
