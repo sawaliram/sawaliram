@@ -503,12 +503,30 @@ class SubmitAnswerView(View):
     def get(self, request, question_id):
         """Return the view to answer a question"""
 
+        # save Answer Questions URL in user session
+        if 'dashboard/answer-questions' in request.META.get('HTTP_REFERER'):
+            request.session['answer_questions_url'] = request.META.get('HTTP_REFERER')
+
         question_to_answer = Question.objects.get(pk=question_id)
+
+        # get next/prev item IDs
+        prev_item_id, next_item_id = '', ''
+        if 'result_id_list' in request.session:
+            result_id_list = request.session['result_id_list']
+            if question_id in result_id_list:
+                current_item_id = result_id_list.index(question_id)
+                if current_item_id != 0:
+                    prev_item_id = result_id_list[current_item_id - 1]
+                if current_item_id != len(result_id_list) - 1:
+                    next_item_id = result_id_list[current_item_id + 1]
 
         context = {
             'question': question_to_answer,
             'grey_background': 'True',
+            'enable_breadcrumbs': 'Yes',
             'page_title': 'Submit Answer',
+            'prev_item_id': prev_item_id,
+            'next_item_id': next_item_id
         }
 
         # Prefill draft answer, if any
@@ -526,9 +544,21 @@ class SubmitAnswerView(View):
 
         question_to_answer = Question.objects.get(pk=question_id)
 
+        # get next/prev item IDs
+        prev_item_id, next_item_id = '', ''
+        if 'result_id_list' in request.session:
+            result_id_list = request.session['result_id_list']
+            if question_id in result_id_list:
+                current_item_id = result_id_list.index(question_id)
+                if current_item_id != 0:
+                    prev_item_id = result_id_list[current_item_id - 1]
+                if current_item_id != len(result_id_list) - 1:
+                    next_item_id = result_id_list[current_item_id + 1]
+
         context = {
             'question': question_to_answer,
             'grey_background': 'True',
+            'enable_breadcrumbs': 'Yes',
             'page_title': 'Submit Answer',
         }
 
@@ -545,12 +575,16 @@ class SubmitAnswerView(View):
             draft.save()
 
             # Congratulate the user
-            messages.success(request, ('Your answer has been saved.'
-                'You can return to this page any time to '
-                'continue editing.'))
+            messages.success(request, ('Your answer has been saved!'
+                ' You can return to this page any time to '
+                'continue editing, or go to "Drafts" in your User Profile.'))
 
             # Set draft in context to re-display
             context['draft_answer'] = draft
+            context['prev_item_id'] = prev_item_id
+            context['next_item_id'] = next_item_id
+
+            return render(request, 'dashboard/submit-answer.html', context)
 
         else:
             # Submit answer
@@ -574,7 +608,13 @@ class SubmitAnswerView(View):
             # Congratulate the user
             messages.success(request, ('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!'))
 
-        return render(request, 'dashboard/submit-answer.html', context)
+            if next_item_id:
+                context['prev_item_id'] = prev_item_id
+                context['next_item_id'] = next_item_id
+                question_to_answer = Question.objects.get(pk=next_item_id)
+                return render(request, 'dashboard/submit-answer.html', context)
+            else:
+                return redirect('dashboard:answer-questions')
 
 
 # Review Answer
@@ -588,12 +628,18 @@ class ReviewAnswerView(View):
         Return the view to approve/comment on an answer
         """
 
+        # save Review Answers URL in user session
+        if 'dashboard/review-answers' in request.META.get('HTTP_REFERER'):
+            request.session['review_answers_url'] = request.META.get('HTTP_REFERER')
+
         answer = Answer.objects.get(pk=answer_id)
 
         context = {
             'answer': answer,
             'comments': answer.comments.all(),
             'grey_background': 'True',
+            'page_title': 'Submit Review',
+            'enable_breadcrumbs': 'Yes'
         }
 
         return render(request, 'dashboard/answers/review.html', context)

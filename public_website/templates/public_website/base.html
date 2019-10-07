@@ -147,7 +147,15 @@
             <div class="page-title-bar">
                 <p class="page-title">
                     {% if enable_breadcrumbs == 'Yes' and page_title != 'Dashboard Home' %}
-                    <a href="{% url 'dashboard:home' %}">Dashboard Home</a> >
+                        {% if page_title != 'Dashboard Home' %}
+                            <a href="{% url 'dashboard:home' %}">Dashboard Home</a> >
+                        {% endif %}
+                        {% if page_title == 'Submit Answer' %}
+                            <a href="{% url 'dashboard:answer-questions' %}">Answer Questions</a> >
+                        {% endif %}
+                        {% if page_title == 'Submit Review' %}
+                            <a href="{% url 'dashboard:review-answers' %}">Review Answers</a> >
+                        {% endif %}
                     {% endif %}
                     {{ page_title }}
                 </p>
