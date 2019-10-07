@@ -2205,6 +2205,12 @@ footer .footer-main .footer-column .footer-links a {
     color: #ffffff;
 }
 
+footer .footer-main .footer-column .footer-links a.dashboard-link {
+    background-color: #9B63A8;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+}
+
 footer .footer-main .footer-column .footer-links a:not(:last-child) {
     margin-right: 2rem;
 }
