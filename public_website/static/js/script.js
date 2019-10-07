@@ -288,6 +288,24 @@ function setupCommentFormDisplayToggle() {
     });
 }
 
+function setupDeleteReviewComment() {
+    $('.delete-comment').click(function() {
+        $(this).hide();
+        $(this).next('.delete-comment-form').show();
+    });
+
+    $('.confirm-delete').click(function(event) {
+        event.preventDefault();
+        if ($(this).hasClass('delete-yes')) {
+            $('.delete-comment-form').submit();
+        }
+        else {
+            $('.delete-comment-form').hide();
+            $('.delete-comment').show();
+        }
+    });
+}
+
 function setupBookmarkContentFunctionality() {
     $('.bookmark-button').click(function() {
 
@@ -379,8 +397,9 @@ if (pattern.test(window.location.pathname)) {
 
 var pattern = new RegExp("^/dashboard/question/\\d+/answers/\\d+/review")
 if (pattern.test(window.location.pathname)) {
-    setupCommentFormDisplayToggle();
-    setupCommentDeleteButtons();
+    // setupCommentFormDisplayToggle();
+    // setupCommentDeleteButtons();
+    setupDeleteReviewComment();
 }
 
 if (window.location.pathname.includes('/users/how-can-i-help')) {

@@ -1854,6 +1854,124 @@ button.deny-access {
 
 }
 
+.review-page-container {
+    display: flex;
+}
+
+.review-page-container .answer-area {
+    width: 60%;
+    padding: 2rem;
+    background-color: #fff;
+    margin-top: -10rem;
+    padding-top: 12rem;
+    margin-bottom: -10rem;
+    padding-bottom: 10rem;
+}
+
+.review-page-container .answer-area h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+.review-page-container .answer-area h2 {
+    font-size: 1.1rem;
+    color: #424242;
+    margin-bottom: 1rem;
+}
+
+.review-page-container .answer-area .answer-text {
+    border-top: 1px solid #D6D6D6;
+    border-bottom: 1px solid #D6D6D6;
+    padding: 1rem 0;
+    padding-bottom: 0;
+    margin-bottom: 1.5rem;
+}
+
+.review-page-container .answer-area .publish-info-text {
+    color: #8c8c8c;
+}
+
+.review-page-container .comment-area {
+    width: 40%;
+    padding: 2rem;
+}
+
+.review-page-container .comment-area h2 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.review-page-container .comment-area .comment-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.review-page-container .comment-area .comment-list .comment-box {
+    background-color: #fff;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-top: 3px solid #9B63A8;
+    padding: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.review-page-container .comment-area .comment-list .comment-box:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .comment-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .comment-header h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .comment-header button.delete-comment {
+    padding: 0;
+    color: #fff;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .comment-header .delete-comment:hover {
+    color: #a6a6a6;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .comment-header .delete-comment i {
+    color: #a6a6a6;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .comment-header .delete-comment-wrapper .delete-comment-form {
+    display: none;
+    color: #a6a6a6;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .comment-header .delete-comment-wrapper .delete-comment-form span {
+    display: inline-block;
+    margin-right: 0.4rem;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .comment-header .delete-comment-wrapper .delete-comment-form .confirm-delete {
+    padding: 0;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .comment-header .delete-comment-wrapper .delete-comment-form .confirm-delete.delete-yes {
+    color: darkred;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .comment-header .delete-comment-wrapper .delete-comment-form .confirm-delete.delete-no {
+    color: #87B24D;
+}
+
+.review-page-container .comment-area .comment-list .comment-box .commane-date {
+    margin-bottom: 0.8rem;
+    font-size: 0.8rem;
+    color: #a6a6a6;
+}
+
 /* ======== USER PROFILE ======== */
 .profile-header {
     text-align: center;

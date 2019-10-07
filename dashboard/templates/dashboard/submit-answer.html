@@ -11,12 +11,18 @@
 {# TODO: add breadcrumb, after implemented in base.html #}
 
 {% block extra_header %}
+{% if prev_item_id or next_item_id %}
 <div class="navbar-extra row justify-content-end">
 	<div>
-		<button class="btn btn-secondary-hollow">&lt; Prev</button>
-		<button class="btn btn-secondary-hollow">Next &gt;</button>
+		{% if prev_item_id %}
+		<a href="{% url 'dashboard:submit-answer' question_id=prev_item_id %}" class="btn btn-secondary-hollow">&lt; Prev</a>
+		{% endif %}
+		{% if next_item_id %}
+		<a href="{% url 'dashboard:submit-answer' question_id=next_item_id %}" class="btn btn-secondary-hollow">Next &gt;</a>
+		{% endif %}
 	</div>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block content %}

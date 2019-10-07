@@ -5,7 +5,7 @@ from django.views import View
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password, make_password
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.db.models import Q
 from django.core.paginator import Paginator
 
@@ -78,6 +78,19 @@ class SearchView(View):
             return ""
 
     def get(self, request):
+
+        # load page from session if arriving from Submit Answer/Review Answer
+        if '/answer/new' in str(request.META.get('HTTP_REFERER')):
+            if 'answer_questions_url' in request.session:
+                redirect_url = request.session['answer_questions_url']
+                del request.session['answer_questions_url']
+                return redirect(redirect_url)
+        elif '/review' in str(request.META.get('HTTP_REFERER')):
+            if 'review_answers_url' in request.session:
+                redirect_url = request.session['review_answers_url']
+                del request.session['review_answers_url']
+                return redirect(redirect_url)
+
         result = self.get_queryset(request)
 
         # get values for filter
@@ -140,6 +153,12 @@ class SearchView(View):
         if sort_by == 'newest':
             result = result.order_by('-created_on')
 
+        # save list of IDs for Submit Answer/Review Answer
+        page_title = self.get_page_title(request)
+        if page_title == 'Review Answers' or page_title == 'Answer Questions':
+            result_id_list = [id['id'] for id in result.values('id')]
+            request.session['result_id_list'] = result_id_list
+
         paginator = Paginator(result, 15)
 
         page = request.GET.get('page', 1)
@@ -153,7 +172,7 @@ class SearchView(View):
 
         context = {
             'grey_background': 'True',
-            'page_title': self.get_page_title(request),
+            'page_title': page_title,
             'enable_breadcrumbs': self.get_enable_breadcrumbs(request),
             'results': result_page_one,
             'result_size': result.count(),
