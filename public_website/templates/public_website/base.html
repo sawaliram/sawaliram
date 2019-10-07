@@ -89,23 +89,23 @@
                     <a href="{% url 'public_website:user-profile' user_id=request.user.id %}" class="btn view-profile">View Profile</a>
                 </div>
                 <div class="user-menu-items">
-                    <a href="javascript:void(0)">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#settings">
                         <img class="slow-transition" src="{% static 'icons/menu_settings.png' %}" alt="User Settings">
                         Settings
                     </a>
-                    <a href="javascript:void(0)">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#drafts">
                         <img class="slow-transition" src="{% static 'icons/menu_drafts.png' %}" alt="User Drafts">
                         Drafts
                     </a>
-                    <a href="javascript:void(0)">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#notifications">
                         <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="User Notifications">
                         Notifications
                     </a>
-                    <a href="javascript:void(0)">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#submissions">
                         <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="User Submissions">
                         Submissions
                     </a>
-                    <a href="javascript:void(0)">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#bookmarks">
                         <img class="slow-transition" src="{% static 'icons/menu_bookmarks.png' %}" alt="User Bookmarks">
                         Bookmarks
                     </a>

@@ -127,7 +127,7 @@
                             <p class="tab-section-intro">Submitted on {{ question.created_on|date:"jS F, Y" }}</p>
                             {% if question.status == 'new' %}
                             <p class="tab-section-status pending">
-                                Under review
+                                Review Pending
                             </p>
                             {% elif question.status == 'curated' %}
                             <p class="tab-section-status success">
@@ -146,13 +146,15 @@
                     <ul class="card-list">
                         {% for answer in submitted_answers %}
                         <li>
-                            <h4>{{ answer.question_id }}</h4>
-                            <p class="tab-section-intro">
-                                {{ answer.answer_text|striptags|truncatechars:140 }}
-                            </p>
-                            <p class="tab-section-status pending">
-                                Unreviewd
-                            </p>
+                                <a class="task-link" href="{% url 'dashboard:review-answer' question_id=answer.question_id.id answer_id=answer.id %}">
+                                {{ answer.question_id }}
+                                </a>
+                                <p class="tab-section-intro">
+                                    {{ answer.answer_text|striptags|truncatechars:140 }}
+                                </p>
+                                <p class="tab-section-status pending">
+                                    Review Pending
+                                </p>
                         </li>
                         {% endfor %}
                     </ul>
@@ -176,7 +178,7 @@
                         <h4>{{ bookmark.question }}</h4>
                         <div>
                             <p class="tab-section-status pending">
-                                Unanswered
+                                Not Answered
                             </p>
                         </div>
                         <br>
