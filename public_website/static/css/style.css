@@ -1810,6 +1810,12 @@ button.deny-access {
     margin-top: 2rem;
 }
 
+.submit-answer-header h2 {
+    font-size: 1.1rem;
+    color: #8e8e8e;
+    margin-bottom: 1.5rem;
+}
+
 .submit-answer-header .question-meta {
     margin: 1rem 0;
     font-size: 0.9rem;
@@ -1871,13 +1877,19 @@ button.deny-access {
 .review-page-container .answer-area h1 {
     font-size: 1.8rem;
     font-weight: bold;
-    margin-bottom: 2rem;
+}
+
+.review-page-container .answer-area h1.question-translation {
+    font-size: 1.2rem;
+    font-weight: 200;
+    color: grey;
 }
 
 .review-page-container .answer-area h2 {
     font-size: 1.1rem;
     color: #424242;
     margin-bottom: 1rem;
+    margin-top: 2rem;
 }
 
 .review-page-container .answer-area .answer-text {

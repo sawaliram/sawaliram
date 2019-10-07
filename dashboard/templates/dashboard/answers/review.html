@@ -10,6 +10,11 @@
 <div class="review-page-container">
     <div class="answer-area">
         <h1>{{ question.question_text }}</h1>
+        {% if question.question_language.lower != 'english' %}
+			{% if question.question_text_english %}
+            <h1 class="question-translation">{{ question.question_text_english }}</h1>
+            {% endif %}
+        {% endif %}
         <h2 class="answered-by">Answered by <b>{{ answer.answered_by.get_full_name }}</b></h2>
         <div class="answer-text">
             {{ answer.answer_text|safe }}

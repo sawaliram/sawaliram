@@ -40,6 +40,11 @@
     {% endif %}
 	<div class="submit-answer-header">
 		<h1>{{ question.question_text }}</h1>
+		{% if question.question_language.lower != 'english' %}
+			{% if question.question_text_english %}
+				<h2>{{ question.question_text_english }}</h2>
+			{% endif %}
+		{% endif %}
 		{% if question.school or question.area or question.state or question.question_asked_on %}
 			<div class="question-meta">
 				{% if question.school %}
