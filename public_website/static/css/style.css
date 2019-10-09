@@ -16,8 +16,8 @@ body.grey-background {
 @media (max-width: 576px) {
     .sawaliram-container {
         margin-top: 7rem;
-        padding-left: 0;
-        padding-right: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 }
 
@@ -2164,7 +2164,7 @@ p.tab-section-status.pending {
 footer .footer-main {
     color: #ffffff;
     background-color: #414141;
-    padding: 4rem 0 0 0;
+    padding: 3rem 0 0.5rem 0;
 }
 
 @media (max-width: 576px) {
@@ -2257,7 +2257,7 @@ footer .footer-main .footer-column .footer-links {
 
 @media (max-width: 576px) {
     footer .footer-main .footer-column .footer-links {
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
     } 
 }
 
@@ -2273,6 +2273,10 @@ footer .footer-main .footer-column .footer-links a.dashboard-link {
 
 footer .footer-main .footer-column .footer-links a:not(:last-child) {
     margin-right: 2rem;
+}
+
+footer .footer-main .footer-column .footer-links a:nth-child(3) {
+    margin-right: 1rem;
 }
 
 footer .footer-main .footer-column a.social-media {
