@@ -101,7 +101,7 @@ class SearchView(View):
             'Mathematics',
             'Arts & Recreation',
             'Earth & Environment',
-            'History-Philosophy and Practice of Science',
+            'History, Philosophy & Practice of Science',
             'Humans & Society',
             'Language & Literature',
             'Technology & Applied Science',
