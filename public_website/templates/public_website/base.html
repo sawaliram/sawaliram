@@ -100,6 +100,9 @@
                     <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#notifications">
                         <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="User Notifications">
                         Notifications
+                        {% if request.user.notifications.all|length > 0 %}
+                            <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
+                        {% endif %}
                     </a>
                     <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#submissions">
                         <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="User Submissions">
@@ -160,10 +163,13 @@
                     {{ page_title }}
                 </p>
                 {% if request.user.is_authenticated %}
-                    <button class="btn user-menu-button">
-                        <span class="user-name">{{ request.user.get_full_name }}</span>
-                        <img src="{% static 'user/default_menu.png' %}" alt="User Profile Picture">
-                    </button>
+                <button class="btn user-menu-button">
+                    <span class="user-name">{{ request.user.get_full_name }}</span>
+                    <img src="{% static 'user/default_menu.png' %}" alt="User Profile Picture">
+                    {% if request.user.notifications.all|length > 0 %}
+                        <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
+                    {% endif %}
+                </button>
                 {% endif %}
             </div>
             {% endif %}

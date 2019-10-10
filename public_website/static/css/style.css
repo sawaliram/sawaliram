@@ -501,6 +501,7 @@ input:focus {
     height: 100%;
     border-radius: 0;
     padding-right: 2rem;
+    position: relative;
 }
 
 @media (max-width: 576px) {
@@ -512,6 +513,17 @@ input:focus {
     .navbar .page-title-bar .user-menu-button .user-name {
         display: none;
     }
+}
+
+.navbar .page-title-bar .user-menu-button .notification-dot {
+    position: absolute;
+    background-color: #9B63A8;
+    color: #fff;
+    border-radius: 50%;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+    top: 0.3rem;
+    right: 1rem;
 }
 
 .navbar .page-title-bar .user-menu-button:hover {
@@ -646,6 +658,16 @@ input:focus {
 
 .user-menu .user-menu-container .user-menu-items a:hover img {
     border-color: #9B63A8;
+}
+
+.user-menu .user-menu-container .user-menu-items a .notification-dot {
+    background-color: #9B63A8;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    color: #fff;
+    display: inline-block;
+    margin-left: 0.5rem;
 }
 
 .navbar-extra {
@@ -1904,6 +1926,10 @@ button.deny-access {
     color: #8c8c8c;
 }
 
+.review-page-container .answer-area .published-text {
+    color: #87B24D;
+}
+
 .review-page-container .comment-area {
     width: 40%;
     padding: 2rem;
@@ -2046,6 +2072,14 @@ button.deny-access {
     border-radius: 50%;
 }
 
+.nav.user-profile-nav .nav-link .notification-dot {
+    background-color: #9B63A8;
+    color: #fff;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+}
+
 .nav.user-profile-nav .nav-link:hover,
 .nav.user-profile-nav .nav-link.active:hover  {
     background-color: #fff;
@@ -2129,6 +2163,8 @@ p.tab-section-status.pending {
     border-color: #9B63A8;
 }
 
+
+
 .tab-content.user-profile-tab-content .tab-section .card-list {
     padding-left: 0;
     margin-top: 1.5rem;
@@ -2146,6 +2182,10 @@ p.tab-section-status.pending {
     margin-bottom: 1rem;
 }
 
+.tab-content.user-profile-tab-content .tab-section .card-list li.notification-card {
+    cursor: pointer;
+}
+
 .tab-content.user-profile-tab-content .tab-section .card-list li h4 {
     font-size: 1.2rem;
 }
@@ -2157,6 +2197,19 @@ p.tab-section-status.pending {
 
 .tab-content.user-profile-tab-content .tab-section .card-list li .text-preview {
     font-size: 1.2rem;
+}
+
+.tab-content.user-profile-tab-content .tab-section .card-list li .notification-details i {
+    color: #9B63A8;
+    border-radius: 50%;
+    padding: 0.5rem;
+}
+
+.tab-content.user-profile-tab-content .tab-section .card-list li .notification-details span {
+    display: inline-block;
+    border-left: 1px solid #a6a6a6;
+    padding-left: 0.8rem;
+    color: #c1c1c1;
 }
 
 /* ======== FOOTER ======== */
@@ -2351,6 +2404,7 @@ footer .footer-base {
 
 footer .footer-base p {
     padding: 1rem 0;
+    margin-bottom: 0;
 }
 
 /* ======== SAWALIRAM_AUTH ======== */
