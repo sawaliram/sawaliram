@@ -19,15 +19,25 @@
         <div class="answer-text">
             {{ answer.answer_text|safe }}
         </div>
-        {% if request.user != answer.answered_by %}
-        <form action="{% url 'dashboard:approve-answer' question_id=question.id answer_id=answer.id %}" method="POST">
-            {% csrf_token %}
-            <p class="publish-info-text">
-                If you think this answer is complete and adequately answers the question, click the 'Publish' button to publish the answer. If you believe the answer can be improved, leave a comment on the right side.
-            </p>
-            <button type="submit" class="btn btn-primary btn-block">Publish</button>
-        </form>
-		{% endif %}
+        {% if answer.approved_by %}
+            <p class="published-text"><i class="far fa-check-circle"></i> Published by <b>{{ answer.approved_by.get_full_name }}</b></p>
+        {% else %}
+            {% if request.user != answer.answered_by %}
+                <form action="{% url 'dashboard:approve-answer' question_id=question.id answer_id=answer.id %}" method="POST">
+                    {% csrf_token %}
+                    <p class="publish-info-text">
+                        If you think this answer is complete and adequately answers the question, click the 'Publish' button to publish the answer. If you believe the answer can be improved, leave a comment on the right side.
+                    </p>
+                    <button type="submit" class="btn btn-primary btn-block">Publish</button>
+                </form>
+            {% else %}
+                <form action="{% url 'dashboard:submit-answer' question_id=question.id %}" method="GET">
+                    <input type="hidden" name="answer-text" value="{{ answer.answer_text }}">
+                    <input type="hidden" name="mode" value="edit">
+                    <button type="submit" class="btn btn-primary btn-block">Edit Answer</button>
+                </form>
+            {% endif %}
+        {% endif %}
     </div>
     <div class="comment-area">
         <h2>Comments</h2>

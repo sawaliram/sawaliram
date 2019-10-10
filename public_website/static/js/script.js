@@ -369,6 +369,12 @@ function enableLinkingtoTabs() {
     });
 }
 
+function setupViewNotification() {
+    $('.notification-card').click(function() {
+        $(this).children('.view-notification-form').submit();
+    });
+}
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
@@ -418,4 +424,8 @@ if (
     setupSearchResultsFilter();
     setupSearchResultsClearAll();
     setupBookmarkContentFunctionality();
+}
+
+if (window.location.pathname.includes('/user/')) {
+    setupViewNotification();
 }

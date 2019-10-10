@@ -72,7 +72,7 @@
 		{% csrf_token %}
 	
 		<div id="editor" data-placeholder="Type your answer here...">
-			{{ draft_answer.answer_text|safe }}
+			{{ draft_answer|safe }}
 		</div>
 	
 		<div id="toolbar" class="justify-content-end">
@@ -103,7 +103,7 @@
 		<div id="submitbar">
 			<input type="hidden" name="question_id" value="{{ question.id }}">
 			<input type="hidden" name="rich-text-content" value="" />
-			<button type="submit" name="mode" value="submit" class="btn btn-primary">Submit Answer</button>
+			<button type="submit" name="mode" value="{{ submission_mode }}" class="btn btn-primary">Submit Answer</button>
 			<button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
 		</div>
 	</form>

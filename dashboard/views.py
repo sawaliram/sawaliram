@@ -2,7 +2,6 @@
 
 import random
 import os
-import urllib
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -19,7 +18,7 @@ from django.core.exceptions import (
     ObjectDoesNotExist,
     PermissionDenied,
 )
-from django.core.paginator import Paginator
+from django.urls import reverse
 
 from sawaliram_auth.decorators import volunteer_permission_required
 from dashboard.models import (
@@ -30,9 +29,8 @@ from dashboard.models import (
     AnswerComment,
     UnencodedSubmission,
     Dataset)
-from sawaliram_auth.models import Bookmark
+from sawaliram_auth.models import Notification, User
 from public_website.views import SearchView
-# from public_website import view as public_view
 
 import pandas as pd
 from pprint import pprint
@@ -526,16 +524,21 @@ class SubmitAnswerView(View):
             'enable_breadcrumbs': 'Yes',
             'page_title': 'Submit Answer',
             'prev_item_id': prev_item_id,
-            'next_item_id': next_item_id
+            'next_item_id': next_item_id,
+            'submission_mode': 'submit'
         }
 
         # Prefill draft answer, if any
         try:
             context['draft_answer'] = request.user.draft_answers.get(
-                question_id=question_to_answer)
-
+                question_id=question_to_answer).answer_text
         except AnswerDraft.DoesNotExist:
             pass
+
+        # Prefill current answer if in edit mode
+        if request.GET.get('mode') == 'edit':
+            context['draft_answer'] = request.GET.get('answer-text')
+            context['submission_mode'] = 'edit'
 
         return render(request, 'dashboard/submit-answer.html', context)
 
@@ -562,7 +565,6 @@ class SubmitAnswerView(View):
             'page_title': 'Submit Answer',
         }
 
-        # TODO allow saving of drafts
         if request.POST.get('mode') == 'draft':
             # Save draft
 
@@ -590,7 +592,7 @@ class SubmitAnswerView(View):
             # Submit answer
 
             # Create new answer object
-            answer = request.user.submitted_answers.create(
+            answer, created = request.user.submitted_answers.get_or_create(
                 question_id=question_to_answer)
 
             # Save new answer
@@ -599,15 +601,39 @@ class SubmitAnswerView(View):
 
             # Delete draft, if any
             try:
-                draft =  request.user.draft_answers.get(
+                draft = request.user.draft_answers.get(
                     question_id=question_to_answer).delete()
             except AnswerDraft.DoesNotExist:
                 # No drafts to delete
                 pass
 
-            # Congratulate the user
-            messages.success(request, ('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!'))
+            # show message to the user
+            if request.POST.get('mode') == 'edit':
+                messages.success(request, ('Your answer has been updated!'))
+            else:
+                messages.success(request, ('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!'))
 
+            # create notifications for users who commented on the answer
+            commentor_id_list = list(AnswerComment.objects
+                                                  .filter(answer=answer.id)
+                                                  .values_list('author')
+                                                  .distinct('author'))
+            for commentor_id in commentor_id_list:
+                if question_to_answer.question_language.lower() != 'english':
+                    question_text = question_to_answer.question_text_english
+                else:
+                    question_text = question_to_answer.question_text
+
+                edit_notification = Notification(
+                    notification_type='updated',
+                    title_text=str(request.user.get_full_name()) + ' updated their answer',
+                    description_text="You commented on an answer for question '" + question_text + "'",
+                    target_url=reverse('dashboard:review-answer', kwargs={'question_id': question_to_answer.id, 'answer_id': answer.id}),
+                    user=User.objects.get(pk=max(commentor_id))
+                )
+                edit_notification.save()
+
+            # get next/prev items
             if next_item_id:
                 context['prev_item_id'] = prev_item_id
                 context['next_item_id'] = next_item_id
@@ -653,16 +679,17 @@ class ApproveAnswerView(View):
         Redirect to ReviewAnswerView
         """
 
-        return redirect('dashboard:review-answer',
+        return redirect(
+            'dashboard:review-answer',
             question_id=question_id,
             answer_id=answer_id)
 
     def post(self, request, question_id, answer_id):
         """Mark the answer as approved"""
 
-
         try:
-            answer = Answer.objects.get(pk=answer_id,
+            answer = Answer.objects.get(
+                pk=answer_id,
                 approved_by__isnull=True)
         except Answer.DoesNotExist:
             raise Http404('Answer does not exist')
@@ -671,12 +698,55 @@ class ApproveAnswerView(View):
             raise PermissionDenied('You cannot approve your own answer')
 
         if request.method != 'POST':
-            return redirect('dashboard:review-answer',
+            return redirect(
+                'dashboard:review-answer',
                 question_id=question_id,
                 answer_id=answer_id)
 
         answer.approved_by = request.user
         answer.save()
+
+        messages.success(request, ('Thanks ' + request.user.first_name + ' for publishing the answer, it will now be visible to all users'))
+
+        question_answered = Question.objects.get(pk=question_id)
+
+        # create notification for user who submitted the answer
+        if question_answered.question_language.lower() != 'english':
+            question_text = question_answered.question_text_english
+        else:
+            question_text = question_answered.question_text
+
+        published_notification = Notification(
+            notification_type='published',
+            title_text=str(request.user.get_full_name()) + ' published your answer',
+            description_text="Your answer for question '" + question_text + "'",
+            target_url=reverse('dashboard:review-answer', kwargs={'question_id': question_answered.id, 'answer_id': answer.id}),
+            user=answer.answered_by
+        )
+        published_notification.save()
+
+        # create notifications for users who commented on the answer
+        commentor_id_list = list(AnswerComment.objects
+                                              .filter(answer=answer.id)
+                                              .values_list('author')
+                                              .distinct('author'))
+        for commentor_id in commentor_id_list:
+            # do not create notification for the user who is publishing
+            # the answer
+            if max(commentor_id) != request.user.id:
+                if question_answered.question_language.lower() != 'english':
+                    question_text = question_answered.question_text_english
+                else:
+                    question_text = question_answered.question_text
+
+                published_notification = Notification(
+                    notification_type='published',
+                    title_text=str(request.user.get_full_name()) + ' published ' + answer.answered_by.first_name + "'s answer",
+                    description_text="You commented on an answer for question '" + question_text + "'",
+                    target_url=reverse('dashboard:review-answer', kwargs={'question_id': question_answered.id, 'answer_id': answer.id}),
+                    user=User.objects.get(pk=max(commentor_id))
+                )
+                published_notification.save()
 
         return redirect('dashboard:review-answers')
 
@@ -745,12 +815,31 @@ class AnswerCommentView(View):
         comment.text = request.POST['comment-text']
         comment.answer = answer
         comment.author = request.user
-
         comment.save()
 
-        return redirect('dashboard:review-answer',
+        # create notification
+        if answer.answered_by.id != request.user.id:
+            answered_question = Question.objects.get(pk=question_id)
+            if answered_question.question_language.lower() != 'english':
+                question_text = answered_question.question_text_english
+            else:
+                question_text = answered_question.question_text
+
+            comment_notification = Notification(
+                notification_type='comment',
+                title_text=str(request.user.get_full_name()) + ' left a comment on your answer',
+                description_text="On your answer for the question '" + question_text + "'",
+                target_url=reverse('dashboard:review-answer', kwargs={'question_id':question_id, 'answer_id':answer_id}),
+                user=answer.answered_by
+            )
+            comment_notification.save()
+
+        return redirect(
+            'dashboard:review-answer',
             question_id=question_id,
-            answer_id=answer_id)
+            answer_id=answer_id
+            )
+
 
 class AnswerCommentDeleteView(View):
 

@@ -5,13 +5,13 @@ from django.views import View
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password, make_password
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.urls import resolve
 
 from dashboard.models import AnswerDraft, Dataset, Answer, Question
-from sawaliram_auth.models import User, Bookmark
-# from dashboard.views import ViewQuestionsView
+from sawaliram_auth.models import User, Bookmark, Notification
 
 import random
 import urllib
@@ -204,12 +204,14 @@ class UserProfileView(View):
             submitted_answers = Answer.objects.filter(answered_by=user_id)
             bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
             bookmarked_articles = selected_user.bookmarks.filter(content_type='article')
+            notifications = Notification.objects.filter(user=user_id)
             context = {
                 'dashboard': 'False',
                 'page_title': selected_user.first_name + "'s Profile",
                 'enable_breadcrumbs': 'Yes',
                 'selected_user': selected_user,
                 'answer_drafts': answer_drafts,
+                'notifications': notifications,
                 'submitted_questions': submitted_questions,
                 'submitted_answers': submitted_answers,
                 'bookmarked_questions': bookmarked_questions,
@@ -244,6 +246,17 @@ class UserProfileView(View):
                 messages.error(request, ('The password you entered is incorrect'))
 
         return redirect('public_website:user-profile', user_id=request.user.id)
+
+
+class ViewNotification(View):
+    """
+    Define the view to delete notification and redirect to target_url
+    """
+    def post(self, request):
+        clicked_notification = Notification.objects.get(pk=request.POST.get('notification-id'))
+        clicked_notification.delete()
+
+        return redirect(request.POST.get('target-url'))
 
 
 class GetInvolvedView(View):

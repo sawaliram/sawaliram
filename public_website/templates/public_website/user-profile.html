@@ -40,6 +40,9 @@
             <a class="nav-item nav-link" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="true">
                 <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="User Notifications">
                 Notifications
+                {% if request.user.notifications.all|length > 0 %}
+                    <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
+                {% endif %}
             </a>
             {% endif %}
             <a class="nav-item nav-link {% if request.user.id != selected_user.id %}active{% endif%}" data-toggle="tab" href="#submissions" role="tab" aria-controls="submissions" aria-selected="true">
@@ -109,9 +112,41 @@
             {% endif %}
         </div>
         <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications">
+            {% if notifications %}
+            <div class="tab-section">
+                <ul class="card-list">
+                    {% for notification in notifications %}
+                    <li class="notification-card">
+                        <h4>
+                        {{ notification.title_text }}
+                        </h4>
+                        <p class="tab-section-intro">
+                            {{ notification.description_text }}
+                        </p>
+                        <div class="notification-details">
+                            {% if notification.notification_type == 'comment' %}
+                                <i class="fas fa-comments"></i>
+                            {% elif notification.notification_type == 'published' %}
+                                <i class="fas fa-check-circle"></i>
+                            {% elif notification.notification_type == 'updated' %}
+                                <i class="fas fa-edit"></i>
+                            {% endif %}
+                            <span>{{ notification.created_on|date:"j F, Y" }}</span>
+                        </div>
+                        <form action="{% url 'public_website:view-notification' %}" class="view-notification-form" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="notification-id" value="{{ notification.id }}">
+                            <input type="hidden" name="target-url" value="{{ notification.target_url }}">
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% else %}
             <div class="empty-tab">
                 <h3><i class="far fa-meh"></i> No notifications</h3>
             </div>
+            {% endif %}
         </div>
         {% endif %}
         <div class="tab-pane fade {% if request.user.id != selected_user.id %}show active{% endif %}" id="submissions" role="tabpanel" aria-labelledby="submissions">

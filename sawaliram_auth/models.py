@@ -119,7 +119,7 @@ class Notification(models.Model):
 
     notification_type = models.CharField(max_length=50)
     title_text = models.CharField(max_length=50)
-    description_text = models.CharField(max_length=100)
+    description_text = models.CharField(max_length=500)
     target_url = models.CharField(max_length=50)
     user = models.ForeignKey(
         'sawaliram_auth.User',
@@ -127,4 +127,3 @@ class Notification(models.Model):
         on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-
