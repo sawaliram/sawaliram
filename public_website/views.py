@@ -134,7 +134,8 @@ class SearchView(View):
         if subjects_to_filter_by:
             result = result.filter(field_of_interest__in=subjects_to_filter_by)
 
-        states_to_filter_by = request.GET.getlist('state')
+        states_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('state')]
+        pprint(states_to_filter_by)
         if states_to_filter_by:
             result = result.filter(state__in=states_to_filter_by)
 
