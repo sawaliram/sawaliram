@@ -1922,6 +1922,10 @@ button.deny-access {
     margin-bottom: 1.5rem;
 }
 
+.review-page-container .answer-area .answer-text img {
+    width: 100%;
+}
+
 .review-page-container .answer-area .publish-info-text {
     color: #8c8c8c;
 }
