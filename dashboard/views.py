@@ -720,7 +720,7 @@ class ApproveAnswerView(View):
             notification_type='published',
             title_text=str(request.user.get_full_name()) + ' published your answer',
             description_text="Your answer for question '" + question_text + "'",
-            target_url=reverse('dashboard:review-answer', kwargs={'question_id': question_answered.id, 'answer_id': answer.id}),
+            target_url=reverse('public_website:view-answer', kwargs={'question_id': question_answered.id, 'answer_id': answer.id}),
             user=answer.answered_by
         )
         published_notification.save()
