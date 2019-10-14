@@ -1925,6 +1925,7 @@ button.deny-access {
     padding: 1rem 0;
     padding-bottom: 0;
     margin-bottom: 1.5rem;
+    text-align: justify;
 }
 
 .review-page-container .answer-area .answer-text img {
