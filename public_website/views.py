@@ -7,11 +7,14 @@ from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password, make_password
 from django.http import Http404
 from django.db.models import Q
+from django.db.models.query import QuerySet
 from django.core.paginator import Paginator
-from django.urls import resolve
+from django.urls import reverse
+from django.core.exceptions import PermissionDenied
 
 from dashboard.models import AnswerDraft, Dataset, Answer, Question
 from sawaliram_auth.models import User, Bookmark, Notification
+from public_website.models import AnswerUserComment
 
 import random
 import urllib
@@ -37,15 +40,19 @@ class HomeView(View):
 class SearchView(View):
     def get_queryset(self, request):
         if 'q' in request.GET:
-            return Question.objects \
-                    .filter(
-                        Q(question_text__icontains=request.GET.get('q')) |
-                        Q(question_text_english__icontains=request.GET.get('q')) |
-                        Q(school__icontains=request.GET.get('q')) |
-                        Q(area__icontains=request.GET.get('q')) |
-                        Q(state__icontains=request.GET.get('q')) |
-                        Q(field_of_interest__icontains=request.GET.get('q'))
-                    )
+            if 'category' in request.GET and request.GET.get('category') == 'questions':
+                return Question.objects \
+                        .filter(
+                            Q(question_text__icontains=request.GET.get('q')) |
+                            Q(question_text_english__icontains=request.GET.get('q')) |
+                            Q(school__icontains=request.GET.get('q')) |
+                            Q(area__icontains=request.GET.get('q')) |
+                            Q(state__icontains=request.GET.get('q')) |
+                            Q(field_of_interest__icontains=request.GET.get('q'))
+                        )
+            else:
+                # return an arbitrary empty queryset
+                return Question.objects.none()
         else:
             return Question.objects.all()
 
@@ -107,10 +114,31 @@ class SearchView(View):
             'Technology & Applied Science',
         ]
 
+        # TODO: Generalise the category filter
+        question_categories = []
+        if 'questions' in request.GET:
+            question_categories = request.GET.getlist('questions')
+
+            questions_queryset = []
+
+            if 'answered' in question_categories:
+                answered_questions = result.filter(answers__approved_by__isnull=False)
+                questions_queryset = answered_questions
+
+            if 'unanswered' in question_categories:
+                unanswered_questions = result.filter(answers__approved_by__isnull=True)
+                if type(questions_queryset) is QuerySet:
+                    questions_queryset = questions_queryset | unanswered_questions
+                else:
+                    questions_queryset = unanswered_questions
+
+            result = questions_queryset
+
         available_subjects = list(result.order_by()
                                         .values_list('field_of_interest', flat=True)
                                         .distinct('field_of_interest')
                                         .values_list('field_of_interest'))
+
         # convert list of tuples to list of strings
         available_subjects = [''.join(item) for item in available_subjects]
 
@@ -135,7 +163,6 @@ class SearchView(View):
             result = result.filter(field_of_interest__in=subjects_to_filter_by)
 
         states_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('state')]
-        pprint(states_to_filter_by)
         if states_to_filter_by:
             result = result.filter(state__in=states_to_filter_by)
 
@@ -188,9 +215,121 @@ class SearchView(View):
             'languages_to_filter_by': languages_to_filter_by,
             'bookmarks': bookmarks,
             'search_query': self.get_search_query(request),
-            'sort_by': sort_by
+            'sort_by': sort_by,
+            'question_categories': question_categories
         }
+
+        # create list of active categories
+        if page_title == 'Search':
+            active_categories = request.GET.getlist('category')
+            context['active_categories'] = active_categories
         return render(request, self.get_template(request), context)
+
+
+class ViewAnswer(View):
+    def get(self, request, question_id, answer_id):
+        question = Question.objects.get(pk=question_id)
+        answer = Answer.objects.get(pk=answer_id)
+
+        context = {
+            'dashboard': 'False',
+            'page_title': 'View Answer',
+            'question': question,
+            'answer': answer,
+            'comments': answer.user_comments.all(),
+            'grey_background': 'True'
+        }
+
+        return render(request, 'public_website/view-answer.html', context)
+
+
+class SubmitUserCommentOnAnswer(View):
+    def post(self, request, question_id, answer_id):
+        """
+        Save the submitted user comment to a particular answer
+        """
+        try:
+            answer = Answer.objects.get(pk=answer_id)
+        except Answer.DoesNotExist:
+            raise Http404('Answer does not exist')
+
+        comment = AnswerUserComment()
+        comment.text = request.POST['comment-text']
+        comment.answer = answer
+        comment.author = request.user
+        comment.save()
+
+        # create notification
+        if answer.answered_by.id != request.user.id:
+            answered_question = Question.objects.get(pk=question_id)
+            if answered_question.question_language.lower() != 'english':
+                question_text = answered_question.question_text_english
+            else:
+                question_text = answered_question.question_text
+
+            comment_notification = Notification(
+                notification_type='comment',
+                title_text=str(request.user.get_full_name()) + ' left a comment on your answer',
+                description_text="On your answer for the question '" + question_text + "'",
+                target_url=reverse('public_website:view-answer', kwargs={'question_id': question_id, 'answer_id': answer_id}),
+                user=answer.answered_by
+            )
+            comment_notification.save()
+
+        return redirect(
+            'public_website:view-answer',
+            question_id=question_id,
+            answer_id=answer_id
+        )
+
+
+class DeleteUserCommentOnAnswer(View):
+    def fetch_comment(self, question_id, answer_id, comment_id):
+        """
+        Return selected comment
+        """
+
+        try:
+            answer = Answer.objects.get(pk=answer_id)
+        except Answer.DoesNotexist:
+            raise Http404('Answer does not exist')
+
+        try:
+            comment = answer.user_comments.get(pk=comment_id)
+        except AnswerUserComment.DoesNotExist:
+            raise Http404('No matching comment')
+
+        return comment
+
+    def get(self, request, question_id, answer_id, comment_id):
+        """
+        Confirm whether to delete a comment or not
+        """
+
+        comment = self.fetch_comment(question_id, answer_id, comment_id)
+
+        context = {
+            'comment': comment,
+        }
+        return render(request, 'dashboard/answers/delete_comment.html', context)
+
+    def post(self, request, question_id, answer_id, comment_id):
+        """
+        Delete a previously published comment on an answer
+        """
+
+        comment = self.fetch_comment(question_id, answer_id, comment_id)
+
+        if request.user != comment.author:
+            raise PermissionDenied('You are not authorised to delete that comment.')
+
+        comment.delete()
+
+        return redirect(
+            'public_website:view-answer',
+            question_id=question_id,
+            answer_id=answer_id
+        )
 
 
 class UserProfileView(View):

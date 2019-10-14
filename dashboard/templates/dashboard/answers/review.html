@@ -41,6 +41,11 @@
     </div>
     <div class="comment-area">
         <h2>Comments</h2>
+        <form action="{% url 'dashboard:submit-answer-comment' question.id answer.id %}" method="POST">
+            {% csrf_token %}
+            <textarea name="comment-text" rows="4" placeholder="Join the conversation"></textarea>
+            <button type="submit" class="btn btn-secondary">Add Comment</button>
+        </form>
         {% if comments %}
             <ul class="comment-list">
                 {% for comment in comments %}
@@ -67,11 +72,6 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <form action="{% url 'dashboard:submit-answer-comment' question.id answer.id %}" method="POST">
-            {% csrf_token %}
-            <textarea name="comment-text" rows="4" placeholder="Join the conversation"></textarea>
-            <button type="submit" class="btn btn-secondary">Add Comment</button>
-        </form>
     </div>
 </div>
 {% endwith %}
