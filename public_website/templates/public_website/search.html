@@ -14,6 +14,26 @@
             <button class="btn clear-all">Clear All</button>
         </div>
         <div class="filter-list">
+            {% if page_title == 'Search' %}
+            <div class="filter-category">
+                <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">Category</button>
+                <div class="category-options-list" id="filterCategories">
+                    <button class="btn category-option {% if 'questions' in active_categories %}active{% endif %} no-fun" data-param="category" data-value="questions">Questions</button>
+                    <button class="btn category-option" data-param="category" data-value="articles" disabled>Articles</button>
+                    <button class="btn category-option" data-param="category" data-value="research" disabled>Research</button>
+                    <button class="btn category-option" data-param="category" data-value="resources" disabled>Resources</button>
+                </div>
+            </div>
+            {% endif %}
+            {% if page_title == 'Search' or page_title == 'View Questions' %}
+            <div class="filter-category">
+                <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">Questions</button>
+                <div class="category-options-list" id="filterCategories">
+                    <button class="btn category-option {% if 'answered' in question_categories %}active{% endif %}" data-param="questions" data-value="answered">Answered</button>
+                    <button class="btn category-option {% if 'unanswered' in question_categories %}active{% endif %}" data-param="questions" data-value="unanswered">Unanswered</button>
+                </div>
+            </div>
+            {% endif %}
             <div class="filter-category">
                 <button class="btn open-filter" data-target="#filterSubjects" aria-expanded="true" aria-controls="filter-subjects">Subjects</button>
                 <div class="category-options-list" id="filterSubjects">
@@ -137,7 +157,7 @@
                             {{ result.question_asked_on|date:"j F, Y" }}
                         </span>
                     </span>
-                {% endif %}
+                    {% endif %}
                 </div>
                 {% if page_title == 'Review Answers' %}
                     {% for answer in result.answers.all %}
@@ -156,6 +176,13 @@
                         <a href="{% url 'dashboard:submit-answer' question_id=result.id %}" class="btn btn-primary">Answer</a>
                         {% endif %}
                     </div>
+                {% endif %}
+                {% if page_title == 'View Questions' or page_title == 'Search' %}
+                    {% for answer in result.answers.all %}
+                    <div class="item-context-controls">
+                        <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-primary">View Answer</a>
+                    </div>
+                    {% endfor %}
                 {% endif %}
                 {% endif %}
             </li>

@@ -185,33 +185,34 @@ function setupSearchResultsSort() {
 
 function setupSearchResultsFilter() {
     $('.category-option').click(function() {
-        var current_params = new URLSearchParams(location.search);
-
-        if ($(this).hasClass('active')) {
-            var new_params_list = []
-            for (const value of current_params.entries()) {
-                if (value[1] == $(this).data('value')) {
-                    if (value[0] != $(this).data('param')) {
+        if (!$(this).hasClass('.no-fun')) {
+            var current_params = new URLSearchParams(location.search);
+            if ($(this).hasClass('active')) {
+                var new_params_list = []
+                for (const value of current_params.entries()) {
+                    if (value[1] == $(this).data('value')) {
+                        if (value[0] != $(this).data('param')) {
+                            new_params_list.push(value);
+                        }
+                    }
+                    else {
                         new_params_list.push(value);
                     }
                 }
+                new_params = new URLSearchParams(new_params_list);
+
+                if (new_params.toString() == '') {
+                    location.href = window.location.origin + window.location.pathname + new_params.toString();
+                }
                 else {
-                    new_params_list.push(value);
+                    location.href = window.location.origin + window.location.pathname + '?' + new_params.toString();
                 }
             }
-            new_params = new URLSearchParams(new_params_list);
-
-            if (new_params.toString() == '') {
-                location.href = window.location.origin + window.location.pathname + new_params.toString();
-            }
             else {
-                location.href = window.location.origin + window.location.pathname + '?' + new_params.toString();
+                current_params.delete('page');
+                current_params.append($(this).data('param'), $(this).data('value'));
+                location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
             }
-        }
-        else {
-            current_params.delete('page');
-            current_params.append($(this).data('param'), $(this).data('value'));
-            location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
         }
     });
 }
@@ -405,6 +406,10 @@ var pattern = new RegExp("^/dashboard/question/\\d+/answers/\\d+/review")
 if (pattern.test(window.location.pathname)) {
     // setupCommentFormDisplayToggle();
     // setupCommentDeleteButtons();
+    setupDeleteReviewComment();
+}
+
+if (window.location.pathname.includes('/view-answer')) {
     setupDeleteReviewComment();
 }
 
