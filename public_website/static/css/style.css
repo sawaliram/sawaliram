@@ -1949,6 +1949,10 @@ button.deny-access {
     margin-bottom: 2rem;
 }
 
+.review-page-container .comment-area .comment-list {
+    margin-top: 2rem;
+}
+
 .comment-list {
     list-style: none;
     padding-left: 0;

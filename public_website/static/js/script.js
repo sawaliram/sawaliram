@@ -248,7 +248,9 @@ function setupQuillEditor({ placeholder = null } = {}) {
     });
 
     $('.rich-text-form').submit(function(e) {
-        $('[name="rich-text-content"]').val(quill.root.innerHTML);
+        var submitted_string = String(quill.root.innerHTML);
+        var regex = new RegExp("<p><br></p>", "g");
+        $('[name="rich-text-content"]').val(submitted_string.replace(regex, ''));
     });
 }
 
