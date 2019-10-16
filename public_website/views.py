@@ -231,13 +231,15 @@ class ViewAnswer(View):
         question = Question.objects.get(pk=question_id)
         answer = Answer.objects.get(pk=answer_id)
 
+        grey_background = 'True' if request.user.is_authenticated else 'False'
+
         context = {
             'dashboard': 'False',
             'page_title': 'View Answer',
             'question': question,
             'answer': answer,
             'comments': answer.user_comments.all(),
-            'grey_background': 'True'
+            'grey_background': grey_background
         }
 
         return render(request, 'public_website/view-answer.html', context)

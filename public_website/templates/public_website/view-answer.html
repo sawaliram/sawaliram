@@ -76,6 +76,7 @@
     </div>
 </div>
 
+{% if user.is_authenticated %}
 <div class="answer-comment-related-section">
     <div class="comments">
         <h2>Comments</h2>
@@ -115,5 +116,6 @@
 
     </div>
 </div>
+{% endif %}
 
 {% endblock %}
