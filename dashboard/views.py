@@ -197,6 +197,8 @@ class ValidateNewExcelSheet(View):
 
         if general_errors:
             file_errors['Problem(s) with the template:'] = general_errors
+            response = render(request, 'dashboard/includes/excel-validation-errors.html', {'errors': file_errors})
+            return HttpResponse(response)
 
         for index, row in excel_file.iterrows():
             row_errors = []
