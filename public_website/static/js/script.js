@@ -378,6 +378,28 @@ function setupViewNotification() {
     });
 }
 
+function setupHomePageCarouselRandomRhymes() {
+    $('#homePageCarousel').on('slide.bs.carousel', function (event) {
+        if (event.relatedTarget.classList.contains('rhyme-header')) {
+            var rhymes_list = [
+                'Leaves or Fruits or Sprouting Shoots?',
+                'Sun or Stars or Life on Mars?',
+                'Constellations or the fate of nations?',
+                'Curly tresses or yellow school buses?'
+            ]
+            var current_rhyme = $('.first-banner-text').text();
+            var available_rhymes_list = [];
+            rhymes_list.forEach(function(element) {
+                if (element != current_rhyme) {
+                    available_rhymes_list.push(element);
+                }
+            });
+            var next_rhyme = available_rhymes_list[Math.floor(Math.random() * available_rhymes_list.length)];
+            $('.first-banner-text').text(next_rhyme);
+        }
+    });
+}
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
@@ -392,6 +414,10 @@ if (window.matchMedia("(min-width: 576px)").matches) {
 }
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
+
+if (window.location.pathname == '/') {
+    setupHomePageCarouselRandomRhymes();
+}
 
 if (window.location.pathname.includes('/dashboard/question/submit') || window.location.pathname.includes('/dashboard/manage-content')) {
     disableSubmitExcelButtonOnPageLoad();
