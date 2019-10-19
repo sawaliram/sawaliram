@@ -102,16 +102,17 @@ class SearchView(View):
 
         # get values for filter
         subjects = [
-            'Chemistry',
             'Biology',
+            'Chemistry',
             'Physics',
             'Mathematics',
-            'Arts & Recreation',
             'Earth & Environment',
             'History, Philosophy & Practice of Science',
-            'Humans & Society',
-            'Language & Literature',
             'Technology & Applied Science',
+            'Humans & Society',
+            'Geography & History',
+            'Language & Literature',
+            'Arts & Recreation',
         ]
 
         # TODO: Generalise the category filter

@@ -389,6 +389,15 @@ class CurateDataset(View):
                             question,
                             column_name_mapping[column],
                             True if row[column] == 'Yes' else False)
+                    elif column == 'Field of Interest':
+                        if row[column] == 'History-Philosophy & Practice of Science':
+                            value = 'History, Philosophy & Practice of Science'
+                        else:
+                            value = row[column]
+                        setattr(
+                            question,
+                            column_name_mapping[column],
+                            value.strip() if isinstance(value, str) else value)
                     else:
                         setattr(
                             question,

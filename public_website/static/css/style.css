@@ -16,8 +16,8 @@ body.grey-background {
 @media (max-width: 576px) {
     .sawaliram-container {
         margin-top: 7rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 0;
+        padding-right: 0;
     }
 }
 
@@ -810,6 +810,7 @@ input:focus {
 
 .home-search .home-search-form {
     width: 45%;
+    display: flex;
 }
 
 @media (max-width: 576px) {
@@ -821,12 +822,23 @@ input:focus {
 }
 
 .home-search .home-search-form .home-search-field {
+    border: none;
     border-radius: 5px;
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
     border-right: none;
     padding: 1rem;
     height: 3rem;
+    margin-bottom: 0;
+}
+
+.home-search .home-search-form .home-search-submit {
+    color: #87B24D;
+    padding: 0 0.7rem;
+    border-radius: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-size: 1.4rem;
 }
 
 .home-search .home-search-form .input-group-append .input-group-text {

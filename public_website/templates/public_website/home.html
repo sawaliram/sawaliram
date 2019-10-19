@@ -49,13 +49,20 @@
 <div class="home-search-wrapper">
     <div class="home-search">
         <img class="home-search-img1" src="{% static 'illustrations/home_search1.png' %}" alt="Sawaliram Search">
-        <form class="home-search-form" action="">
+        <!-- <form class="home-search-form" action="">
             <div class="input-group">
                 <input class="home-search-field form-control" type="text" placeholder="Drop your curious questions here">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                 </div>
             </div>
+        </form> -->
+        <form action="{% url 'public_website:search' %}" class="home-search-form" method="GET">
+            <input type="hidden" name="category" value="questions">
+            <input type="hidden" name="questions" value="answered">
+            <input type="hidden" name="questions" value="unanswered">
+            <input type="text" class="home-search-field" name="q" placeholder="Drop your question here">
+            <button class="btn home-search-submit" type="submit"><i class="fas fa-search"></i></button>
         </form>
     </div>
 </div>
