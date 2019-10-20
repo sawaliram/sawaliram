@@ -14,4 +14,5 @@ urlpatterns = [
     path('question/<int:question_id>/view-answer/<int:answer_id>', views.ViewAnswer.as_view(), name='view-answer'),
     path('question/<int:question_id>/answers/<int:answer_id>/user-comment/add', views.SubmitUserCommentOnAnswer.as_view(), name='submit-user-comment-answer'),
     path('question/<int:question_id>/answers/<int:answer_id>/user-comment/<int:comment_id>/delete', views.DeleteUserCommentOnAnswer.as_view(), name='delete-user-comment-answer'),
+    path('about', views.AbputUs.as_view(), name='about'),
 ]

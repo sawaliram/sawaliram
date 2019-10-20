@@ -407,3 +407,11 @@ class GetInvolvedView(View):
             'page_title': 'Get Involved',
         }
         return render(request, 'public_website/get-involved.html', context)
+
+
+class AbputUs(View):
+    def get(self, request):
+        context = {
+            'page_title': 'About',
+        }
+        return render(request, 'public_website/about.html', context)
