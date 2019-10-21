@@ -2427,7 +2427,7 @@ p.tab-section-status.pending {
 }
 
 .research-second-section .content-wrapper div {
-    flex-basis: 55%;
+    flex-basis: 48%;
 }
 
 .research-intro-section h2,
@@ -2468,11 +2468,22 @@ p.tab-section-status.pending {
 
 .research-intro-section .research-intro-p-wrapper {
     margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+@media (max-width: 576px) {
+    .research-intro-section .research-intro-p-wrapper {
+        flex-direction: column;
+    }
+}
+
+.research-intro-section .research-intro-p-wrapper div {
+    flex-basis: 48%;
 }
 
 .research-intro-section .research-intro-p-wrapper p {
     text-align: justify;
-    width: 55%;
 }
 
 @media (max-width: 576px) {
