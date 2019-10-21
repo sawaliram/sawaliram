@@ -922,6 +922,7 @@ input:focus {
     align-items: center;
 }
 
+
 .about-wave {
     
     display: block;
@@ -933,6 +934,7 @@ input:focus {
     background-size: 100vw;
     height: calc(100vw/481*66.000568); 
 }
+
 /* ======== GET_INVOLVED_PAGE ======== */
 
 .get-involved-header {
