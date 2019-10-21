@@ -10,6 +10,7 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     path('get-involved', views.GetInvolvedView.as_view(), name='get-involved'),
     path('research', views.ResearchPage.as_view(), name='research'),
+    path('faq', views.FAQPage.as_view(), name='faq'),
     path('search', views.SearchView.as_view(), name='search'),
     path('view-notification', views.ViewNotification.as_view(), name='view-notification'),
     path('question/<int:question_id>/view-answer/<int:answer_id>', views.ViewAnswer.as_view(), name='view-answer'),

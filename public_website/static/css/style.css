@@ -2553,6 +2553,44 @@ p.tab-section-status.pending {
     margin-bottom: 2rem;
 }
 
+/* ======== FAQ ======== */
+.faq-wrapper {
+    padding: 0 2rem;
+    padding-top: 2rem;
+    width: 60%;
+    margin: auto;
+}
+
+@media (max-width: 576px) {
+    .faq-wrapper {
+        width: 100%;
+        padding: 0 1rem;
+    }
+}
+
+.faq-wrapper h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.7rem;
+}
+
+@media (max-width: 576px) {
+    .faq-wrapper h2 {
+        font-size: 1.2rem;
+    }
+}
+
+.faq-wrapper p {
+    text-align: justify;
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 576px) {
+    .faq-wrapper p {
+        margin-bottom: 2rem;
+    }
+}
+
 /* ======== FOOTER ======== */
 
 footer .footer-main {

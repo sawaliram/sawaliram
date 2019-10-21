@@ -416,3 +416,10 @@ class ResearchPage(View):
             'page_title': 'Research'
         }
         return render(request, 'public_website/research.html', context)
+
+class FAQPage(View):
+    def get(self, request):
+        context = {
+            'page_title': 'Frequently Asked Questions'
+        }
+        return render(request, 'public_website/faq.html', context)
