@@ -20,7 +20,7 @@ class SignupView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('dashboard:home')
+            return redirect('public_website:home')
         form = SignUpForm(auto_id=False)
         context = {
             'form': form
@@ -43,7 +43,7 @@ class SignupView(View):
             users.user_set.add(user)
 
             login(request, user)
-            return redirect(request.POST.get('next', 'dashboard:home'))
+            return redirect(request.POST.get('next', 'public_website:home'))
         context = {
             'form': form
         }
@@ -80,7 +80,7 @@ class SigninView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('dashboard:home')
+            return redirect('public_website:home')
         form = SignInForm(auto_id=False)
         context = {
             'form': form
@@ -96,7 +96,7 @@ class SigninView(View):
                 password=form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
-                return redirect(request.POST.get('next', 'dashboard:home'))
+                return redirect(request.POST.get('next', 'public_website:home'))
             else:
                 context = {
                     'form': form,
@@ -109,7 +109,7 @@ class SignoutView(View):
 
     def get(self, request):
         logout(request)
-        return redirect('dashboard:home')
+        return redirect('public_website:home')
 
 
 @method_decorator(login_required, name='dispatch')

@@ -29,7 +29,7 @@
                 <div class="row">
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_research.png' %}" alt="Research">
-                        <a href="javascript:void(0)">Research</a>
+                        <a href="{% url 'public_website:research' %}">Research</a>
                     </div>
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_blog.png' %}" alt="Blog">
@@ -63,15 +63,15 @@
                     </div>
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_get_involved.png' %}" alt="Get Involved">
-                        <a href="javascript:void(0)">Get Involved!</a>
+                        <a href="{% url 'public_website:get-involved' %}">Get Involved!</a>
                     </div>
                 </div>
                 <div class="row auth-buttons-area">
                     <div class="col-sm auth-button">
-                        <a href="javascript:void(0)">Login</a>
+                        <a href="{% url 'sawaliram_auth:signin' %}">Signin</a>
                     </div>
                     <div class="col-sm auth-button">
-                        <a href="javascript:void(0)">Sign Up</a>
+                        <a href="{% url 'sawaliram_auth:signup' %}">Sign Up</a>
                     </div>
                 </div>
             </div>
