@@ -2553,6 +2553,19 @@ p.tab-section-status.pending {
     margin-bottom: 2rem;
 }
 
+.bibliography-section #bibliographyList .card .card-body {
+    padding-top: 1rem; 
+}
+
+.bibliography-section #bibliographyList .card .card-body p {
+    margin-bottom: 1.5rem;
+}
+
+.bibliography-section #bibliographyList .card .card-body p a {
+    color: #9B63A8;
+    text-decoration: underline;
+}
+
 /* ======== FAQ ======== */
 .faq-wrapper {
     padding: 0 2rem;
