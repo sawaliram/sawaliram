@@ -24,7 +24,7 @@
                 <div class="carousel-text">
                     <h1 class="carousel-header">Why don't sky and stars fall on earth?</h1>
                     <p class="carousel-paragraph">Know the extent of all the questions, resources and blogs that Sawaliram has for you!</p>
-                    <button class="btn btn-yellow">View Questions</button>
+                    <a href="{% url 'public_website:search' %}" class="btn btn-yellow">View Questions</a>
                 </div>
             </div>
         </div>
@@ -49,14 +49,6 @@
 <div class="home-search-wrapper">
     <div class="home-search">
         <img class="home-search-img1" src="{% static 'illustrations/home_search1.png' %}" alt="Sawaliram Search">
-        <!-- <form class="home-search-form" action="">
-            <div class="input-group">
-                <input class="home-search-field form-control" type="text" placeholder="Drop your curious questions here">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                </div>
-            </div>
-        </form> -->
         <form action="{% url 'public_website:search' %}" class="home-search-form" method="GET">
             <input type="hidden" name="category" value="questions">
             <input type="hidden" name="questions" value="answered">
@@ -72,7 +64,7 @@
         <h2>Research</h2>
         <img src="{% static 'illustrations/home_research.png' %}">
         <p>What is curiosity really? At home and school, in the mind and in society. See what researchers find.</p>
-        <button class="btn btn-primary">Learn More</button>
+        <a href="{% url 'public_website:research' %}" class="btn btn-primary">Learn More</a>
     </div>
     <div class="col-xs-12 col-lg-4 home-page-link-item">
         <h2>Articles</h2>

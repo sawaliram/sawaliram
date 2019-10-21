@@ -975,13 +975,13 @@ input:focus {
     }   
 }
 
-#getInvolvedList .card {
+.sawaliram-accordion .card {
     border: none;
     border-top: 2px solid #D6D6D6;
     border-radius: 0;
 }
 
-#getInvolvedList .card .card-header {
+.sawaliram-accordion .card .card-header {
     background-color: #fff;
     border: none;
     padding: 1rem 0;
@@ -991,28 +991,28 @@ input:focus {
     justify-content: space-between;
 }
 
-#getInvolvedList .card .card-header h3 {
+.sawaliram-accordion .card .card-header h3 {
     font-size: 1.3rem;
     margin-bottom: 0;
 }
 
 @media (max-width: 576px) {
-    #getInvolvedList .card .card-header h3 {
+    .sawaliram-accordion .card .card-header h3 {
         font-size: 1.1rem;
     }   
 }
 
-#getInvolvedList .card .card-header i {
+.sawaliram-accordion .card .card-header i {
     color: #9B63A8;
 }
 
-#getInvolvedList .card .card-body {
+.sawaliram-accordion .card .card-body {
     padding-left: 0;
     padding-top: 0;
     width: 90%;
 }
 
-#getInvolvedList .card .card-body p {
+.sawaliram-accordion .card .card-body p {
     color: #797979;
 }
 
@@ -2376,6 +2376,181 @@ p.tab-section-status.pending {
     border-left: 1px solid #a6a6a6;
     padding-left: 0.8rem;
     color: #c1c1c1;
+}
+
+/* ======== RESEARCH PAGE ======== */
+
+.research-intro-section {
+    padding: 0 2rem;
+}
+
+@media (max-width: 576px) {
+    .research-intro-section {
+        padding: 0 1rem;
+    }
+}
+
+.research-intro-section h1 {
+    font-size: 1.7rem;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 576px) {
+    .research-intro-section h1 {
+        font-size: 1.2rem;
+        margin-bottom: 0.8rem;
+    }
+}
+
+.research-second-section {
+    background-color: #f2f2f2;
+    padding: 3rem 2rem;
+    margin-top: 3rem;
+}
+
+@media (max-width: 576px) {
+    .research-second-section {
+        margin-top: 2rem;
+        padding: 2rem 1rem;
+    }
+}
+
+.research-second-section .content-wrapper {
+    display: flex;
+}
+
+@media (max-width: 576px) {
+    .research-second-section .content-wrapper {
+        flex-direction: column;
+    }
+}
+
+.research-second-section .content-wrapper div {
+    flex-basis: 55%;
+}
+
+.research-intro-section h2,
+.research-second-section h2,
+.bibliography-section h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+@media (max-width: 576px) {
+    .research-intro-section h2,
+    .research-second-section h2,
+    .bibliography-section h2 {
+        font-size: 1rem;
+    }
+}
+
+.research-second-section h2 {
+    margin-bottom: 1.5rem;
+}
+
+.research-second-section .content-wrapper div p {
+    text-align: justify;
+}
+
+.research-second-section .content-wrapper img {
+    margin: auto;
+    width: 366px;
+    height: 240px;
+}
+
+@media (max-width: 576px) {
+    .research-second-section .content-wrapper img {
+        width: 100%;
+        margin-top: 2rem;
+    }
+}
+
+.research-intro-section .research-intro-p-wrapper {
+    margin-top: 1.5rem;
+}
+
+.research-intro-section .research-intro-p-wrapper p {
+    text-align: justify;
+    width: 55%;
+}
+
+@media (max-width: 576px) {
+    .research-intro-section .research-intro-p-wrapper p {
+        width: 100%;
+    }
+}
+
+.research-links-section {
+    width: 80%;
+    margin: 4rem auto;
+}
+
+@media (max-width: 576px) {
+    .research-links-section {
+        margin: 2rem auto;
+    }
+}
+
+.research-links-section .research-link-row {
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+}
+
+@media (max-width: 576px) {
+    .research-links-section .research-link-row {
+        flex-direction: column;
+    }
+}
+
+.research-links-section .research-link-row:first-child {
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 576px) {
+    .research-links-section .research-link-row:first-child {
+        margin-bottom: 0;
+    }
+}
+
+.research-links-section .research-link-row a {
+    background-color:#87B24D;
+    color:#fff;
+    padding: 1.5rem;
+    font-size: 1.2rem;
+    flex-basis: 45%;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+} 
+
+@media (max-width: 576px) {
+    .research-links-section .research-link-row a {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+}
+
+.research-links-section .research-link-row a i {
+    float: right;
+}
+
+@media (max-width: 576px) {
+    .research-links-section .research-link-row a i {
+        float: none;
+        display: inline-block;
+        margin-left: 0.5rem;
+        font-size: 0.8rem;
+    }
+}
+
+.bibliography-section {
+    width: 80%;
+    margin: auto;
+}
+
+.bibliography-section h2 {
+    margin-bottom: 2rem;
 }
 
 /* ======== FOOTER ======== */

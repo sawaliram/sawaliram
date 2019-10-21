@@ -408,3 +408,11 @@ class GetInvolvedView(View):
             'page_title': 'Get Involved',
         }
         return render(request, 'public_website/get-involved.html', context)
+
+
+class ResearchPage(View):
+    def get(self, request):
+        context = {
+            'page_title': 'Research'
+        }
+        return render(request, 'public_website/research.html', context)
