@@ -102,16 +102,17 @@ class SearchView(View):
 
         # get values for filter
         subjects = [
-            'Chemistry',
             'Biology',
+            'Chemistry',
             'Physics',
             'Mathematics',
-            'Arts & Recreation',
             'Earth & Environment',
             'History, Philosophy & Practice of Science',
-            'Humans & Society',
-            'Language & Literature',
             'Technology & Applied Science',
+            'Humans & Society',
+            'Geography & History',
+            'Language & Literature',
+            'Arts & Recreation',
         ]
 
         # TODO: Generalise the category filter
@@ -415,3 +416,16 @@ class AbputUs(View):
             'page_title': 'About',
         }
         return render(request, 'public_website/about.html', context)
+class ResearchPage(View):
+    def get(self, request):
+        context = {
+            'page_title': 'Research'
+        }
+        return render(request, 'public_website/research.html', context)
+
+class FAQPage(View):
+    def get(self, request):
+        context = {
+            'page_title': 'Frequently Asked Questions'
+        }
+        return render(request, 'public_website/faq.html', context)
