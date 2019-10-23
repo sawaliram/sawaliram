@@ -925,6 +925,10 @@ input:focus {
     width: 80%;
     margin: auto;
     align-items: left;
+}
+
+.about-header h2{
+    font-weight: bold;
 }@media (max-width: 576px) {
     .about-header h2 {
         margin-top: 1rem;
@@ -953,6 +957,14 @@ input:focus {
     .about-content-second-section {
         margin-top: 2rem;
         padding: 2rem 1rem;
+    }
+}
+
+.about-content-second-section h2{
+    font-weight: bold;
+}@media (max-width: 576px) {
+    .about-content-second-section h2 {
+        font-size: 1.2rem;
     }
 }
 
