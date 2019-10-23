@@ -382,10 +382,11 @@ function setupHomePageCarouselRandomRhymes() {
     $('#homePageCarousel').on('slide.bs.carousel', function (event) {
         if (event.relatedTarget.classList.contains('rhyme-header')) {
             var rhymes_list = [
-                'Leaves or Fruits or Sprouting Shoots?',
-                'Sun or Stars or Life on Mars?',
+                'Leaves or fruits or sprouting shoots?',
+                'Sun or stars or life on Mars?',
                 'Constellations or the fate of nations?',
-                'Curly tresses or yellow school buses?'
+                'Curly tresses or yellow school buses?',
+                'Birds in the sky or a firefly?'
             ]
             var current_rhyme = $('.first-banner-text').text();
             var available_rhymes_list = [];

@@ -730,9 +730,12 @@ input:focus {
 
 #homePageCarousel .carousel-content  {
     display: flex;
+    justify-content: center;
+}
+
+#homePageCarousel .carousel-content  .carousel-content-wrapper {
+    display: flex;
     align-items: center;
-    width: 80%;
-    margin: auto;
 }
 
 #homePageCarousel .carousel-content img {
