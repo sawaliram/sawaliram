@@ -1577,7 +1577,7 @@ h1.dashboard-home-greeting {
 @media (min-width: 1450px) {
     .search-container .search-results {
         width: 65%;
-        margin: auto;
+        margin: 0 auto;
     }
 }
 
