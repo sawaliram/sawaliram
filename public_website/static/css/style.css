@@ -1699,6 +1699,11 @@ h1.dashboard-home-greeting {
     font-size: 1rem;
 }
 
+.search-container .search-results ul.search-results-list li.search-result-item .answer-preview .review-answer-controls {
+    display: flex;
+    justify-content: end;
+}
+
 @media (max-width: 576px) {
     .search-container .search-results ul.search-results-list li.search-result-item .item-title {
         font-size: 1.3rem;
