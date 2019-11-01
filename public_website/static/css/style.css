@@ -205,6 +205,11 @@ input:focus {
     text-decoration: none;
 }
 
+.btn-small {
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+}
+
 .link-secondary {
     color: #9B63A8
 }
@@ -1668,6 +1673,12 @@ h1.dashboard-home-greeting {
     color: #87B24D;
 }
 
+.search-container .search-results ul.search-results-list li.search-result-item .search-result-item-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .search-container .search-results ul.search-results-list li.search-result-item .item-title {
     color: #000;
     font-size: 1.5rem;
@@ -1679,10 +1690,6 @@ h1.dashboard-home-greeting {
     color: #707070;
 }
 
-.search-container .search-results ul.search-results-list li.search-result-item .item-meta {
-    margin-top: 1rem;
-}
-
 .search-container .search-results ul.search-results-list li.search-result-item .answer-preview {
     margin-top: 2rem;
     color: #707070;
@@ -1690,12 +1697,6 @@ h1.dashboard-home-greeting {
 
 .search-container .search-results ul.search-results-list li.search-result-item .answer-preview h4 {
     font-size: 1rem;
-}
-
-.search-container .search-results ul.search-results-list li.search-result-item .item-context-controls {
-    display: flex;
-    justify-content: end;
-    margin-top: 1rem;
 }
 
 @media (max-width: 576px) {
@@ -1713,6 +1714,10 @@ h1.dashboard-home-greeting {
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta:not(:last-child),
 .answer-section .question-and-meta .meta-section .highlighted-meta:not(:last-child) {
     margin-right: 0.8rem;
+}
+
+.search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta {
+    margin-top: 1rem;
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta,

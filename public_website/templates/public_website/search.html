@@ -114,49 +114,74 @@
                     {{ result.question_text_english }}
                 </h4>
                 {% endif %}
-                {% if result.school or result.state or result.area or result.question_asked_on %}
-                <div class="item-meta">
-                    {% if result.school %}
-                    <span class="highlighted-meta">
-                        <i class="fas fa-university"></i>
-                        <span class="meta-value">
-                            {{ result.school }}
-                            {% if result.curriculum_followed %}
-                                ({{ result.curriculum_followed }})
+                <div class="search-result-item-content">
+                    {% if result.school or result.state or result.area or result.question_asked_on or result.published_source %}
+                    <div class="item-meta">
+                        {% if result.published == True and result.published_source %}
+                        <span class="highlighted-meta">
+                            <i class="fas fa-book"></i>
+                            <span class="meta-value">
+                                {{ result.published_source }}
+                            </span>
+                        </span>
+                        {% endif %}
+                        {% if result.school %}
+                        <span class="highlighted-meta">
+                            <i class="fas fa-university"></i>
+                            <span class="meta-value">
+                                {{ result.school }}
+                                {% if result.curriculum_followed %}
+                                    ({{ result.curriculum_followed }})
+                                {% endif %}
+                            </span>
+                        </span>
+                        {% endif %}
+
+                        {% if result.area or result.state %}
+                        <span class="highlighted-meta">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span class="meta-value">
+                                {% if result.area %}
+                                    {{ result.area.rstrip }} {% if result.state %}, {{ result.state }} {% endif %}
+                                {% elif result.state %}
+                                    {{ result.state }}
+                                {% endif %}
+                            </span>    
+                        </span>
+                        {% endif %}
+
+                        {% if result.student_class %}
+                        <span class="highlighted-meta">
+                            <i class="fas fa-user-graduate"></i>
+                            <span class="meta-value">
+                                Class {{ result.student_class }}
+                            </span>
+                        </span>
+                        {% endif %}
+
+                        {% if result.question_asked_on %}
+                        <span class="highlighted-meta">
+                            <i class="far fa-calendar-alt"></i>
+                            <span class="meta-value">
+                                {{ result.question_asked_on|date:"j F, Y" }}
+                            </span>
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% if page_title == 'Answer Questions' %}
+                        <div class="item-context-controls">
+                            {% if page_title == 'Answer Questions' %}
+                            <a href="{% url 'dashboard:submit-answer' question_id=result.id %}" class="btn btn-small btn-primary">Answer</a>
                             {% endif %}
-                        </span>
-                    </span>
+                        </div>
                     {% endif %}
-
-                    {% if result.area or result.state %}
-                    <span class="highlighted-meta">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span class="meta-value">
-                            {% if result.area %}
-                                {{ result.area.rstrip }} {% if result.state %}, {{ result.state }} {% endif %}
-                            {% elif result.state %}
-                                {{ result.state }}
-                            {% endif %}
-                        </span>    
-                    </span>
-                    {% endif %}
-
-                    {% if result.student_class %}
-                    <span class="highlighted-meta">
-                        <i class="fas fa-user-graduate"></i>
-                        <span class="meta-value">
-                            Class {{ result.student_class }}
-                        </span>
-                    </span>
-                    {% endif %}
-
-                    {% if result.question_asked_on %}
-                    <span class="highlighted-meta">
-                        <i class="far fa-calendar-alt"></i>
-                        <span class="meta-value">
-                            {{ result.question_asked_on|date:"j F, Y" }}
-                        </span>
-                    </span>
+                    {% if page_title == 'View Questions' or page_title == 'Search' %}
+                        {% for answer in result.answers.all %}
+                        <div class="item-context-controls">
+                            <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">View Answer</a>
+                        </div>
+                        {% endfor %}
                     {% endif %}
                 </div>
                 {% if page_title == 'Review Answers' %}
@@ -169,21 +194,6 @@
                         </div>
                     </div>
                     {% endfor %}
-                {% endif %}
-                {% if page_title == 'Answer Questions' %}
-                    <div class="item-context-controls">
-                        {% if page_title == 'Answer Questions' %}
-                        <a href="{% url 'dashboard:submit-answer' question_id=result.id %}" class="btn btn-primary">Answer</a>
-                        {% endif %}
-                    </div>
-                {% endif %}
-                {% if page_title == 'View Questions' or page_title == 'Search' %}
-                    {% for answer in result.answers.all %}
-                    <div class="item-context-controls">
-                        <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-primary">View Answer</a>
-                    </div>
-                    {% endfor %}
-                {% endif %}
                 {% endif %}
             </li>
             {% endfor %}

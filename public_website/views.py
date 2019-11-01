@@ -49,7 +49,8 @@ class SearchView(View):
                             Q(school__icontains=request.GET.get('q')) |
                             Q(area__icontains=request.GET.get('q')) |
                             Q(state__icontains=request.GET.get('q')) |
-                            Q(field_of_interest__icontains=request.GET.get('q'))
+                            Q(field_of_interest__icontains=request.GET.get('q')) |
+                            Q(published_source__icontains=request.GET.get('q'))
                         )
             else:
                 # return an arbitrary empty queryset
