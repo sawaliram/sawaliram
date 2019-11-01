@@ -178,9 +178,11 @@
                     {% endif %}
                     {% if page_title == 'View Questions' or page_title == 'Search' %}
                         {% for answer in result.answers.all %}
-                        <div class="item-context-controls">
-                            <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">View Answer</a>
-                        </div>
+                        {% if answer.approved_by %}
+                            <div class="item-context-controls">
+                                <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">View Answer</a>
+                            </div>
+                        {% endif %}
                         {% endfor %}
                     {% endif %}
                 </div>
