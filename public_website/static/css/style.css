@@ -743,6 +743,12 @@ input:focus {
     align-items: center;
 }
 
+@media (max-width: 576px) {
+    #homePageCarousel .carousel-content  .carousel-content-wrapper {
+        flex-direction: column;
+    }
+}
+
 #homePageCarousel .carousel-content img {
     height: 540px;
     width: 540px;
@@ -750,8 +756,8 @@ input:focus {
 
 @media (max-width: 576px) {
     #homePageCarousel .carousel-content  {
-        flex-direction: column;
         width: 90%;
+        margin: 0 auto;
     }
 
     #homePageCarousel .carousel-content img {
