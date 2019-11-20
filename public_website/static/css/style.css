@@ -800,7 +800,9 @@ textarea {
 
 @media (max-width: 576px) {
     .navbar-search-form .search-field {
-        font-size: 0.7rem;
+        font-size: 0.8rem;
+        padding: 0 0.5rem;
+        line-height: 2.5rem;
     }
 }
 
