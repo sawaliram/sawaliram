@@ -1,0 +1,112 @@
+{% extends "public_website/base.html" %}
+
+{% load static %}
+
+{% block head_includes %}
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %} Submit Answer | Sawaliram {% endblock %}
+
+{# TODO: add breadcrumb, after implemented in base.html #}
+
+{% block extra_header %}
+{% if prev_item_id or next_item_id %}
+<div class="navbar-extra row justify-content-end">
+	<div>
+		{% if prev_item_id %}
+		<a href="{% url 'dashboard:submit-answer' question_id=prev_item_id %}" class="btn btn-secondary-hollow">&lt; Prev</a>
+		{% endif %}
+		{% if next_item_id %}
+		<a href="{% url 'dashboard:submit-answer' question_id=next_item_id %}" class="btn btn-secondary-hollow">Next &gt;</a>
+		{% endif %}
+	</div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="wide-container">
+	{% if messages %}
+        {% for message in messages %}
+			<div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+				{{ message }}
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+        {% endfor %}
+    {% endif %}
+	<div class="submit-answer-header">
+		<h1>{{ question.question_text }}</h1>
+		{% if question.question_language.lower != 'english' %}
+			{% if question.question_text_english %}
+				<h2>{{ question.question_text_english }}</h2>
+			{% endif %}
+		{% endif %}
+		{% if question.school or question.area or question.state or question.question_asked_on %}
+			<div class="question-meta">
+				{% if question.school %}
+					<span>
+						<i class="fas fa-graduation-cap"></i>
+						{{ question.school }}
+					</span>
+				{% endif %}
+				{% if question.area or question.state %}
+					<span>
+						<i class="fas fa-map-marker-alt"></i>
+						{% if question.area %}{{ question.area }}, {% endif %}{% if question.state %}{{ question.state }}{% endif %}
+					</span>
+				{% endif %}
+				{% if question.question_asked_on %}
+					<span>
+						<i class="fas fa-calendar-alt"></i>
+						{{ question.question_asked_on }}
+					</span>
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+	<form action="{% url 'dashboard:submit-answer' question_id=question.id %}" class="rich-text-form" method="POST">
+		{% csrf_token %}
+	
+		<div id="editor" data-placeholder="Type your answer here...">
+			{{ draft_answer|safe }}
+		</div>
+	
+		<div id="toolbar" class="justify-content-end">
+			<span class="ql-formats">
+				<button class="ql-bold"></button>
+				<button class="ql-italic"></button>
+				<button class="ql-underline"></button>
+			</span>
+			<span class="ql-formats">
+				<button class="ql-script" value="sub"></button>
+				<button class="ql-script" value="super"></button>
+			</span>
+			<span class="ql-formats">
+				<button class="ql-list" value="ordered"></button>
+				<button class="ql-list" value="bullet"></button>
+				<button class="ql-indent" value="-1"></button>
+				<button class="ql-indent" value="+1"></button>
+			</span>
+			<span class="ql-formats">
+				<button class="ql-blockquote"></button>
+				<button class="ql-link"></button>
+				<button class="ql-image"></button>
+				<button class="ql-video"></button>
+				<button class="ql-formula"></button>
+			</span>
+		</div>
+	
+		<div id="submitbar">
+			<input type="hidden" name="question_id" value="{{ question.id }}">
+			<input type="hidden" name="rich-text-content" value="" />
+			<button type="submit" name="mode" value="{{ submission_mode }}" class="btn btn-primary">Submit Answer</button>
+			<button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+		</div>
+	</form>
+</div>
+
+{% endblock %}

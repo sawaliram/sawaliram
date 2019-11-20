@@ -1,6 +1,7 @@
 
 import os
-import django_heroku
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,12 +16,13 @@ SECRET_KEY = os.environ.get('sawaliram_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('sawaliram_debug_value') == 'True'
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['10.10.9.33', '117.198.100.10', '.sawaliram.org', 'localhost']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'public_website.apps.PublicWebsiteConfig',
+    'sawaliram_auth.apps.SawaliramAuthConfig',
     'dashboard.apps.DashboardConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -67,7 +69,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'sawaliram',
         'USER': 'admin',
         'PASSWORD': os.environ.get('sawaliram_db_password'),
@@ -75,6 +77,16 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+# Custom Auth System settings
+AUTH_USER_MODEL = 'sawaliram_auth.User'
+LOGIN_URL = '/users/signin'
+
+# Sentry settings
+sentry_sdk.init(
+    dsn="https://06e228b93d3644cd83a7d6b4ff1e66a1@sentry.io/1434408",
+    integrations=[DjangoIntegration()]
+)
 
 
 # Password validation
@@ -124,5 +136,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Activate Django-Heroku
-django_heroku.settings(locals())
+if os.environ.get('environment') == 'heroku':
+    import django_heroku
+    django_heroku.settings(locals())

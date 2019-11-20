@@ -1,0 +1,223 @@
+{% extends "public_website/base.html" %}
+
+{% block title %} {{ page_title }} | Sawaliram {% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <div class="mobile-filter-controls">
+        <button class="filter-button">Filters</button>
+        <button class="sort-by-button">Sort By</button>
+    </div>
+    <div class="filter-sidebar">
+        <div class="filter-head">
+            <span><b>Filters</b></span>
+            <button class="btn clear-all">Clear All</button>
+        </div>
+        <div class="filter-list">
+            {% if page_title == 'Search' %}
+            <div class="filter-category">
+                <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">Category</button>
+                <div class="category-options-list" id="filterCategories">
+                    <button class="btn category-option {% if 'questions' in active_categories %}active{% endif %} no-fun" data-param="category" data-value="questions">Questions</button>
+                    <button class="btn category-option" data-param="category" data-value="articles" disabled>Articles</button>
+                    <button class="btn category-option" data-param="category" data-value="research" disabled>Research</button>
+                    <button class="btn category-option" data-param="category" data-value="resources" disabled>Resources</button>
+                </div>
+            </div>
+            {% endif %}
+            {% if page_title == 'Search' or page_title == 'View Questions' %}
+            <div class="filter-category">
+                <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">Questions</button>
+                <div class="category-options-list" id="filterCategories">
+                    <button class="btn category-option {% if 'answered' in question_categories %}active{% endif %}" data-param="questions" data-value="answered">Answered</button>
+                    <button class="btn category-option {% if 'unanswered' in question_categories %}active{% endif %}" data-param="questions" data-value="unanswered">Unanswered</button>
+                </div>
+            </div>
+            {% endif %}
+            <div class="filter-category">
+                <button class="btn open-filter" data-target="#filterSubjects" aria-expanded="true" aria-controls="filter-subjects">Subjects</button>
+                <div class="category-options-list" id="filterSubjects">
+                    {% for subject in subjects %}
+                    <button class="btn category-option {% if subject in subjects_to_filter_by %}active{% endif %} {% if subject|length > 11 %}long-title{% endif %}" data-param="subject" data-value="{{ subject|urlencode }}" {% if subject not in available_subjects %}disabled{% endif %}>{{ subject|capfirst }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="filter-category">
+                <button class="btn open-filter" data-target="#filterStates" aria-expanded="true" aria-controls="filter-states">States</button>
+                <div class="category-options-list" id="filterStates">
+                    {% for state in states %}
+                    <button class="btn category-option {% if state.state in states_to_filter_by %}active{% endif %}" data-param="state" data-value="{{ state.state|urlencode }}">{{ state.state|capfirst }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="filter-category">
+                <button class="btn open-filter" data-target="#filterLanguages" aria-expanded="true" aria-controls="filter-languages">Languages</button>
+                <div class="category-options-list" id="filterLanguages">
+                    {% for language in languages %}
+                    <button class="btn category-option {% if language.question_language in languages_to_filter_by %}active{% endif %}" data-param="language" data-value="{{ language.question_language|urlencode }}">{{ language.question_language|capfirst }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="filter-category">
+                <button class="btn open-filter" data-target="#filterCurriculum" aria-expanded="true" aria-controls="filter-curriculum">Curriculum Followed</button>
+                <div class="category-options-list" id="filterCurriculum">
+                    {% for curriculum in curriculums %}
+                    <button class="btn category-option {% if curriculum.curriculum_followed in curriculums_to_filter_by %}active{% endif %}" data-param="curriculum" data-value="{{ curriculum.curriculum_followed|urlencode }}">{{ curriculum.curriculum_followed|capfirst }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="search-results">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <form action="" class="search-results-search" method="GET">
+            <input class="search-results-search-field" type="text" name="q" placeholder="Search these results" {% if search_query %} value="{{ search_query }}" {% endif %}>
+            <button type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+        {% if results %}
+        <div class="head-area">
+            <span class="results-count">Showing {{ results.start_index}}-{{ results.end_index }} of {{ result_size }} results</span>
+            <div class="dropdown">
+                <button class="btn sort-by-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="sortOptionSelector">
+                    sorted by <span class="sort-by-text">{{ sort_by|capfirst }}</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="sortOptionSelector">
+                    <span class="dropdown-item sort-by-option" data-sort="newest">Newest</span>
+                    <span class="dropdown-item sort-by-option" data-sort="oldest">Oldest</span>
+                </div>
+            </div>
+        </div>
+        <ul class="search-results-list">
+            {% for result in results %}
+            <li class="search-result-item">
+                <div class="search-result-item-header">
+                    <p class="item-number">#{{ result.id }} | Question</p>
+                    <button class="btn bookmark-button {% if result.id in bookmarks %}bookmarked{% endif %}" data-content="question" data-id="{{ result.id }}">{% if result.id in bookmarks %}<i class="fas fa-bookmark"></i> Bookmarked{% else %}<i class="far fa-bookmark"></i> Bookmark{% endif %}</button>
+                </div>
+                <h3 class="item-title">
+                    {{ result.question_text }}
+                </h3>
+                {% if result.question_language.lower != 'english' and result.question_text_english %}
+                <h4 class="item-sub-title">
+                    {{ result.question_text_english }}
+                </h4>
+                {% endif %}
+                <div class="search-result-item-content">
+                    {% if result.school or result.state or result.area or result.question_asked_on or result.published_source %}
+                    <div class="item-meta">
+                        {% if result.published == True and result.published_source %}
+                        <span class="highlighted-meta">
+                            <i class="fas fa-book"></i>
+                            <span class="meta-value">
+                                {{ result.published_source }}
+                            </span>
+                        </span>
+                        {% endif %}
+                        {% if result.school %}
+                        <span class="highlighted-meta">
+                            <i class="fas fa-university"></i>
+                            <span class="meta-value">
+                                {{ result.school }}
+                                {% if result.curriculum_followed %}
+                                    ({{ result.curriculum_followed }})
+                                {% endif %}
+                            </span>
+                        </span>
+                        {% endif %}
+
+                        {% if result.area or result.state %}
+                        <span class="highlighted-meta">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span class="meta-value">
+                                {% if result.area %}
+                                    {{ result.area.rstrip }} {% if result.state %}, {{ result.state }} {% endif %}
+                                {% elif result.state %}
+                                    {{ result.state }}
+                                {% endif %}
+                            </span>    
+                        </span>
+                        {% endif %}
+
+                        {% if result.student_class %}
+                        <span class="highlighted-meta">
+                            <i class="fas fa-user-graduate"></i>
+                            <span class="meta-value">
+                                Class {{ result.student_class }}
+                            </span>
+                        </span>
+                        {% endif %}
+
+                        {% if result.question_asked_on %}
+                        <span class="highlighted-meta">
+                            <i class="far fa-calendar-alt"></i>
+                            <span class="meta-value">
+                                {{ result.question_asked_on|date:"j F, Y" }}
+                            </span>
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% if page_title == 'Answer Questions' %}
+                        <div class="item-context-controls">
+                            {% if page_title == 'Answer Questions' %}
+                            <a href="{% url 'dashboard:submit-answer' question_id=result.id %}" class="btn btn-small btn-primary">Answer</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    {% if page_title == 'View Questions' or page_title == 'Search' %}
+                        {% for answer in result.answers.all %}
+                        {% if answer.approved_by %}
+                            <div class="item-context-controls">
+                                <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">View Answer</a>
+                            </div>
+                        {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% if page_title == 'Review Answers' %}
+                    {% for answer in result.answers.all %}
+                    <div class="answer-preview">
+                        <h4>Answered by <b>{{ answer.answered_by.get_full_name }}</b></h4>
+                        <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
+                        <div class="review-answer-controls">
+                            <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">Review</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    
+        <div class="search-pagination">
+            {% if results.has_previous %}
+            <span class="page-number end-page-number page-button" data-page="1"> << </span>
+            <span class="page-number page-button" data-page="{{ results.previous_page_number }}"> {{ results.previous_page_number }} </span>
+            {% endif %}
+            <span class="page-number current-page">{{ results.number }}</span>
+            {% if results.has_next %}
+            <span class="page-number page-button" data-page="{{ results.next_page_number }}"> {{ results.next_page_number }} </span>
+            <span class="page-number end-page-number page-button" data-page="{{ results.paginator.num_pages }}"> >> </a>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="no-search-results-container">
+            <i class="far fa-frown"></i>
+            <p>No results found. Try changing the filters or search for something else</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

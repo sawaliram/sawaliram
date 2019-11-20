@@ -1,0 +1,51 @@
+{% extends "sawaliram_auth/base.html" %}
+
+{% load static %}
+
+{% block title %} Sign-up | Sawaliram {% endblock %}
+
+{% block content %}
+
+<div class="row onboarding-form-section">
+    <div class="col-md onboarding-text-column">
+        <h1>Welcome to the Sawaliram family!</h1>
+        <p>
+            Hi there,<br>
+            Thanks for volunteering to help with answering, translating or collecting questions, and managing the Sawaliram site. I’m sure you will enjoy the innocent, yet deep and wonderful questions that children ask, just as much as I do!<br>
+            <br>
+            Warmly,<br>
+            Sawaliram
+        </p>
+        <p class="signin-message">
+            Already a member? <a href="{% url 'sawaliram_auth:signin' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="link-secondary">Sign in!</a>
+        </p>
+    </div>
+    <div class="col-md onboarding-form-column">
+        <form action="{% url 'sawaliram_auth:signup' %}" method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                {% if form.errors %}
+                    {% for error in field.errors %}
+                        <p class="error">{{ error|escape }}</p>
+                    {% endfor %}
+                {% endif %}
+                <span class="{% if field.errors %}error-field{% endif %}">
+                    {{ field}}
+                </span>
+            {% endfor %}
+            <datalist id="organisationChoices">
+                <option value="TIFR Centre for Interdisciplinary Sciences, Hyderabad"></option>
+                <option value="Eklavya"></option>
+                <option value="Homi Bhabha Centre for Science Education"></option>
+            </datalist>
+            <input class="btn btn-primary" type="submit" value="Sign-up">
+        </form>
+        <!-- <p class="alternate-login-options-heading"><span>or sign-up with</span></p>
+        <div class="social-login-section">
+            <button class="btn btn-secondary social-login"><i class="fab fa-facebook-f"></i> Facebook</button>
+            <button class="btn btn-secondary social-login"><i class="fab fa-google"></i> Google</button>
+        </div> -->
+    </div>
+</div>
+
+{% endblock %}
