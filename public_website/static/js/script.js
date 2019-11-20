@@ -39,10 +39,10 @@ function closeMenusOnClickingDarkbackground() {
 function resizeMainLogoOnScrollDown() {
     $(window).scroll(function() {
         if ($(window).scrollTop() > 100) {
-            $('#mainLogo').css('width', '190px');
+            $('#mainLogo').css('width', '200px');
         }
         else {
-            $('#mainLogo').css('width', '250px');
+            $('#mainLogo').css('width', '230px');
         }
     });
 }
@@ -73,15 +73,14 @@ function openVolunteerOptionDialog() {
 
 function setupNavbarSearchBar() {
     $('.navbar-search-icon').click(function() {
-        if(($('.search-field').val() != '') && ($('.navbar-search-container').hasClass('active'))) {
-            $('.navbar-search-form').submit();
-        }
-        else {
-            $(this).toggleClass('active');
-            $('.navbar-search-container').toggleClass('active');
-            $('.navbar-search-form').toggleClass('active');
-            $('.navbar-search-form .search-field').focus();
-        }
+        $(this).toggleClass('active');
+        $('.navbar-search-box').toggleClass('open');
+    });
+
+    $('.close-navbar-search-box').click(function(event) {
+        event.preventDefault();
+        $('.navbar-search-box').removeClass('open');
+        $('.navbar-search-icon').toggleClass('active');
     });
 }
 
@@ -410,9 +409,9 @@ enableLinkingtoTabs();
 setupNavbarSearchBar();
 setupSearchResultsSearch();
 
-if (window.matchMedia("(min-width: 576px)").matches) {
-    resizeMainLogoOnScrollDown();
-}
+// if (window.matchMedia("(min-width: 576px)").matches) {
+//     resizeMainLogoOnScrollDown();
+// }
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 

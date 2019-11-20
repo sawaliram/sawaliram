@@ -66,14 +66,14 @@
                         <a href="{% url 'public_website:get-involved' %}">Get Involved!</a>
                     </div>
                 </div>
-                <div class="row auth-buttons-area">
+                <!-- <div class="row auth-buttons-area">
                     <div class="col-sm auth-button">
                         <a href="{% url 'sawaliram_auth:signin' %}">Signin</a>
                     </div>
                     <div class="col-sm auth-button">
                         <a href="{% url 'sawaliram_auth:signup' %}">Sign Up</a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </nav>
 
@@ -121,7 +121,7 @@
         </nav>
         {% endif %}
 
-        <header class="navbar fixed-top navbar-light">
+        <!-- <header class="navbar fixed-top navbar-light">
             <a class="navbar-brand slow-transition" href="{% url 'public_website:home' %}">
                 <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo.png' %}" alt="Sawaliram Home">
             </a>
@@ -179,9 +179,89 @@
             {% block extra_header %}
                 {# page-specific header/breadcrumbs can go here #}
             {% endblock %}
+        </header> -->
+
+        <div class="navbar-search-box slow-transition">
+            <div class="navbar-search-form-wrapper">
+                <form action="{% url 'public_website:search' %}" class="navbar-search-form slow-transition" method="GET">
+                    <input type="hidden" name="category" value="questions">
+                    <input type="hidden" name="questions" value="answered">
+                    <input type="hidden" name="questions" value="unanswered">
+                    <input type="text" class="search-field" name="q" placeholder="Search for questions, articles and resources">
+                </form>
+                <button class="btn close-navbar-search-box"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+
+        <header class="navbar fixed-top navbar-light">
+            <div class="header-container">
+                <div class="left-section">
+                    <i class="fas fa-bars navbar-menu-toggle"></i>
+                    <a class="navbar-brand slow-transition" href="{% url 'public_website:home' %}">
+                        <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo.png' %}" alt="Sawaliram Home">
+                    </a>
+                </div>
+                <div class="right-section">
+                    <i class="fas fa-search navbar-search-icon"></i>
+                    <div class="dropdown navbar-element">
+                        <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="languageSelector">
+                            English
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="languageSelector">
+                            <span class="dropdown-item">हिंदी</span>
+                            <span class="dropdown-item">मराठी</span>
+                            <span class="dropdown-item">മലയാളം</span>
+                            <span class="dropdown-item">தமிழ்</span>
+                        </div>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    <div class="navbar-user-wrapper">
+                        {% if request.user.notifications.all|length > 0 %}
+                            <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
+                        {% endif %}
+                        <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="navbarUserButton">
+                            <img src="{% static 'user/default_menu.png' %}" alt="User Profile Picture">
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="navbarUserButton">
+                            <p class="user-name">{{ request.user.get_full_name }}</p>
+                            <span class="dropdown-item">
+                                <a href="{% url 'public_website:user-profile' user_id=request.user.id %}"><i class="fas fa-user-circle"></i> My Profile</a>
+                            </span>
+                            <span class="dropdown-item">
+                                <a href="{% url 'dashboard:home' %}"><i class="fas fa-pencil-ruler"></i> Dashboard</a>
+                            </span>
+                            <span class="dropdown-item">
+                                <a href="{% url 'sawaliram_auth:signout' %}"><i class="fas fa-sign-out-alt"></i> Signout</a>
+                            </span>
+                        </div>
+                    </div>
+                    {% else %}
+                        <a href="{% url 'sawaliram_auth:signin' %}" class="user-signin slow-transition"><i class="fas fa-sign-in-alt"></i></a>
+                    {% endif %}
+                </div>
+            </div>
         </header>
 
         <div class="container sawaliram-container flex-grow">
+            {% if page_title != 'Home' %}
+            <div class="page-title-bar">
+                <p class="page-title">
+                    {% if enable_breadcrumbs == 'Yes' and page_title != 'Dashboard Home' %}
+                        {% if page_title != 'Dashboard Home' %}
+                            <a href="{% url 'dashboard:home' %}">Dashboard Home</a> >
+                        {% endif %}
+                        {% if page_title == 'Submit Answer' %}
+                            <a href="{% url 'dashboard:answer-questions' %}">Answer Questions</a> >
+                        {% endif %}
+                        {% if page_title == 'Submit Review' %}
+                            <a href="{% url 'dashboard:review-answers' %}">Review Answers</a> >
+                        {% endif %}
+                    {% endif %}
+                    {{ page_title }}
+                </p>
+            </div>
+            {% endif %}
             {% block content %} {% endblock %}
         </div>
 
