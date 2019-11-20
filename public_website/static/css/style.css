@@ -336,6 +336,7 @@ textarea {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .navbar .navbar-menu-toggle {
@@ -454,6 +455,7 @@ textarea {
 
     .navbar .navbar-brand img {
         width: 120px;
+        height: 35px;
     }
 }
 
