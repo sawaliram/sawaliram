@@ -412,6 +412,12 @@ class GetInvolvedView(View):
         return render(request, 'public_website/get-involved.html', context)
 
 
+class About(View):
+    def get(self, request):
+        context = {
+            'page_title': 'About',
+        }
+        return render(request, 'public_website/about.html', context)
 class ResearchPage(View):
     def get(self, request):
         context = {
