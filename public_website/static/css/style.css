@@ -927,10 +927,10 @@ input:focus {
     align-items: left;
 }
 
-.about-header h2{
+.about-content h2 {
     font-weight: bold;
 }@media (max-width: 576px) {
-    .about-header h2 {
+    .about-content h2 {
         margin-top: 1rem;
         flex-direction: column;
         font-size: 1.2rem;
