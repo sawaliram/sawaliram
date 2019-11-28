@@ -550,7 +550,7 @@ class SubmitAnswerView(View):
 
         # Prefill current answer if in edit mode
         if request.GET.get('mode') == 'edit':
-            context['draft_answer'] = request.GET.get('answer-text')
+            context['draft_answer'] = Answer.objects.get(pk=request.GET.get('answer')).answer_text
             context['submission_mode'] = 'edit'
 
         return render(request, 'dashboard/submit-answer.html', context)
