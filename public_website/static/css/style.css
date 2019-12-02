@@ -233,7 +233,7 @@ textarea {
 .dropdown .dropdown-menu {
     min-width: 100%;
     border-color: #dadada;
-    box-shadow: 0 3px 5px 1px rgba(0,0,0,.14);
+    /* box-shadow: 0 3px 5px 1px rgba(0,0,0,.14); */
     top: 120%;
 }
 
@@ -384,26 +384,38 @@ textarea {
 }
 
 .navbar .navbar-user-wrapper {
-    border: 0.3rem solid #e4e4e4;
     border-radius: 50%;
     position: relative;
+    padding: 0 1rem;
+}
+
+@media (max-width: 576px) {
+    .navbar .navbar-user-wrapper {
+        padding: 0 0.5rem;
+        padding-right: 0.3rem;
+        line-height: 1;
+    }
 }
 
 .navbar .navbar-user-wrapper #navbarUserButton {
     padding: 0;
-    background-color: #d9d9d9;
     border: none;
+    background-color: #fff;
+    border-radius: 50%;
+    font-size: 2rem;
+    line-height: 1;
+}@media (max-width: 576px) {
+    .navbar .navbar-user-wrapper #navbarUserButton {
+        font-size: 1.3rem;
+    }
+}
+
+.navbar .navbar-user-wrapper #navbarUserButton i {
+    margin: 0;
 }
 
 .navbar .navbar-user-wrapper #navbarUserButton:focus {
     box-shadow: none;
-}
-
-@media (max-width: 576px) {
-    .navbar .navbar-user-wrapper #navbarUserButton img {
-        width: 30px;
-        height: 30px;
-    }
 }
 
 .navbar .navbar-user-wrapper .dropdown-menu {
@@ -459,21 +471,10 @@ textarea {
     }
 }
 
-.navbar .navbar-element {
-    font-size: 1.5rem;
-}
-
-@media (max-width: 576px) {
-    .navbar .navbar-element {
-        font-size: 0.9rem;
-        margin: 0 0.5rem;
-    }
-}
-
 .navbar #languageSelector {
     font-size: 1.2rem;
     padding: 0 1rem;
-    padding-left: 1.8rem;
+    padding-left: 2.3rem;
 }
 
 .navbar #languageSelector i {
@@ -482,8 +483,10 @@ textarea {
 
 @media (max-width: 576px) {
     .navbar #languageSelector {
-        font-size: 0.9rem;
+        font-size: 1rem;
         padding: 0;
+        margin: 0 0.2rem;
+        margin-left: 0.9rem;
     }
 
     .navbar #languageSelector i {
