@@ -595,7 +595,7 @@ class SubmitAnswerView(View):
                 'continue editing, or go to "Drafts" in your User Profile.'))
 
             # Set draft in context to re-display
-            context['draft_answer'] = draft
+            context['draft_answer'] = draft.answer_text
             context['prev_item_id'] = prev_item_id
             context['next_item_id'] = next_item_id
 
@@ -648,9 +648,10 @@ class SubmitAnswerView(View):
 
             # get next/prev items
             if next_item_id:
+                question_to_answer = Question.objects.get(pk=next_item_id)
                 context['prev_item_id'] = prev_item_id
                 context['next_item_id'] = next_item_id
-                question_to_answer = Question.objects.get(pk=next_item_id)
+                context['question'] = question_to_answer
                 return render(request, 'dashboard/submit-answer.html', context)
             else:
                 return redirect('dashboard:answer-questions')
