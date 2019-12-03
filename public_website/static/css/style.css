@@ -610,21 +610,22 @@ textarea {
 
 .navbar-user-wrapper .notification-dot {
     position: absolute;
-    background-color: #9B63A8;
-    color: #fff;
+    background-color:#9B63A8;
+    color:#fff;
     border-radius: 50%;
-    padding: 0.3rem 0.6rem;
+    padding: 0.3rem 0.5rem;
     font-size: 0.7rem;
-    top: -0.7rem;
-    right: -0.8rem;
+    top: -0.6rem;
+    right: 0.4rem;
+    line-height: 1;
 }
 
 @media (max-width: 576px) {
     .navbar-user-wrapper .notification-dot {
-        padding: 0.2rem 0.5rem;
-        font-size: 0.5rem;
+        padding: 0.2rem 0.3rem;
+        font-size: 0.6rem;
         top: -0.5rem;
-        right: -0.5rem;
+        right: -0.1rem;
     }
 }
 
