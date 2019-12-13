@@ -113,4 +113,3 @@ sawaliram.code-workspace
 # dirs to ignore
 staticfiles/
 assets/submissions/*
-public_website/templates/public_website/research.html
