@@ -8,26 +8,9 @@
 
 {% block title %} Submit Answer | Sawaliram {% endblock %}
 
-{# TODO: add breadcrumb, after implemented in base.html #}
-
-{% block extra_header %}
-{% if prev_item_id or next_item_id %}
-<div class="navbar-extra row justify-content-end">
-	<div>
-		{% if prev_item_id %}
-		<a href="{% url 'dashboard:submit-answer' question_id=prev_item_id %}" class="btn btn-secondary-hollow">&lt; Prev</a>
-		{% endif %}
-		{% if next_item_id %}
-		<a href="{% url 'dashboard:submit-answer' question_id=next_item_id %}" class="btn btn-secondary-hollow">Next &gt;</a>
-		{% endif %}
-	</div>
-</div>
-{% endif %}
-{% endblock %}
-
 {% block content %}
 
-<div class="wide-container">
+<div class="editor-container">
 	{% if messages %}
         {% for message in messages %}
 			<div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
@@ -38,7 +21,33 @@
 			</div>
         {% endfor %}
     {% endif %}
-	<div class="submit-answer-header">
+	<div class="editor-header">
+		<div class="header-controls">
+			{% if prev_item_id or next_item_id %}
+			<div class="item-cycle-controls">
+				{% if prev_item_id %}
+					<a href="{% url 'dashboard:submit-answer' question_id=prev_item_id %}" class="btn prev-link"><i class="fas fa-arrow-left"></i> Prev</a> |
+				{% endif %}
+				{% if next_item_id %}
+				<a href="{% url 'dashboard:submit-answer' question_id=next_item_id %}" class="btn next-link">Next <i class="fas fa-arrow-right"></i></a>
+				{% endif%}
+			</div>
+			{% endif %}
+			<div class="submission-language-control">
+				<span>Answering in: </span>
+				<div class="dropdown">
+					<button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="submissionLanguageSelector">
+						English
+						<i class="fas fa-chevron-down"></i>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="languageSelector">
+						{% if question.question_language.lower != 'english' %}
+							<span class="dropdown-item">{{ question.question_language }}</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
 		<h1>{{ question.question_text }}</h1>
 		{% if question.question_language.lower != 'english' %}
 			{% if question.question_text_english %}
@@ -70,12 +79,12 @@
 	</div>
 	<form action="{% url 'dashboard:submit-answer' question_id=question.id %}" class="rich-text-form" method="POST">
 		{% csrf_token %}
-	
+		
 		<div id="editor" data-placeholder="Type your answer here...">
 			{{ draft_answer|safe }}
 		</div>
 	
-		<div id="toolbar" class="justify-content-end">
+		<div id="toolbar">
 			<span class="ql-formats">
 				<button class="ql-bold"></button>
 				<button class="ql-italic"></button>
@@ -98,6 +107,19 @@
 				<button class="ql-video"></button>
 				<button class="ql-formula"></button>
 			</span>
+		</div>
+
+		<div id="credits-bar">
+			<h2>Credits</h2>
+			<div class="credits-card">
+				<select name="credit-title">
+					<option value="author" selected>Author</option>
+					<option value="co-author">Co-author</option>
+				</select>
+				<input type="text" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="Full Name">
+				<input type="hidden" name="credit-user-id" value="{{ request.user.id }}">
+			</div>
+			<button class="btn btn-small btn-secondary-hollow"><i class="fas fa-plus"></i> Add</button>
 		</div>
 	
 		<div id="submitbar">
