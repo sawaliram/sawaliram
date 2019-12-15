@@ -267,3 +267,86 @@ class TranslatedQuestion(models.Model):
     language = models.CharField(max_length=100)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+class BaseArticle(models.Model):
+    '''
+    Base data model for all articles
+    '''
+
+    title = models.CharField(max_length=1000)
+    language = models.CharField(max_length=100)
+    author = models.ForeignKey('sawaliram_auth.User',
+        related_name='%(class)ss',
+        on_delete=models.PROTECT,
+        default='')
+
+    body = models.TextField()
+
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+class ArticleDraft(BaseArticle):
+    '''
+    Draft articles are visible only to the user who creates them.
+    Once ready, they can be submitted by converting to a
+    SubmittedArticle which, upon approval, will be finally released
+    to the world as a published Article.
+
+    The complete sequence is:
+        ArticleDraft -> SubmittedArticle -> Article
+    '''
+
+    title = models.CharField(max_length=1000, null=True)
+    language = models.CharField(max_length=100, null=True)
+
+    body = models.TextField(null=True)
+
+    class Meta:
+        db_table = 'article_drafts'
+
+class SubmittedArticle(BaseArticle):
+    '''
+    Submitted articles are article which are ready to publish, but which
+    have to be vetted by an editor or manager before they are released
+    to the world as a published Article
+
+    The complete sequence is:
+        ArticleDraft -> SubmittedArticle -> Article
+    '''
+
+class Article(BaseArticle):
+    '''
+    Articles are published articles, visible to the world after having
+    gone through the full editorial process
+
+    The complete sequence is:
+        ArticleDraft -> SubmittedArticle -> Article
+    '''
+
+    approved_by = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='approved_articles',
+        on_delete=models.PROTECT,
+        default='',
+        null=True)
+    published_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'articles'
+
+class TranslatedArticle(BaseArticle):
+    '''
+    A TranslatedArticle is like an Article, except that it has been
+    translated from a different languages.
+    '''
+
+    original_article = models.ForeignKey('Article',
+        related_name='translations',
+        on_delete=models.PROTECT,
+        default='')
+
+    class Meta:
+        db_table = 'article_translations'
