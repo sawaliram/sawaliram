@@ -35,6 +35,7 @@ from dashboard.models import (
     AnswerComment,
     UnencodedSubmission,
     ArticleDraft,
+    SubmittedArticle,
     Dataset)
 from sawaliram_auth.models import Notification, User
 from public_website.views import SearchView
@@ -240,12 +241,14 @@ class ManageContentView(View):
     def get(self, request):
 
         datasets = Dataset.objects.all().order_by('-created_on')
+        articles = SubmittedArticle.objects.all().order_by('-updated_on')
 
         context = {
             'grey_background': 'True',
             'page_title': 'Manage Content',
             'enable_breadcrumbs': 'Yes',
-            'datasets': datasets
+            'datasets': datasets,
+            'articles': articles,
         }
         return render(request, 'dashboard/manage-content.html', context)
 
