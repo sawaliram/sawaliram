@@ -3,7 +3,11 @@
 import random
 import os
 
-from django.shortcuts import render, redirect
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404,
+)
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -11,23 +15,26 @@ from django.db.models import Subquery, Q
 from django.views import View
 from django.http import (
     HttpResponse,
-    Http404,
+    Http404, # Page Not found
 )
 from django.contrib import messages
 from django.core.exceptions import (
     ObjectDoesNotExist,
     PermissionDenied,
+    SuspiciousOperation
 )
 from django.urls import reverse
 
 from sawaliram_auth.decorators import volunteer_permission_required
 from dashboard.models import (
+    LANGUAGE_CHOICES,
     QuestionArchive,
     Question,
     Answer,
     AnswerDraft,
     AnswerComment,
     UnencodedSubmission,
+    ArticleDraft,
     Dataset)
 from sawaliram_auth.models import Notification, User
 from public_website.views import SearchView
@@ -763,6 +770,74 @@ class ApproveAnswerView(View):
                 published_notification.save()
 
         return redirect('dashboard:review-answers')
+
+# Write Articles
+
+def create_article(request):
+    '''
+    Create a blank draft and redirect to WriteArticleView
+    '''
+
+    draft = ArticleDraft.objects.create(author=request.user)
+
+    return redirect(reverse('dashboard:edit-article',
+      kwargs={'draft_id': draft.id}))
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class EditArticleView(View):
+    '''
+    Write or update a draft or published article
+    '''
+
+    template = 'dashboard/articles/edit.html'
+
+    def get(self, request, draft_id):
+        '''
+        Display the edit form
+        '''
+
+        article = get_object_or_404(ArticleDraft, id=draft_id)
+        context = {
+            'article': article,
+            'grey_background': 'True',
+            'language_choices': LANGUAGE_CHOICES,
+        }
+
+        return render(request, self.template, context)
+
+    def post(self, request, draft_id):
+        '''
+        Save draft or submit post
+        '''
+
+        article = get_object_or_404(ArticleDraft, id=draft_id)
+        context = {
+            'article': article,
+            'grey_background': 'True',
+            'language_choices': LANGUAGE_CHOICES,
+        }
+
+        article.title = request.POST.get('title')
+        article.body = request.POST.get('rich-text-content')
+        article.language = request.POST.get('language')
+
+        if request.POST.get('mode') == 'draft':
+
+            article.save()
+
+            return render(request, self.template, context)
+
+        elif request.POST.get('mode') == 'submit':
+
+            # Get and submit article
+            submitted_article = article.submit_draft()
+
+            messages.success(request, 'Thanks! Your article has been submitted.')
+            return redirect(reverse('dashboard:home'))
+
+        else:
+            raise SuspiciousOperation('Are you trying to save draft or submit?')
 
 # Legacy Functions
 

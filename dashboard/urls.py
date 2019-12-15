@@ -22,4 +22,7 @@ urlpatterns = [
     path('question/<int:question_id>/answers/<int:answer_id>/comment/add', views.AnswerCommentView.as_view(), name='submit-answer-comment'),
     path('question/<int:question_id>/answers/<int:answer_id>/comment/<int:comment_id>/delete', views.AnswerCommentDeleteView.as_view(), name='delete-answer-comment'),
 
+    path('article/<int:draft_id>/edit/', views.EditArticleView.as_view(), name='edit-article'),
+    path('article/new/', views.create_article, name='create-article')
+
 ]

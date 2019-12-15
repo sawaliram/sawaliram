@@ -76,6 +76,23 @@ input[type=email] {
     margin-bottom: 1rem;
 }
 
+input.input-plain {
+    border: 0;
+    font-size: inherit;
+    font-style: inherit;
+    margin-bottom: 0;
+}
+
+select.input-plain {
+    border: none;
+    background: inherit;
+    display: inline-block;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    width: auto;
+}
+
 textarea {
     border-radius: 5px;
 }
@@ -247,6 +264,10 @@ textarea {
     display: inline-block;
 }
 
+.flex {
+    display: flex;
+}
+
 /* ---- Tabs ---- */
 
 .nav.nav-pills .nav-link {
@@ -277,6 +298,22 @@ textarea {
 .tab-content {
     padding-top: 2rem;
     min-height: 15rem;
+}
+
+/* ---- Separator ---- */
+
+.hr-under::after {
+    display: block;
+    border-bottom: 1px solid lightgray;
+    margin-top: 0.5rem;
+    content: "";
+}
+
+.hr-over::before {
+    display: block;
+    border-top: 1px solid lightgray;
+    margin-bottom: 0.5rem;
+    content: "";
 }
 
 @media (max-width: 576px) {
@@ -1496,7 +1533,6 @@ h1.dashboard-home-greeting {
 
 .rich-text-form #toolbar {
     border: none;
-    border-top: 1px solid lightgray;
     padding: 0.8rem;
     margin: 0 1rem 0rem 1rem;
     text-align: right;

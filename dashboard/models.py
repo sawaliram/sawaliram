@@ -3,6 +3,13 @@
 import datetime
 from django.db import models
 
+LANGUAGE_CHOICES = [
+    ('en', 'English'),
+    ('hi', 'Hindi'),
+    ('ta', 'Tamil'),
+    ('te', 'Telugu'),
+]
+
 
 class Dataset(models.Model):
     """Define the data model for submitted datasets"""
@@ -274,7 +281,9 @@ class BaseArticle(models.Model):
     '''
 
     title = models.CharField(max_length=1000)
-    language = models.CharField(max_length=100)
+    language = models.CharField(max_length=100,
+        choices=LANGUAGE_CHOICES,
+        default='en')
     author = models.ForeignKey('sawaliram_auth.User',
         related_name='%(class)ss',
         on_delete=models.PROTECT,
@@ -299,13 +308,37 @@ class ArticleDraft(BaseArticle):
         ArticleDraft -> SubmittedArticle -> Article
     '''
 
-    title = models.CharField(max_length=1000, null=True)
-    language = models.CharField(max_length=100, null=True)
+    title = models.CharField(max_length=1000, default='', null=True)
+    language = models.CharField(max_length=100, default='', null=True)
 
-    body = models.TextField(null=True)
+    body = models.TextField(default='', null=True)
 
     class Meta:
         db_table = 'article_drafts'
+
+    def submit_draft(self):
+        '''
+        Submit the draft. In other words, copy over content to a new
+        SubmittedArticle object and destroy self.
+        '''
+
+        a = SubmittedArticle.objects.create(
+            title = self.title,
+            language = self.language,
+            author = self.author,
+            body = self.body,
+            created_on = self.created_on,
+        )
+
+        try:
+            a.save()
+            self.delete()
+        except Exception as e:
+            error = 'Error submitting article: %s' % e
+            print(error)
+            raise e
+
+        return a
 
 class SubmittedArticle(BaseArticle):
     '''

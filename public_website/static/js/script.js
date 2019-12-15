@@ -424,9 +424,13 @@ if (window.location.pathname.includes('/dashboard/question/submit') || window.lo
     processSelectedExcelSheet();
 }
 
-var pattern = new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)")
-if (pattern.test(window.location.pathname)) {
+if (new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)) {
     setupQuillEditor({ placeholder: 'Type your answer here...' });
+    activateTooltips();
+}
+
+if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) {
+    setupQuillEditor({});
     activateTooltips();
 }
 
