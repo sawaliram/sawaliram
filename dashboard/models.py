@@ -383,3 +383,23 @@ class TranslatedArticle(BaseArticle):
 
     class Meta:
         db_table = 'article_translations'
+
+class ArticleComment(models.Model):
+    """Define the data model for comments on Answers"""
+
+    class Meta:
+        db_table = 'article_comment'
+
+    text = models.TextField()
+
+    article = models.ForeignKey(
+        'SubmittedArticle',
+        related_name='comments',
+        on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='article_comments',
+        on_delete=models.PROTECT)
+
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
