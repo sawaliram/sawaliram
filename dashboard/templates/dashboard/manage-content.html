@@ -83,7 +83,7 @@
                             <p>{{ article.body|striptags|truncatechars:250 }}</p>
                             <p>Submitted by <b>{{ article.author.get_full_name }}</b> on <b>{{ article.updated_on|date:"j F, Y" }}</b></p>
                         </div>
-                        <a href="#" class="btn btn-primary sub-task-button">Review Article</a>
+                        <a href="{% url 'dashboard:review-article' article=article.id %}" class="btn btn-primary sub-task-button">Review Article</a>
                     </div>
                 </li>
                 {% endfor %}

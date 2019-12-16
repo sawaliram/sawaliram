@@ -23,6 +23,10 @@ urlpatterns = [
     path('question/<int:question_id>/answers/<int:answer_id>/comment/<int:comment_id>/delete', views.AnswerCommentDeleteView.as_view(), name='delete-answer-comment'),
 
     path('article/<int:draft_id>/edit/', views.EditArticleView.as_view(), name='edit-article'),
-    path('article/new/', views.create_article, name='create-article')
+    path('article/new/', views.create_article, name='create-article'),
+    path('article/<int:article>/review/', views.ReviewSubmittedArticleView.as_view(), name='review-article'),
+    path('article/<int:article>/approve/', views.ApproveSubmittedArticleView.as_view(), name='approve-article'),
+    path('article/<int:article>/comment/add', views.AddArticleCommentView.as_view(), name='submit-article-comment'),
+    path('article/<int:article>/comment/<int:comment_id>/delete/', views.DeleteArticleCommentView.as_view(), name='delete-article-comment'),
 
 ]

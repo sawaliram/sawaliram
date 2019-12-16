@@ -350,6 +350,31 @@ class SubmittedArticle(BaseArticle):
         ArticleDraft -> SubmittedArticle -> Article
     '''
 
+    def publish(self, approved_by):
+        '''
+        Publish the article. In other words, copy over content to a new
+        Article object and destroy self.
+        '''
+
+        a = Article.objects.create(
+            title = self.title,
+            language = self.language,
+            author = self.author,
+            body = self.body,
+            created_on = self.created_on,
+            approved_by = approved_by,
+        )
+
+        try:
+            a.save()
+            self.delete()
+        except Exception as e:
+            error = 'Error publishing article: %s' % e
+            print(error)
+            raise e
+
+        return a
+
 class Article(BaseArticle):
     '''
     Articles are published articles, visible to the world after having
