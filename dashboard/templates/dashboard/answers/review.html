@@ -32,7 +32,7 @@
                 </form>
             {% else %}
                 <form action="{% url 'dashboard:submit-answer' question_id=question.id %}" method="GET">
-                    <input type="hidden" name="answer-text" value="{{ answer.answer_text }}">
+                    <input type="hidden" name="answer" value="{{ answer.id }}">
                     <input type="hidden" name="mode" value="edit">
                     <button type="submit" class="btn btn-primary btn-block">Edit Answer</button>
                 </form>

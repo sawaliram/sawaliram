@@ -24,10 +24,11 @@ from pprint import pprint
 class HomeView(View):
     def get(self, request):
         banner_texts_list = [
-            'Leaves or Fruits or Sprouting Shoots?',
-            'Sun or Stars or Life on Mars?',
+            'Leaves or fruits or sprouting shoots?',
+            'Sun or stars or life on Mars?',
             'Constellations or the fate of nations?',
-            'Curly tresses or yellow school buses?'
+            'Curly tresses or yellow school buses?',
+            'Birds in the sky or a firefly?'
         ]
         context = {
             'dashboard': 'False',
@@ -48,7 +49,8 @@ class SearchView(View):
                             Q(school__icontains=request.GET.get('q')) |
                             Q(area__icontains=request.GET.get('q')) |
                             Q(state__icontains=request.GET.get('q')) |
-                            Q(field_of_interest__icontains=request.GET.get('q'))
+                            Q(field_of_interest__icontains=request.GET.get('q')) |
+                            Q(published_source__icontains=request.GET.get('q'))
                         )
             else:
                 # return an arbitrary empty queryset
@@ -410,6 +412,12 @@ class GetInvolvedView(View):
         return render(request, 'public_website/get-involved.html', context)
 
 
+class About(View):
+    def get(self, request):
+        context = {
+            'page_title': 'About',
+        }
+        return render(request, 'public_website/about.html', context)
 class ResearchPage(View):
     def get(self, request):
         context = {

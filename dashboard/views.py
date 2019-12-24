@@ -434,7 +434,8 @@ class ViewQuestionsView(SearchView):
                     Q(school__icontains=request.GET.get('q')) |
                     Q(area__icontains=request.GET.get('q')) |
                     Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q'))
+                    Q(field_of_interest__icontains=request.GET.get('q')) |
+                    Q(published_source__icontains=request.GET.get('q'))
             )
         else:
             return Question.objects.all()
@@ -459,7 +460,8 @@ class AnswerQuestions(SearchView):
                     Q(school__icontains=request.GET.get('q')) |
                     Q(area__icontains=request.GET.get('q')) |
                     Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q'))
+                    Q(field_of_interest__icontains=request.GET.get('q')) |
+                    Q(published_source__icontains=request.GET.get('q'))
             )
         else:
             return Question.objects.exclude(id__in=Subquery(
@@ -548,7 +550,7 @@ class SubmitAnswerView(View):
 
         # Prefill current answer if in edit mode
         if request.GET.get('mode') == 'edit':
-            context['draft_answer'] = request.GET.get('answer-text')
+            context['draft_answer'] = Answer.objects.get(pk=request.GET.get('answer')).answer_text
             context['submission_mode'] = 'edit'
 
         return render(request, 'dashboard/submit-answer.html', context)
@@ -593,7 +595,7 @@ class SubmitAnswerView(View):
                 'continue editing, or go to "Drafts" in your User Profile.'))
 
             # Set draft in context to re-display
-            context['draft_answer'] = draft
+            context['draft_answer'] = draft.answer_text
             context['prev_item_id'] = prev_item_id
             context['next_item_id'] = next_item_id
 
@@ -646,9 +648,10 @@ class SubmitAnswerView(View):
 
             # get next/prev items
             if next_item_id:
+                question_to_answer = Question.objects.get(pk=next_item_id)
                 context['prev_item_id'] = prev_item_id
                 context['next_item_id'] = next_item_id
-                question_to_answer = Question.objects.get(pk=next_item_id)
+                context['question'] = question_to_answer
                 return render(request, 'dashboard/submit-answer.html', context)
             else:
                 return redirect('dashboard:answer-questions')
