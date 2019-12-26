@@ -249,7 +249,12 @@ function setupQuillEditor({ placeholder = null } = {}) {
     $('.rich-text-form').submit(function(e) {
         var submitted_string = String(quill.root.innerHTML);
         var regex = new RegExp("<p><br></p>", "g");
-        $('[name="rich-text-content"]').val(submitted_string.replace(regex, ''));
+        var cleaned_submission = submitted_string.replace(regex, '');
+        if (cleaned_submission != '') {
+            $('[name="rich-text-content"]').val(submitted_string.replace(regex, ''));
+        } else {
+            return false;
+        }
     });
 }
 
@@ -399,6 +404,24 @@ function setupHomePageCarouselRandomRhymes() {
         }
     });
 }
+
+function setupAddCredit() {
+    $('.add-credit').click(function(event) {
+        event.preventDefault();
+        $('.credits-card:first').clone().addClass('removable').appendTo('.credits-list').find('.credit-user-name').val('');
+        setupRemoveCredit();
+    });
+}
+
+function setupRemoveCredit() {
+    $('.remove-credit-user').click(function(event) {
+        event.preventDefault();
+        $(this).parent('.credits-card').remove();
+    });
+}
+
+setupAddCredit();
+setupRemoveCredit();
 
 // ======== CALL GENERAL FUNCTIONS ========
 

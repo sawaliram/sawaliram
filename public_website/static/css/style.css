@@ -1480,6 +1480,7 @@ h1.dashboard-home-greeting {
 
 .rich-text-form .ql-editor {
     min-height: 20rem;
+    padding: 0.8rem;
 }
 
 .rich-text-form  .ql-container.ql-snow {
@@ -1505,6 +1506,50 @@ h1.dashboard-home-greeting {
 .rich-text-form #submitbar {
     margin-bottom: 1rem;
     padding: 0 1rem;
+}
+
+.rich-text-form #credits-bar {
+    padding: 0 1rem;
+    margin: 2rem 0;
+}
+
+.rich-text-form #credits-bar h2 {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.rich-text-form #credits-bar .credits-card {
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+    margin-bottom: 1rem;
+}
+
+.rich-text-form #credits-bar .credits-card .credit-title {
+    width: 15%;
+    margin-right: 0.5rem;
+}
+
+.rich-text-form #credits-bar .credits-card .credit-user-name {
+    margin-bottom: 0;
+    width: 40%;
+    padding: 0.4rem 1rem;
+    margin-right: 0.2rem;
+}
+
+.rich-text-form #credits-bar .credits-card .remove-credit-user {
+    font-size: 1.2rem;
+    padding: 0 1rem;
+    color:#757575;
+    display: none;
+}
+
+.rich-text-form #credits-bar .credits-card .remove-credit-user:hover {
+    color: #d00;
+}
+
+.rich-text-form #credits-bar .credits-card.removable .remove-credit-user {
+    display: inline-block;
 }
 
 /* ======== SUBMIT QUESTIONS ======== */

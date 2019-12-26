@@ -111,15 +111,19 @@
 
 		<div id="credits-bar">
 			<h2>Credits</h2>
-			<div class="credits-card">
-				<select name="credit-title">
-					<option value="author" selected>Author</option>
-					<option value="co-author">Co-author</option>
-				</select>
-				<input type="text" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="Full Name">
-				<input type="hidden" name="credit-user-id" value="{{ request.user.id }}">
+			<div class="credits-list">
+				<div class="credits-card">
+					<select class="credit-title" name="credit-title">
+						<option value="author" selected>Author</option>
+						<option value="co-author">Co-author</option>
+						<option value="submitter">Submitter</option>
+					</select>
+					<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="Full Name">
+					<input type="hidden" name="credit-user-id" value="{{ request.user.id }}">
+					<button class="btn remove-credit-user"><i class="far fa-times-circle"></i></button>
+				</div>
 			</div>
-			<button class="btn btn-small btn-secondary-hollow"><i class="fas fa-plus"></i> Add</button>
+			<button class="btn btn-small btn-secondary-hollow add-credit"><i class="fas fa-plus"></i> Add</button>
 		</div>
 	
 		<div id="submitbar">

@@ -204,7 +204,6 @@ class AnswerComment(models.Model):
         db_table = 'answer_comment'
 
     text = models.TextField()
-
     answer = models.ForeignKey(
         'Answer',
         related_name='comments',
@@ -213,7 +212,29 @@ class AnswerComment(models.Model):
         'sawaliram_auth.User',
         related_name='answer_comments',
         on_delete=models.PROTECT)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
 
+
+class AnswerCredit(models.Model):
+    """Define the data model for answer and article credits"""
+
+    class Meta:
+        db_table = 'answer_credit'
+
+    credit_title = models.CharField(max_length=50)
+    credit_user_name = models.CharField(max_length=50)
+    is_user = models.BooleanField(default=False)
+    user = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='answer_credits',
+        on_delete=models.PROTECT,
+        default=''
+    )
+    answer = models.ForeignKey(
+        'Answer',
+        related_name='credits',
+        on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
