@@ -2244,8 +2244,6 @@ button.deny-access {
 .answer-section {
     display: flex;
     background-color: #fff;
-    padding-top: 5rem;
-    margin-top: -5rem;
     padding-bottom: 3rem;
 }
 
