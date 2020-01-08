@@ -173,7 +173,7 @@
         </div>
         {% endif %}
         <div class="tab-pane fade {% if request.user.id != selected_user.id %}show active{% endif %}" id="submissions" role="tabpanel" aria-labelledby="submissions">
-            {% if submitted_questions or submitted_answers or submitted_articles %}
+            {% if submitted_questions or submitted_answers or submitted_articles or published_articles %}
                 {% if submitted_questions %}
                 <div class="tab-section">
                     <h3 class="tab-subheading">Questions</h3>
