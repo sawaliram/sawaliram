@@ -2569,12 +2569,12 @@ p.tab-section-status.pending {
 
 
 
-.tab-content.user-profile-tab-content .tab-section .card-list {
+.card-list {
     padding-left: 0;
     margin-top: 1.5rem;
 }
 
-.tab-content.user-profile-tab-content .tab-section .card-list li {
+.card-list li {
     list-style: none;
     box-shadow: #eeecec 0rem 0rem 1rem 0rem;
     padding: 1rem;
@@ -2582,34 +2582,34 @@ p.tab-section-status.pending {
     border-radius: 5px;
 }
 
-.tab-content.user-profile-tab-content .tab-section .card-list li:not(:last-child) {
+.card-list li:not(:last-child) {
     margin-bottom: 1rem;
 }
 
-.tab-content.user-profile-tab-content .tab-section .card-list li.notification-card {
+.card-list li.notification-card {
     cursor: pointer;
 }
 
-.tab-content.user-profile-tab-content .tab-section .card-list li h4 {
+.card-list li h4 {
     font-size: 1.2rem;
 }
 
-.tab-content.user-profile-tab-content .tab-section .card-list li a.task-link {
+.card-list li a.task-link {
     font-size: 1.2rem;
     color: #000;
 }
 
-.tab-content.user-profile-tab-content .tab-section .card-list li .text-preview {
+.card-list li .text-preview {
     font-size: 1.2rem;
 }
 
-.tab-content.user-profile-tab-content .tab-section .card-list li .notification-details i {
+.card-list li .notification-details i {
     color: #9B63A8;
     border-radius: 50%;
     padding: 0.5rem;
 }
 
-.tab-content.user-profile-tab-content .tab-section .card-list li .notification-details span {
+.card-list li .notification-details span {
     display: inline-block;
     border-left: 1px solid #a6a6a6;
     padding-left: 0.8rem;
