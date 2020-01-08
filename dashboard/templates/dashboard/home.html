@@ -67,7 +67,7 @@
             </div>
             <div class="task-details">
                 <div class="task-title">
-                    <a href="javascript:void(0)">Review Answers</a>
+                    <a href="{% url 'dashboard:review-answers' %}">Review Answers</a>
                     <button class="btn btn-secondary-hollow task-help">Help?</button>
                 </div>
                 <p class="task-description">Review and suggest edits for answers before publishing to the website</p>
@@ -130,7 +130,7 @@
             </div>
             <div class="task-details">
                 <div class="task-title">
-                    <a href="{% url 'dashboard:view-questions' %}">View Questions</a>
+                    <a href="{% url 'dashboard:view-questions' %}?questions=answered&questions=unanswered">View Questions</a>
                     <button class="btn btn-secondary-hollow task-help">Help?</button>
                 </div>
                 <p class="task-description">View submitted questions by States and other metadata</p>

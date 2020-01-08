@@ -2,6 +2,88 @@
 
 {% block title %} Home | Sawaliram {% endblock %}
 
+{% load static %}
+
 {% block content %}
-<h1>Home Page</h1>
+
+<div id="homePageCarousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active rhyme-header">
+            <div class="carousel-content">
+                <div class="carousel-content-wrapper">
+                    <img src="{% static 'illustrations/home_carousel1.png' %}">
+                    <div class="carousel-text">
+                        <h1 class="carousel-header first-banner-text">{{ first_banner_text }}</h1>
+                        <p class="carousel-paragraph">Meet Sawaliram, a curious crow who likes questions</p>
+                        <button class="btn btn-yellow">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="carousel-content">
+                <div class="carousel-content-wrapper">
+                    <img src="{% static 'illustrations/home_carousel2.png' %}">
+                    <div class="carousel-text">
+                        <h1 class="carousel-header">Why don't sky and stars fall on earth?</h1>
+                        <p class="carousel-paragraph">Know the extent of all the questions, resources and blogs that Sawaliram has for you!</p>
+                        <a href="{% url 'public_website:search' %}" class="btn btn-yellow">View Questions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="carousel-content">
+                <div class="carousel-content-wrapper">
+                    <img src="{% static 'illustrations/home_carousel3.png' %}">
+                    <div class="carousel-text">
+                        <h1 class="carousel-header">4000+ questions asked in 6 languages</h1>
+                        <p class="carousel-paragraph">Know the extent of all the questions, resources and blogs that Sawaliram has for you!</p>
+                        <button class="btn btn-yellow">View Analytics</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ol class="carousel-indicators">
+        <li data-target="#homePageCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#homePageCarousel" data-slide-to="1"></li>
+        <li data-target="#homePageCarousel" data-slide-to="2"></li>
+    </ol>
+</div>
+
+<div class="home-search-wrapper">
+    <div class="home-search">
+        <img class="home-search-img1" src="{% static 'illustrations/home_search1.png' %}" alt="Sawaliram Search">
+        <form action="{% url 'public_website:search' %}" class="home-search-form" method="GET">
+            <input type="hidden" name="category" value="questions">
+            <input type="hidden" name="questions" value="answered">
+            <input type="hidden" name="questions" value="unanswered">
+            <input type="text" class="home-search-field" name="q" placeholder="Drop your question here">
+            <button class="btn home-search-submit" type="submit"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+</div>
+
+<div class="row home-page-links">
+    <div class="col-xs-12 col-lg-4 home-page-link-item">
+        <h2>Research</h2>
+        <img src="{% static 'illustrations/home_research.png' %}">
+        <p>What is curiosity really? At home and school, in the mind and in society. See what researchers find.</p>
+        <a href="{% url 'public_website:research' %}" class="btn btn-primary">Learn More</a>
+    </div>
+    <div class="col-xs-12 col-lg-4 home-page-link-item">
+        <h2>Articles</h2>
+        <img src="{% static 'illustrations/home_articles.png' %}">
+        <p>Stories about curiosity from near and far, now and long ago. Your stories could be here too!</p>
+        <button class="btn btn-primary">View Articles</button>
+    </div>
+    <div class="col-xs-12 col-lg-4 home-page-link-item">
+        <h2>Resources</h2>
+        <img src="{% static 'illustrations/home_resources.png' %}">
+        <p>View books, magazines, websites, Q&A collections, everything you want to know about curiosity and questioning.</p>
+        <button class="btn btn-primary">View Resources</button>
+    </div>
+</div>
+
 {% endblock %}

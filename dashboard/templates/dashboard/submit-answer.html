@@ -11,17 +11,23 @@
 {# TODO: add breadcrumb, after implemented in base.html #}
 
 {% block extra_header %}
+{% if prev_item_id or next_item_id %}
 <div class="navbar-extra row justify-content-end">
 	<div>
-		<button class="btn btn-secondary-hollow">&lt; Prev</button>
-		<button class="btn btn-secondary-hollow">Next &gt;</button>
+		{% if prev_item_id %}
+		<a href="{% url 'dashboard:submit-answer' question_id=prev_item_id %}" class="btn btn-secondary-hollow">&lt; Prev</a>
+		{% endif %}
+		{% if next_item_id %}
+		<a href="{% url 'dashboard:submit-answer' question_id=next_item_id %}" class="btn btn-secondary-hollow">Next &gt;</a>
+		{% endif %}
 	</div>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block content %}
 
-<div class="editor-container">
+<div class="wide-container">
 	{% if messages %}
         {% for message in messages %}
 			<div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
@@ -34,6 +40,11 @@
     {% endif %}
 	<div class="submit-answer-header">
 		<h1>{{ question.question_text }}</h1>
+		{% if question.question_language.lower != 'english' %}
+			{% if question.question_text_english %}
+				<h2>{{ question.question_text_english }}</h2>
+			{% endif %}
+		{% endif %}
 		{% if question.school or question.area or question.state or question.question_asked_on %}
 			<div class="question-meta">
 				{% if question.school %}
@@ -60,7 +71,9 @@
 	<form action="{% url 'dashboard:submit-answer' question_id=question.id %}" class="rich-text-form" method="POST">
 		{% csrf_token %}
 	
-		<div id="editor" data-placeholder="Type your answer here..."></div>
+		<div id="editor" data-placeholder="Type your answer here...">
+			{{ draft_answer|safe }}
+		</div>
 	
 		<div id="toolbar" class="justify-content-end">
 			<span class="ql-formats">
@@ -90,7 +103,8 @@
 		<div id="submitbar">
 			<input type="hidden" name="question_id" value="{{ question.id }}">
 			<input type="hidden" name="rich-text-content" value="" />
-			<button type="submit" class="btn btn-primary">Submit Answer</button>
+			<button type="submit" name="mode" value="{{ submission_mode }}" class="btn btn-primary">Submit Answer</button>
+			<button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
 		</div>
 	</form>
 </div>

@@ -107,6 +107,7 @@ class Question(models.Model):
     student_gender = models.CharField(max_length=100, default='')
     student_class = models.CharField(max_length=100, default='')
     question_text = models.CharField(max_length=1000)
+    question_text_english = models.CharField(max_length=1000, default='')
     question_format = models.CharField(max_length=100)
     question_language = models.CharField(max_length=100)
     contributor = models.CharField(max_length=100)
@@ -173,6 +174,46 @@ class Answer(models.Model):
         on_delete=models.PROTECT,
         default='',
         null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+
+class AnswerDraft(models.Model):
+
+    class Meta:
+        db_table = 'answer_draft'
+
+    answer_text = models.TextField()
+    question_id = models.ForeignKey(
+        'Question',
+        related_name='draft_answers',
+        on_delete=models.PROTECT,
+        default='')
+    answered_by = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='draft_answers',
+        on_delete=models.PROTECT,
+        default='')
+    last_saved = models.DateTimeField(auto_now=True)
+
+
+class AnswerComment(models.Model):
+    """Define the data model for comments on Answers"""
+
+    class Meta:
+        db_table = 'answer_comment'
+
+    text = models.TextField()
+
+    answer = models.ForeignKey(
+        'Answer',
+        related_name='comments',
+        on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='answer_comments',
+        on_delete=models.PROTECT)
+
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 

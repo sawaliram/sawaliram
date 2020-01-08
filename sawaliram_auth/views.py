@@ -6,18 +6,21 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+from django.http import HttpResponse
 
-from sawaliram_auth.models import User, VolunteerRequest
+from sawaliram_auth.models import User, VolunteerRequest, Bookmark
 from sawaliram_auth.forms import SignInForm, SignUpForm
 from sawaliram_auth.decorators import volunteer_permission_required
+from dashboard.models import Question, AnswerDraft
 
 
 class SignupView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('dashboard:home')
+            return redirect('public_website:home')
         form = SignUpForm(auto_id=False)
         context = {
             'form': form
@@ -30,6 +33,7 @@ class SignupView(View):
             user = User.objects.create_user(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
+                organisation=form.cleaned_data['organisation'],
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password']
             )
@@ -39,7 +43,7 @@ class SignupView(View):
             users.user_set.add(user)
 
             login(request, user)
-            return redirect(request.POST.get('next', 'dashboard:home'))
+            return redirect(request.POST.get('next', 'public_website:home'))
         context = {
             'form': form
         }
@@ -76,7 +80,7 @@ class SigninView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('dashboard:home')
+            return redirect('public_website:home')
         form = SignInForm(auto_id=False)
         context = {
             'form': form
@@ -92,7 +96,7 @@ class SigninView(View):
                 password=form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
-                return redirect(request.POST.get('next', 'dashboard:home'))
+                return redirect(request.POST.get('next', 'public_website:home'))
             else:
                 context = {
                     'form': form,
@@ -105,7 +109,7 @@ class SignoutView(View):
 
     def get(self, request):
         logout(request)
-        return redirect('dashboard:home')
+        return redirect('public_website:home')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -126,6 +130,7 @@ class ManageUsersView(View):
             'users': users,
             'pending_requests': pending_requests,
             'page_title': 'Manage Users',
+            'enable_breadcrumbs': 'Yes',
             'grey_background': 'True'
         }
 
@@ -179,3 +184,49 @@ class GrantOrDenyUserPermission(View):
 
         messages.success(request, user.first_name + ' ' + user.last_name + ' was granted ' + request.POST.get('permission') + ' access')
         return redirect('sawaliram_auth:manage-users')
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AddBookmark(View):
+    def post(self, request):
+        new_bookmark = Bookmark(
+            content_type=request.POST.get('content'),
+            question=Question.objects.get(id=request.POST.get('id')),
+            user=request.user
+        )
+        new_bookmark.save()
+
+        return HttpResponse()
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class RemoveBookmark(View):
+    def post(self, request):
+        bookmark_to_remove = Bookmark.objects.get(
+            content_type=request.POST.get('content'),
+            question=request.POST.get('id'))
+        bookmark_to_remove.delete()
+
+        return HttpResponse()
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class DeleteBookmark(View):
+    def post(self, request):
+        bookmark_to_remove = Bookmark.objects.get(
+            content_type=request.POST.get('content-type'),
+            question=request.POST.get('question-id'))
+        bookmark_to_remove.delete()
+        messages.success(request, 'Bookmark has been deleted!')
+        return redirect('public_website:user-profile', user_id=request.user.id)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class RemoveDraft(View):
+    def post(self, request):
+        draft_to_remove = AnswerDraft.objects.get(id=request.POST.get('draft-id'))
+        draft_to_remove.delete()
+        messages.success(request, 'Draft has been deleted!')
+        return redirect('public_website:user-profile', user_id=request.user.id)

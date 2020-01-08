@@ -39,10 +39,10 @@ function closeMenusOnClickingDarkbackground() {
 function resizeMainLogoOnScrollDown() {
     $(window).scroll(function() {
         if ($(window).scrollTop() > 100) {
-            $('#mainLogo').css('width', '190px');
+            $('#mainLogo').css('width', '200px');
         }
         else {
-            $('#mainLogo').css('width', '250px');
+            $('#mainLogo').css('width', '230px');
         }
     });
 }
@@ -71,24 +71,26 @@ function openVolunteerOptionDialog() {
     });
 }
 
-function togglePlaintextPassword() {
-    $('.password-plaintext i').click(function() {
-        if ($(this).hasClass('fa-eye-slash')) {
-            $(this).removeClass('fa-eye-slash');
-            $(this).addClass('fa-eye');
-        }
-        else {
-            $(this).removeClass('fa-eye');
-            $(this).addClass('fa-eye-slash');
-        }
+function setupNavbarSearchBar() {
+    $('.navbar-search-icon').click(function() {
+        $(this).toggleClass('active');
+        $('.navbar-search-box').toggleClass('open');
+    });
 
-        $('.password-plaintext').toggleClass('hidden');
+    $('.close-navbar-search-box').click(function(event) {
+        event.preventDefault();
+        $('.navbar-search-box').removeClass('open');
+        $('.navbar-search-icon').toggleClass('active');
     });
 }
 
-function copyPasswordToPlaintextArea() {
-    $('.password-field').on('input', function() {
-        $('.password-plaintext span').text($(this).val());
+function setupSearchResultsSearch() {
+    $('.search-results-search').submit(function(event) {
+        event.preventDefault();
+        var current_params = new URLSearchParams(location.search);
+        current_params.delete('q');
+        current_params.append('q', $('.search-results-search-field').val());
+        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
     });
 }
 
@@ -182,32 +184,34 @@ function setupSearchResultsSort() {
 
 function setupSearchResultsFilter() {
     $('.category-option').click(function() {
-        var current_params = new URLSearchParams(location.search);
-
-        if ($(this).hasClass('active')) {
-            var new_params_list = []
-            for (const value of current_params.entries()) {
-                if (value[1] == $(this).data('value')) {
-                    if (value[0] != $(this).data('param')) {
+        if (!$(this).hasClass('.no-fun')) {
+            var current_params = new URLSearchParams(location.search);
+            if ($(this).hasClass('active')) {
+                var new_params_list = []
+                for (const value of current_params.entries()) {
+                    if (value[1] == $(this).data('value')) {
+                        if (value[0] != $(this).data('param')) {
+                            new_params_list.push(value);
+                        }
+                    }
+                    else {
                         new_params_list.push(value);
                     }
                 }
+                new_params = new URLSearchParams(new_params_list);
+
+                if (new_params.toString() == '') {
+                    location.href = window.location.origin + window.location.pathname + new_params.toString();
+                }
                 else {
-                    new_params_list.push(value);
+                    location.href = window.location.origin + window.location.pathname + '?' + new_params.toString();
                 }
             }
-            new_params = new URLSearchParams(new_params_list);
-
-            if (new_params.toString() == '') {
-                location.href = window.location.origin + window.location.pathname + new_params.toString();
-            }
             else {
-                location.href = window.location.origin + window.location.pathname + '?' + new_params.toString();
+                current_params.delete('page');
+                current_params.append($(this).data('param'), $(this).data('value'));
+                location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
             }
-        }
-        else {
-            current_params.append($(this).data('param'), $(this).data('value'));
-            location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
         }
     });
 }
@@ -218,7 +222,7 @@ function setupSearchResultsClearAll() {
         var new_params_list = []
 
         for (const value of current_params.entries()) {
-            if ((value[0] == 'page') || (value[0] == 'sort-by')) {
+            if ((value[0] == 'page') || (value[0] == 'sort-by') || (value[0] == 'q')) {
                 new_params_list.push(value);
             }
         }
@@ -243,7 +247,9 @@ function setupQuillEditor({ placeholder = null } = {}) {
     });
 
     $('.rich-text-form').submit(function(e) {
-        $('[name="rich-text-content"]').val(quill.root.innerHTML);
+        var submitted_string = String(quill.root.innerHTML);
+        var regex = new RegExp("<p><br></p>", "g");
+        $('[name="rich-text-content"]').val(submitted_string.replace(regex, ''));
     });
 }
 
@@ -251,20 +257,167 @@ function activateTooltips() {
   $('[data-toggle="tooltip"]').tooltip()
 }
 
+/*
+ * Comment delete buttons
+ * These show the user a confirmation note before deciding whether to
+ * actually delete the comment or not
+*/
+
+function setupCommentDeleteButtons() {
+	$('.comment-delete-form')
+    .attr('method', 'POST')
+    .find('button.delete-button')
+	.html('delete?')
+	.click(function(e) {
+	    e.preventDefault();
+		$(this)
+		.css('display', 'none')
+		.next('span.delete-comment-prompt').show();
+	});
+	$('.comment-delete-form button.delete-cancel').click(function(e) {
+		$(this)
+		.parents('span.delete-comment-prompt').hide()
+		.prev('button.delete-button').css('display', '')
+		e.preventDefault();
+	});
+}
+
+function setupCommentFormDisplayToggle() {
+    $('.comment-form').hide();
+    $('*[data-toggle="#comment-form"]')
+    .click(function(e) {
+        $('.comment-form').toggle();
+    });
+}
+
+function setupDeleteReviewComment() {
+    $('.delete-comment').click(function() {
+        $(this).hide();
+        $(this).next('.delete-comment-form').show();
+    });
+
+    $('.confirm-delete').click(function(event) {
+        event.preventDefault();
+        if ($(this).hasClass('delete-yes')) {
+            $('.delete-comment-form').submit();
+        }
+        else {
+            $('.delete-comment-form').hide();
+            $('.delete-comment').show();
+        }
+    });
+}
+
+function setupBookmarkContentFunctionality() {
+    $('.bookmark-button').click(function() {
+
+        var form_data = new FormData();
+        form_data.append('content', $(this).data('content'));
+        form_data.append('id', $(this).data('id'));
+
+        if ($(this).html() == '<i class="far fa-bookmark"></i> Bookmark') {
+
+            // change the button icon and text
+            $(this).html('<i class="fas fa-bookmark"></i> Bookmarked');
+            $(this).addClass('bookmarked');
+
+            // save bookmark
+            $.ajax({
+                url: location.origin + '/users/bookmark/add',
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(response) {
+                    console.log(response);
+                },
+            });
+        }
+        else {
+            $(this).html('<i class="far fa-bookmark"></i> Bookmark');
+            $(this).removeClass('bookmarked');
+
+            // remove bookmark
+            $.ajax({
+                url: location.origin + '/users/bookmark/remove',
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(response) {
+                    console.log(response);
+                },
+            });
+        }
+    });
+}
+
+function enableLinkingtoTabs() {
+    $(document).ready(function() {
+        var hash = document.location.hash;
+        if (hash) {
+            $('.nav a[href="'+hash+'"]').tab('show');
+        }
+
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            window.location.hash = e.target.hash;
+        });
+    });
+}
+
+function setupViewNotification() {
+    $('.notification-card').click(function() {
+        $(this).children('.view-notification-form').submit();
+    });
+}
+
+function setupHomePageCarouselRandomRhymes() {
+    $('#homePageCarousel').on('slide.bs.carousel', function (event) {
+        if (event.relatedTarget.classList.contains('rhyme-header')) {
+            var rhymes_list = [
+                'Leaves or fruits or sprouting shoots?',
+                'Sun or stars or life on Mars?',
+                'Constellations or the fate of nations?',
+                'Curly tresses or yellow school buses?',
+                'Birds in the sky or a firefly?'
+            ]
+            var current_rhyme = $('.first-banner-text').text();
+            var available_rhymes_list = [];
+            rhymes_list.forEach(function(element) {
+                if (element != current_rhyme) {
+                    available_rhymes_list.push(element);
+                }
+            });
+            var next_rhyme = available_rhymes_list[Math.floor(Math.random() * available_rhymes_list.length)];
+            $('.first-banner-text').text(next_rhyme);
+        }
+    });
+}
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
 toggleUserMenu();
 closeMenusOnClickingDarkbackground();
+enableLinkingtoTabs();
+setupNavbarSearchBar();
+setupSearchResultsSearch();
 
-if (window.matchMedia("(min-width: 576px)").matches) {
-    resizeMainLogoOnScrollDown();
-}
-
-togglePlaintextPassword();
-copyPasswordToPlaintextArea();
+// if (window.matchMedia("(min-width: 576px)").matches) {
+//     resizeMainLogoOnScrollDown();
+// }
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
+
+if (window.location.pathname == '/') {
+    setupHomePageCarouselRandomRhymes();
+}
 
 if (window.location.pathname.includes('/dashboard/question/submit') || window.location.pathname.includes('/dashboard/manage-content')) {
     disableSubmitExcelButtonOnPageLoad();
@@ -277,14 +430,35 @@ if (pattern.test(window.location.pathname)) {
     activateTooltips();
 }
 
+var pattern = new RegExp("^/dashboard/question/\\d+/answers/\\d+/review")
+if (pattern.test(window.location.pathname)) {
+    // setupCommentFormDisplayToggle();
+    // setupCommentDeleteButtons();
+    setupDeleteReviewComment();
+}
+
+if (window.location.pathname.includes('/view-answer')) {
+    setupDeleteReviewComment();
+}
+
 if (window.location.pathname.includes('/users/how-can-i-help')) {
     highlightSelectedVolunteerOption();
     openVolunteerOptionDialog();
 }
 
-if (window.location.pathname.includes('/dashboard/view-questions') || (window.location.pathname.includes('/dashboard/answer-questions'))) {
+if (
+    window.location.pathname.includes('/dashboard/view-questions') ||
+    window.location.pathname.includes('/dashboard/answer-questions') ||
+    window.location.pathname.includes('/dashboard/review-answers') ||
+    window.location.pathname.includes('/search')
+   ) {
     setupSearchResultsPagination();
     setupSearchResultsSort();
     setupSearchResultsFilter();
     setupSearchResultsClearAll();
+    setupBookmarkContentFunctionality();
+}
+
+if (window.location.pathname.includes('/user/')) {
+    setupViewNotification();
 }

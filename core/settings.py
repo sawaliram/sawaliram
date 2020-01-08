@@ -1,5 +1,7 @@
 
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,7 +16,7 @@ SECRET_KEY = os.environ.get('sawaliram_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('sawaliram_debug_value') == 'True'
 
-ALLOWED_HOSTS = ['10.10.9.33', '117.198.100.10', '.sawaliram.org', 'localhost']
+ALLOWED_HOSTS = ['10.10.9.33', '117.198.100.10', '.sawaliram.org', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -79,6 +81,12 @@ DATABASES = {
 # Custom Auth System settings
 AUTH_USER_MODEL = 'sawaliram_auth.User'
 LOGIN_URL = '/users/signin'
+
+# Sentry settings
+sentry_sdk.init(
+    dsn="https://06e228b93d3644cd83a7d6b4ff1e66a1@sentry.io/1434408",
+    integrations=[DjangoIntegration()]
+)
 
 
 # Password validation

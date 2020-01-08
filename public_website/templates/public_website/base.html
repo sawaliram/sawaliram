@@ -5,12 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         {% load static %}
+        <link rel="shortcut icon" type="image/png" href="{% static 'icons/favicon.ico' %}"/>
         <link rel="stylesheet" href="{% static 'css/reboot.css' %}">
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i&display=swap&subset=latin-ext" rel="stylesheet">
 
         {% block head_includes %} {% endblock %}
 
@@ -28,7 +29,7 @@
                 <div class="row">
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_research.png' %}" alt="Research">
-                        <a href="javascript:void(0)">Research</a>
+                        <a href="{% url 'public_website:research' %}">Research</a>
                     </div>
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_blog.png' %}" alt="Blog">
@@ -48,7 +49,7 @@
                 <div class="row">
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_about.png' %}" alt="About">
-                        <a href="javascript:void(0)">About</a>
+                        <a href="{% url 'public_website:about' %}">About</a>
                     </div>
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_team.png' %}" alt="Team">
@@ -62,20 +63,13 @@
                     </div>
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_get_involved.png' %}" alt="Get Involved">
-                        <a href="javascript:void(0)">Get Involved!</a>
-                    </div>
-                </div>
-                <div class="row auth-buttons-area">
-                    <div class="col-sm auth-button">
-                        <a href="javascript:void(0)">Login</a>
-                    </div>
-                    <div class="col-sm auth-button">
-                        <a href="javascript:void(0)">Sign Up</a>
+                        <a href="{% url 'public_website:get-involved' %}">Get Involved!</a>
                     </div>
                 </div>
             </div>
         </nav>
 
+        {% if request.user.is_authenticated %}
         <nav class="user-menu slow-transition">
             <button class="btn user-menu-close">
                 <i class="fas fa-times"></i>
@@ -84,26 +78,29 @@
                 <div class="user-menu-profile">
                     <img src="{% static 'user/default.png' %}" alt="Profile Picture">
                     <p class="user-name">{{ request.user.get_full_name }}</p>
-                    <button class="btn btn-secondary edit-profile">Edit Profile</button>
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}" class="btn view-profile">View Profile</a>
                 </div>
                 <div class="user-menu-items">
-                    <a href="javascript:void(0)">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#settings">
                         <img class="slow-transition" src="{% static 'icons/menu_settings.png' %}" alt="User Settings">
                         Settings
                     </a>
-                    <a href="javascript:void(0)">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#drafts">
                         <img class="slow-transition" src="{% static 'icons/menu_drafts.png' %}" alt="User Drafts">
                         Drafts
                     </a>
-                    <a href="javascript:void(0)">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#notifications">
                         <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="User Notifications">
                         Notifications
+                        {% if request.user.notifications.all|length > 0 %}
+                            <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
+                        {% endif %}
                     </a>
-                    <a href="javascript:void(0)">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#submissions">
                         <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="User Submissions">
                         Submissions
                     </a>
-                    <a href="javascript:void(0)">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#bookmarks">
                         <img class="slow-transition" src="{% static 'icons/menu_bookmarks.png' %}" alt="User Bookmarks">
                         Bookmarks
                     </a>
@@ -114,59 +111,107 @@
                 </div>
             </div>
         </nav>
+        {% endif %}
+
+        <div class="navbar-search-box slow-transition">
+            <div class="navbar-search-form-wrapper">
+                <form action="{% url 'public_website:search' %}" class="navbar-search-form slow-transition" method="GET">
+                    <input type="hidden" name="category" value="questions">
+                    <input type="hidden" name="questions" value="answered">
+                    <input type="hidden" name="questions" value="unanswered">
+                    <input type="text" class="search-field" name="q" placeholder="Search for questions, articles and resources">
+                </form>
+                <button class="btn close-navbar-search-box"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
 
         <header class="navbar fixed-top navbar-light">
-            <a class="navbar-brand slow-transition" href="{% url 'public_site:home' %}">
-                <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo.png' %}" alt="Sawaliram Home">
-            </a>
-            <div class="navbar-options">
-                <i class="fas fa-search navbar-icon navbar-element"></i>
-                <div class="dropdown navbar-element">
-                    <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="languageSelector">
-                        English
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="languageSelector">
-                        <span class="dropdown-item">हिंदी</span>
-                        <span class="dropdown-item">मराठी</span>
-                        <span class="dropdown-item">മലയാളം</span>
-                        <span class="dropdown-item">தமிழ்</span>
-                    </div>
+            <div class="header-container">
+                <div class="left-section">
+                    <i class="fas fa-bars navbar-menu-toggle"></i>
+                    <a class="navbar-brand slow-transition" href="{% url 'public_website:home' %}">
+                        <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo.png' %}" alt="Sawaliram Home">
+                    </a>
                 </div>
-                <i class="fas fa-bars navbar-element navbar-menu-toggle"></i>
+                <div class="right-section">
+                    <i class="fas fa-search navbar-search-icon"></i>
+                    <div class="dropdown navbar-element">
+                        <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="languageSelector">
+                            English
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="languageSelector">
+                            <span class="dropdown-item">हिंदी</span>
+                            <span class="dropdown-item">मराठी</span>
+                            <span class="dropdown-item">മലയാളം</span>
+                            <span class="dropdown-item">தமிழ்</span>
+                        </div>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    <div class="navbar-user-wrapper">
+                        {% if request.user.notifications.all|length > 0 %}
+                            <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
+                        {% endif %}
+                        <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="navbarUserButton">
+                            <!-- <img src="{% static 'user/default_menu.png' %}" alt="User Profile Picture"> -->
+                            <i class="far fa-user-circle"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="navbarUserButton">
+                            <p class="user-name">{{ request.user.get_full_name }}</p>
+                            <span class="dropdown-item">
+                                <a href="{% url 'public_website:user-profile' user_id=request.user.id %}"><i class="fas fa-user-circle"></i> My Profile</a>
+                            </span>
+                            <span class="dropdown-item">
+                                <a href="{% url 'dashboard:home' %}"><i class="fas fa-pencil-ruler"></i> Dashboard</a>
+                            </span>
+                            <span class="dropdown-item">
+                                <a href="{% url 'sawaliram_auth:signout' %}"><i class="fas fa-sign-out-alt"></i> Signout</a>
+                            </span>
+                        </div>
+                    </div>
+                    {% else %}
+                        <a href="{% url 'sawaliram_auth:signin' %}" class="user-signin slow-transition"><i class="fas fa-sign-in-alt"></i></a>
+                    {% endif %}
+                </div>
             </div>
-            <div class="page-title-bar">
-                <p class="page-title">{{ page_title }}</p>
-                {% if user.is_authenticated %}
-                    <button class="btn user-menu-button">
-                        <span class="user-name">{{ user.get_full_name }}</span>
-                        <img src="{% static 'user/menu_default.png' %}" alt="User Profile Picture">
-                    </button>
-                {% endif %}
-            </div>
-            {% block extra_header %}
-                {# page-specific header/breadcrumbs can go here #}
-            {% endblock %}
         </header>
 
         <div class="container sawaliram-container flex-grow">
+            {% if page_title != 'Home' %}
+            <div class="page-title-bar">
+                <p class="page-title">
+                    {% if enable_breadcrumbs == 'Yes' and page_title != 'Dashboard Home' %}
+                        {% if page_title != 'Dashboard Home' %}
+                            <a href="{% url 'dashboard:home' %}">Dashboard Home</a> >
+                        {% endif %}
+                        {% if page_title == 'Submit Answer' %}
+                            <a href="{% url 'dashboard:answer-questions' %}">Answer Questions</a> >
+                        {% endif %}
+                        {% if page_title == 'Submit Review' %}
+                            <a href="{% url 'dashboard:review-answers' %}">Review Answers</a> >
+                        {% endif %}
+                    {% endif %}
+                    {{ page_title }}
+                </p>
+            </div>
+            {% endif %}
             {% block content %} {% endblock %}
         </div>
 
-        <footer>
+        <footer class="wavy-footer">
             <div class="row no-gutters footer-main">
                 <div class="col-12 col-sm-7 footer-column">
                     <p class="footer-text">
                         You too can volunteer to collect or answer questions, translate content or help build this website!
                     </p>
-                    <button class="btn get-involved">Get Involved!</button>
+                    <a href="{% url 'public_website:get-involved' %}" class="btn btn-yellow">Get Involved!</a>
                 </div>
                 <div class="col-12 col-sm-5 footer-column">
                     <div class="footer-links">
                         <a href="javascript:void(0)">Team</a>
                         <a href="javascript:void(0)">Contact</a>
-                        <a href="javascript:void(0)">Login</a>
-                        <a href="javascript:void(0)">FAQ</a>
+                        <a href="{% url 'public_website:faq' %}">FAQ</a>
+                        <a class="dashboard-link" href="{% url 'dashboard:home' %}">Dashboard</a>
                     </div>
                     <a class="social-media facebook" href="javascript:void(0)"><i class="fab fa-facebook-f"></i></a>
                     <a class="social-media youtube" href="javascript:void(0)"><i class="fab fa-youtube"></i></a>
@@ -174,7 +219,7 @@
                 </div>
             </div>
             <div class="footer-base">
-                &copy; Copyright Sawaliram 2019
+                <p>&copy; Copyright Sawaliram 2019</p>
             </div>
         </footer>
 
@@ -182,5 +227,6 @@
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         <script src="{% static 'js/script.js' %}"></script>
+        {% block footer %}{# We can add extra JS or something here #}{% endblock %}
     </body>
 </html>
