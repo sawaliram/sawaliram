@@ -119,7 +119,7 @@
                                 {{ draft.body|striptags|truncatechars:140  }}
                             </p>
                             <a href="{% url 'dashboard:edit-article' draft_id=draft.id %}" class="btn btn-secondary sub-task-button">Continue writing</a>
-                            <form class="inline-block" action="#" method="POST">
+                            <form class="inline-block" action="{% url 'dashboard:delete-article' draft.id %}" method="GET">
                                 {% csrf_token %}
                                 <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
                             </form>

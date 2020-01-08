@@ -67,6 +67,9 @@
 			<input type="hidden" name="rich-text-content" value="" />
 			<button type="submit" name="mode" value="submit" class="btn btn-primary">Submit Article</button>
 			<button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+			<a href="{% url 'dashboard:delete-article' article.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete article">
+			  <i class="fas fa-trash"></i>
+			</a>
 		</div>
 	</form>
 </div>

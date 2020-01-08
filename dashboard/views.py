@@ -859,6 +859,44 @@ class EditArticleView(View):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteArticleView(View):
+    def fetch_article(self, article):
+        """
+        Return selected comment
+        """
+
+        article = get_object_or_404(ArticleDraft, id=article)
+
+        return article
+
+    def get(self, request, article):
+        """
+        Confirm whether to delete a comment or not
+        """
+
+        article = self.fetch_article(article)
+
+        context = {
+            'article': article,
+        }
+        return render(request, 'dashboard/articles/delete.html', context)
+
+    def post(self, request, article):
+        """
+        Delete a previously published comment on an answer
+        """
+
+        article = self.fetch_article(article)
+
+        if request.user != article.author:
+            raise PermissionDenied('You are not authorised to delete that comment.')
+
+        article.delete()
+
+        return redirect('dashboard:home')
+
+@method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('admins'), name='dispatch')
 class ReviewSubmittedArticleView(View):
     '''
