@@ -3,6 +3,8 @@
 import datetime
 from django.db import models
 
+from django.utils.text import slugify
+
 LANGUAGE_CHOICES = [
     ('en', 'English'),
     ('hi', 'Hindi'),
@@ -368,6 +370,10 @@ class Article(models.Model):
 
     status = models.IntegerField(default=-1) # draft
 
+    # Managers
+
+    objects = models.Manager()
+
     get_published = PublishedArticleManager()
     get_drafts = ArticleDraftManager()
     get_submitted = SubmittedArticleManager()
@@ -383,6 +389,9 @@ class Article(models.Model):
     @property
     def is_published(self):
         return self.status == self.STATUS_PUBLISHED
+
+    def get_slug(self):
+        return slugify(self.title)
 
     class Meta:
         db_table = 'articles'
