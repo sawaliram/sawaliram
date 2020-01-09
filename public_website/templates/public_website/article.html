@@ -1,0 +1,26 @@
+{% extends 'public_website/base.html' %}
+
+{% block title %}{{ article.title }} | Sawaliram{% endblock %}
+
+{% block content %}
+
+{% if article.cover_image %}
+<img src="{{ article.cover_image }} class="cover-image" />
+{% endif %}
+<article class="article row">
+  <header class="article-meta col-sm-3">
+    <h1>{{ article.title }}</h1>
+    <p>
+      {{ article.published_on|date:'d M Y' }}
+      |
+      <a href="{% url 'public_website:user-profile' article.author.id %}" class="text-secondary">{{ article.author.get_full_name }}</a>
+    </p>
+  </header>
+  <section class="article-body col-sm-6">
+    {{ article.body|safe }}
+  </section>
+  <aside class="article-footer col-sm-3">
+  </aside>
+</article>
+    
+{% endblock %}

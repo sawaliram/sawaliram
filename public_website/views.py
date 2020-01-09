@@ -1,6 +1,10 @@
 """Define the View classes that will handle the public website pages"""
 
-from django.shortcuts import render, redirect
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404
+)
 from django.views import View
 from django.contrib import messages
 from django.contrib.auth import login
@@ -12,7 +16,15 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 
-from dashboard.models import AnswerDraft, Dataset, Answer, Question, PublishedArticle, ArticleDraft, SubmittedArticle
+from dashboard.models import (
+    AnswerDraft, Dataset,
+    Answer,
+    Question,
+    Article,
+    PublishedArticle,
+    ArticleDraft,
+    SubmittedArticle,
+)
 from sawaliram_auth.models import User, Bookmark, Notification
 from public_website.models import AnswerUserComment
 
@@ -247,6 +259,27 @@ class ViewAnswer(View):
 
         return render(request, 'public_website/view-answer.html', context)
 
+class ArticleView(View):
+    def get (self, request, article, slug=None):
+        article = get_object_or_404(Article, id=article)
+
+        # Don't allow other people to see an unpublished draft
+        if article.is_draft and article.author != request.user:
+            raise Http404('Article does not exist')
+
+        # Set slug if required
+        if slug != article.get_slug():
+            return redirect(
+                'public_website:view-article',
+                slug=article.get_slug(),
+                article=article.id
+            )
+
+        context = {
+            'article': article,
+        }
+
+        return render(request, 'public_website/article.html', context)
 
 class SubmitUserCommentOnAnswer(View):
     def post(self, request, question_id, answer_id):
