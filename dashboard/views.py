@@ -25,12 +25,13 @@ from django.core.exceptions import (
 )
 from django.urls import reverse
 
+from django.conf import settings
+
 from sawaliram_auth.decorators import (
     permission_required,
     volunteer_permission_required,
 )
 from dashboard.models import (
-    LANGUAGE_CHOICES,
     QuestionArchive,
     Question,
     Answer,
@@ -818,7 +819,7 @@ class EditArticleView(View):
         context = {
             'article': article,
             'grey_background': 'True',
-            'language_choices': LANGUAGE_CHOICES,
+            'language_choices': settings.LANGUAGE_CHOICES,
         }
 
         return render(request, self.template, context)
@@ -832,7 +833,7 @@ class EditArticleView(View):
         context = {
             'article': article,
             'grey_background': 'True',
-            'language_choices': LANGUAGE_CHOICES,
+            'language_choices': settings.LANGUAGE_CHOICES,
         }
 
         article.title = request.POST.get('title')

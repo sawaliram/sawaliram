@@ -18,5 +18,6 @@ urlpatterns = [
     path('question/<int:question_id>/answers/<int:answer_id>/user-comment/<int:comment_id>/delete', views.DeleteUserCommentOnAnswer.as_view(), name='delete-user-comment-answer'),
     path('blog/<int:article>/', views.ArticleView.as_view(), name='view-article'),
     path('blog/<str:slug>-<int:article>', views.ArticleView.as_view(), name='view-article'),
+    path('lang/<str:language>', views.SetLanguageView.as_view(), name='set-language'),
     path('about', views.About.as_view(), name='about'),
 ]
