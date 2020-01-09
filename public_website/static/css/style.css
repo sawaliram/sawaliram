@@ -60,10 +60,6 @@ a:hover {
     text-decoration: none;
 }
 
-i {
-    margin-right: 0.2rem;
-}
-
 textarea,
 input[type=text], 
 input[type=password], 
@@ -1462,13 +1458,17 @@ h1.dashboard-home-greeting {
 .wide-container {
     max-width: 65%;
     margin: auto;
-    /* padding-top: 2rem; */
 }
 
 @media (max-width: 576px) {
     .wide-container {
         max-width: 100%;
     }
+}
+
+.editor-container {
+    max-width: 70%;
+    margin: auto;
 }
 
 .rich-text-form {
@@ -1480,6 +1480,7 @@ h1.dashboard-home-greeting {
 
 .rich-text-form .ql-editor {
     min-height: 20rem;
+    padding: 0.8rem;
 }
 
 .rich-text-form  .ql-container.ql-snow {
@@ -1497,14 +1498,58 @@ h1.dashboard-home-greeting {
 .rich-text-form #toolbar {
     border: none;
     border-top: 1px solid lightgray;
-    padding: 0.8rem;
+    padding: 0.8rem 0;
     margin: 0 1rem 0rem 1rem;
-    text-align: right;
+    text-align: left;
 }
 
 .rich-text-form #submitbar {
     margin-bottom: 1rem;
     padding: 0 1rem;
+}
+
+.rich-text-form #credits-bar {
+    padding: 0 1rem;
+    margin: 2rem 0;
+}
+
+.rich-text-form #credits-bar h2 {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.rich-text-form #credits-bar .credits-card {
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+    margin-bottom: 1rem;
+}
+
+.rich-text-form #credits-bar .credits-card .credit-title {
+    width: 15%;
+    margin-right: 0.5rem;
+}
+
+.rich-text-form #credits-bar .credits-card .credit-user-name {
+    margin-bottom: 0;
+    width: 40%;
+    padding: 0.4rem 1rem;
+    margin-right: 0.2rem;
+}
+
+.rich-text-form #credits-bar .credits-card .remove-credit-user {
+    font-size: 1.2rem;
+    padding: 0 1rem;
+    color:#757575;
+    display: none;
+}
+
+.rich-text-form #credits-bar .credits-card .remove-credit-user:hover {
+    color: #d00;
+}
+
+.rich-text-form #credits-bar .credits-card.removable .remove-credit-user {
+    display: inline-block;
 }
 
 /* ======== SUBMIT QUESTIONS ======== */
@@ -2048,25 +2093,78 @@ button.deny-access {
 
 /* ======== SUBMIT ANSWER ======== */
 
+.editor-header .header-controls {
+    display: flex;
+    justify-content: space-between;
+}
+
+.editor-header .header-controls .item-cycle-controls .prev-link,
+.editor-header .header-controls .item-cycle-controls .next-link {
+    margin: 0.4rem 0;
+    padding: 0;
+    background-color:#f2f2f2;
+    color:#9b63a8;
+    text-decoration: underline;
+    border: none;
+    border-radius: 0;
+}
+
+.editor-header .header-controls .item-cycle-controls .prev-link {
+    padding-right: 0.3rem;
+}
+
+.editor-header .header-controls .item-cycle-controls .next-link {
+    padding-left: 0.3rem;
+}
+
+.editor-header .header-controls .item-cycle-controls a i {
+    font-size: 0.9rem;
+}
+
+.editor-header .header-controls .item-cycle-controls .prev-link i {
+    margin-right: 0.3rem;
+}
+
+.editor-header .header-controls .item-cycle-controls .next-link i {
+    margin-left: 0.3rem;
+}
+
+.editor-header .header-controls .submission-language-control {
+    display: flex;
+    align-items: center;
+}
+
+.editor-header .header-controls .submission-language-control .dropdown {
+    margin-left: 0.8rem;
+}
+
+.editor-header .header-controls .submission-language-control .dropdown button {
+    border-radius: 3px;
+}
+
 .answer-details h1,
-.submit-answer-header h1 {
+.editor-header h1 {
     font-size: 1.7rem;
     margin-top: 2rem;
 }
 
-.submit-answer-header h2 {
+.editor-header h1 {
+    margin-top: 1rem;
+}
+
+.editor-header h2 {
     font-size: 1.1rem;
     color: #8e8e8e;
     margin-bottom: 1.5rem;
 }
 
-.submit-answer-header .question-meta {
+.editor-header .question-meta {
     margin: 1rem 0;
     font-size: 0.9rem;
     color: #666;
 }
 
-.submit-answer-header .question-meta span:not(:last-child) {
+.editor-header .question-meta span:not(:last-child) {
     border-right: 2px solid #acacac;
     padding-right: 0.5rem;
     margin-right: 0.6rem;
@@ -2129,10 +2227,11 @@ button.deny-access {
 }
 
 .review-page-container .answer-area h2 {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    font-weight: bold;
     color: #424242;
     margin-bottom: 1rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
 .review-page-container .answer-area .answer-text {
@@ -2140,12 +2239,30 @@ button.deny-access {
     border-bottom: 1px solid #D6D6D6;
     padding: 1rem 0;
     padding-bottom: 0;
-    margin-bottom: 1.5rem;
+    margin: 1.5rem 0;
     text-align: justify;
 }
 
 .review-page-container .answer-area .answer-text img {
     width: 100%;
+}
+
+.review-page-container .answer-area .credit-card {
+    margin-bottom: 1rem;
+}
+
+.review-page-container .answer-area .credit-card p {
+    margin-bottom: 0;
+}
+
+.review-page-container .answer-area .credit-card span {
+    color: grey;
+}
+
+.review-page-container .answer-area form {
+    border-top: 1px solid #D6D6D6;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
 }
 
 .review-page-container .answer-area .publish-info-text {

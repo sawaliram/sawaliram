@@ -249,7 +249,12 @@ function setupQuillEditor({ placeholder = null } = {}) {
     $('.rich-text-form').submit(function(e) {
         var submitted_string = String(quill.root.innerHTML);
         var regex = new RegExp("<p><br></p>", "g");
-        $('[name="rich-text-content"]').val(submitted_string.replace(regex, ''));
+        var cleaned_submission = submitted_string.replace(regex, '');
+        if (cleaned_submission != '') {
+            $('[name="rich-text-content"]').val(submitted_string.replace(regex, ''));
+        } else {
+            return false;
+        }
     });
 }
 
@@ -299,7 +304,7 @@ function setupDeleteReviewComment() {
     $('.confirm-delete').click(function(event) {
         event.preventDefault();
         if ($(this).hasClass('delete-yes')) {
-            $('.delete-comment-form').submit();
+            $(this).parent('.delete-comment-form').submit();
         }
         else {
             $('.delete-comment-form').hide();
@@ -399,6 +404,26 @@ function setupHomePageCarouselRandomRhymes() {
         }
     });
 }
+
+function setupAddCredit() {
+    $('.add-credit').click(function(event) {
+        event.preventDefault();
+        var credit_form = $('.credits-card:first').clone().addClass('removable').appendTo('.credits-list'); 
+        credit_form.find('.credit-user-name').val('').removeAttr('readonly').attr('value' ,'');
+        credit_form.find('.credit-user-id').prop('value', '');
+        setupRemoveCredit();
+    });
+}
+
+function setupRemoveCredit() {
+    $('.remove-credit-user').click(function(event) {
+        event.preventDefault();
+        $(this).parent('.credits-card').remove();
+    });
+}
+
+setupAddCredit();
+setupRemoveCredit();
 
 // ======== CALL GENERAL FUNCTIONS ========
 

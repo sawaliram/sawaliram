@@ -9,20 +9,36 @@
 {% with question=answer.question_id %}
 <div class="review-page-container">
     <div class="answer-area">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
         <h1>{{ question.question_text }}</h1>
         {% if question.question_language.lower != 'english' %}
 			{% if question.question_text_english %}
             <h1 class="question-translation">{{ question.question_text_english }}</h1>
             {% endif %}
         {% endif %}
-        <h2 class="answered-by">Answered by <b>{{ answer.answered_by.get_full_name }}</b></h2>
         <div class="answer-text">
             {{ answer.answer_text|safe }}
         </div>
+        <h2>Credits</h2>
+        {% for credit in answer.credits.all %}
+            <div class="credit-card">
+                <p>{{ credit.credit_user_name }}</p>
+                <span>{{ credit.credit_title|capfirst }}</span>
+            </div>
+        {% endfor %}
         {% if answer.approved_by %}
             <p class="published-text"><i class="far fa-check-circle"></i> Published by <b>{{ answer.approved_by.get_full_name }}</b></p>
         {% else %}
-            {% if request.user != answer.answered_by %}
+            {% if request.user != answer.submitted_by %}
                 <form action="{% url 'dashboard:approve-answer' question_id=question.id answer_id=answer.id %}" method="POST">
                     {% csrf_token %}
                     <p class="publish-info-text">
@@ -54,7 +70,7 @@
                         <h3>{{ comment.author.get_full_name }}</h3>
                         {% if comment.author == request.user %}
                         <div class="delete-comment-wrapper">
-                            <button type="submit" class="btn delete-comment slow-transition">Delete <i class="far fa-trash-alt"></i></button>
+                            <button type="submit" class="btn delete-comment slow-transition">Delete {{ comment.id}}<i class="far fa-trash-alt"></i></button>
                             <form action="{% url 'dashboard:delete-answer-comment' question.id answer.id comment.id %}" class="delete-comment-form slow-transition" method="POST">
                                 {% csrf_token %}
                                 <span>Are you sure?</span>

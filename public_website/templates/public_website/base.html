@@ -69,50 +69,6 @@
             </div>
         </nav>
 
-        {% if request.user.is_authenticated %}
-        <nav class="user-menu slow-transition">
-            <button class="btn user-menu-close">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="user-menu-container">
-                <div class="user-menu-profile">
-                    <img src="{% static 'user/default.png' %}" alt="Profile Picture">
-                    <p class="user-name">{{ request.user.get_full_name }}</p>
-                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}" class="btn view-profile">View Profile</a>
-                </div>
-                <div class="user-menu-items">
-                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#settings">
-                        <img class="slow-transition" src="{% static 'icons/menu_settings.png' %}" alt="User Settings">
-                        Settings
-                    </a>
-                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#drafts">
-                        <img class="slow-transition" src="{% static 'icons/menu_drafts.png' %}" alt="User Drafts">
-                        Drafts
-                    </a>
-                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#notifications">
-                        <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="User Notifications">
-                        Notifications
-                        {% if request.user.notifications.all|length > 0 %}
-                            <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
-                        {% endif %}
-                    </a>
-                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#submissions">
-                        <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="User Submissions">
-                        Submissions
-                    </a>
-                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#bookmarks">
-                        <img class="slow-transition" src="{% static 'icons/menu_bookmarks.png' %}" alt="User Bookmarks">
-                        Bookmarks
-                    </a>
-                    <a href="{% url 'sawaliram_auth:signout' %}">
-                        <img class="slow-transition" src="{% static 'icons/menu_signout.png' %}" alt="User Signout">
-                        Signout
-                    </a>
-                </div>
-            </div>
-        </nav>
-        {% endif %}
-
         <div class="navbar-search-box slow-transition">
             <div class="navbar-search-form-wrapper">
                 <form action="{% url 'public_website:search' %}" class="navbar-search-form slow-transition" method="GET">
