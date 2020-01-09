@@ -6,6 +6,11 @@ from django.shortcuts import (
     get_object_or_404
 )
 from django.views import View
+from django.utils.translation import gettext as _
+from django.utils.translation import (
+    ngettext,
+    pgettext,
+)
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password, make_password
@@ -38,15 +43,15 @@ from pprint import pprint
 class HomeView(View):
     def get(self, request):
         banner_texts_list = [
-            'Leaves or fruits or sprouting shoots?',
-            'Sun or stars or life on Mars?',
-            'Constellations or the fate of nations?',
-            'Curly tresses or yellow school buses?',
-            'Birds in the sky or a firefly?'
+            _('Leaves or fruits or sprouting shoots?'),
+            _('Sun or stars or life on Mars?'),
+            _('Constellations or the fate of nations?'),
+            _('Curly tresses or yellow school buses?'),
+            _('Birds in the sky or a firefly?'),
         ]
         context = {
             'dashboard': 'False',
-            'page_title': 'Home',
+            'page_title': pgettext('website homepage', 'Home'),
             'first_banner_text': random.choice(banner_texts_list)
         }
         return render(request, 'public_website/home.html', context)
@@ -55,9 +60,13 @@ class HomeView(View):
 class SetLanguageView(View):
     def post(self, request, language):
         request.session['lang'] = language
-        return redirect(request.POST.get('next')
+
+        response = redirect(request.POST.get('next')
             or request.GET.get('next')
             or 'public_website:home')
+        response.set_cookie('lang', language)
+
+        return response
 
     def get(self, request, language):
         # TODO: display language picker or something

@@ -36,6 +36,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -112,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Asia/Kolkata'
 
@@ -124,7 +125,7 @@ USE_TZ = True
 
 # Possible languages available in this website
 # (used for models, language fields, etc.)
-LANGUAGE_CHOICES = [
+LANGUAGES = [
     ('en', 'English'),
     ('hi', 'हिंदी'),
     ('mr', 'मराठी'),
@@ -133,7 +134,19 @@ LANGUAGE_CHOICES = [
     ('te', 'తెలుగు'),
 ]
 
-DEFAULT_LANGUAGE = 'en'
+# Cookie settings
+LANGUAGE_COOKIE_NAME = 'lang'
+
+# Translation files
+LOCALE_PATHS = [
+    BASE_DIR + '/locale',
+]
+
+# For backward compatibility since old functions still expect this
+# name for the variable.
+# TODO: weed out and delete
+LANGUAGE_CHOICES = LANGUAGES
+DEFAULT_LANGUAGE = LANGUAGE_CODE
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
