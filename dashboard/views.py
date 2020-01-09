@@ -802,6 +802,19 @@ class EditArticleView(View):
     success_message = 'Thanks! Your article has been submitted.'
     draft_save_message = 'Your changes have been saved.'
 
+    def get_article(self, article):
+        '''
+        Fetch and sanitise an article
+        '''
+
+        article = get_object_or_404(self.model, id=article)
+
+        # Sanitise fields so 'None' doesn't get rendered
+        if article.title is None: article.title = ''
+        if article.body is None: article.body = ''
+
+        return article
+
     def submit_article(self, article):
         '''
         Submits the article. Override this for custom behaviour.
@@ -814,7 +827,7 @@ class EditArticleView(View):
         Display the edit form
         '''
 
-        article = get_object_or_404(self.model, id=draft_id)
+        article = self.get_article(draft_id)
         context = {
             'article': article,
             'grey_background': 'True',
@@ -828,7 +841,7 @@ class EditArticleView(View):
         Save draft or submit post
         '''
 
-        article = get_object_or_404(self.model, id=draft_id)
+        article = self.get_article(draft_id)
         context = {
             'article': article,
             'grey_background': 'True',
