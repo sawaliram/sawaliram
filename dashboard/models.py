@@ -163,9 +163,10 @@ class Answer(models.Model):
         related_name='answers',
         on_delete=models.PROTECT,
         default='')
-    answered_by = models.ForeignKey(
+    status = models.CharField(max_length=50, default='submitted')
+    submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
-        related_name='submitted_answers',
+        related_name='answers',
         on_delete=models.PROTECT,
         default='')
     approved_by = models.ForeignKey(
@@ -176,25 +177,6 @@ class Answer(models.Model):
         null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-
-
-class AnswerDraft(models.Model):
-
-    class Meta:
-        db_table = 'answer_draft'
-
-    answer_text = models.TextField()
-    question_id = models.ForeignKey(
-        'Question',
-        related_name='draft_answers',
-        on_delete=models.PROTECT,
-        default='')
-    answered_by = models.ForeignKey(
-        'sawaliram_auth.User',
-        related_name='draft_answers',
-        on_delete=models.PROTECT,
-        default='')
-    last_saved = models.DateTimeField(auto_now=True)
 
 
 class AnswerComment(models.Model):
@@ -221,6 +203,7 @@ class AnswerCredit(models.Model):
 
     class Meta:
         db_table = 'answer_credit'
+        ordering = ['id']
 
     credit_title = models.CharField(max_length=50)
     credit_user_name = models.CharField(max_length=50)
@@ -229,8 +212,8 @@ class AnswerCredit(models.Model):
         'sawaliram_auth.User',
         related_name='answer_credits',
         on_delete=models.PROTECT,
-        default=''
-    )
+        default='',
+        null=True)
     answer = models.ForeignKey(
         'Answer',
         related_name='credits',

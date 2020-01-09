@@ -81,7 +81,7 @@
 		{% csrf_token %}
 		
 		<div id="editor" data-placeholder="Type your answer here...">
-			{{ draft_answer|safe }}
+			{{ draft_answer.answer_text|safe }}
 		</div>
 	
 		<div id="toolbar">
@@ -112,16 +112,31 @@
 		<div id="credits-bar">
 			<h2>Credits</h2>
 			<div class="credits-list">
-				<div class="credits-card">
-					<select class="credit-title" name="credit-title">
-						<option value="author" selected>Author</option>
-						<option value="co-author">Co-author</option>
-						<option value="submitter">Submitter</option>
-					</select>
-					<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="Full Name">
-					<input type="hidden" name="credit-user-id" value="{{ request.user.id }}">
-					<button class="btn remove-credit-user"><i class="far fa-times-circle"></i></button>
-				</div>
+				{% if draft_answer %}
+					{% for credit in draft_answer.credits.all %}
+						<div class="credits-card {% if not forloop.first %}removable{% endif %}">
+							<select class="credit-title" name="credit-title">
+								<option value="author" {% if credit.credit_title == 'author' %}selected{% endif %}>Author</option>
+								<option value="co-author" {% if credit.credit_title == 'co-author' %}selected{% endif %}>Co-author</option>
+								<option value="submitter" {% if credit.credit_title == 'submitter' %}selected{% endif %}>Submitter</option>
+							</select>
+							<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ credit.credit_user_name }}" placeholder="Full Name" {% if forloop.first %}readonly{% endif %}>
+							<input type="hidden" class="credit-user-id" name="credit-user-id" value="">
+							<button class="btn remove-credit-user"><i class="far fa-times-circle"></i></button>
+						</div>
+					{% endfor %}
+				{% else %}
+					<div class="credits-card">
+						<select class="credit-title" name="credit-title">
+							<option value="author" selected>Author</option>
+							<option value="co-author">Co-author</option>
+							<option value="submitter">Submitter</option>
+						</select>
+						<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="Full Name" readonly>
+						<input type="hidden" class="credit-user-id" name="credit-user-id" value="{{ request.user.id }}">
+						<button class="btn remove-credit-user"><i class="far fa-times-circle"></i></button>
+					</div>
+				{% endif %}
 			</div>
 			<button class="btn btn-small btn-secondary-hollow add-credit"><i class="fas fa-plus"></i> Add</button>
 		</div>
@@ -129,8 +144,14 @@
 		<div id="submitbar">
 			<input type="hidden" name="question_id" value="{{ question.id }}">
 			<input type="hidden" name="rich-text-content" value="" />
-			<button type="submit" name="mode" value="{{ submission_mode }}" class="btn btn-primary">Submit Answer</button>
-			<button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+
+			{% if draft_answer and draft_answer.status == 'submitted' %}
+				<input type="hidden" name="answer_id" value="{{ draft_answer.id }}">
+				<button type="submit" name="mode" value="edit" class="btn btn-primary">Save</button>
+			{% else %}
+				<button type="submit" name="mode" value="{{ submission_mode }}" class="btn btn-primary">Submit Answer</button>
+				<button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+			{% endif %}
 		</div>
 	</form>
 </div>

@@ -12,7 +12,7 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 
-from dashboard.models import AnswerDraft, Dataset, Answer, Question
+from dashboard.models import Dataset, Answer, Question
 from sawaliram_auth.models import User, Bookmark, Notification
 from public_website.models import AnswerUserComment
 
@@ -344,9 +344,9 @@ class UserProfileView(View):
             raise Http404
         else:
             selected_user = User.objects.get(id=user_id)
-            answer_drafts = AnswerDraft.objects.filter(answered_by_id=user_id)
+            answer_drafts = Answer.objects.filter(submitted_by=user_id, status='draft')
             submitted_questions = Dataset.objects.filter(submitted_by=user_id)
-            submitted_answers = Answer.objects.filter(answered_by=user_id)
+            submitted_answers = Answer.objects.filter(submitted_by=user_id)
             bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
             bookmarked_articles = selected_user.bookmarks.filter(content_type='article')
             notifications = Notification.objects.filter(user=user_id)

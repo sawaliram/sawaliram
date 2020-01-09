@@ -25,8 +25,8 @@ from dashboard.models import (
     QuestionArchive,
     Question,
     Answer,
-    AnswerDraft,
     AnswerComment,
+    AnswerCredit,
     UnencodedSubmission,
     Dataset)
 from sawaliram_auth.models import Notification, User
@@ -481,9 +481,9 @@ class ReviewAnswersList(SearchView):
         if 'q' in request.GET:
             query_set = Question.objects.filter(
                                 answers__approved_by__isnull=True,
-                                answers__answered_by__isnull=False,
+                                answers__submitted_by__isnull=False,
                             ).exclude(
-                                answers__answered_by=request.user,
+                                answers__submitted_by=request.user,
                             ).distinct()
             return query_set.filter(
                     Q(question_text__icontains=request.GET.get('q')) |
@@ -496,9 +496,9 @@ class ReviewAnswersList(SearchView):
         else:
             return Question.objects.filter(
                             answers__approved_by__isnull=True,
-                            answers__answered_by__isnull=False,
+                            answers__submitted_by__isnull=False,
                         ).exclude(
-                            answers__answered_by=request.user,
+                            answers__submitted_by=request.user,
                         ).distinct()
 
     def get_page_title(self, request):
@@ -543,20 +543,18 @@ class SubmitAnswerView(View):
 
         # Prefill draft answer, if any
         try:
-            context['draft_answer'] = request.user.draft_answers.get(
-                question_id=question_to_answer).answer_text
-        except AnswerDraft.DoesNotExist:
+            if request.GET.get('mode') == 'edit':
+                context['draft_answer'] = Answer.objects.get(pk=request.GET.get('answer'))
+            else:
+                context['draft_answer'] = request.user.answers.get(
+                    question_id=question_to_answer, status='draft')
+        except Answer.DoesNotExist:
             pass
-
-        # Prefill current answer if in edit mode
-        if request.GET.get('mode') == 'edit':
-            context['draft_answer'] = Answer.objects.get(pk=request.GET.get('answer')).answer_text
-            context['submission_mode'] = 'edit'
 
         return render(request, 'dashboard/submit-answer.html', context)
 
     def post(self, request, question_id):
-        """Save the submitted answer for review"""
+        """Save the submitted answer for review or as draft"""
 
         question_to_answer = Question.objects.get(pk=question_id)
 
@@ -582,71 +580,104 @@ class SubmitAnswerView(View):
             # Save draft
 
             # Fetch or create draft
-            draft, createdp = request.user.draft_answers.get_or_create(
-                question_id=question_to_answer)
+            draft, createdp = request.user.answers.get_or_create(
+                question_id=question_to_answer, status='draft')
 
             # Update values and save
             draft.answer_text = request.POST.get('rich-text-content')
+            draft.submitted_by = request.user
             draft.save()
 
-            # Congratulate the user
+            # Save credits
+            # delete existing credits for the answer, if any
+            for credit in draft.credits.all():
+                credit.delete()
+
+            credit_titles = request.POST.getlist('credit-title')
+            credited_user_names = request.POST.getlist('credit-user-name')
+            credited_user_ids = request.POST.getlist('credit-user-id')
+
+            for i in range(len(credited_user_names)):
+                credit = AnswerCredit()
+                credit.credit_title = credit_titles[i]
+                credit.credit_user_name = credited_user_names[i]
+                if credited_user_ids[i]:
+                    credit.is_user = True
+                    credit.user = User.objects.get(pk=credited_user_ids[i])
+                credit.answer = draft
+                credit.save()
+
+            # show success message to the user
             messages.success(request, ('Your answer has been saved!'
                 ' You can return to this page any time to '
                 'continue editing, or go to "Drafts" in your User Profile.'))
 
             # Set draft in context to re-display
-            context['draft_answer'] = draft.answer_text
+            context['draft_answer'] = draft
             context['prev_item_id'] = prev_item_id
             context['next_item_id'] = next_item_id
 
             return render(request, 'dashboard/submit-answer.html', context)
 
         else:
-            # Submit answer
 
-            # Create new answer object
-            answer, created = request.user.submitted_answers.get_or_create(
-                question_id=question_to_answer)
+            if request.POST.get('mode') == 'edit':
+                answer = Answer.objects.get(pk=request.POST.get('answer_id'))
+            else:
+                answer, created = request.user.answers.get_or_create(
+                    question_id=question_to_answer, status='draft')
+                answer.status = 'submitted'
 
-            # Save new answer
             answer.answer_text = request.POST.get('rich-text-content')
             answer.save()
 
-            # Delete draft, if any
-            try:
-                draft = request.user.draft_answers.get(
-                    question_id=question_to_answer).delete()
-            except AnswerDraft.DoesNotExist:
-                # No drafts to delete
-                pass
+            # Save credits
+            # delete existing credits for the answer, if any
+            for credit in answer.credits.all():
+                credit.delete()
+
+            credit_titles = request.POST.getlist('credit-title')
+            credited_user_names = request.POST.getlist('credit-user-name')
+            credited_user_ids = request.POST.getlist('credit-user-id')
+
+            for i in range(len(credited_user_names)):
+                credit = AnswerCredit()
+                credit.credit_title = credit_titles[i]
+                credit.credit_user_name = credited_user_names[i]
+                if credited_user_ids[i]:
+                    credit.is_user = True
+                    credit.user = User.objects.get(pk=credited_user_ids[i])
+                credit.answer = answer
+                credit.save()
 
             # show message to the user
             if request.POST.get('mode') == 'edit':
                 messages.success(request, ('Your answer has been updated!'))
+
+                # create notifications for users who commented on the answer
+                commentor_id_list = list(AnswerComment.objects
+                                                    .filter(answer=answer.id)
+                                                    .values_list('author')
+                                                    .distinct('author'))
+                for commentor_id in commentor_id_list:
+                    if question_to_answer.question_language.lower() != 'english':
+                        question_text = question_to_answer.question_text_english
+                    else:
+                        question_text = question_to_answer.question_text
+
+                    edit_notification = Notification(
+                        notification_type='updated',
+                        title_text=str(request.user.get_full_name()) + ' updated their answer',
+                        description_text="You commented on an answer for question '" + question_text + "'",
+                        target_url=reverse('dashboard:review-answer', kwargs={'question_id': question_to_answer.id, 'answer_id': answer.id}),
+                        user=User.objects.get(pk=max(commentor_id))
+                    )
+                    edit_notification.save()
+
+                return redirect('dashboard:review-answer', question_id=question_to_answer.id, answer_id=answer.id)
             else:
                 messages.success(request, ('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!'))
 
-            # create notifications for users who commented on the answer
-            commentor_id_list = list(AnswerComment.objects
-                                                  .filter(answer=answer.id)
-                                                  .values_list('author')
-                                                  .distinct('author'))
-            for commentor_id in commentor_id_list:
-                if question_to_answer.question_language.lower() != 'english':
-                    question_text = question_to_answer.question_text_english
-                else:
-                    question_text = question_to_answer.question_text
-
-                edit_notification = Notification(
-                    notification_type='updated',
-                    title_text=str(request.user.get_full_name()) + ' updated their answer',
-                    description_text="You commented on an answer for question '" + question_text + "'",
-                    target_url=reverse('dashboard:review-answer', kwargs={'question_id': question_to_answer.id, 'answer_id': answer.id}),
-                    user=User.objects.get(pk=max(commentor_id))
-                )
-                edit_notification.save()
-
-            # get next/prev items
             if next_item_id:
                 question_to_answer = Question.objects.get(pk=next_item_id)
                 context['prev_item_id'] = prev_item_id
@@ -656,8 +687,6 @@ class SubmitAnswerView(View):
             else:
                 return redirect('dashboard:answer-questions')
 
-
-# Review Answer
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
@@ -708,7 +737,7 @@ class ApproveAnswerView(View):
         except Answer.DoesNotExist:
             raise Http404('Answer does not exist')
 
-        if request.user == answer.answered_by:
+        if request.user == answer.submitted_by:
             raise PermissionDenied('You cannot approve your own answer')
 
         if request.method != 'POST':
@@ -735,7 +764,7 @@ class ApproveAnswerView(View):
             title_text=str(request.user.get_full_name()) + ' published your answer',
             description_text="Your answer for question '" + question_text + "'",
             target_url=reverse('public_website:view-answer', kwargs={'question_id': question_answered.id, 'answer_id': answer.id}),
-            user=answer.answered_by
+            user=answer.submitted_by
         )
         published_notification.save()
 
@@ -755,7 +784,7 @@ class ApproveAnswerView(View):
 
                 published_notification = Notification(
                     notification_type='published',
-                    title_text=str(request.user.get_full_name()) + ' published ' + answer.answered_by.first_name + "'s answer",
+                    title_text=str(request.user.get_full_name()) + ' published ' + answer.submitted_by.first_name + "'s answer",
                     description_text="You commented on an answer for question '" + question_text + "'",
                     target_url=reverse('dashboard:review-answer', kwargs={'question_id': question_answered.id, 'answer_id': answer.id}),
                     user=User.objects.get(pk=max(commentor_id))
@@ -832,7 +861,7 @@ class AnswerCommentView(View):
         comment.save()
 
         # create notification
-        if answer.answered_by.id != request.user.id:
+        if answer.submitted_by.id != request.user.id:
             answered_question = Question.objects.get(pk=question_id)
             if answered_question.question_language.lower() != 'english':
                 question_text = answered_question.question_text_english
@@ -844,7 +873,7 @@ class AnswerCommentView(View):
                 title_text=str(request.user.get_full_name()) + ' left a comment on your answer',
                 description_text="On your answer for the question '" + question_text + "'",
                 target_url=reverse('dashboard:review-answer', kwargs={'question_id':question_id, 'answer_id':answer_id}),
-                user=answer.answered_by
+                user=answer.submitted_by
             )
             comment_notification.save()
 
@@ -866,7 +895,7 @@ class AnswerCommentDeleteView(View):
             answer = Answer.objects.get(pk=answer_id)
         except Answer.DoesNotexist:
             raise Http404('Answer does not exist')
-    
+
         try:
             comment = answer.comments.get(pk=comment_id)
         except AnswerComment.DoesNotExist:

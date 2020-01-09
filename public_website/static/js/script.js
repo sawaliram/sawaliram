@@ -304,7 +304,7 @@ function setupDeleteReviewComment() {
     $('.confirm-delete').click(function(event) {
         event.preventDefault();
         if ($(this).hasClass('delete-yes')) {
-            $('.delete-comment-form').submit();
+            $(this).parent('.delete-comment-form').submit();
         }
         else {
             $('.delete-comment-form').hide();
@@ -408,7 +408,9 @@ function setupHomePageCarouselRandomRhymes() {
 function setupAddCredit() {
     $('.add-credit').click(function(event) {
         event.preventDefault();
-        $('.credits-card:first').clone().addClass('removable').appendTo('.credits-list').find('.credit-user-name').val('');
+        var credit_form = $('.credits-card:first').clone().addClass('removable').appendTo('.credits-list'); 
+        credit_form.find('.credit-user-name').val('').removeAttr('readonly').attr('value' ,'');
+        credit_form.find('.credit-user-id').prop('value', '');
         setupRemoveCredit();
     });
 }
