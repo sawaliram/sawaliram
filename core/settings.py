@@ -56,6 +56,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.language_list',
             ],
         },
     },
@@ -121,6 +122,18 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Possible languages available in this website
+# (used for models, language fields, etc.)
+LANGUAGE_CHOICES = [
+    ('en', 'English'),
+    ('hi', 'हिंदी'),
+    ('mr', 'मराठी'),
+    ('ml', 'മലയാളം'),
+    ('ta', 'தமிழ்'),
+    ('te', 'తెలుగు'),
+]
+
+DEFAULT_LANGUAGE = 'en'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

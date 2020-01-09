@@ -16,6 +16,8 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 
+from django.conf import settings
+
 from dashboard.models import (
     Dataset,
     Answer,
@@ -49,6 +51,19 @@ class HomeView(View):
         }
         return render(request, 'public_website/home.html', context)
 
+
+class SetLanguageView(View):
+    def post(self, request, language):
+        request.session['lang'] = language
+        return redirect(request.POST.get('next')
+            or request.GET.get('next')
+            or 'public_website:home')
+
+    def get(self, request, language):
+        # TODO: display language picker or something
+        # it's bad practice to set params on a GET request
+        # or maybe it doesn't matter in this case?
+        return self.post(request, language)
 
 class SearchView(View):
     def get_queryset(self, request):
@@ -259,6 +274,7 @@ class ViewAnswer(View):
 
         return render(request, 'public_website/view-answer.html', context)
 
+
 class ArticleView(View):
     def get (self, request, article, slug=None):
         article = get_object_or_404(Article, id=article)
@@ -276,13 +292,14 @@ class ArticleView(View):
             )
 
         # Populate with language
-        article.set_language(request.session.get('lang', 'en'))
+        article.set_language(request.session.get('lang', settings.DEFAULT_LANGUAGE))
 
         context = {
             'article': article,
         }
 
         return render(request, 'public_website/article.html', context)
+
 
 class SubmitUserCommentOnAnswer(View):
     def post(self, request, question_id, answer_id):

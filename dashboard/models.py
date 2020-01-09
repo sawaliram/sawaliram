@@ -2,15 +2,9 @@
 
 import datetime
 from django.db import models
+from django.conf import settings
 
 from django.utils.text import slugify
-
-LANGUAGE_CHOICES = [
-    ('en', 'English'),
-    ('hi', 'Hindi'),
-    ('ta', 'Tamil'),
-    ('te', 'Telugu')
-]
 
 LANGUAGE_CODES = {
     'english': 'en',
@@ -21,7 +15,6 @@ LANGUAGE_CODES = {
     'tamil': 'ta',
     'telugu': 'te'
 }
-
 
 class Dataset(models.Model):
     """Define the data model for submitted datasets"""
@@ -349,7 +342,7 @@ class Article(models.Model):
 
     title = models.CharField(max_length=1000, null=True)
     language = models.CharField(max_length=100,
-        choices=LANGUAGE_CHOICES,
+        choices=settings.LANGUAGE_CHOICES,
         default='en')
     author = models.ForeignKey('sawaliram_auth.User',
         related_name='articles',
@@ -572,7 +565,7 @@ class ArticleTranslation(models.Model):
     '''
 
     language = models.CharField(max_length=100,
-        choices=LANGUAGE_CHOICES,
+        choices=settings.LANGUAGE_CHOICES,
         default='en')
 
     # Translated Fields
