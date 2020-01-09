@@ -275,6 +275,9 @@ class ArticleView(View):
                 article=article.id
             )
 
+        # Populate with language
+        article.set_language(request.session.get('lang', 'en'))
+
         context = {
             'article': article,
         }
