@@ -312,6 +312,8 @@ class Article(models.Model):
     STATUS_SUBMITTED = 0
     STATUS_PUBLISHED = 1
 
+    translation = None
+
     title = models.CharField(max_length=1000, null=True)
     language = models.CharField(max_length=100,
         choices=LANGUAGE_CHOICES,
@@ -359,6 +361,62 @@ class Article(models.Model):
 
     def get_slug(self):
         return slugify(self.title)
+
+    # Language handling
+
+    def set_language(self, language):
+        '''
+        Fetches a translation in the specified language, if available,
+        and caches it in self.translation for future use.
+
+        This step is skipped if the main article is already in the
+        current language or if not translation is available (in which
+        case we'll fall back to providing the original version).
+
+        In future, this could be updated to use a hierarchy of
+        preferred languages, but we don't have time for that at the
+        moment :P
+        '''
+
+        # If we're already the correct language, do nothing
+        if language == self.language:
+            return
+
+        # Search for translations with the given language
+        t = self.translations.filter(language=language)
+
+        # if it's there, set that to the translation
+        if t.count() > 0:
+            # TODO: warn if more than one translation per language
+            self.translation = t[0]
+
+        # if it's not there, do nothing
+        # we'll fall back to using our default values
+
+    @property
+    def tr_title(self):
+        if self.translation:
+            return self.translation.title
+        else:
+            return self.title
+
+    @property
+    def tr_body(self):
+        if self.translation:
+            return self.translation.body
+        else:
+            return self.body
+
+    @property
+    def is_translated(self):
+        return self.translation is not None
+
+    @property
+    def translated_by(self):
+        if self.translation:
+            return self.translation.translated_by
+        else:
+            return None
 
     class Meta:
         db_table = 'articles'
@@ -474,3 +532,35 @@ class ArticleComment(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+class ArticleTranslation(models.Model):
+    '''
+    Stores translated data for a given article
+    '''
+
+    language = models.CharField(max_length=100,
+        choices=LANGUAGE_CHOICES,
+        default='en')
+
+    # Translated Fields
+
+    title = models.CharField(max_length=1000, null=True)
+    body = models.TextField(null=True)
+
+    # Translation metadata
+
+    article = models.ForeignKey(
+        'Article',
+        related_name='translations',
+        on_delete=models.CASCADE)
+    translated_by = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='translated_articles',
+        on_delete=models.PROTECT)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    @property
+    def translator(self):
+        return self.translated_by
