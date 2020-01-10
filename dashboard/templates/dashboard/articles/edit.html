@@ -65,11 +65,15 @@
 	
 		<div id="submitbar">
 			<input type="hidden" name="rich-text-content" value="" />
+      {% if article.is_draft %}
 			<button type="submit" name="mode" value="submit" class="btn btn-primary">Submit Article</button>
 			<button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
-			<a href="{% url 'dashboard:delete-article' article.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete article">
+      <a href="{% url 'dashboard:delete-article' article.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete article">
 			  <i class="fas fa-trash"></i>
-			</a>
+      </a>
+      {% elif article.is_submitted %}
+      <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Update Draft</button>
+      {% endif %}
 		</div>
 	</form>
 </div>

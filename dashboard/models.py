@@ -339,6 +339,18 @@ class Article(models.Model):
     get_drafts = ArticleDraftManager()
     get_submitted = SubmittedArticleManager()
 
+    @property
+    def is_draft(self):
+        return self.status == self.STATUS_DRAFT
+
+    @property
+    def is_submitted(self):
+        return self.status == self.STATUS_SUBMITTED
+
+    @property
+    def is_published(self):
+        return self.status == self.STATUS_PUBLISHED
+
     class Meta:
         db_table = 'articles'
 
@@ -377,7 +389,7 @@ class ArticleDraft(Article):
             print(error)
             raise e
 
-        return SubmittedArticle(self)
+        return SubmittedArticle.objects.get(pk=self.pk)
 
 class SubmittedArticle(Article):
     '''

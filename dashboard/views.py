@@ -807,7 +807,11 @@ class EditArticleView(View):
         Fetch and sanitise an article
         '''
 
-        article = get_object_or_404(self.model, id=article)
+        # Get ArticleDraft or SubmittedArticle
+        try:
+            article = ArticleDraft.objects.get(id=article)
+        except ArticleDraft.DoesNotExist:
+            article = get_object_or_404(SubmittedArticle, id=article)
 
         # Sanitise fields so 'None' doesn't get rendered
         if article.title is None: article.title = ''
@@ -857,6 +861,11 @@ class EditArticleView(View):
             article.save()
 
             messages.info(request, self.draft_save_message)
+
+            # if submitted, go back to reviwe page
+            if article.is_submitted:
+                return redirect('dashboard:review-article', article=article.id)
+
             return render(request, self.template, context)
 
         elif request.POST.get('mode') == 'submit':
@@ -865,7 +874,7 @@ class EditArticleView(View):
             submitted_article = self.submit_article(article)
 
             messages.success(request, self.success_message)
-            return redirect(reverse('dashboard:home'))
+            return redirect('dashboard:review-article', article=submitted_article.id)
 
         else:
             raise SuspiciousOperation('Are you trying to save draft or submit?')
@@ -944,10 +953,15 @@ class ApproveSubmittedArticleView(View):
 
     def post(self, request, article):
         article = get_object_or_404(self.model, id=article)
+
+        # Check that the publisher is not the author
+        if article.author == request.user:
+            raise PermissionDenied('You cannot publish your own article.')
+
         a = article.publish(request.user)
 
         messages.success(request, self.success_message)
-        return redirect(reverse('dashboard:home'))
+        return redirect('dashboard:review-article', article=a.id)
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')
