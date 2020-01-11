@@ -30,4 +30,6 @@ urlpatterns = [
     path('article/<int:article>/comment/add', views.AddArticleCommentView.as_view(), name='submit-article-comment'),
     path('article/<int:article>/comment/<int:comment_id>/delete/', views.DeleteArticleCommentView.as_view(), name='delete-article-comment'),
 
+    path('article/<int:source>/translate/from/<str:lang_from>/to/<str:lang_to>', views.EditArticleTranslation.as_view(), name='edit-article-translation')
+
 ]

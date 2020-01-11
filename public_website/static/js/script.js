@@ -237,7 +237,10 @@ function setupSearchResultsClearAll() {
     });
 }
 
-function setupQuillEditor({ placeholder = null } = {}) {
+function setupQuillEditor({
+        placeholder = null,
+        inputName = 'rich-text-content'
+    } = {}) {
     var quill = new Quill('#editor', {
         theme: 'snow',
         modules: {
@@ -249,7 +252,7 @@ function setupQuillEditor({ placeholder = null } = {}) {
     $('.rich-text-form').submit(function(e) {
         var submitted_string = String(quill.root.innerHTML);
         var regex = new RegExp("<p><br></p>", "g");
-        $('[name="rich-text-content"]').val(submitted_string.replace(regex, ''));
+        $('[name="' + inputName + '"]').val(submitted_string.replace(regex, ''));
     });
 }
 
@@ -433,6 +436,18 @@ if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) 
     setupQuillEditor({});
     activateTooltips();
 }
+
+/* Breaking from tradition, this function is going intot the template so
+ * that it can be better fine-tuned and generalised.
+
+if (new RegExp('^/dashboard/article/\\d+/translate/from/[A-Za-z-]+/to/[A-Za-z-]+').test(window.location.pathname)) {
+    setupQuillEditor({
+        placeholder: 'Translation goes here...',
+        inputName: 'body'
+    })
+}
+*/
+
 
 if (
     new RegExp("^/dashboard/article/\\d+/review").test(window.location.pathname) ||

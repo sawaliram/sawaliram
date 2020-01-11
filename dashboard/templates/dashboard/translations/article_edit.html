@@ -1,0 +1,80 @@
+{% extends "public_website/base.html" %}
+
+{% load static %}
+
+{% block head_includes %}
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %} Edit Translation | Sawaliram {% endblock %}
+
+{% block content %}
+
+<div class="container wider-container">
+	{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  {% endif %}
+  <form class="rich-text-form row" action="{% url 'dashboard:edit-article-translation' source=object.article.id lang_from=object.article.tr_language lang_to=object.language %}" method="POST">
+    <div class="col-md-12 flex ">
+      <div class="mx-auto flex btn btn-secondary mb-3">
+        <span><label for="lang_from" class="fas fa-globe-asia"></label></span>
+        <select id="lang_from" name="lang_from" class="input-plain text-center">
+          {% for value, label in object.article.list_available_languages %}
+          <option value="{{ value }}"{% if value == object.article.tr_language %} selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <span><label for="{{ form.language.id_for_label }}" class="fas fa-arrow-right"></label></span>
+        <select id="{{ form.language.id_for_label }}" name="{{ form.language.name }}" class="input-plain text-center" style="ml-auto">
+          {% for value, label in language_choices %}
+          <option value="{{ value }}"{% if value == object.language %} selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <article class="answer-area col-md-6">
+      <header class="flex">
+        <h1>{{ object.article.tr_title }}</h1>
+      </header>
+      <section class="hr-over">
+        {{ object.article.tr_body|safe }}
+      </section>
+      <footer>
+        
+      </footer>
+    </article>
+    <div class="col-md-6 answer-area">
+      {% csrf_token %}
+  
+      <header class="flex">
+        <h1><input type="text" name="{{ form.title.name }}" value="{{ form.title.value }}" id="{{ form.title.id }}" class="input-plain input-title" /></h1>
+      </header>
+      {% include 'dashboard/snippets/richtext_editor.html' with value=form.body.value %}
+      <footer id="submitbar">
+        <input type="hidden" name="{{ form.body.name }}" value="{{ form.body.value }}" />
+        <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
+        <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+        <a href="{# url 'dashboard:delete-article' object.id #}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete article">
+          <i class="fas fa-trash"></i>
+        </a>
+      </div>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+    setupQuillEditor({
+        placeholder: 'Translation goes here...',
+        inputName: '{{ form.body.name }}'
+    })
+</script>
+{% endblock %}
