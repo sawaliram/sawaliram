@@ -292,6 +292,13 @@ class ArticleView(View):
         if article.is_draft and article.author != request.user:
             raise Http404('Article does not exist')
 
+        # If it's under review, redirect to the review page
+        if article.is_submitted:
+            return redirect(
+                'dashboard:review-article',
+                article=article.id
+            )
+
         # Set slug if required
         if slug != article.get_slug():
             return redirect(
