@@ -46,6 +46,10 @@ body.grey-background {
     }
 }
 
+.wider-container {
+    max-width: 100%;
+}
+
 ::-moz-selection { /* For Firefox */
     color: #000000;
     background: #FFBA4B;
@@ -76,7 +80,11 @@ input.input-plain {
     border: 0;
     font-size: inherit;
     font-style: inherit;
-    margin-bottom: 0;
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    margin: 0;
+    padding: 0;
 }
 
 select.input-plain {
@@ -87,6 +95,7 @@ select.input-plain {
     -moz-appearance: none;
     -webkit-appearance: none;
     width: auto;
+    color: inherit;
 }
 
 textarea {
@@ -1515,6 +1524,9 @@ h1.dashboard-home-greeting {
 .rich-text-form {
     background: white;
     border-radius: 0.2rem;
+}
+
+.rich-text-form.padded {
     padding: 0.4em;
     margin-top: 1.2rem;
 }
@@ -1526,6 +1538,7 @@ h1.dashboard-home-greeting {
 
 .rich-text-form  .ql-container.ql-snow {
     border: none;
+    height: unset;
 }
 
 .rich-text-form .ql-toolbar.ql-snow {
@@ -2260,18 +2273,18 @@ button.deny-access {
     padding-bottom: 10rem;
 }
 
-.review-page-container .answer-area h1 {
+.answer-area h1 {
     font-size: 1.8rem;
     font-weight: bold;
 }
 
-.review-page-container .answer-area h1.question-translation {
+.answer-area h1.question-translation {
     font-size: 1.2rem;
     font-weight: 200;
     color: grey;
 }
 
-.review-page-container .answer-area h2 {
+.answer-area h2 {
     font-size: 1rem;
     font-weight: bold;
     color: #424242;
@@ -2279,7 +2292,7 @@ button.deny-access {
     margin-top: 1rem;
 }
 
-.review-page-container .answer-area .answer-text {
+.answer-area .answer-text {
     border-top: 1px solid #D6D6D6;
     border-bottom: 1px solid #D6D6D6;
     padding: 1rem 0;
@@ -2288,7 +2301,7 @@ button.deny-access {
     text-align: justify;
 }
 
-.review-page-container .answer-area .answer-text img {
+.answer-area .answer-text img {
     width: 100%;
 }
 
@@ -2310,20 +2323,20 @@ button.deny-access {
     padding-top: 1rem;
 }
 
-.review-page-container .answer-area .publish-info-text {
+.answer-area .publish-info-text {
     color: #8c8c8c;
 }
 
-.review-page-container .answer-area .published-text {
+.answer-area .published-text {
     color: #87B24D;
 }
 
-.review-page-container .comment-area {
+.comment-area {
     width: 40%;
     padding: 2rem;
 }
 
-.review-page-container .comment-area h2 {
+.comment-area h2 {
     font-size: 1.5rem;
     margin-bottom: 2rem;
 }

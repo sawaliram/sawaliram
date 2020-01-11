@@ -5,6 +5,7 @@ from django.db import models
 from django.conf import settings
 
 from django.utils.text import slugify
+from django.utils.translation import get_language_info
 
 LANGUAGE_CODES = {
     'english': 'en',
@@ -420,6 +421,13 @@ class Article(models.Model):
         # we'll fall back to using our default values
 
     @property
+    def tr_language(self):
+        if self.translation and self.translation.language:
+            return self.translation.language
+        else:
+            return self.language
+
+    @property
     def tr_title(self):
         if self.translation:
             return self.translation.title
@@ -443,6 +451,20 @@ class Article(models.Model):
             return self.translation.translated_by
         else:
             return None
+
+    def list_available_languages(self):
+        langs = [self.language]
+        langs += [t.language for t in self.translations.all()]
+
+        langs_dedup = list(set(langs))
+        langs_dedup.sort()
+
+        languages = [
+            (lang, get_language_info(lang).get('name_local'))
+            for lang in langs_dedup
+        ]
+
+        return languages
 
     class Meta:
         db_table = 'articles'

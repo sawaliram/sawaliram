@@ -13,6 +13,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.models import Subquery, Q
 from django.views import View
+from django.views.generic import (
+    UpdateView,
+)
 from django.http import (
     HttpResponse,
     Http404, # Page Not found
@@ -21,7 +24,8 @@ from django.contrib import messages
 from django.core.exceptions import (
     ObjectDoesNotExist,
     PermissionDenied,
-    SuspiciousOperation
+    SuspiciousOperation,
+    ImproperlyConfigured,
 )
 from django.urls import reverse
 
@@ -39,9 +43,11 @@ from dashboard.models import (
     AnswerComment,
     AnswerCredit,
     UnencodedSubmission,
+    PublishedArticle,
     ArticleDraft,
     SubmittedArticle,
     ArticleComment,
+    ArticleTranslation,
     Dataset)
 from sawaliram_auth.models import Notification, User
 from public_website.views import SearchView
@@ -1093,6 +1099,125 @@ class DeleteArticleCommentView(View):
 
         return redirect('dashboard:review-article',
             article=article)
+
+# Translate Article
+class BaseEditTranslation(UpdateView):
+    '''
+    A generic view that can be extended to provide translations for
+    specific models.
+
+    Expected URL parameters: source, lang_from, lang_to
+    '''
+
+    conflict_url = None
+    source_model = None
+    view_name = None
+
+    def get_object(self, queryset=None):
+        '''
+        Fetch translation object for the given source model, language,
+        and current user.
+        '''
+
+        source = get_object_or_404(self.source_model,
+            id=self.kwargs.get('source'))
+
+        obj, createdp = self.model.objects.get_or_create(
+            article=source,
+            translated_by=self.request.user,
+            language=self.kwargs.get('lang_to'),
+        )
+
+        obj.article.set_language(self.kwargs.get('lang_from'))
+
+        return obj
+
+    def get_conflict_url(self):
+        '''
+        Returns a URL to redirect to if there is a conflict in
+        translations (eg. if multiple translations exist for the same
+        language for the same object).
+        '''
+        if self.conflict_url is None:
+            raise ImproperlyConfigured((
+                'No URL to redirect to. Either provide a URL or '
+                'define a get_conflict_url method on the Model.'
+            ))
+
+        return self.conflict_url
+
+    def form_valid(self, form):
+        '''
+        Validates form. This version inherits from UpdateView, but also
+        changes the redirect URL if the "translate to" language has been
+        changed.
+        '''
+
+        clean = form.cleaned_data
+
+        # Redirect to new URL if language has been changed
+        if (clean.get('language') != self.kwargs.get('lang_to') or
+          self.request.POST.get('lang_from') != self.kwargs.get('lang_from')):
+            self.success_url = reverse(
+                self.get_view_name(),
+                kwargs={
+                    'lang_from': self.request.POST.get('lang_from'),
+                    'lang_to': clean.get('language'),
+                    'source': self.kwargs.get('source'),
+                })
+        return super().form_valid(form)
+
+    def get_view_name(self):
+        if self.view_name is None:
+            raise ImproperlyConfigured((
+                'No view name specified. Please set view_name as '
+                'found in the urlconf.'
+            ))
+
+        return self.view_name
+
+    def get_success_url(self):
+        if self.success_url is None:
+            self.success_url = reverse(self.get_view_name(), kwargs=self.kwargs)
+
+        return self.success_url
+
+    def get(self, *args, **kwargs):
+        try:
+            return super().get(*args, **kwargs)
+        except self.model.MultipleObjectsReturned:
+            return redirect(self.get_conflict_url())
+
+# TODO: new view for "you have multiple drafts for this answer in this
+# language, please choose one".
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class EditArticleTranslation(BaseEditTranslation):
+    source_model = PublishedArticle
+    model = ArticleTranslation
+    fields = ['language', 'title', 'body']
+    template_name = 'dashboard/translations/article_edit.html'
+    view_name = 'dashboard:edit-article-translation'
+
+    def get_object(self, *args, **kwargs):
+        '''
+        Fetch this user's translation object
+        '''
+
+        obj = super().get_object(*args, **kwargs)
+
+        # Replace None with empty string
+        if obj.title == None: obj.title = ''
+        if obj.body == None: obj.body = ''
+
+        return obj
+
+    def get_conflict_url(self):
+        # TODO: redirect to conflict resolution page instead
+        return reverse('public_website:view-article', kwargs={
+            'article': self.kwargs.get('source')
+        })
 
 # Legacy Functions
 
