@@ -12,7 +12,14 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 
-from dashboard.models import Dataset, Answer, Question
+from dashboard.models import (
+    Dataset,
+    Answer,
+    Question,
+    PublishedArticle,
+    ArticleDraft,
+    SubmittedArticle,
+)
 from sawaliram_auth.models import User, Bookmark, Notification
 from public_website.models import AnswerUserComment
 
@@ -347,6 +354,9 @@ class UserProfileView(View):
             answer_drafts = Answer.objects.filter(submitted_by=user_id, status='draft')
             submitted_questions = Dataset.objects.filter(submitted_by=user_id)
             submitted_answers = Answer.objects.filter(submitted_by=user_id)
+            article_drafts = ArticleDraft.objects.filter(author=user_id)
+            submitted_articles = SubmittedArticle.objects.filter(author=user_id)
+            published_articles = PublishedArticle.objects.filter(author=user_id)
             bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
             bookmarked_articles = selected_user.bookmarks.filter(content_type='article')
             notifications = Notification.objects.filter(user=user_id)
@@ -359,6 +369,9 @@ class UserProfileView(View):
                 'notifications': notifications,
                 'submitted_questions': submitted_questions,
                 'submitted_answers': submitted_answers,
+                'article_drafts': article_drafts,
+                'submitted_articles': submitted_articles,
+                'published_articles': published_articles,
                 'bookmarked_questions': bookmarked_questions,
                 'bookmarked_articles': bookmarked_articles,
             }

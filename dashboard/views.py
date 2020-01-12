@@ -3,7 +3,11 @@
 import random
 import os
 
-from django.shortcuts import render, redirect
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404,
+)
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -11,23 +15,31 @@ from django.db.models import Subquery, Q
 from django.views import View
 from django.http import (
     HttpResponse,
-    Http404,
+    Http404, # Page Not found
 )
 from django.contrib import messages
 from django.core.exceptions import (
     ObjectDoesNotExist,
     PermissionDenied,
+    SuspiciousOperation
 )
 from django.urls import reverse
 
-from sawaliram_auth.decorators import volunteer_permission_required
+from sawaliram_auth.decorators import (
+    permission_required,
+    volunteer_permission_required,
+)
 from dashboard.models import (
+    LANGUAGE_CHOICES,
     QuestionArchive,
     Question,
     Answer,
     AnswerComment,
     AnswerCredit,
     UnencodedSubmission,
+    ArticleDraft,
+    SubmittedArticle,
+    ArticleComment,
     Dataset)
 from sawaliram_auth.models import Notification, User
 from public_website.views import SearchView
@@ -233,12 +245,14 @@ class ManageContentView(View):
     def get(self, request):
 
         datasets = Dataset.objects.all().order_by('-created_on')
+        articles = SubmittedArticle.objects.all().order_by('-updated_on')
 
         context = {
             'grey_background': 'True',
             'page_title': 'Manage Content',
             'enable_breadcrumbs': 'Yes',
-            'datasets': datasets
+            'datasets': datasets,
+            'articles': articles,
         }
         return render(request, 'dashboard/manage-content.html', context)
 
@@ -792,6 +806,288 @@ class ApproveAnswerView(View):
                 published_notification.save()
 
         return redirect('dashboard:review-answers')
+
+# Write Articles
+
+def create_article(request):
+    '''
+    Create a blank draft and redirect to WriteArticleView
+    '''
+
+    draft = ArticleDraft.objects.create(author=request.user)
+
+    return redirect(reverse('dashboard:edit-article',
+      kwargs={'draft_id': draft.id}))
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class EditArticleView(View):
+    '''
+    Write or update a draft or published article
+    '''
+
+    model = ArticleDraft
+    template = 'dashboard/articles/edit.html'
+    success_message = 'Thanks! Your article has been submitted.'
+    draft_save_message = 'Your changes have been saved.'
+
+    def get_article(self, article):
+        '''
+        Fetch and sanitise an article
+        '''
+
+        # Get ArticleDraft or SubmittedArticle
+        try:
+            article = ArticleDraft.objects.get(id=article)
+        except ArticleDraft.DoesNotExist:
+            article = get_object_or_404(SubmittedArticle, id=article)
+
+        # Sanitise fields so 'None' doesn't get rendered
+        if article.title is None: article.title = ''
+        if article.body is None: article.body = ''
+
+        return article
+
+    def submit_article(self, article):
+        '''
+        Submits the article. Override this for custom behaviour.
+        '''
+
+        return article.submit_draft()
+
+    def get(self, request, draft_id):
+        '''
+        Display the edit form
+        '''
+
+        article = self.get_article(draft_id)
+        context = {
+            'article': article,
+            'grey_background': 'True',
+            'language_choices': LANGUAGE_CHOICES,
+            'page_title': 'Write Article',
+            'enable_breadcrumbs': 'Yes'
+        }
+
+        return render(request, self.template, context)
+
+    def post(self, request, draft_id):
+        '''
+        Save draft or submit post
+        '''
+
+        article = self.get_article(draft_id)
+        context = {
+            'article': article,
+            'grey_background': 'True',
+            'language_choices': LANGUAGE_CHOICES,
+        }
+
+        article.title = request.POST.get('title')
+        article.body = request.POST.get('rich-text-content')
+        article.language = request.POST.get('language')
+
+        if request.POST.get('mode') == 'draft':
+
+            article.save()
+
+            messages.info(request, self.draft_save_message)
+
+            # if submitted, go back to reviwe page
+            if article.is_submitted:
+                return redirect('dashboard:review-article', article=article.id)
+
+            return render(request, self.template, context)
+
+        elif request.POST.get('mode') == 'submit':
+
+            # Get and submit article
+            submitted_article = self.submit_article(article)
+
+            messages.success(request, self.success_message)
+            return redirect('dashboard:review-article', article=submitted_article.id)
+
+        else:
+            raise SuspiciousOperation('Are you trying to save draft or submit?')
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteArticleView(View):
+    def fetch_article(self, article):
+        """
+        Return selected comment
+        """
+
+        article = get_object_or_404(ArticleDraft, id=article)
+
+        return article
+
+    def get(self, request, article):
+        """
+        Confirm whether to delete a comment or not
+        """
+
+        article = self.fetch_article(article)
+
+        context = {
+            'article': article,
+        }
+        return render(request, 'dashboard/articles/delete.html', context)
+
+    def post(self, request, article):
+        """
+        Delete a previously published comment on an answer
+        """
+
+        article = self.fetch_article(article)
+
+        if request.user != article.author:
+            raise PermissionDenied('You are not authorised to delete that comment.')
+
+        article.delete()
+
+        return redirect('dashboard:home')
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class ReviewSubmittedArticleView(View):
+    '''
+    Add updates to a submitted article
+    '''
+
+    model = SubmittedArticle
+    template = 'dashboard/articles/review.html'
+
+    def get(self, request, article):
+        article = get_object_or_404(self.model, id=article)
+        context = {
+            'article': article,
+            'grey_background': 'True',
+            'comments': article.comments.all(),
+            'page_title': 'Review Article',
+            'enable_breadcrumbs': 'Yes'
+        }
+
+        return render(request, self.template, context)
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class ApproveSubmittedArticleView(View):
+
+    model = SubmittedArticle
+    success_message = 'The article has been published successfully'
+
+    def get(self, request, article):
+        '''
+        Not valid; redirect user back to article
+        '''
+        return redirect(reverse('dashboard:review-article', kwargs={'article': article}))
+
+    def post(self, request, article):
+        article = get_object_or_404(self.model, id=article)
+
+        # Check that the publisher is not the author
+        if article.author == request.user:
+            raise PermissionDenied('You cannot publish your own article.')
+
+        a = article.publish(request.user)
+
+        messages.success(request, self.success_message)
+        return redirect('dashboard:review-article', article=a.id)
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class AddArticleCommentView(View):
+    '''
+    Add a comment on an article
+    '''
+
+    model = SubmittedArticle
+    comment_model = ArticleComment
+
+    def get(self, request, article):
+        '''
+        Not valid; redirect user back to article
+        '''
+        return redirect(reverse('dashboard:review-article', kwargs={'article': article}))
+
+    def post(self, request, article):
+        """
+        Save the submitted comment to a particular answer
+        """
+
+        article = get_object_or_404(self.model, id=article)
+
+        comment = self.comment_model()
+        comment.text = request.POST['comment-text']
+        comment.article = article
+        comment.author = request.user
+        comment.save()
+
+        # create notification
+        if article.author != request.user:
+            answered_question = Question.objects.get(pk=question_id)
+
+            comment_notification = Notification(
+                notification_type='comment',
+                title_text=str(request.user.get_full_name()) + ' left a comment on your article',
+                description_text=('{} commented on {}'
+                    .format(request.user.get_full_name(), article.title)),
+                target_url=reverse('dashboard:review-article',
+                    article=article),
+                user=article.author
+            )
+            comment_notification.save()
+
+        return redirect(
+            'dashboard:review-article',
+            article=article.id,
+        )
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteArticleCommentView(View):
+    def fetch_comment(self, article, comment_id):
+        """
+        Return selected comment
+        """
+
+        article = get_object_or_404(SubmittedArticle, id=article)
+
+        try:
+            comment = article.comments.get(pk=comment_id)
+        except ArticleComment.DoesNotExist:
+            raise Http404('No matching comment')
+
+        return comment
+
+    def get(self, request, article, comment_id):
+        """
+        Confirm whether to delete a comment or not
+        """
+
+        comment = self.fetch_comment(article, comment_id)
+
+        context = {
+            'comment': comment,
+        }
+        return render(request, 'dashboard/articles/delete_comment.html', context)
+
+    def post(self, request, article, comment_id):
+        """
+        Delete a previously published comment on an answer
+        """
+
+        comment = self.fetch_comment(article, comment_id)
+
+        if request.user != comment.author:
+            raise PermissionDenied('You are not authorised to delete that comment.')
+
+        comment.delete()
+
+        return redirect('dashboard:review-article',
+            article=article)
 
 # Legacy Functions
 
