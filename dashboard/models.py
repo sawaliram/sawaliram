@@ -3,6 +3,13 @@
 import datetime
 from django.db import models
 
+LANGUAGE_CHOICES = [
+    ('en', 'English'),
+    ('hi', 'Hindi'),
+    ('ta', 'Tamil'),
+    ('te', 'Telugu'),
+]
+
 
 class Dataset(models.Model):
     """Define the data model for submitted datasets"""
@@ -269,5 +276,196 @@ class TranslatedQuestion(models.Model):
         default='')
     question_text = models.CharField(max_length=1000)
     language = models.CharField(max_length=100)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+class PublishedArticleManager(models.Manager):
+    def get_queryset(self):
+        return (super()
+            .get_queryset()
+            .filter(status=Article.STATUS_PUBLISHED))
+
+class ArticleDraftManager(models.Manager):
+    def get_queryset(self):
+        return (super()
+            .get_queryset()
+            .filter(status=Article.STATUS_DRAFT))
+
+class SubmittedArticleManager(models.Manager):
+    def get_queryset(self):
+        return (super()
+            .get_queryset()
+            .filter(status=Article.STATUS_SUBMITTED))
+
+class Article(models.Model):
+    '''
+    Complete data model holding all kinds of articles. This includes:
+      * ArticleDraft
+      * SubmittedArticle
+      * Article
+
+    This is internally tracked via the 'status' parameter. You can
+    also query articles with the specified status by using its proxy
+    model (which internally checks the 'status' prameter before
+    returning results).
+    '''
+
+    STATUS_DRAFT = -1
+    STATUS_SUBMITTED = 0
+    STATUS_PUBLISHED = 1
+
+    title = models.CharField(max_length=1000, null=True)
+    language = models.CharField(max_length=100,
+        choices=LANGUAGE_CHOICES,
+        default='en')
+    author = models.ForeignKey('sawaliram_auth.User',
+        related_name='articles',
+        on_delete=models.PROTECT,
+        default='',
+        null=True)
+
+    body = models.TextField(null=True)
+
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    approved_by = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='approved_articles',
+        on_delete=models.PROTECT,
+        default='',
+        null=True)
+    published_on = models.DateTimeField(auto_now_add=True)
+
+    status = models.IntegerField(default=-1) # draft
+
+    get_published = PublishedArticleManager()
+    get_drafts = ArticleDraftManager()
+    get_submitted = SubmittedArticleManager()
+
+    @property
+    def is_draft(self):
+        return self.status == self.STATUS_DRAFT
+
+    @property
+    def is_submitted(self):
+        return self.status == self.STATUS_SUBMITTED
+
+    @property
+    def is_published(self):
+        return self.status == self.STATUS_PUBLISHED
+
+    class Meta:
+        db_table = 'articles'
+
+class ArticleDraft(Article):
+    '''
+    Draft articles are visible only to the user who creates them.
+    Once ready, they can be submitted by converting to a
+    SubmittedArticle which, upon approval, will be finally released
+    to the world as a published Article.
+
+    The complete sequence is:
+        ArticleDraft -> SubmittedArticle -> Article
+    '''
+
+    class Meta:
+        db_table = 'articles'
+        proxy=True
+
+    objects = ArticleDraftManager()
+
+    def __init__(self, *args, **kwargs):
+        self._meta.get_field('status').default = self.STATUS_DRAFT
+        super().__init__(*args, **kwargs)
+
+    def submit_draft(self):
+        '''
+        Submit the draft. In other words, copy over content to a new
+        SubmittedArticle object and destroy self.
+        '''
+
+        try:
+            self.status = self.STATUS_SUBMITTED
+            self.save()
+        except Exception as e:
+            error = 'Error submitting article: %s' % e
+            print(error)
+            raise e
+
+        return SubmittedArticle.objects.get(pk=self.pk)
+
+class SubmittedArticle(Article):
+    '''
+    Submitted articles are article which are ready to publish, but which
+    have to be vetted by an editor or manager before they are released
+    to the world as a published Article
+
+    The complete sequence is:
+        ArticleDraft -> SubmittedArticle -> Article
+    '''
+
+    class Meta:
+        db_table = 'articles'
+        proxy=True
+
+    objects = SubmittedArticleManager()
+
+    def __init__(self, *args, **kwargs):
+        self._meta.get_field('status').default = self.STATUS_SUBMITTED
+        super().__init__(*args, **kwargs)
+
+    def publish(self, approved_by):
+        '''
+        Publish the article. In other words, copy over content to a new
+        Article object and destroy self.
+        '''
+
+        try:
+            self.approved_by = approved_by
+            self.status = self.STATUS_PUBLISHED
+            self.save()
+        except Exception as e:
+            error = 'Error publishing article: %s' % e
+            print(error)
+            raise e
+
+        return Article(self)
+
+class PublishedArticle(Article):
+    '''
+    Articles are published articles, visible to the world after having
+    gone through the full editorial process
+
+    The complete sequence is:
+        ArticleDraft -> SubmittedArticle -> PublishedArticle
+    '''
+
+    class Meta:
+        db_table = 'articles'
+        proxy = True
+
+    objects = PublishedArticleManager()
+
+    def __init__(self, *args, **kwargs):
+        self._meta.get_field('status').default = self.STATUS_PUBLISHED
+        super().__init__(*args, **kwargs)
+class ArticleComment(models.Model):
+    """Define the data model for comments on Answers"""
+
+    class Meta:
+        db_table = 'article_comment'
+
+    text = models.TextField()
+
+    article = models.ForeignKey(
+        'Article',
+        related_name='comments',
+        on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='article_comments',
+        on_delete=models.PROTECT)
+
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

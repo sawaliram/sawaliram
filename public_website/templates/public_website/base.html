@@ -146,6 +146,9 @@
                         {% if page_title == 'Submit Review' %}
                             <a href="{% url 'dashboard:review-answers' %}">Review Answers</a> >
                         {% endif %}
+                        {% if page_title == 'Review Article' %}
+                            <a href="{% url 'dashboard:manage-content' %}">Manage Content</a> >
+                        {% endif %}
                     {% endif %}
                     {{ page_title }}
                 </p>
