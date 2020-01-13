@@ -460,7 +460,7 @@ class Article(models.Model):
         langs_dedup.sort()
 
         languages = [
-            (lang, get_language_info(lang).get('name_local'))
+            (lang, dict(settings.LANGUAGES).get(lang, lang))
             for lang in langs_dedup
         ]
 
