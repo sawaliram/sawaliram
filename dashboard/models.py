@@ -271,25 +271,67 @@ class TranslatedQuestion(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
-class PublishedArticleManager(models.Manager):
+# Generic draftable mixin
+# "Draftables" are things that go through the three stages of
+# draft -> submitted -> published
+
+class PublishedDraftableManager(models.Manager):
     def get_queryset(self):
         return (super()
             .get_queryset()
             .filter(status=Article.STATUS_PUBLISHED))
 
-class ArticleDraftManager(models.Manager):
+class DraftDraftableManager(models.Manager):
     def get_queryset(self):
         return (super()
             .get_queryset()
             .filter(status=Article.STATUS_DRAFT))
 
-class SubmittedArticleManager(models.Manager):
+class SubmittedDraftableManager(models.Manager):
     def get_queryset(self):
         return (super()
             .get_queryset()
             .filter(status=Article.STATUS_SUBMITTED))
 
-class Article(models.Model):
+class DraftableModel(models.Model):
+    '''
+    Generic mixin for all "draftable" items - that is, items which go
+    through the three states of "draft", "submitted" and "published".
+    '''
+
+    class Meta:
+        abstract = True
+
+    # Statuses
+
+    STATUS_DRAFT = -1
+    STATUS_SUBMITTED = 0
+    STATUS_PUBLISHED = 1
+
+    # Fields
+
+    status = models.IntegerField(default=-1) # draft
+
+    # Managers
+
+    objects = models.Manager()
+    get_published = PublishedDraftableManager()
+    get_drafts = DraftDraftableManager()
+    get_submitted = SubmittedDraftableManager()
+
+    @property
+    def is_draft(self):
+        return self.status == self.STATUS_DRAFT
+
+    @property
+    def is_submitted(self):
+        return self.status == self.STATUS_SUBMITTED
+
+    @property
+    def is_published(self):
+        return self.status == self.STATUS_PUBLISHED
+
+class Article(DraftableModel):
     '''
     Complete data model holding all kinds of articles. This includes:
       * ArticleDraft
@@ -301,10 +343,6 @@ class Article(models.Model):
     model (which internally checks the 'status' prameter before
     returning results).
     '''
-
-    STATUS_DRAFT = -1
-    STATUS_SUBMITTED = 0
-    STATUS_PUBLISHED = 1
 
     translation = None
 
@@ -330,28 +368,6 @@ class Article(models.Model):
         default='',
         null=True)
     published_on = models.DateTimeField(auto_now_add=True)
-
-    status = models.IntegerField(default=-1) # draft
-
-    # Managers
-
-    objects = models.Manager()
-
-    get_published = PublishedArticleManager()
-    get_drafts = ArticleDraftManager()
-    get_submitted = SubmittedArticleManager()
-
-    @property
-    def is_draft(self):
-        return self.status == self.STATUS_DRAFT
-
-    @property
-    def is_submitted(self):
-        return self.status == self.STATUS_SUBMITTED
-
-    @property
-    def is_published(self):
-        return self.status == self.STATUS_PUBLISHED
 
     def get_slug(self):
         return slugify(self.title)
@@ -451,7 +467,7 @@ class ArticleDraft(Article):
         db_table = 'articles'
         proxy=True
 
-    objects = ArticleDraftManager()
+    objects = DraftDraftableManager()
 
     def __init__(self, *args, **kwargs):
         self._meta.get_field('status').default = self.STATUS_DRAFT
@@ -487,7 +503,7 @@ class SubmittedArticle(Article):
         db_table = 'articles'
         proxy=True
 
-    objects = SubmittedArticleManager()
+    objects = SubmittedDraftableManager()
 
     def __init__(self, *args, **kwargs):
         self._meta.get_field('status').default = self.STATUS_SUBMITTED
@@ -523,7 +539,7 @@ class PublishedArticle(Article):
         db_table = 'articles'
         proxy = True
 
-    objects = PublishedArticleManager()
+    objects = PublishedDraftableManager()
 
     def __init__(self, *args, **kwargs):
         self._meta.get_field('status').default = self.STATUS_PUBLISHED
