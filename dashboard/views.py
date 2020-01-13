@@ -1119,6 +1119,20 @@ class BaseEditTranslation(UpdateView):
         and current user.
         '''
 
+        # Check validity of languages
+        valid_languages = [l[0] for l in settings.LANGUAGES]
+        lang_from = self.kwargs.get('lang_from')
+        lang_to = self.kwargs.get('lang_to')
+
+        if lang_from not in valid_languages:
+            raise Http404('Invalid language: {}'
+                .format(lang_from))
+
+        if lang_to not in valid_languages:
+            raise Http404('Invalid language: {}'
+                .format(lang_to))
+
+        # Fetch source model
         source = get_object_or_404(self.source_model,
             id=self.kwargs.get('source'))
 
