@@ -1136,13 +1136,23 @@ class BaseEditTranslation(UpdateView):
         source = get_object_or_404(self.source_model,
             id=self.kwargs.get('source'))
 
-        obj, createdp = self.model.objects.get_or_create(
-            article=source,
-            translated_by=self.request.user,
-            language=self.kwargs.get('lang_to'),
-        )
+        # Fetch or create the translation object itself
 
-        obj.article.set_language(self.kwargs.get('lang_from'))
+        query_filters = {
+            'article': source,
+            'translated_by': self.request.user,
+            'language': lang_to,
+        }
+
+        try:
+            obj, createdp = (self.model.objects
+                .get_or_create(**query_filters))
+        except self.model.MultipleObjectsReturned:
+            # Workaround: select the first object
+            # TODO: handle this more systematically
+            obj = self.model.objects.filter(**query_filters)[0]
+
+        obj.article.set_language(lang_from)
 
         return obj
 
@@ -1226,12 +1236,6 @@ class EditArticleTranslation(BaseEditTranslation):
         if obj.body == None: obj.body = ''
 
         return obj
-
-    def get_conflict_url(self):
-        # TODO: redirect to conflict resolution page instead
-        return reverse('public_website:view-article', kwargs={
-            'article': self.kwargs.get('source')
-        })
 
 # Legacy Functions
 
