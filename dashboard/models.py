@@ -564,7 +564,7 @@ class ArticleTranslation(models.Model):
 
     # Translation metadata
 
-    article = models.ForeignKey(
+    source = models.ForeignKey(
         'Article',
         related_name='translations',
         on_delete=models.CASCADE)
