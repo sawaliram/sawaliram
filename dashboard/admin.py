@@ -8,4 +8,7 @@ from .models import (
 class AnswerAdmin(admin.ModelAdmin):
     search_fields = ['question_id__id', 'question_id__question_text']
 
-admin.site.register(Question)
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    search_fields = ['id', 'question_text']
+    list_filter = ['question_language', 'state', 'field_of_interest']
