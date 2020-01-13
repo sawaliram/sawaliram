@@ -30,8 +30,8 @@
           <option value="{{ value }}"{% if value == object.article.tr_language %} selected{% endif %}>{{ label }}</option>
           {% endfor %}
         </select>
-        <span><label for="{{ form.language.id_for_label }}" class="fas fa-arrow-right"></label></span>
-        <select id="{{ form.language.id_for_label }}" name="{{ form.language.name }}" class="input-plain text-center" style="ml-auto">
+        <span><label for="lang_to" class="fas fa-arrow-right"></label></span>
+        <select id="lang_to" name="lang_to" class="input-plain text-center" style="ml-auto">
           {% for value, label in language_choices %}
           <option value="{{ value }}"{% if value == object.language %} selected{% endif %}>{{ label }}</option>
           {% endfor %}

@@ -1177,18 +1177,20 @@ class BaseEditTranslation(UpdateView):
         changed.
         '''
 
-        clean = form.cleaned_data
+        lang_to = self.request.POST.get('lang_to')
+        lang_from = self.request.POST.get('lang_from')
 
         # Redirect to new URL if language has been changed
-        if (clean.get('language') != self.kwargs.get('lang_to') or
-          self.request.POST.get('lang_from') != self.kwargs.get('lang_from')):
+        if (lang_to != self.kwargs.get('lang_to') or
+          lang_from != self.kwargs.get('lang_from')):
             self.success_url = reverse(
                 self.get_view_name(),
                 kwargs={
-                    'lang_from': self.request.POST.get('lang_from'),
-                    'lang_to': clean.get('language'),
+                    'lang_from': lang_from,
+                    'lang_to': lang_to,
                     'source': self.kwargs.get('source'),
                 })
+
         return super().form_valid(form)
 
     def get_view_name(self):
@@ -1220,7 +1222,7 @@ class BaseEditTranslation(UpdateView):
 class EditArticleTranslation(BaseEditTranslation):
     source_model = PublishedArticle
     model = ArticleTranslation
-    fields = ['language', 'title', 'body']
+    fields = ['title', 'body']
     template_name = 'dashboard/translations/article_edit.html'
     view_name = 'dashboard:edit-article-translation'
 
