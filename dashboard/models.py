@@ -185,6 +185,14 @@ class Answer(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        '''Return unicode representation of this Answer'''
+
+        return 'Answer [{}]: {}'.format(
+            self.question_id.question_language,
+            self.question_id.question_text,
+        )
+
 
 class AnswerComment(models.Model):
     """Define the data model for comments on Answers"""
