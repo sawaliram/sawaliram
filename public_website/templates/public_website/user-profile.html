@@ -238,7 +238,7 @@
                         {% endfor %}
                         {% for article in published_articles %}
                         <li>
-                                <a class="task-link" href="{% url 'dashboard:review-article' article=article.id %}">
+                                <a class="task-link" href="{% url 'public_website:view-article' article=article.id %}">
                                 {{ article.title }}
                                 </a>
                                 <p class="tab-section-intro">
