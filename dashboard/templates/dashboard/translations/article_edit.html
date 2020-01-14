@@ -21,13 +21,13 @@
     </div>
     {% endfor %}
   {% endif %}
-  <form class="rich-text-form row" action="{% url 'dashboard:edit-article-translation' source=object.article.id lang_from=object.article.tr_language lang_to=object.language %}" method="POST">
+  <form class="rich-text-form row" action="{% url 'dashboard:edit-article-translation' source=object.source.id lang_from=object.source.tr_language lang_to=object.language %}" method="POST">
     <div class="col-md-12 flex ">
       <div class="mx-auto flex btn btn-secondary mb-3">
         <span><label for="lang_from" class="fas fa-globe-asia"></label></span>
         <select id="lang_from" name="lang_from" class="input-plain text-center">
-          {% for value, label in object.article.list_available_languages %}
-          <option value="{{ value }}"{% if value == object.article.tr_language %} selected{% endif %}>{{ label }}</option>
+          {% for value, label in object.source.list_available_languages %}
+          <option value="{{ value }}"{% if value == object.source.tr_language %} selected{% endif %}>{{ label }}</option>
           {% endfor %}
         </select>
         <span><label for="lang_to" class="fas fa-arrow-right"></label></span>
@@ -40,10 +40,10 @@
     </div>
     <article class="answer-area col-md-6">
       <header class="flex">
-        <h1>{{ object.article.tr_title }}</h1>
+        <h1>{{ object.source.tr_title }}</h1>
       </header>
       <section class="hr-over">
-        {{ object.article.tr_body|safe }}
+        {{ object.source.tr_body|safe }}
       </section>
       <footer>
         

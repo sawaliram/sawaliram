@@ -1139,7 +1139,7 @@ class BaseEditTranslation(UpdateView):
         # Fetch or create the translation object itself
 
         query_filters = {
-            'article': source,
+            'source': source,
             'translated_by': self.request.user,
             'language': lang_to,
         }
@@ -1152,7 +1152,7 @@ class BaseEditTranslation(UpdateView):
             # TODO: handle this more systematically
             obj = self.model.objects.filter(**query_filters)[0]
 
-        obj.article.set_language(lang_from)
+        obj.source.set_language(lang_from)
 
         return obj
 
