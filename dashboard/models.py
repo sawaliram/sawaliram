@@ -493,7 +493,10 @@ class Article(DraftableModel):
             return
 
         # Search for translations with the given language
-        t = self.translations.filter(language=language)
+        t = self.translations.filter(
+            language=language,
+            status=ArticleTranslation.STATUS_PUBLISHED,
+        )
 
         # if it's there, set that to the translation
         if t.count() > 0:
