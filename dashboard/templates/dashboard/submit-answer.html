@@ -23,6 +23,34 @@
     {% endif %}
 	<div class="editor-header">
 		<div class="header-controls">
+			<div class="submission-language-control">
+				<span>Answering in: </span>
+				<select class="submission-language-select">
+					{% if draft_answer %}
+					<option value="{{ question.question_language.lower }}" selected>
+						{{ draft_answer.get_language_name|capfirst }}
+					</option>
+					{% else %}
+						<option value="english" selected>English</option>
+						{% if question.question_language.lower != 'english' %}
+						<option value="{{ question.question_language.lower }}">
+							{{ question.question_language }}
+						</option>
+						{% endif %}
+					{% endif %}
+				</select>
+				<!-- <div class="dropdown">
+					<button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="submissionLanguageSelector">
+						English
+						<i class="fas fa-chevron-down"></i>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="languageSelector">
+						{% if question.question_language.lower != 'english' %}
+							<a class="dropdown-item toggle-languge-option" href="#">{{ question.question_language }}</a>
+						{% endif %}
+					</div>
+				</div> -->
+			</div>
 			{% if prev_item_id or next_item_id %}
 			<div class="item-cycle-controls">
 				{% if prev_item_id %}
@@ -33,20 +61,6 @@
 				{% endif%}
 			</div>
 			{% endif %}
-			<div class="submission-language-control">
-				<span>Answering in: </span>
-				<div class="dropdown">
-					<button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="submissionLanguageSelector">
-						English
-						<i class="fas fa-chevron-down"></i>
-					</button>
-					<div class="dropdown-menu" aria-labelledby="languageSelector">
-						{% if question.question_language.lower != 'english' %}
-							<span class="dropdown-item">{{ question.question_language }}</span>
-						{% endif %}
-					</div>
-				</div>
-			</div>
 		</div>
 		<h1>{{ question.question_text }}</h1>
 		{% if question.question_language.lower != 'english' %}
@@ -144,11 +158,12 @@
 		<div id="submitbar">
 			<input type="hidden" name="question_id" value="{{ question.id }}">
 			<input type="hidden" name="rich-text-content" value="" />
-
 			{% if draft_answer and draft_answer.status == 'submitted' %}
 				<input type="hidden" name="answer_id" value="{{ draft_answer.id }}">
+				<input type="hidden" name="submission-language" value="{{ draft_answer.get_language_name }}" />
 				<button type="submit" name="mode" value="edit" class="btn btn-primary">Save</button>
 			{% else %}
+				<input type="hidden" name="submission-language" value="english" />	
 				<button type="submit" name="mode" value="{{ submission_mode }}" class="btn btn-primary">Submit Answer</button>
 				<button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
 			{% endif %}
