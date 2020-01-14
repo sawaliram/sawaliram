@@ -364,6 +364,73 @@ class DraftableModel(models.Model):
     def is_published(self):
         return self.status == self.STATUS_PUBLISHED
 
+    @classmethod
+    def get_draft_model(cls):
+        class DraftMixin:
+
+            def __init__(self, *args, **kwargs):
+                self._meta.get_field('status').default = self.STATUS_DRAFT
+                super().__init__(*args, **kwargs)
+
+            def submit_draft(self):
+                '''
+                Submit the draft. That is, change the status of the
+                current object to STATUS_SUBMITTED and return it.
+                '''
+
+                try:
+                    self.status = self.STATUS_SUBMITTED
+                    self.save()
+                except Exception as e:
+                    error = 'Error submitting: {}'.format(e)
+                    print(error)
+                    raise e
+
+                return cls(self.id)
+
+        # Return the mixin
+        return DraftMixin
+
+    @classmethod
+    def get_submitted_model(cls):
+        class SubmittedMixin:
+
+            def __init__(self, *args, **kwargs):
+                self._meta.get_field('status').default = self.STATUS_SUBMITTED
+                super().__init__(*args, **kwargs)
+
+            def publish(self, approved_by):
+                '''
+                Publish the submission. That is, change the status
+                of the current object to STATUS_PUBLISHED and set
+                the approved_by attribute
+                '''
+
+                try:
+                    self.approved_by = approved_by
+                    self.status = self.STATUS_SUBMITTED
+                    self.save()
+                except Exception as e:
+                    error = 'Error publishing: {}'.format(e)
+                    print(error)
+                    raise e
+
+                return cls(self.id)
+
+        # Return the mixin
+        return SubmittedMixin
+
+    @classmethod
+    def get_published_model(cls):
+        class PublishedMixin:
+
+            def __init__(self, *args, **kwargs):
+                self._meta.get_field('status').default = self.STATUS_PUBLISHED
+                super().__init__(*args, **kwargs)
+
+        # Return the mixin
+        return PublishedMixin
+
 class Article(DraftableModel):
     '''
     Complete data model holding all kinds of articles. This includes:
@@ -485,98 +552,21 @@ class Article(DraftableModel):
     class Meta:
         db_table = 'articles'
 
-class ArticleDraft(Article):
-    '''
-    Draft articles are visible only to the user who creates them.
-    Once ready, they can be submitted by converting to a
-    SubmittedArticle which, upon approval, will be finally released
-    to the world as a published Article.
-
-    The complete sequence is:
-        ArticleDraft -> SubmittedArticle -> Article
-    '''
-
-    class Meta:
-        db_table = 'articles'
-        proxy=True
-
+class ArticleDraft(Article.get_draft_model(), Article):
     objects = DraftDraftableManager()
-
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('status').default = self.STATUS_DRAFT
-        super().__init__(*args, **kwargs)
-
-    def submit_draft(self):
-        '''
-        Submit the draft. In other words, copy over content to a new
-        SubmittedArticle object and destroy self.
-        '''
-
-        try:
-            self.status = self.STATUS_SUBMITTED
-            self.save()
-        except Exception as e:
-            error = 'Error submitting article: %s' % e
-            print(error)
-            raise e
-
-        return SubmittedArticle.objects.get(pk=self.pk)
-
-class SubmittedArticle(Article):
-    '''
-    Submitted articles are article which are ready to publish, but which
-    have to be vetted by an editor or manager before they are released
-    to the world as a published Article
-
-    The complete sequence is:
-        ArticleDraft -> SubmittedArticle -> Article
-    '''
-
     class Meta:
-        db_table = 'articles'
-        proxy=True
-
-    objects = SubmittedDraftableManager()
-
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('status').default = self.STATUS_SUBMITTED
-        super().__init__(*args, **kwargs)
-
-    def publish(self, approved_by):
-        '''
-        Publish the article. In other words, copy over content to a new
-        Article object and destroy self.
-        '''
-
-        try:
-            self.approved_by = approved_by
-            self.status = self.STATUS_PUBLISHED
-            self.save()
-        except Exception as e:
-            error = 'Error publishing article: %s' % e
-            print(error)
-            raise e
-
-        return Article(self)
-
-class PublishedArticle(Article):
-    '''
-    Articles are published articles, visible to the world after having
-    gone through the full editorial process
-
-    The complete sequence is:
-        ArticleDraft -> SubmittedArticle -> PublishedArticle
-    '''
-
-    class Meta:
-        db_table = 'articles'
         proxy = True
 
-    objects = PublishedDraftableManager()
+class SubmittedArticle(Article.get_submitted_model(), Article):
+    objects = SubmittedDraftableManager()
+    class Meta:
+        proxy = True
 
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('status').default = self.STATUS_PUBLISHED
-        super().__init__(*args, **kwargs)
+class PublishedArticle(Article.get_published_model(), Article):
+    objects = PublishedDraftableManager()
+    class Meta:
+        proxy = True
+
 class ArticleComment(models.Model):
     """Define the data model for comments on Answers"""
 
