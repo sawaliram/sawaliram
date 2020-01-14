@@ -1138,6 +1138,13 @@ class BaseEditTranslation(UpdateView):
 
         # Fetch or create the translation object itself
 
+        # Make sure it's not a published object
+        allowed_objects = self.model.objects.filter(
+            Q(status=self.model.STATUS_DRAFT) |
+            Q(status=self.model.STATUS_SUBMITTED)
+        )
+
+        # Select the specific one, if it exists
         query_filters = {
             'source': source,
             'translated_by': self.request.user,

@@ -611,7 +611,7 @@ class TranslationMixin(models.Model):
     def translator(self):
         return self.translated_by
 
-class ArticleTranslation(TranslationMixin):
+class ArticleTranslation(DraftableModel, TranslationMixin):
     '''
     Stores translated data for a given article
     '''
