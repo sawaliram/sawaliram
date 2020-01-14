@@ -540,7 +540,13 @@ class Article(DraftableModel):
 
     def list_available_languages(self):
         langs = [self.language]
-        langs += [t.language for t in self.translations.all()]
+        langs += [
+            t.language
+            for t
+            in self.translations.filter(
+                status=ArticleTranslation.STATUS_PUBLISHED,
+            )
+        ]
 
         langs_dedup = list(set(langs))
         langs_dedup.sort()
