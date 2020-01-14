@@ -36,17 +36,6 @@ function closeMenusOnClickingDarkbackground() {
     });
 }
 
-function resizeMainLogoOnScrollDown() {
-    $(window).scroll(function() {
-        if ($(window).scrollTop() > 100) {
-            $('#mainLogo').css('width', '200px');
-        }
-        else {
-            $('#mainLogo').css('width', '230px');
-        }
-    });
-}
-
 function highlightSelectedVolunteerOption() {
     $('.volunteer-option input:checkbox').change(function() {
         if(this.checked) {
@@ -258,6 +247,12 @@ function setupQuillEditor({ placeholder = null } = {}) {
     });
 }
 
+function setupSubmissionLanguageSelector() {
+    $('.submission-language-select').change(function() {
+        $('[name="submission-language"]').val($(this).val());
+    });
+}
+
 function activateTooltips() {
   $('[data-toggle="tooltip"]').tooltip()
 }
@@ -434,10 +429,6 @@ enableLinkingtoTabs();
 setupNavbarSearchBar();
 setupSearchResultsSearch();
 
-// if (window.matchMedia("(min-width: 576px)").matches) {
-//     resizeMainLogoOnScrollDown();
-// }
-
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
 if (window.location.pathname == '/') {
@@ -451,6 +442,7 @@ if (window.location.pathname.includes('/dashboard/question/submit') || window.lo
 
 if (new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)) {
     setupQuillEditor({ placeholder: 'Type your answer here...' });
+    setupSubmissionLanguageSelector();
     activateTooltips();
 }
 

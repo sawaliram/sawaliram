@@ -2132,6 +2132,7 @@ button.deny-access {
 .editor-header .header-controls {
     display: flex;
     justify-content: space-between;
+    flex-direction: row-reverse;
 }
 
 .editor-header .header-controls .item-cycle-controls .prev-link,
@@ -2170,13 +2171,17 @@ button.deny-access {
     align-items: center;
 }
 
-.editor-header .header-controls .submission-language-control .dropdown {
+.editor-header .header-controls .submission-language-control .submission-language-select {
+    margin-left: 0.5rem;
+}
+
+/* .editor-header .header-controls .submission-language-control .dropdown {
     margin-left: 0.8rem;
 }
 
 .editor-header .header-controls .submission-language-control .dropdown button {
     border-radius: 3px;
-}
+} */
 
 .answer-details h1,
 .editor-header h1 {

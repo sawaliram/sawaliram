@@ -31,6 +31,7 @@ from sawaliram_auth.decorators import (
 )
 from dashboard.models import (
     LANGUAGE_CHOICES,
+    LANGUAGE_CODES,
     QuestionArchive,
     Question,
     Answer,
@@ -599,6 +600,7 @@ class SubmitAnswerView(View):
 
             # Update values and save
             draft.answer_text = request.POST.get('rich-text-content')
+            draft.language = LANGUAGE_CODES[request.POST.get('submission-language')]
             draft.submitted_by = request.user
             draft.save()
 
@@ -643,6 +645,7 @@ class SubmitAnswerView(View):
                 answer.status = 'submitted'
 
             answer.answer_text = request.POST.get('rich-text-content')
+            answer.language = LANGUAGE_CODES[request.POST.get('submission-language')]
             answer.save()
 
             # Save credits
