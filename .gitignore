@@ -113,6 +113,7 @@ Pipfile.lock
 
 # local ignores
 .vscode
+sawaliram.code-workspace
 
 # helper script ignores
 set-environment.sh
@@ -120,3 +121,4 @@ set-environment.sh
 # dirs to ignore
 staticfiles/
 assets/submissions
+

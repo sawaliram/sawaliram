@@ -1,0 +1,14 @@
+/*!
+ * Quill Editor v1.3.6
+ * https://quilljs.com/
+ * Copyright (c) 2014, Jason Chen
+ * Copyright (c) 2013, salesforce.com
+ */
+.ql-container {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.ql-editor h6 {
+  margin-bottom: 1rem;
+}

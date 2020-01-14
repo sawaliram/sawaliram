@@ -1,0 +1,297 @@
+{% extends "public_website/base.html" %}
+
+{% block title %} {{ page_title }} | Sawaliram {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="wide-container">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="profile-header">
+        <img src="{% static 'user/default.png' %}" alt="Profile Picture">
+        <h1 class="user-name">{{ selected_user.get_full_name }}</h1>
+        {% if selected_user.organisation %}
+            <p class="organisation">{% if selected_user.organisation_role %}{{ selected_user.organisation_role }} at {% endif %}{{ selected_user.organisation }}</p>
+        {% endif %}
+    </div>
+    
+    <nav>
+        <div class="nav nav-pills user-profile-nav" role="tablist">
+            {% if request.user.id == selected_user.id %}
+            <a class="nav-item nav-link active" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="true">
+                <img class="slow-transition" src="{% static 'icons/menu_settings.png' %}" alt="User Settings">
+                Settings
+            </a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#drafts" role="tab" aria-controls="drafts" aria-selected="true">
+                <img class="slow-transition" src="{% static 'icons/menu_drafts.png' %}" alt="User Drafts">
+                Drafts
+            </a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="true">
+                <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="User Notifications">
+                Notifications
+                {% if request.user.notifications.all|length > 0 %}
+                    <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
+                {% endif %}
+            </a>
+            {% endif %}
+            <a class="nav-item nav-link {% if request.user.id != selected_user.id %}active{% endif%}" data-toggle="tab" href="#submissions" role="tab" aria-controls="submissions" aria-selected="true">
+                <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="User Submissions">
+                Submissions
+            </a>
+            {% if request.user.id == selected_user.id %}
+            <a class="nav-item nav-link" data-toggle="tab" href="#bookmarks" role="tab" aria-controls="bookmarks" aria-selected="true">
+                <img class="slow-transition" src="{% static 'icons/menu_bookmarks.png' %}" alt="User Bookmarks">
+                Bookmarks
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+    
+    <div class="tab-content user-profile-tab-content accordion">
+        {% if request.user.id == selected_user.id %}
+        <div class="tab-pane fade show active" id="settings" role="tabpanel" aria-labelledby="settings">
+            <div class="tab-section">
+                <h3 class="tab-subheading">Organisation</h3>
+                <p class="tab-section-intro">Details of your organisation and your role</p>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="text" maxlength="50" name="organisation-role" placeholder="Your role" {% if request.user.organisation_role %}value="{{ request.user.organisation_role }}"{% endif %}>
+                    <input type="text" maxlength="200" name="organisation-name" placeholder="Organisation name" {% if request.user.organisation %}value="{{ request.user.organisation }}"{% endif %}>
+                    <button class="btn btn-secondary sub-task-button">Update organisation info</button>
+                </form>
+            </div>
+            <div class="tab-section">
+                <h3 class="tab-subheading">Security</h3>
+                <p class="tab-section-intro">Manage your password</p>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="password" name="current-password" placeholder="Current password" required>
+                    <input type="password" name="new-password" placeholder="New password" required>
+                    <input type="password" name="confirm-new-password" placeholder="Confirm new password" required>
+                    <button class="btn btn-secondary sub-task-button">Update password</button>
+                </form>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="drafts" role="tabpanel" aria-labelledby="drafts">
+            {% if answer_drafts or article_drafts %}
+                {% if answer_drafts %}
+                <div class="tab-section">
+                    <h3 class="tab-subheading">Answers</h3>
+                    <p class="tab-section-intro">Your draft answers</p>
+                    <ul class="card-list">
+                        {% for draft in answer_drafts %}
+                        <li>
+                            <h4>{{ draft.question_id }}</h4>
+                            <p class="tab-section-intro">
+                                {{ draft.answer_text|striptags|truncatechars:140  }}
+                            </p>
+                            <a href="{% url 'dashboard:submit-answer' question_id=draft.question_id.id %}" class="btn btn-secondary sub-task-button">Continue writing</a>
+                            <form class="inline-block" action="{% url 'sawaliram_auth:remove-draft' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="draft-id" value="{{ draft.id }}">
+                                <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if article_drafts %}
+                <div class="tab-section">
+                    <h3 class="tab-subheading">Articles</h3>
+                    <p class="tab-section-intro">Your draft articles</p>
+                    <ul class="card-list">
+                        {% for draft in article_drafts %}
+                        <li>
+                            <h4>{{ draft.title }}</h4>
+                            <p class="tab-section-intro">
+                                {{ draft.body|striptags|truncatechars:140  }}
+                            </p>
+                            <a href="{% url 'dashboard:edit-article' draft_id=draft.id %}" class="btn btn-secondary sub-task-button">Continue writing</a>
+                            <form class="inline-block" action="{% url 'dashboard:delete-article' draft.id %}" method="GET">
+                                {% csrf_token %}
+                                <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            {% else %}
+            <div class="empty-tab">
+                <h3><i class="far fa-meh"></i> No drafts</h3>
+            </div>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications">
+            {% if notifications %}
+            <div class="tab-section">
+                <ul class="card-list">
+                    {% for notification in notifications %}
+                    <li class="notification-card">
+                        <h4>
+                        {{ notification.title_text }}
+                        </h4>
+                        <p class="tab-section-intro">
+                            {{ notification.description_text }}
+                        </p>
+                        <div class="notification-details">
+                            {% if notification.notification_type == 'comment' %}
+                                <i class="fas fa-comments"></i>
+                            {% elif notification.notification_type == 'published' %}
+                                <i class="fas fa-check-circle"></i>
+                            {% elif notification.notification_type == 'updated' %}
+                                <i class="fas fa-edit"></i>
+                            {% endif %}
+                            <span>{{ notification.created_on|date:"j F, Y" }}</span>
+                        </div>
+                        <form action="{% url 'public_website:view-notification' %}" class="view-notification-form" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="notification-id" value="{{ notification.id }}">
+                            <input type="hidden" name="target-url" value="{{ notification.target_url }}">
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% else %}
+            <div class="empty-tab">
+                <h3><i class="far fa-meh"></i> No notifications</h3>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        <div class="tab-pane fade {% if request.user.id != selected_user.id %}show active{% endif %}" id="submissions" role="tabpanel" aria-labelledby="submissions">
+            {% if submitted_questions or submitted_answers or submitted_articles or published_articles %}
+                {% if submitted_questions %}
+                <div class="tab-section">
+                    <h3 class="tab-subheading">Questions</h3>
+                    <p class="tab-section-intro">Questions submitted by {% if request.user.id != selected_user.id %} {{ selected_user.first_name }}{% else %}you{% endif%}</p>
+                    <ul class="card-list">
+                        {% for question in submitted_questions %}
+                        <li>
+                            <h4>{{ question.question_count }} questions</h4>
+                            <p class="tab-section-intro">Submitted on {{ question.created_on|date:"jS F, Y" }}</p>
+                            {% if question.status == 'new' %}
+                            <p class="tab-section-status pending">
+                                Review Pending
+                            </p>
+                            {% elif question.status == 'curated' %}
+                            <p class="tab-section-status success">
+                                Ready to answer
+                            </p> 
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if submitted_answers %}
+                <div class="tab-section">
+                    <h3 class="tab-subheading">Answers</h3>
+                    <p class="tab-section-intro">Answers submitted by {% if request.user.id != selected_user.id %} {{ selected_user.first_name }}{% else %}you{% endif%}</p>
+                    <ul class="card-list">
+                        {% for answer in submitted_answers %}
+                        <li>
+                                <a class="task-link" href="{% url 'dashboard:review-answer' question_id=answer.question_id.id answer_id=answer.id %}">
+                                {{ answer.question_id }}
+                                </a>
+                                <p class="tab-section-intro">
+                                    {{ answer.answer_text|striptags|truncatechars:140 }}
+                                </p>
+                                <p class="tab-section-status pending">
+                                    Review Pending
+                                </p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if submitted_articles  or published_articles%}
+                <div class="tab-section">
+                    <h3 class="tab-subheading">Articles</h3>
+                    <p class="tab-section-intro">Articles submitted by {% if request.user.id != selected_user.id %} {{ selected_user.first_name }}{% else %}you{% endif%}</p>
+                    <ul class="card-list">
+                        {% for article in submitted_articles %}
+                        <li>
+                                <a class="task-link" href="{% url 'dashboard:review-article' article=article.id %}">
+                                {{ article.title }}
+                                </a>
+                                <p class="tab-section-intro">
+                                    {{ article.body|striptags|truncatechars:140 }}
+                                </p>
+                                <p class="tab-section-status pending">
+                                    Review Pending
+                                </p>
+                        </li>
+                        {% endfor %}
+                        {% for article in published_articles %}
+                        <li>
+                                <a class="task-link" href="{% url 'dashboard:review-article' article=article.id %}">
+                                {{ article.title }}
+                                </a>
+                                <p class="tab-section-intro">
+                                    {{ article.body|striptags|truncatechars:140 }}
+                                </p>
+                                <p class="tab-section-status success">
+                                    Published
+                                </p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="empty-tab">
+                    <h3><i class="far fa-meh"></i> No submissions</h3>
+                </div>
+            {% endif %}
+        </div>
+        {% if request.user.id == selected_user.id %}
+        <div class="tab-pane fade" id="bookmarks" role="tabpanel" aria-labelledby="bookmarks">
+            {% if bookmarked_questions %}
+            <div class="tab-section">
+                <h3 class="tab-subheading">Questions</h3>
+                <p class="tab-section-intro">Questions you saved</p>
+                <ul class="card-list">
+                    {% for bookmark in bookmarked_questions %}
+                    <li>
+                        <h4>{{ bookmark.question }}</h4>
+                        <div>
+                            <p class="tab-section-status pending">
+                                Not Answered
+                            </p>
+                        </div>
+                        <br>
+                        <form action="{% url 'sawaliram_auth:delete-bookmark' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="content-type" value="question">
+                            <input type="hidden" name="question-id" value="{{ bookmark.question.id }}">
+                            <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% else %}
+                <div class="empty-tab">
+                    <h3><i class="far fa-meh"></i> No bookmarks</h3>
+                </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

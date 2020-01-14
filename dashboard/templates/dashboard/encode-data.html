@@ -1,0 +1,54 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %} Encode Data | Sawaliram {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<h1 class="task-heading">Encode Data</h1>
+
+<h3 class="task-section-heading">Recently Curated Submissions</h3>
+
+{% if unencoded_submissions %}
+
+<table class="table table-striped submissions-table">
+    <thead>
+        <tr>
+            <th>Questions</th>
+            <th>Curated On</th>
+            <th>Download</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for submission in unencoded_submissions %}
+        <tr>
+            <td>{{ submission.number_of_questions }}</td>
+            <td>{{ submission.created_on }}</td>
+            <td><a class="grey-link" href="{% static 'submissions/unencoded/'|add:submission.excel_sheet_name %}">Link</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+    <p class="empty-result-text">No pending submissions to encode</p>
+{% endif %}
+
+<h3 class="task-section-heading">Submit Encoded Datasets</h3>
+
+<form action="{% url 'dashboard:submit-encoded-dataset' %}" enctype="multipart/form-data" method="POST">
+    {% csrf_token %}
+
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" id="excelFileBrowser" name="{{ excel_file_name }}" required>
+        <label class="custom-file-label" for="excelFileBrowser">Choose Excel file</label>
+        <input type="hidden" name="excel-file-name" value="{{ excel_file_name }}">
+    </div>
+
+    <br><br><br>
+    <button type="submit" class="btn btn-block green-button">Submit</button>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,174 @@
+{% extends "public_website/base.html" %}
+
+{% load static %}
+
+{% block head_includes %}
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %} Submit Answer | Sawaliram {% endblock %}
+
+{% block content %}
+
+<div class="editor-container">
+	{% if messages %}
+        {% for message in messages %}
+			<div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+				{{ message }}
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+        {% endfor %}
+    {% endif %}
+	<div class="editor-header">
+		<div class="header-controls">
+			<div class="submission-language-control">
+				<span>Answering in: </span>
+				<select class="submission-language-select">
+					{% if draft_answer %}
+					<option value="{{ question.question_language.lower }}" selected>
+						{{ draft_answer.get_language_name|capfirst }}
+					</option>
+					{% else %}
+						<option value="english" selected>English</option>
+						{% if question.question_language.lower != 'english' %}
+						<option value="{{ question.question_language.lower }}">
+							{{ question.question_language }}
+						</option>
+						{% endif %}
+					{% endif %}
+				</select>
+				<!-- <div class="dropdown">
+					<button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="submissionLanguageSelector">
+						English
+						<i class="fas fa-chevron-down"></i>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="languageSelector">
+						{% if question.question_language.lower != 'english' %}
+							<a class="dropdown-item toggle-languge-option" href="#">{{ question.question_language }}</a>
+						{% endif %}
+					</div>
+				</div> -->
+			</div>
+			{% if prev_item_id or next_item_id %}
+			<div class="item-cycle-controls">
+				{% if prev_item_id %}
+					<a href="{% url 'dashboard:submit-answer' question_id=prev_item_id %}" class="btn prev-link"><i class="fas fa-arrow-left"></i> Prev</a> |
+				{% endif %}
+				{% if next_item_id %}
+				<a href="{% url 'dashboard:submit-answer' question_id=next_item_id %}" class="btn next-link">Next <i class="fas fa-arrow-right"></i></a>
+				{% endif%}
+			</div>
+			{% endif %}
+		</div>
+		<h1>{{ question.question_text }}</h1>
+		{% if question.question_language.lower != 'english' %}
+			{% if question.question_text_english %}
+				<h2>{{ question.question_text_english }}</h2>
+			{% endif %}
+		{% endif %}
+		{% if question.school or question.area or question.state or question.question_asked_on %}
+			<div class="question-meta">
+				{% if question.school %}
+					<span>
+						<i class="fas fa-graduation-cap"></i>
+						{{ question.school }}
+					</span>
+				{% endif %}
+				{% if question.area or question.state %}
+					<span>
+						<i class="fas fa-map-marker-alt"></i>
+						{% if question.area %}{{ question.area }}, {% endif %}{% if question.state %}{{ question.state }}{% endif %}
+					</span>
+				{% endif %}
+				{% if question.question_asked_on %}
+					<span>
+						<i class="fas fa-calendar-alt"></i>
+						{{ question.question_asked_on }}
+					</span>
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+	<form action="{% url 'dashboard:submit-answer' question_id=question.id %}" class="rich-text-form" method="POST">
+		{% csrf_token %}
+		
+		<div id="editor" data-placeholder="Type your answer here...">
+			{{ draft_answer.answer_text|safe }}
+		</div>
+	
+		<div id="toolbar" class="justify-content-end hr-over">
+			<span class="ql-formats">
+				<button class="ql-bold"></button>
+				<button class="ql-italic"></button>
+				<button class="ql-underline"></button>
+			</span>
+			<span class="ql-formats">
+				<button class="ql-script" value="sub"></button>
+				<button class="ql-script" value="super"></button>
+			</span>
+			<span class="ql-formats">
+				<button class="ql-list" value="ordered"></button>
+				<button class="ql-list" value="bullet"></button>
+				<button class="ql-indent" value="-1"></button>
+				<button class="ql-indent" value="+1"></button>
+			</span>
+			<span class="ql-formats">
+				<button class="ql-blockquote"></button>
+				<button class="ql-link"></button>
+				<button class="ql-image"></button>
+				<button class="ql-video"></button>
+				<button class="ql-formula"></button>
+			</span>
+		</div>
+
+		<div id="credits-bar">
+			<h2>Credits</h2>
+			<div class="credits-list">
+				{% if draft_answer %}
+					{% for credit in draft_answer.credits.all %}
+						<div class="credits-card {% if not forloop.first %}removable{% endif %}">
+							<select class="credit-title" name="credit-title">
+								<option value="author" {% if credit.credit_title == 'author' %}selected{% endif %}>Author</option>
+								<option value="co-author" {% if credit.credit_title == 'co-author' %}selected{% endif %}>Co-author</option>
+								<option value="submitter" {% if credit.credit_title == 'submitter' %}selected{% endif %}>Submitter</option>
+							</select>
+							<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ credit.credit_user_name }}" placeholder="Full Name" {% if forloop.first %}readonly{% endif %}>
+							<input type="hidden" class="credit-user-id" name="credit-user-id" value="">
+							<button class="btn remove-credit-user"><i class="far fa-times-circle"></i></button>
+						</div>
+					{% endfor %}
+				{% else %}
+					<div class="credits-card">
+						<select class="credit-title" name="credit-title">
+							<option value="author" selected>Author</option>
+							<option value="co-author">Co-author</option>
+							<option value="submitter">Submitter</option>
+						</select>
+						<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="Full Name" readonly>
+						<input type="hidden" class="credit-user-id" name="credit-user-id" value="{{ request.user.id }}">
+						<button class="btn remove-credit-user"><i class="far fa-times-circle"></i></button>
+					</div>
+				{% endif %}
+			</div>
+			<button class="btn btn-small btn-secondary-hollow add-credit"><i class="fas fa-plus"></i> Add</button>
+		</div>
+	
+		<div id="submitbar">
+			<input type="hidden" name="question_id" value="{{ question.id }}">
+			<input type="hidden" name="rich-text-content" value="" />
+			{% if draft_answer and draft_answer.status == 'submitted' %}
+				<input type="hidden" name="answer_id" value="{{ draft_answer.id }}">
+				<input type="hidden" name="submission-language" value="{{ draft_answer.get_language_name }}" />
+				<button type="submit" name="mode" value="edit" class="btn btn-primary">Save</button>
+			{% else %}
+				<input type="hidden" name="submission-language" value="english" />	
+				<button type="submit" name="mode" value="{{ submission_mode }}" class="btn btn-primary">Submit Answer</button>
+				<button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+			{% endif %}
+		</div>
+	</form>
+</div>
+
+{% endblock %}

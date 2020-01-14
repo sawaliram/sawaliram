@@ -1,179 +1,59 @@
 
-{% extends "dashboard/base.html" %}
+{% extends "public_website/base.html" %}
+
+{% load static %}
 
 {% block title %} Submit Questions | Sawaliram {% endblock %}
 
 {% block content %}
 
-<h1 class="task-heading">Enter Questions Manually</h1>
+<div class="narrow-container">
 
-<form class="question-submission-form" action="{% url 'dashboard:submit-questions' %}" method="POST">
-    {% csrf_token %}
-
-    <h3 class="task-section-heading">Common Information</h3>
-
-    <div class="form-group">
-        <label>Were these questions published in a magazine/newspaper/website/book?</label><br>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="published" id="publishedTrue" value="True">
-            <label class="form-check-label" for="publishedTrue">Yes</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="published" id="publishedFalse" value="False" checked>
-            <label class="form-check-label" for="publishedFalse">No</label>
-        </div>
+    {% if messages %}
+    <div class="alert alert-success alert-dismissible fade show task-success-message" role="alert">
+        {% for message in messages %}
+        <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            <i class="far fa-check-circle"></i>
+            {{ message }}
+        </span>
+        {% endfor %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-
-    <div class="published-information">
-        <div class="form-group">
-            <input type="text" class="form-control" name="published-source" id="publishedSource" placeholder="Name of publication">
-            <small class="form-text">Name of the publication in which the question appeared</small>
-        </div>
-
-        <div class="form-group">
-            <label for="publishedDate">Date of publication</label>
-            <input type="date" class="form-control" name="published-date" id="publishedDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
-            <small class="form-text">Date of publication (dd/mm/yyyy)</small>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <input type="text" class="form-control" name="school-name" id="schoolName" placeholder="School Name">
-    </div>
-
-    <div class="form-group">
-        <label>Curriculum Followed</label><br>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedStateBoard" value="State Board" checked>
-            <label class="form-check-label" for="curriculumFollowedStateBoard">State Board</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedCBSE" value="CBSE">
-            <label class="form-check-label" for="curriculumFollowedCBSE">CBSE</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedICSE" value="ICSE">
-            <label class="form-check-label" for="curriculumFollowedICSE">ICSE</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedHSTP" value="HSTP">
-            <label class="form-check-label" for="curriculumFollowedHSTP">HSTP</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedSmallScience" value="Small Science">
-            <label class="form-check-label" for="curriculumFollowedSmallScience">Small Science</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="curriculum-followed" id="curriculumFollowedOther" value="Other">
-            <label class="form-check-label" for="curriculumFollowedOther">Other</label>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <input type="text" class="form-control" name="medium-language" id="mediumLanguage" placeholder="Medium of instruction">
-        <small class="form-text">Language in which classes are taught in the school</small>
-    </div>
-
-    <div class="form-group">
-        <input type="text" class="form-control" name="area" id="area" placeholder="Area*" required>
-        <small class="form-text">The address of the student’s school or residence (locality/village-town-city/district). May be entered in local language.</small>
-    </div>
-
-    <div class="form-group">
-        <input type="text" class="form-control" name="state" id="state" placeholder="State*" required>
-        <small class="form-text">The state in India where the school/residence is located (may be entered in local language)</small>
-    </div>
-
-    <div class="form-group">
-        <label>How was the question originally asked?</label><br>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="question-format" id="questionFormatWritten" value="handed over in writen form" checked>
-            <label class="form-check-label" for="questionFormatWritten">Handed over in writen form</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="question-format" id="questionFormatOral" value="asked orally">
-            <label class="form-check-label" for="questionFormatOral">Asked orally</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="question-format" id="questionFormatPost" value="sent in by post">
-            <label class="form-check-label" for="questionFormatPost">Received by post</label>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="area">Context*</label>
-        <select class="form-control" name="context" id="context" required>
-            <option>In class</option>
-            <option>During or after an activity or field visit</option>
-            <option>During or after a special event</option>
-            <option>Other</option>
-        </select>
-        <small class="form-text">The setting in which the question was asked. If none of the options match the context, select the 'Other' option, and elaborate in the Notes Column.</small>
-    </div>
-
-    <div class="form-group">
-        <input type="text" class="form-control" name="contributor-name" id="contributorName" placeholder="Contributor Name">
-        <small class="form-text">Name of the person who received/entered the question</small>
-    </div>
-
-    <div class="form-group">
-        <input type="text" class="form-control" name="contributor-role" id="contributorRole" placeholder="Contributor Role*">
-        <small class="form-text">Role of the person who received/entered the question, eg: teacher, volunteer, AFSP, project officer, etc</small>
-    </div>
-
-    <br>
-    <h3 class="task-section-heading">Questions & Related Information</h3>
-
-    <div class="card question-card">
-        <div class="card-header">
-            #<span class="question-number">1</span>
-            <button type="button" class="delete-question-button">Delete</button>
-        </div>
-        <div class="card-body">
-            <div class="form-group">
-                <textarea class="form-control" name="question-text" id="question_text" placeholder="Question*" required></textarea>
-                <small class="form-text">The question asked by a student, in its original language</small>
-            </div>
-
-            <div class="form-group">
-                <input type="text" class="form-control" name="question-language" id="question_language" placeholder="Question language*" required>
-                <small class="form-text">The language in which the question was originally asked</small>
-            </div>
-
-            <div class="form-group">
-                <textarea class="form-control" name="question-text-english" id="question_text_english" placeholder="English translation of question"></textarea>
-                <small class="form-text">Translation of the question in English. Leave blank if the original question is in English</small>
-            </div>
-        
-            <div class="form-group">
-                <input type="text" class="form-control" name="student-name" id="student_name" placeholder="Student name">
-                <small class="form-text">Name(s) of the student(s) who asked the question (may be entered in the local language). If multiple students have asked the same question, enter their names with comma-separation, eg: Geeta, Ali, Mary.</small>
-            </div>
-        
-            <div class="form-group">
-                <input type="text" class="form-control" name="student-class" id="student_class" placeholder="Student class">
-                <small class="form-text">The class of the student(s) in Arabic numerals (1-12). Avoid ordinals like 3rd or 4th. If the class of that student is not known but the group had students from multiple classes, enter the classes with comma-separation, Eg: 7, 8, 9, 10</small>
-            </div>
-
-            <div class="form-group">
-                <label for="questionAskedOn">When was the question asked?</label>
-                <input type="date" class="form-control" name="question-asked-on" id="questionAskedOn" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
-                <small class="form-text">The date on which the question was asked (dd/mm/yyyy)</small>
-            </div>
-
-            <div class="form-group">
-                <textarea class="form-control" name="notes" id="notes" placeholder="Notes"></textarea>
-                <small class="form-text">Space for additional details or information points not recorded in any other field. Use semicolon (;) as a separator for more than one point</small>
-            </div>
+    {% endif %}
     
-        </div>
+    <div class="task-help-button-wrapper">
+        <button class="btn btn-secondary-hollow task-help task-page-help">Help?</button>
     </div>
-
-    <button type="button" class="btn btn-block add-question-button">Add Another Question</button>
-
-    <br><br>
-    <button type="submit" class="btn btn-block green-button">Submit</button>
     
-</form>
+    <div class="submit-questions-help">
+        <p>The easiest way to submit questions to Sawaliram is by downloading the Excel Template below, collecting questions over a period of time from the students and submit the filled Excel sheet on this page. The Excel sheet has pre-filled column headers that indicate the information that needs to be filled out. It will also validate your entries, making sure the data is correct. If any errors still manage to slip through, your Excel sheet will be checked again before uploading it and any mistakes will be clearly pointed out for you to correct!</p>
+    
+        <a href="{% static 'files/sawaliram_template.xlsx' %}" class="btn btn-secondary download-file">
+            <i class="fas fa-download"></i> Download Excel Template
+        </a>
+        <a href="{% static 'files/Guidelines_to_submit_questions.pdf' %}" class="btn btn-secondary-hollow download-file">
+            <i class="fas fa-download"></i> Download Guidelines
+        </a>
+    </div>
+    
+    <form action="{% url 'dashboard:submit-questions' %}" enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        <div class="excel-file-selection-panel">
+            <input type="file" class="custom-file-input" id="excelFileBrowser" name="excel_file" data-url="validate-new" required>
+            <label class="excel-file-label" for="excelFileBrowser">
+                <i class="fas fa-file-excel"></i> 
+                <span>Click to select your excel sheet</span>
+            </label>
+            <div class="validation-errors">
+                <h5></h5>
+                <div class="error-list"></div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary submit-excel" disabled>Submit</button>
+    </form>
+    
+</div>
 
 {% endblock %}
