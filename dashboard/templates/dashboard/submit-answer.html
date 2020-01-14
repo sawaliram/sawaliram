@@ -145,6 +145,9 @@
 							<option value="author" selected>Author</option>
 							<option value="co-author">Co-author</option>
 							<option value="submitter">Submitter</option>
+							{% if question.published %}
+							<option value="publication" data-publication="{{ question.published_source }}">Publication</option>
+							{% endif %}
 						</select>
 						<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="Full Name" readonly>
 						<input type="hidden" class="credit-user-id" name="credit-user-id" value="{{ request.user.id }}">
