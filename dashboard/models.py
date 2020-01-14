@@ -7,8 +7,18 @@ LANGUAGE_CHOICES = [
     ('en', 'English'),
     ('hi', 'Hindi'),
     ('ta', 'Tamil'),
-    ('te', 'Telugu'),
+    ('te', 'Telugu')
 ]
+
+LANGUAGE_CODES = {
+    'english': 'en',
+    'hindi': 'hi',
+    'bengali': 'bn',
+    'malayalam': 'ml',
+    'marathi': 'mr',
+    'tamil': 'ta',
+    'telugu': 'te'
+}
 
 
 class Dataset(models.Model):
@@ -165,6 +175,9 @@ class Answer(models.Model):
         db_table = 'answer'
 
     answer_text = models.TextField()
+    language = models.CharField(
+        max_length=100,
+        default='en')
     question_id = models.ForeignKey(
         'Question',
         related_name='answers',
@@ -192,6 +205,14 @@ class Answer(models.Model):
             self.question_id.question_language,
             self.question_id.question_text,
         )
+
+    def get_language_name(self):
+        """
+        Return the full language name
+        """
+        for language, code in LANGUAGE_CODES.items():
+            if code == self.language:
+                return language
 
 
 class AnswerComment(models.Model):
