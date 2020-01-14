@@ -599,13 +599,9 @@ class TranslationMixin(models.Model):
         choices=settings.LANGUAGE_CHOICES,
         default='en')
 
-    source = models.ForeignKey(
-        'Article',
-        related_name='translations',
-        on_delete=models.CASCADE)
     translated_by = models.ForeignKey(
         'sawaliram_auth.User',
-        related_name='translated_articles',
+        related_name='%(class)s',
         on_delete=models.PROTECT)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -619,6 +615,12 @@ class ArticleTranslation(TranslationMixin):
     '''
     Stores translated data for a given article
     '''
+
+    # What we're translating
+    source = models.ForeignKey(
+        'Article',
+        related_name='translations',
+        on_delete=models.CASCADE)
 
     # Translated Fields
 
