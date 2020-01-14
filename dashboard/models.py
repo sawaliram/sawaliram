@@ -587,21 +587,17 @@ class ArticleComment(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
-class ArticleTranslation(models.Model):
+class TranslationMixin(models.Model):
     '''
-    Stores translated data for a given article
+    Mixin for storing data of something that needs to be translated
     '''
+
+    class Meta:
+        abstract = True
 
     language = models.CharField(max_length=100,
         choices=settings.LANGUAGE_CHOICES,
         default='en')
-
-    # Translated Fields
-
-    title = models.CharField(max_length=1000, null=True)
-    body = models.TextField(null=True)
-
-    # Translation metadata
 
     source = models.ForeignKey(
         'Article',
@@ -618,3 +614,13 @@ class ArticleTranslation(models.Model):
     @property
     def translator(self):
         return self.translated_by
+
+class ArticleTranslation(TranslationMixin):
+    '''
+    Stores translated data for a given article
+    '''
+
+    # Translated Fields
+
+    title = models.CharField(max_length=1000, null=True)
+    body = models.TextField(null=True)
