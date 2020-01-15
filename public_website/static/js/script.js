@@ -253,6 +253,17 @@ function setupSubmissionLanguageSelector() {
     });
 }
 
+function setupPublicationAutoFill() {
+    $('.credit-title').change(function() {
+        if ($(this).val() == 'publication') {
+            $(this).next('.credit-user-name').val($(this).data('publication'));
+        }
+        else {
+            $(this).next('.credit-user-name').val('');
+        }
+    });
+}
+
 function activateTooltips() {
   $('[data-toggle="tooltip"]').tooltip()
 }
@@ -407,6 +418,7 @@ function setupAddCredit() {
         credit_form.find('.credit-user-name').val('').removeAttr('readonly').attr('value' ,'');
         credit_form.find('.credit-user-id').prop('value', '');
         setupRemoveCredit();
+        setupPublicationAutoFill();
     });
 }
 
@@ -443,6 +455,7 @@ if (window.location.pathname.includes('/dashboard/question/submit') || window.lo
 if (new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)) {
     setupQuillEditor({ placeholder: 'Type your answer here...' });
     setupSubmissionLanguageSelector();
+    setupPublicationAutoFill();
     activateTooltips();
 }
 
