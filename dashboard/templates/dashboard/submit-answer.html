@@ -27,7 +27,7 @@
 				<span>Answering in: </span>
 				<select class="submission-language-select">
 					{% if draft_answer %}
-					<option value="{{ question.question_language.lower }}" selected>
+					<option value="{{ draft_answer.get_language_name }}" selected>
 						{{ draft_answer.get_language_name|capfirst }}
 					</option>
 					{% else %}
@@ -39,17 +39,6 @@
 						{% endif %}
 					{% endif %}
 				</select>
-				<!-- <div class="dropdown">
-					<button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="submissionLanguageSelector">
-						English
-						<i class="fas fa-chevron-down"></i>
-					</button>
-					<div class="dropdown-menu" aria-labelledby="languageSelector">
-						{% if question.question_language.lower != 'english' %}
-							<a class="dropdown-item toggle-languge-option" href="#">{{ question.question_language }}</a>
-						{% endif %}
-					</div>
-				</div> -->
 			</div>
 			{% if prev_item_id or next_item_id %}
 			<div class="item-cycle-controls">
@@ -141,12 +130,12 @@
 					{% endfor %}
 				{% else %}
 					<div class="credits-card">
-						<select class="credit-title" name="credit-title">
+						<select class="credit-title" name="credit-title" {% if question.published %}data-publication="{{ question.published_source }}"{% endif %}>
 							<option value="author" selected>Author</option>
 							<option value="co-author">Co-author</option>
 							<option value="submitter">Submitter</option>
 							{% if question.published %}
-							<option value="publication" data-publication="{{ question.published_source }}">Publication</option>
+							<option value="publication">Publication</option>
 							{% endif %}
 						</select>
 						<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="Full Name" readonly>
