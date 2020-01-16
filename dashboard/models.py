@@ -2,6 +2,7 @@
 
 import datetime
 from django.db import models
+from django.urls import reverse
 
 LANGUAGE_CHOICES = [
     ('en', 'English'),
@@ -32,6 +33,9 @@ class Dataset(models.Model):
     status = models.CharField(max_length=100)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'Dataset #{}'.format(self.id)
 
 
 class QuestionArchive(models.Model):
@@ -108,8 +112,7 @@ class QuestionArchive(models.Model):
             print('Error accepting question: %s' % e)
 
     def __str__(self):
-        return self.question_text
-
+        return 'Q{} (uncurated): {}'.format(self.id, self.question_text)
 
 class Question(models.Model):
     """Define the data model for questions curated by admins."""
@@ -165,7 +168,7 @@ class Question(models.Model):
     comments_on_coding_rationale = models.CharField(max_length=500, default='')
 
     def __str__(self):
-        return self.question_text
+        return 'Q{}: {}'.format(self.id, self.question_text)
 
 
 class Answer(models.Model):
@@ -205,6 +208,12 @@ class Answer(models.Model):
             self.question_id.question_language,
             self.question_id.question_text,
         )
+
+    def get_absolute_url(self):
+        return reverse('public_website:view-answer',kwargs={
+            'question_id': self.question_id.id,
+            'answer_id': self.id
+        })
 
     def get_language_name(self):
         """
@@ -308,6 +317,13 @@ class TranslatedQuestion(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return 'Q{}T{}: {}'.format(
+            self.question_id.id,
+            self.question_text,
+            self.question_text,
+        )
+
 class PublishedArticleManager(models.Manager):
     def get_queryset(self):
         return (super()
@@ -387,6 +403,23 @@ class Article(models.Model):
     class Meta:
         db_table = 'articles'
 
+    def __str__(self):
+        return 'Article #{}: {}'.format(self.id, self.title)
+
+    def get_absolute_url(self):
+        if self.is_draft:
+            return reverse('dashboard:edit-article', kwargs={
+                'draft_id': self.id,
+            })
+        elif self.is_submitted:
+            return reverse('dashboard:review-article', kwargs={
+                'article': self.id,
+            })
+        else:
+            return reverse('dashboard:review-article', kwargs={
+                'article': self.id,
+            })
+
 class ArticleDraft(Article):
     '''
     Draft articles are visible only to the user who creates them.
@@ -424,6 +457,11 @@ class ArticleDraft(Article):
 
         return SubmittedArticle.objects.get(pk=self.pk)
 
+    def get_absolute_url(self):
+        return reverse('dashboard:edit-article', kwargs={
+            'draft_id': self.id
+        })
+
 class SubmittedArticle(Article):
     '''
     Submitted articles are article which are ready to publish, but which
@@ -460,6 +498,11 @@ class SubmittedArticle(Article):
             raise e
 
         return Article(self)
+
+    def get_absolute_url(self):
+        return reverse('dashboard:review-article', kwargs={
+            'article': self.id
+        })
 
 class PublishedArticle(Article):
     '''
