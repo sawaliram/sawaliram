@@ -25,9 +25,9 @@
 		{% csrf_token %}
 
     <div class="flex">
-      <input name="title" type="text" class="input-plain" placeholder="Title" value="{{ article.title }}" />
+      <input name="title" type="text" class="input-plain ml-3 my-3" placeholder="Title" value="{{ article.title }}" />
       <!-- TODO: style select properly -->
-      <select id="language" name="language" class="input-plain">
+      <select id="language" name="language" class="input-plain mr-3 my-3">
         {% for value, label in language_choices %}
         <option value="{{ value }}"{% if value == article.language %} selected{% endif %}>{{ label }}</option>
         {% endfor %}
