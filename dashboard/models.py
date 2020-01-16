@@ -15,6 +15,7 @@ from dashboard.mixins.draftables import (
 )
 from dashboard.mixins.translations import (
     TranslationMixin,
+    translatable,
 )
 
 LANGUAGE_CODES = {
@@ -314,6 +315,7 @@ class TranslatedQuestion(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+@translatable
 class Article(DraftableModel):
     '''
     Complete data model holding all kinds of articles. This includes:
@@ -327,7 +329,8 @@ class Article(DraftableModel):
     returning results).
     '''
 
-    translation = None
+    translation_model = 'dashboard.PublishedArticleTranslation'
+    translatable_fields = ['title', 'body']
 
     title = models.CharField(max_length=1000, null=True)
     language = models.CharField(max_length=100,
@@ -354,92 +357,6 @@ class Article(DraftableModel):
 
     def get_slug(self):
         return slugify(self.title)
-
-    # Language handling
-
-    def set_language(self, language):
-        '''
-        Fetches a translation in the specified language, if available,
-        and caches it in self.translation for future use.
-
-        This step is skipped if the main article is already in the
-        current language or if not translation is available (in which
-        case we'll fall back to providing the original version).
-
-        In future, this could be updated to use a hierarchy of
-        preferred languages, but we don't have time for that at the
-        moment :P
-        '''
-
-        # If we're already the correct language, do nothing
-        if language == self.language:
-            return
-
-        # Search for translations with the given language
-        t = self.translations.filter(
-            language=language,
-            status=ArticleTranslation.STATUS_PUBLISHED,
-        )
-
-        # if it's there, set that to the translation
-        if t.count() > 0:
-            # TODO: warn if more than one translation per language
-            self.translation = t[0]
-
-        # if it's not there, do nothing
-        # we'll fall back to using our default values
-
-    @property
-    def tr_language(self):
-        if self.translation and self.translation.language:
-            return self.translation.language
-        else:
-            return self.language
-
-    @property
-    def tr_title(self):
-        if self.translation:
-            return self.translation.title
-        else:
-            return self.title
-
-    @property
-    def tr_body(self):
-        if self.translation:
-            return self.translation.body
-        else:
-            return self.body
-
-    @property
-    def is_translated(self):
-        return self.translation is not None
-
-    @property
-    def translated_by(self):
-        if self.translation:
-            return self.translation.translated_by
-        else:
-            return None
-
-    def list_available_languages(self):
-        langs = [self.language]
-        langs += [
-            t.language
-            for t
-            in self.translations.filter(
-                status=ArticleTranslation.STATUS_PUBLISHED,
-            )
-        ]
-
-        langs_dedup = list(set(langs))
-        langs_dedup.sort()
-
-        languages = [
-            (lang, dict(settings.LANGUAGES).get(lang, lang))
-            for lang in langs_dedup
-        ]
-
-        return languages
 
     class Meta:
         db_table = 'articles'
@@ -494,3 +411,11 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
 
     title = models.CharField(max_length=1000, null=True)
     body = models.TextField(null=True)
+
+class PublishedArticleTranslation(
+    ArticleTranslation.get_published_model(),
+    ArticleTranslation
+):
+    objects = PublishedDraftableManager()
+    class Meta:
+        proxy = True
