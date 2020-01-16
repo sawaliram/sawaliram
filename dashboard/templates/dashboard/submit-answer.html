@@ -31,11 +31,11 @@
 						{{ draft_answer.get_language_name|capfirst }}
 					</option>
 					{% else %}
-						<option value="english" selected>English</option>
-						{% if question.question_language.lower != 'english' %}
-						<option value="{{ question.question_language.lower }}">
+						<option value="{{ question.question_language.lower }}" selected>
 							{{ question.question_language }}
 						</option>
+						{% if question.question_language.lower != 'english' %}
+						<option value="english">English</option>
 						{% endif %}
 					{% endif %}
 				</select>
@@ -155,7 +155,7 @@
 				<input type="hidden" name="submission-language" value="{{ draft_answer.get_language_name }}" />
 				<button type="submit" name="mode" value="edit" class="btn btn-primary">Save</button>
 			{% else %}
-				<input type="hidden" name="submission-language" value="english" />	
+				<input type="hidden" name="submission-language" value="{{ question.question_language.lower }}" />	
 				<button type="submit" name="mode" value="{{ submission_mode }}" class="btn btn-primary">Submit Answer</button>
 				<button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
 			{% endif %}
