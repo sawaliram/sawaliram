@@ -13,6 +13,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.models import Subquery, Q
 from django.views import View
+from django.views.generic.edit import (
+    FormView,
+)
+from django import forms
 from django.http import (
     HttpResponse,
     Http404, # Page Not found
@@ -38,9 +42,11 @@ from dashboard.models import (
     AnswerComment,
     AnswerCredit,
     UnencodedSubmission,
+    Article,
     ArticleDraft,
     SubmittedArticle,
     ArticleComment,
+    Comment,
     Dataset)
 from sawaliram_auth.models import Notification, User
 from public_website.views import SearchView
@@ -999,6 +1005,71 @@ class ApproveSubmittedArticleView(View):
 
         messages.success(request, self.success_message)
         return redirect('dashboard:review-article', article=a.id)
+
+class CommentForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder': 'Enter your comment...',
+        'rows': '4',
+    }))
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class CreateCommentView(FormView):
+    '''
+    Add a comment to any item
+    '''
+
+    model = Comment
+    form_class = CommentForm
+
+    def get_target(self, target_type, target):
+
+        if target_type == 'article':
+            target_model = Article
+        elif target_type == 'answer':
+            self.target_model = Answer
+        else:
+            # What is this‽ Let's get out of here!
+            raise Http404
+
+        return get_object_or_404(target_model, id=target)
+
+    def get(self, request, target_type, target):
+        '''
+        Not valid; raise 404 for now
+        '''
+
+        raise Http404('This page does not make sense')
+
+    def get_template_names(self):
+        raise NotImplementedError('No templates for this one!')
+
+    def post(self, request, target_type, target):
+        self.target = self.get_target(target_type, target)
+        return super().post(request)
+
+    def form_valid(self, form):
+        '''
+        Let's create the comment!
+        '''
+
+        c = Comment.objects.create(
+            text=form.cleaned_data.get('text'),
+            author=self.request.user,
+            target=self.target,
+        )
+
+        messages.success(self.request, 'Your comment has been posted.')
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        if 'next' in self.request.POST:
+            return self.request.POST.get('next')
+        elif 'next' in self.request.GET:
+            return self.request.GET.get('next')
+        else:
+            return self.target.get_absolute_url()
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')

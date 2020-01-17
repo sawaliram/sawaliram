@@ -4,6 +4,12 @@ import datetime
 from django.db import models
 from django.urls import reverse
 
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import (
+    GenericForeignKey,
+    GenericRelation,
+)
+
 LANGUAGE_CHOICES = [
     ('en', 'English'),
     ('hi', 'Hindi'),
@@ -541,3 +547,28 @@ class ArticleComment(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+class Comment(models.Model):
+    '''
+    Generic class for comments on any kind of model 🎉
+    '''
+
+    # Main field
+    text = models.TextField()
+
+    # Metadata fields
+    author = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='comments',
+        on_delete=models.PROTECT)
+
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    # The following fields are used for defining 'target'
+    content_type = models.ForeignKey(ContentType,
+        on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+
+    # And this is the aforementioned 'target', now defined
+    target = GenericForeignKey('content_type', 'object_id')
