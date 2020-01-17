@@ -15,6 +15,7 @@ from django.db.models import Subquery, Q
 from django.views import View
 from django.views.generic.edit import (
     FormView,
+    DeleteView,
 )
 from django import forms
 from django.http import (
@@ -1012,15 +1013,12 @@ class CommentForm(forms.Form):
         'rows': '4',
     }))
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('volunteers'), name='dispatch')
-class CreateCommentView(FormView):
+class CommentMixin:
     '''
-    Add a comment to any item
+    Mixin to help create comment-handling views
     '''
 
     model = Comment
-    form_class = CommentForm
 
     def get_target(self, target_type, target):
 
@@ -1034,6 +1032,19 @@ class CreateCommentView(FormView):
 
         return get_object_or_404(target_model, id=target)
 
+    def setup(self, request, target_type, target):
+        self.target = self.get_target(target_type, target)
+        return super().setup(request)
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class CreateCommentView(CommentMixin, FormView):
+    '''
+    Add a comment to any item
+    '''
+
+    form_class = CommentForm
+
     def get(self, request, target_type, target):
         '''
         Not valid; raise 404 for now
@@ -1043,10 +1054,6 @@ class CreateCommentView(FormView):
 
     def get_template_names(self):
         raise NotImplementedError('No templates for this one!')
-
-    def post(self, request, target_type, target):
-        self.target = self.get_target(target_type, target)
-        return super().post(request)
 
     def form_valid(self, form):
         '''
@@ -1070,6 +1077,13 @@ class CreateCommentView(FormView):
             return self.request.GET.get('next')
         else:
             return self.target.get_absolute_url()
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteCommentView(DeleteView):
+
+    model = Comment
+    template_name = 'dashboard/comments/delete.html'
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')

@@ -2338,6 +2338,7 @@ button.deny-access {
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     border-top: 3px solid #9B63A8;
+    box-shadow: 1px 3px 6px #9B63A852;
     padding: 1rem;
     padding-bottom: 0.5rem;
 }

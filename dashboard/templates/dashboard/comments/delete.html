@@ -1,0 +1,28 @@
+{% extends "public_website/base.html" %}
+
+{% load static %}
+
+{% block head_includes %}
+    <link href="{% static 'css/quill.sawaliram.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %} Delete Comment | Sawaliram {% endblock %}
+
+{% block content %}
+
+<div class="wide-container">
+  <h3><i class="fas fa-exclamation-triangle"></i> Delete comment</h3>
+  <p>Are you sure you want to delete the following comment? This action cannot be undone.</p>
+
+  <ul class="comment-list">
+  {% include 'dashboard/comments/comment_box.htm' with show_target=True %}
+  </ul>
+
+  <form action="{% url 'dashboard:delete-comment' comment.id %}" method="POST">
+    {% csrf_token %}
+    <a class="btn btn-small btn-secondary" href="{{ comment.target.get_absolute_url }}"><i class="fas fa-arrow-left"></i> Go back</a>
+    <button type="submit" class="btn btn-small btn-danger-hollow"><i class="fas fa-trash"></i> Delete article</button>
+  </form>
+</div>
+
+{% endblock %}
