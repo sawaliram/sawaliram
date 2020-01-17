@@ -885,6 +885,8 @@ class EditArticleView(View):
             'article': article,
             'grey_background': 'True',
             'language_choices': LANGUAGE_CHOICES,
+            'page_title': 'Write Article',
+            'enable_breadcrumbs': 'Yes'
         }
 
         article.title = request.POST.get('title')
@@ -895,7 +897,7 @@ class EditArticleView(View):
 
             article.save()
 
-            messages.info(request, self.draft_save_message)
+            messages.success(request, self.draft_save_message)
 
             # if submitted, go back to reviwe page
             if article.is_submitted:

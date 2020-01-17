@@ -142,6 +142,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
+
 if os.environ.get('environment') == 'heroku':
     import django_heroku
     django_heroku.settings(locals())

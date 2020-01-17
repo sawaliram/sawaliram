@@ -1520,6 +1520,16 @@ h1.dashboard-home-greeting {
     padding: 0.8rem;
 }
 
+.rich-text-form .ql-editor p {
+    margin-bottom: 1rem;   
+}
+
+.rich-text-form .ql-editor img {
+    max-width: 70%;
+    display: block;
+    margin: 0 auto;
+}
+
 .rich-text-form  .ql-container.ql-snow {
     border: none;
 }
