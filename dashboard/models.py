@@ -77,6 +77,13 @@ class QuestionArchive(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    @property
+    def en_text(self):
+        if self.language in ('en', 'english'):
+            return self.question_text
+        else:
+            return self.question_text_english
+
     def accept_question(self, acceptor):
         """
         Mark a question as approved, by the given acceptor (user).
@@ -207,6 +214,8 @@ class Answer(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    comments = GenericRelation('dashboard.Comment')
+
     def __str__(self):
         '''Return unicode representation of this Answer'''
 
@@ -216,10 +225,16 @@ class Answer(models.Model):
         )
 
     def get_absolute_url(self):
-        return reverse('public_website:view-answer',kwargs={
-            'question_id': self.question_id.id,
-            'answer_id': self.id
-        })
+        if self.status == 'published':
+            return reverse('public_website:view-answer', kwargs={
+                'question_id': self.question_id.id,
+                'answer_id': self.id,
+            })
+        else:
+            return reverse('dashboard:review-answer',kwargs={
+                'question_id': self.question_id.id,
+                'answer_id': self.id,
+            })
 
     def get_language_name(self):
         """
@@ -228,26 +243,6 @@ class Answer(models.Model):
         for language, code in LANGUAGE_CODES.items():
             if code == self.language:
                 return language
-
-
-class AnswerComment(models.Model):
-    """Define the data model for comments on Answers"""
-
-    class Meta:
-        db_table = 'answer_comment'
-
-    text = models.TextField()
-    answer = models.ForeignKey(
-        'Answer',
-        related_name='comments',
-        on_delete=models.CASCADE)
-    author = models.ForeignKey(
-        'sawaliram_auth.User',
-        related_name='answer_comments',
-        on_delete=models.PROTECT)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-
 
 class AnswerCredit(models.Model):
     """Define the data model for answer and article credits"""
@@ -388,8 +383,11 @@ class Article(models.Model):
         null=True)
     published_on = models.DateTimeField(auto_now_add=True)
 
+    comments = GenericRelation('dashboard.Comment')
+
     status = models.IntegerField(default=-1) # draft
 
+    objects = models.Manager()
     get_published = PublishedArticleManager()
     get_drafts = ArticleDraftManager()
     get_submitted = SubmittedArticleManager()
@@ -528,25 +526,6 @@ class PublishedArticle(Article):
     def __init__(self, *args, **kwargs):
         self._meta.get_field('status').default = self.STATUS_PUBLISHED
         super().__init__(*args, **kwargs)
-class ArticleComment(models.Model):
-    """Define the data model for comments on Answers"""
-
-    class Meta:
-        db_table = 'article_comment'
-
-    text = models.TextField()
-
-    article = models.ForeignKey(
-        'Article',
-        related_name='comments',
-        on_delete=models.CASCADE)
-    author = models.ForeignKey(
-        'sawaliram_auth.User',
-        related_name='article_comments',
-        on_delete=models.PROTECT)
-
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
 class Comment(models.Model):
     '''
@@ -572,3 +551,10 @@ class Comment(models.Model):
 
     # And this is the aforementioned 'target', now defined
     target = GenericForeignKey('content_type', 'object_id')
+
+    def __str__(self):
+        return 'Comment #{} by {} on {}'.format(
+            self.id,
+            self.author,
+            self.target
+        )

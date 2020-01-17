@@ -19,15 +19,14 @@ urlpatterns = [
     path('question/<int:question_id>/answers/<int:answer_id>/review', views.ReviewAnswerView.as_view(), name='review-answer'),
     path('question/<int:question_id>/answers/<int:answer_id>/approve', views.ApproveAnswerView.as_view(), name='approve-answer'),
 
-    path('question/<int:question_id>/answers/<int:answer_id>/comment/add', views.AnswerCommentView.as_view(), name='submit-answer-comment'),
-    path('question/<int:question_id>/answers/<int:answer_id>/comment/<int:comment_id>/delete', views.AnswerCommentDeleteView.as_view(), name='delete-answer-comment'),
+    path('question/<int:question>/answers/<int:answer>/comment/add', views.CreateAnswerCommentView.as_view(), { 'target_type': 'answer' }, name='submit-answer-comment'),
+
+    path('comment/<int:pk>/delete', views.DeleteCommentView.as_view(), name='delete-comment'),
 
     path('article/<int:draft_id>/edit/', views.EditArticleView.as_view(), name='edit-article'),
     path('article/<int:article>/delete', views.DeleteArticleView.as_view(), name='delete-article'),
     path('article/new/', views.create_article, name='create-article'),
     path('article/<int:article>/review/', views.ReviewSubmittedArticleView.as_view(), name='review-article'),
     path('article/<int:article>/approve/', views.ApproveSubmittedArticleView.as_view(), name='approve-article'),
-    path('article/<int:article>/comment/add', views.AddArticleCommentView.as_view(), name='submit-article-comment'),
-    path('article/<int:article>/comment/<int:comment_id>/delete/', views.DeleteArticleCommentView.as_view(), name='delete-article-comment'),
-
+    path('article/<int:target>/comment/add', views.CreateCommentView.as_view(), { 'target_type': 'article' }, name='submit-article-comment'),
 ]
