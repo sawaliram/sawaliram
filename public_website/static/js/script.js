@@ -254,12 +254,14 @@ function setupSubmissionLanguageSelector() {
 }
 
 function setupPublicationAutoFill() {
-    $('.credit-title').change(function() {
+    $('.credit-title.added-later').change(function() {
         if ($(this).val() == 'publication') {
             $(this).next('.credit-user-name').val($(this).data('publication'));
         }
         else {
-            $(this).next('.credit-user-name').val('');
+            if ($(this).next('.credit-user-name').val() == $(this).data('publication')) {
+                $(this).next('.credit-user-name').val('');
+            }
         }
     });
 }
@@ -417,6 +419,8 @@ function setupAddCredit() {
         var credit_form = $('.credits-card:first').clone().addClass('removable').appendTo('.credits-list'); 
         credit_form.find('.credit-user-name').val('').removeAttr('readonly').attr('value' ,'');
         credit_form.find('.credit-user-id').prop('value', '');
+        credit_form.find('.credit-title').addClass('added-later');
+        credit_form.find('.credit-title option[value="publication"]').css('display', 'block');
         setupRemoveCredit();
         setupPublicationAutoFill();
     });

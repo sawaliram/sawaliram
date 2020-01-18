@@ -9,8 +9,8 @@ body.grey-background {
 }
 
 .sawaliram-container {
-    margin-top: calc(60px + 1rem);
-    margin-bottom: 4rem;
+    padding-top: calc(60px + 1rem);
+    padding-bottom: 4rem;
 }
 
 @media (max-width: 576px) {
@@ -102,6 +102,8 @@ textarea {
 }
 
 .btn {
+    display: inline-block;
+    width: unset;
     border-radius: 20px;
     padding: 0.4rem 1.3rem;
     background-color: #ffffff;
@@ -123,8 +125,6 @@ textarea {
 }
 
 .btn-primary {
-    display: inline-block;
-    width: unset;
     background-color: #87B24D;
     border-color: #87B24D;
     color: #FFFFFF;
@@ -1574,6 +1574,10 @@ h1.dashboard-home-greeting {
 .rich-text-form #credits-bar .credits-card .credit-title {
     width: 15%;
     margin-right: 0.5rem;
+}
+
+.rich-text-form #credits-bar .credits-card .credit-title option[value="publication"] {
+    display: none;
 }
 
 .rich-text-form #credits-bar .credits-card .credit-user-name {
