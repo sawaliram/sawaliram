@@ -1576,6 +1576,10 @@ h1.dashboard-home-greeting {
     margin-right: 0.5rem;
 }
 
+.rich-text-form #credits-bar .credits-card .credit-title option[value="publication"] {
+    display: none;
+}
+
 .rich-text-form #credits-bar .credits-card .credit-user-name {
     margin-bottom: 0;
     width: 40%;
