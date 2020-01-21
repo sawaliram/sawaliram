@@ -21,7 +21,7 @@
   <form action="{% url 'dashboard:delete-comment' comment.id %}" method="POST">
     {% csrf_token %}
     <a class="btn btn-small btn-secondary" href="{{ comment.target.get_absolute_url }}"><i class="fas fa-arrow-left"></i> Go back</a>
-    <button type="submit" class="btn btn-small btn-danger-hollow"><i class="fas fa-trash"></i> Delete article</button>
+    <button type="submit" class="btn btn-small btn-danger-hollow"><i class="fas fa-trash"></i> Delete comment</button>
   </form>
 </div>
 

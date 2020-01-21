@@ -72,10 +72,15 @@ input[type=email] {
     margin-bottom: 1rem;
 }
 
-input.input-plain {
-    border: 0;
+/* plain input styles (so they look the same as rendered content) */
+
+.input-plain {
     font-size: inherit;
     font-style: inherit;
+}
+
+input.input-plain {
+    border: 0;
     margin-bottom: 0;
 }
 
@@ -87,6 +92,12 @@ select.input-plain {
     -moz-appearance: none;
     -webkit-appearance: none;
     width: auto;
+}
+
+textarea.input-plain {
+    border: none;
+    margin: unset;
+    padding: unset;
 }
 
 textarea {

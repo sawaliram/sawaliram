@@ -1044,16 +1044,24 @@ class CreateCommentView(CommentMixin, FormView):
     '''
 
     form_class = CommentForm
+    template_name = 'dashboard/comments/create.html'
+
+    def get_context(self, form=None):
+        if form is None:
+            form = self.get_form()
+
+        return {
+            'comment': {
+                'target': self.target,
+                'author': self.request.user,
+            },
+            'form': form,
+        }
 
     def get(self, request, target_type, target):
-        '''
-        Not valid; raise 404 for now
-        '''
-
-        raise Http404('This page does not make sense')
-
-    def get_template_names(self):
-        raise NotImplementedError('No templates for this one!')
+        return render(self.request,
+            self.template_name,
+            self.get_context())
 
     def form_valid(self, form):
         '''
@@ -1069,6 +1077,15 @@ class CreateCommentView(CommentMixin, FormView):
         messages.success(self.request, 'Your comment has been posted.')
 
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        '''
+        Let's ask the user to try again!
+        '''
+
+        return render(self.request,
+            self.template_name,
+            self.get_context(form))
 
     def get_success_url(self):
         if 'next' in self.request.POST:

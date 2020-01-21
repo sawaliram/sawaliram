@@ -21,7 +21,11 @@
         {% endif %}
     </div>
     <p class="comment-date">{{ comment.created_on|date:"j F, Y" }}</p>
+    {% if editable %}
+    <textarea class="input-plain"{% if input_name %} name="{{ input_name }}"{% endif %} placeholder="enter comment here..." required autofocus>{{ comment.text|escape|render_linebreaks|safe }}</textarea>
+    {% else %}
     <p class="comment-text">
         {{ comment.text|escape|render_linebreaks|safe }}
     </p>
+    {% endif %}
 </li>
