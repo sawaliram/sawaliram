@@ -236,6 +236,10 @@ class Answer(models.Model):
                 'answer_id': self.id,
             })
 
+    @property
+    def author(self):
+        return self.submitted_by
+
     def get_language_name(self):
         """
         Return the full language name

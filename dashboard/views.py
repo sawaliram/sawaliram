@@ -1076,6 +1076,23 @@ class CreateCommentView(CommentMixin, FormView):
 
         messages.success(self.request, 'Your comment has been posted.')
 
+        if hasattr(self.target, 'author'):
+            # Create notification for the comment
+
+            if self.target.author != self.request.user:
+                Notification.objects.create(
+                    notification_type='comment',
+                    title_text=('{} left a comment on your {}'
+                        .format(
+                            self.request.user.get_full_name(),
+                            self.target._meta.verbose_name,
+                        )),
+                    description_text=('Commented on {}'
+                        .format(self.target)),
+                    target_url=self.target.get_absolute_url(),
+                    user=self.target.author,
+                )
+
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -1121,23 +1138,6 @@ class CreateAnswerCommentView(CreateCommentView):
 
     def setup(self, request, target_type, answer, question):
         return super().setup(request, target_type, answer)
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-
-        # Create notification for the comment
-        if self.target.submitted_by != self.request.user:
-            Notification.objects.create(
-                notification_type='comment',
-                title_text=('{} left a comment on your answer'
-                    .format(self.request.user.get_full_name())),
-                description_text=('Commented on {}'
-                    .format(self.target.question_id)),
-                target_url=self.target.get_absolute_url(),
-                user=self.target.submitted_by,
-            )
-
-        return response
 
 # Legacy Functions
 
