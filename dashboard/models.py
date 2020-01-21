@@ -558,3 +558,6 @@ class Comment(models.Model):
             self.author,
             self.target
         )
+
+    def get_absolute_url(self):
+        return self.target.get_absolute_url()
