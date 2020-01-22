@@ -227,10 +227,14 @@ function setupSearchResultsClearAll() {
 }
 
 function setupQuillEditor({ placeholder = null } = {}) {
+
+    Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
+
     var quill = new Quill('#editor', {
         theme: 'snow',
         modules: {
             toolbar: '#toolbar',
+            blotFormatter: {},
         },
         placeholder: placeholder,
     });
