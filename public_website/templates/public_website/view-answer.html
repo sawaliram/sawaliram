@@ -10,7 +10,7 @@
 <div class="answer-section">
     <div class="question-and-meta">
         <h1>{{ question.question_text }}</h1>
-        {% if question.question_language.lower != 'english' and question.question_text_english %}
+        {% if question.language.lower != 'english' and question.question_text_english %}
             <h2>
                 {{ question.question_text_english }}
             </h4>

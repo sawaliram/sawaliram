@@ -96,7 +96,7 @@ class SubmitQuestionsView(View):
 
         column_name_mapping = {
             'Question': 'question_text',
-            'Question Language': 'question_language',
+            'Question Language': 'language',
             'English translation of the question': 'question_text_english',
             'How was the question originally asked?': 'question_format',
             'Context': 'context',
@@ -347,7 +347,7 @@ class CurateDataset(View):
 
         column_name_mapping = {
             'Question': 'question_text',
-            'Question Language': 'question_language',
+            'Question Language': 'language',
             'English translation of the question': 'question_text_english',
             'How was the question originally asked?': 'question_format',
             'Context': 'context',
@@ -685,7 +685,7 @@ class SubmitAnswerView(View):
                                                     .values_list('author')
                                                     .distinct('author'))
                 for commentor_id in commentor_id_list:
-                    if question_to_answer.question_language.lower() != 'english':
+                    if question_to_answer.language.lower() != 'english':
                         question_text = question_to_answer.question_text_english
                     else:
                         question_text = question_to_answer.question_text
@@ -779,7 +779,7 @@ class ApproveAnswerView(View):
         question_answered = Question.objects.get(pk=question_id)
 
         # create notification for user who submitted the answer
-        if question_answered.question_language.lower() != 'english':
+        if question_answered.language.lower() != 'english':
             question_text = question_answered.question_text_english
         else:
             question_text = question_answered.question_text
@@ -802,7 +802,7 @@ class ApproveAnswerView(View):
             # do not create notification for the user who is publishing
             # the answer
             if max(commentor_id) != request.user.id:
-                if question_answered.question_language.lower() != 'english':
+                if question_answered.language.lower() != 'english':
                     question_text = question_answered.question_text_english
                 else:
                     question_text = question_answered.question_text
@@ -1316,7 +1316,7 @@ class AnswerCommentView(View):
         # create notification
         if answer.submitted_by.id != request.user.id:
             answered_question = Question.objects.get(pk=question_id)
-            if answered_question.question_language.lower() != 'english':
+            if answered_question.language.lower() != 'english':
                 question_text = answered_question.question_text_english
             else:
                 question_text = answered_question.question_text

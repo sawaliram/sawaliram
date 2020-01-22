@@ -192,9 +192,9 @@ class SearchView(View):
                             .values('curriculum_followed')
 
         languages = result.order_by() \
-                          .values_list('question_language') \
-                          .distinct('question_language') \
-                          .values('question_language')
+                          .values_list('language') \
+                          .distinct('language') \
+                          .values('language')
 
         # apply filters if any
         subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
@@ -211,7 +211,7 @@ class SearchView(View):
 
         languages_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('language')]
         if languages_to_filter_by:
-            result = result.filter(question_language__in=languages_to_filter_by)
+            result = result.filter(language__in=languages_to_filter_by)
 
         # sort the results if sort-by parameter exists
         # default: newest
@@ -336,7 +336,7 @@ class SubmitUserCommentOnAnswer(View):
         # create notification
         if answer.answered_by.id != request.user.id:
             answered_question = Question.objects.get(pk=question_id)
-            if answered_question.question_language.lower() != 'english':
+            if answered_question.language.lower() != 'english':
                 question_text = answered_question.question_text_english
             else:
                 question_text = answered_question.question_text

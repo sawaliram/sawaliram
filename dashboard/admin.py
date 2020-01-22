@@ -11,4 +11,4 @@ class AnswerAdmin(admin.ModelAdmin):
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     search_fields = ['id', 'question_text']
-    list_filter = ['question_language', 'state', 'field_of_interest']
+    list_filter = ['language', 'state', 'field_of_interest']

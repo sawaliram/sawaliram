@@ -56,7 +56,7 @@ class QuestionArchive(models.Model):
     question_text = models.CharField(max_length=1000)
     question_text_english = models.CharField(max_length=1000, default='')
     question_format = models.CharField(max_length=100)
-    question_language = models.CharField(max_length=100)
+    language = models.CharField(max_length=100)
     contributor = models.CharField(max_length=100)
     contributor_role = models.CharField(max_length=100)
     context = models.CharField(max_length=100)
@@ -93,7 +93,7 @@ class QuestionArchive(models.Model):
         q.question_text = self.question_text
         q.question_text_english = self.question_text_english
         q.question_format = self.question_format
-        q.question_language = self.question_language
+        q.language = self.language
         q.contributor = self.contributor
         q.contributor_role = self.contributor_role
         q.context = self.context
@@ -133,7 +133,7 @@ class Question(models.Model):
     question_text = models.CharField(max_length=1000)
     question_text_english = models.CharField(max_length=1000, default='')
     question_format = models.CharField(max_length=100)
-    question_language = models.CharField(max_length=100)
+    language = models.CharField(max_length=100)
     contributor = models.CharField(max_length=100)
     contributor_role = models.CharField(max_length=100)
     context = models.CharField(max_length=100)
@@ -209,7 +209,7 @@ class Answer(models.Model):
         '''Return unicode representation of this Answer'''
 
         return 'Answer [{}]: {}'.format(
-            self.question_id.question_language,
+            self.question_id.language,
             self.question_id.question_text,
         )
 
