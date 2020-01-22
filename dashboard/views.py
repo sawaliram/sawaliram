@@ -530,9 +530,8 @@ class SubmitAnswerView(View):
         """Return the view to answer a question"""
 
         # save Answer Questions URL in user session
-        if request.META.get('HTTP_REFERER'):
-            if 'dashboard/answer-questions' in request.META.get('HTTP_REFERER'):
-                request.session['answer_questions_url'] = request.META.get('HTTP_REFERER')
+        if 'dashboard/answer-questions' in request.META.get('HTTP_REFERER', ''):
+            request.session['answer_questions_url'] = request.META.get('HTTP_REFERER')
 
         question_to_answer = Question.objects.get(pk=question_id)
 
