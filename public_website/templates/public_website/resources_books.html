@@ -1,0 +1,163 @@
+{% extends "public_website/base.html" %}
+
+{% block title %} Resources | Sawaliram <{% endblock %}
+
+
+{% load static %}
+
+{% block content %}
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="font-weight-bold nav-link text-success active">Books</a>
+  </li>
+  <li class="nav-item">
+    <a class="font-weight-bold nav-link text-success" href="{% url 'public_website:resources_magazines' %}">Magazines</a>
+  </li>
+  <li class="nav-item">
+    <a class="font-weight-bold nav-link text-success" href="{% url 'public_website:resources_weblinks' %}">Weblinks</a>
+  </li>
+  <li class="nav-item" style="margin-left: auto;">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+         
+              <div class="dropdown navbar-element">
+                    <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="languageSelector">
+                        <span style="color: purple; font-weight: bold; font-style: Times New Roman; font-size: 13px; float: center;">Select Language
+                        <i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="languageSelector">
+                        <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option1" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>English</b></a></span>
+                        <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option2" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>Hindi</b></a></span>
+                        <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option3" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>Marathi</b></a></span>
+                        <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option4" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>Tamil</b></a></span>
+                        <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option5" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>Telegu</b></a></span>
+                        <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option6" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>Malayalam</b></a></span>
+                    </div>
+                </div>
+
+          </div>
+        </div>
+      </div>
+  </li>
+</ul>
+
+<div class="container-fluid" style="background-color: #f2f2f2;"> 
+<div class="container"> 
+<br>
+<br>
+<div>
+<p class="font-weight-bold">Books for children <a class="font-weight-bold" href="{% url 'public_website:childrensbooks' %}">&emsp; see more</a> </p>
+
+</div>
+<div class="card-deck">
+  
+  <div class="card" style="height: 400px; width: 18rem; border: none;">
+    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;" src="https://www.tulikabooks.com/3223-large_default/the-why-why-girl-english.jpg" alt="The Why-Why Girl">
+    <div style="padding: 11px;">
+      <p class="card-title"><b>The Why-Why Girl</b></p>
+      <p class="small" style="color: grey;">by Mahashweta Devi</p>
+      <p class="text-truncate"><a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-english.html" target="_blank">English</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kyun-kyun-ladki-hindi.html" target="_blank">Hindi</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kame-kame-chhokri-gujarati.html" target="_blank">Gujarati</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-yaake-yaake-hudugi-kannada.html" target="_blank">Kannada</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-oru-endendinu-pennkutti-malayalam.html" target="_blank">Malayalam</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kaan-kaan-kumari-marathi.html" target="_blank">Marathi</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-yain-yain-sirumi-tamil.html" target="_blank">Tamil</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-enduku-enduku-ammaayi-telugu.html" target="_blank">Telugu</a> </p>
+    </div>
+  </div>
+
+  <div class="card" style="height: 400px; width: 18rem; border: none;">
+    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;" src="https://archive.org/services/img/DiscoveredQuestions" alt="Discovered questions">
+    <div style="padding: 11px;">
+      <p class="card-title"><b>Discovered questions</b></p>
+      <p class="small" style="color: grey;">by Yash Pal</p>
+      <p class="text-truncate"><a href="https://archive.org/details/DiscoveredQuestions" target="_blank">English</a>, <a href="#" target="_blank">Hindi</a>, <a href="#" target="_blank">Malayalam </a></p>
+    </div>
+  </div>
+
+  <div class="card" style="height: 400px; width: 18rem; border: none;">
+    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;"  src="https://scipop.iucaa.in/Literature/f18.jpg" alt="Science through postcards">
+    <div style="padding: 11px;">
+      <p class="card-title text-bottom" style="float: bottom"><b>Science through postcards</b></p>
+      <p class="small" style="color: grey;">by Jayant Narlikar</p>
+      <p class="text-truncate"><a href="https://scipop.iucaa.in/Literature/jvn-postcardbook.htm" target="_blank">English</a>, <a href="#" target="_blank">Hindi</a>, <a href="#" target="_blank">Marathi</a> </p>
+    </div>
+  </div>
+
+  <div class="card" style="height: 400px; width: 18rem; border: none;">
+    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;"  src="#" alt="Chinnara Lokadalli Karantu">
+    <div style="padding: 11px;">
+      <p class="card-title text-bottom" style="float: bottom"><b>Chinnara Lokadalli Karantu</b></p>
+      <p class="small" style="color: grey;">by Shivaram Karanth</p>
+      <p class="text-truncate"><a href="#" target="_blank">Kannada</a></p>
+    </div>
+  </div>
+
+  <div class="card" style="height: 400px; width: 18rem; border: none;">
+    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;"  src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1546081615l/328802.jpg" alt="Totto Chan">
+    <div style="padding: 11px;">
+      <p class="card-title text-bottom" style="float: bottom"><b>Totto Chan</b></p>
+      <p class="small" style="color: grey;">by Tetsuko Kuroyanagi</p>
+      <p class="text-truncate"><a href="#" target="_blank">English</a>, <a href="#" target="_blank">Japanese</a>, <a href="#" target="_blank">Hindi</a>, <a href="#" target="_blank">Marathi</a>, <a href="#" target="_blank">Gujarati</a>, <a href="#" target="_blank">Telugu</a>, <a href="#" target="_blank">Assamese</a>, <a href="#" target="_blank">Kannada</a>, <a href="#" target="_blank">Tamil</a>, <a href="#" target="_blank"> Malayalam</a>, <a href="#" target="_blank">Bengali</a>, <a href="#" target="_blank">Oriya</a> </p>
+    </div>
+  </div>   
+
+</div>
+
+<br>  
+<br>
+<div>
+<p class="font-weight-bold">Books for adults <a class="font-weight-bold" href="#">&emsp; see more</a> </p>
+</div>
+<div class="card-deck">
+  
+ <div class="card-deck">
+  
+  <div class="card" style="height: 400px; width: 18rem; border: none;">
+    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;" src="https://www.hup.harvard.edu/images/jackets/9780674736757.jpg" alt="The Hungry Mind">
+    <div style="padding: 11px;">
+      <p class="card-title"><b>The Hungry Mind</b></p>
+      <p class="small" style="color: grey;">Susan Engel</p>
+      <p class="text-truncate"><a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-english.html" target="_blank">English</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kyun-kyun-ladki-hindi.html" target="_blank">Hindi</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kame-kame-chhokri-gujarati.html" target="_blank">Gujarati</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-yaake-yaake-hudugi-kannada.html" target="_blank">Kannada</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-oru-endendinu-pennkutti-malayalam.html" target="_blank">Malayalam</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kaan-kaan-kumari-marathi.html" target="_blank">Marathi</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-yain-yain-sirumi-tamil.html" target="_blank">Tamil</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-enduku-enduku-ammaayi-telugu.html" target="_blank">Telugu</a> </p>
+    </div>
+  </div>
+
+  <div class="card" style="height: 400px; width: 18rem; border: none;">
+    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;" src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1499862456l/32620361._SY475_.jpg" alt="Why? What Makes Us Curious">
+    <div style="padding: 11px;">
+      <p class="card-title"><b>Why? What Makes Us Curious</b></p>
+      <p class="small" style="color: grey;">Mario Livio</p>
+      <p class="text-truncate"><a href="#" target="_blank">Languanges</a></p>
+    </div>
+  </div>
+
+  <div class="card" style="height: 400px; width: 18rem; border: none;">
+    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;"  src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1190917246l/1960724._SX318_.jpg" alt="The Philosophy of Childhood">
+    <div style="padding: 11px;">
+      <p class="card-title text-bottom" style="float: bottom"><b>The Philosophy of Childhood</b></p>
+      <p class="small" style="color: grey;">by Gareth B. Matthews</p> 
+      <p class="text-truncate"><a href="#" target="_blank">English</a>, <a href="#" target="_blank">Hindi</a>, <a href="#" target="_blank">Telegu, <a href="#" target="_blank">Language1</a>, , <a href="#" target="_blank">Language 2 </a></p>
+    </div>
+  </div>
+
+  <div class="card" style="height: 400px; width: 18rem; border: none;">
+    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;"  src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1397424764l/684911.jpg" alt="The Having of Wonderful Ideas: And Other Essays on Teaching and Learning">
+    <div style="padding: 11px;">
+      <p class="card-title text-bottom" style="float: bottom"><b>The Having of Wonderful Ideas: And Other Essays on Teaching and Learning</b></p>
+      <p class="small" style="color: grey;">by Eleanor Duckworth</p>
+      <p class="text-truncate"><a href="#" target="_blank">English</a></p>
+    </div>
+  </div>
+
+    <div class="card" style="height: 400px; width: 18rem; border: none;">
+    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;"  src="https://www.abc-clio.com/images/coverimages/9780313359613.JPG" alt="The Hundred Languages of Children: The Reggio Emilia Experience in Transformation">
+    <div style="padding: 11px;">
+      <p class="card-title text-bottom" style="float: bottom"><b>The Hundred Languages of Children: The Reggio Emilia Experience in Transformation</b></p>
+      <p class="small" style="color: grey;">by Carolyn P. Edwards, Lella Gandini, George Forman</p>
+      <p class="text-truncate"><a href="#" target="_blank">English</a></p>
+    </div>
+  </div>
+
+</div>
+</div>
+<br>
+<br>
+<br>
+</div>
+
+{% endblock %}
