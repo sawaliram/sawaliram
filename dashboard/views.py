@@ -716,7 +716,7 @@ class ReviewAnswerView(View):
         """
 
         # save Review Answers URL in user session
-        if 'dashboard/review-answers' in request.META.get('HTTP_REFERER'):
+        if 'dashboard/review-answers' in request.META.get('HTTP_REFERER', ''):
             request.session['review_answers_url'] = request.META.get('HTTP_REFERER')
 
         answer = Answer.objects.get(pk=answer_id)
