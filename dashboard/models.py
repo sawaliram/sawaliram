@@ -117,12 +117,21 @@ class QuestionArchive(models.Model):
     def __str__(self):
         return self.question_text
 
-
+@translatable
 class Question(models.Model):
     """Define the data model for questions curated by admins."""
 
     class Meta:
         db_table = 'question'
+
+    translation_model = 'dashboard.TranslatedQuestion'
+    translatable_fields = [
+        'question_text',
+        'school',
+        'area',
+        'state',
+        'curriculum_followed',
+    ]
 
     school = models.CharField(max_length=100)
     area = models.CharField(max_length=100)
@@ -175,8 +184,12 @@ class Question(models.Model):
         return self.question_text
 
 
+@translatable
 class Answer(models.Model):
     """Define the data model for answers in English"""
+
+    translation_model = 'dashboard.AnswerTranslation'
+    translatable_fields = ['answer_text']
 
     class Meta:
         db_table = 'answer'
@@ -221,6 +234,22 @@ class Answer(models.Model):
             if code == self.language:
                 return language
 
+class AnswerTranslation(DraftableModel, TranslationMixin):
+    '''
+    Stores translated data for a given Answer
+    '''
+
+    # Where we're translating from
+
+    source = models.ForeignKey(
+        'Answer',
+        related_name='translations',
+        on_delete=models.PROTECT,
+        default='')
+
+    # What we're translating
+
+    answer_text = models.TextField()
 
 class AnswerComment(models.Model):
     """Define the data model for comments on Answers"""
@@ -299,21 +328,30 @@ class UnencodedSubmission(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
 
 
-class TranslatedQuestion(models.Model):
+class TranslatedQuestion(DraftableModel, TranslationMixin):
     """Define the data model to store translated questions"""
 
     class Meta:
         db_table = 'translated_question'
 
-    question_id = models.ForeignKey(
+    # Where we're translating from
+
+    source = models.ForeignKey(
         'Question',
         related_name='translations',
         on_delete=models.PROTECT,
         default='')
-    question_text = models.CharField(max_length=1000)
-    language = models.CharField(max_length=100)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+
+    # What we're translating
+
+    question_text = models.CharField(max_length=1000, blank=True)
+    school = models.CharField(max_length=100, blank=True)
+    area = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=100, default='', blank=True)
+    curriculum_followed = models.CharField(
+        max_length=100,
+        default='',
+        blank=True)
 
 @translatable
 class Article(DraftableModel):
