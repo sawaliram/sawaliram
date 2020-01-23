@@ -39,9 +39,11 @@ from dashboard.models import (
     LANGUAGE_CODES,
     QuestionArchive,
     Question,
+    TranslatedQuestion,
     Answer,
     AnswerComment,
     AnswerCredit,
+    AnswerTranslation,
     UnencodedSubmission,
     PublishedArticle,
     ArticleDraft,
@@ -1159,6 +1161,11 @@ class BaseEditTranslation(UpdateView):
             # TODO: handle this more systematically
             obj = self.model.objects.filter(**query_filters)[0]
 
+        # Blank out fields if they're empty
+        for field in self.fields:
+            if getattr(obj, field) is None:
+                setattr(obj, field, '')
+
         obj.source.set_language(lang_from)
 
         return obj
@@ -1190,13 +1197,13 @@ class BaseEditTranslation(UpdateView):
         # Redirect to new URL if language has been changed
         if (lang_to != self.kwargs.get('lang_to') or
           lang_from != self.kwargs.get('lang_from')):
+            kwargs = self.kwargs
+            kwargs['lang_from'] = lang_from
+            kwargs['lang_to'] = lang_to
             self.success_url = reverse(
                 self.get_view_name(),
-                kwargs={
-                    'lang_from': lang_from,
-                    'lang_to': lang_to,
-                    'source': self.kwargs.get('source'),
-                })
+                kwargs=kwargs,
+            )
 
         return super().form_valid(form)
 
@@ -1233,18 +1240,80 @@ class EditArticleTranslation(BaseEditTranslation):
     template_name = 'dashboard/translations/article_edit.html'
     view_name = 'dashboard:edit-article-translation'
 
-    def get_object(self, *args, **kwargs):
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class EditAnswerTranslation(BaseEditTranslation):
+    source_model = Question
+    model = TranslatedQuestion
+    fields = Question.translatable_fields
+    template_name = 'dashboard/translations/answer_edit.html'
+    view_name = 'dashboard:edit-answer-translation'
+
+    def get_object(self):
         '''
-        Fetch this user's translation object
+        Fetch question and its related answer.
+
+        Note: in this function, 'question' and 'answer' are the
+        translated question and answer; the original are referred to
+        as the 'source' of those question and answer.
         '''
 
-        obj = super().get_object(*args, **kwargs)
+        question = super().get_object()
+        lang_to = self.kwargs.get('lang_to')
+        lang_from = self.kwargs.get('lang_from')
 
-        # Replace None with empty string
-        if obj.title == None: obj.title = ''
-        if obj.body == None: obj.body = ''
+        # Get the related source answer
+        source_answer = get_object_or_404(Answer,
+            id=self.kwargs.get('answer'))
 
-        return obj
+        # Make sure the question and answer match
+        if source_answer.question_id != question.source:
+            raise Http404('No matching answer found')
+
+        # Select the specific translated answer, if it exists
+        # This will be saved as self.answer
+        query_filters = {
+            'source': source_answer,
+            'translated_by': self.request.user,
+            'language': lang_to,
+        }
+
+        # Fetch the translated answer and save as 'self.answer'
+        try:
+            answer, createdp = (AnswerTranslation.objects
+                .get_or_create(**query_filters))
+        except AnswerTranslation.MultipleObjectsReturned:
+            # Workaround: select the first object
+            # TODO: handle this more systematically
+            answer = AnswerTranslation.objects.filter(**query_filters)[0]
+
+        # Set the language of the answer source
+        answer.source.set_language(lang_from)
+
+        # Save the answer
+        self.answer = answer
+
+        return question
+
+    def get_context_data(self, *args, **kwargs):
+        '''
+        Add the answer to the render context
+        '''
+
+        context = super().get_context_data(*args, **kwargs)
+        context['answer'] = self.answer
+        return context
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        # Set answer text if it's there
+        answer_text = self.request.POST.get('answer-text')
+        if answer_text:
+            self.answer.answer_text = answer_text
+            self.answer.save()
+
+        return response
 
 # Legacy Functions
 
