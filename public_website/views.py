@@ -270,6 +270,12 @@ class ViewAnswer(View):
         question = Question.objects.get(pk=question_id)
         answer = Answer.objects.get(pk=answer_id)
 
+        # Set languages
+        preferred_language = request.session.get('lang',
+            settings.DEFAULT_LANGUAGE)
+        question.set_language(preferred_language)
+        answer.set_language(preferred_language)
+
         grey_background = 'True' if request.user.is_authenticated else 'False'
 
         context = {
