@@ -353,6 +353,15 @@ class TranslatedQuestion(DraftableModel, TranslationMixin):
         default='',
         blank=True)
 
+    def __str__(self):
+        return 'Q{}T{} [{}->{}]: {}'.format(
+            self.source.id,
+            self.id,
+            self.source.language,
+            self.language,
+            self.question_text,
+        )
+
 @translatable
 class Article(DraftableModel):
     '''
@@ -449,6 +458,15 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
 
     title = models.CharField(max_length=1000, null=True)
     body = models.TextField(null=True)
+
+    def __str__(self):
+        return 'B{}T{} [{}->{}]: {}'.format(
+            self.source.id,
+            self.id,
+            self.source.language,
+            self.language,
+            self.title,
+        )
 
 class PublishedArticleTranslation(
     ArticleTranslation.get_published_model(),

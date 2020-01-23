@@ -84,7 +84,7 @@
             </div>
         </div>
         <div class="tab-pane fade" id="drafts" role="tabpanel" aria-labelledby="drafts">
-            {% if answer_drafts or article_drafts %}
+            {% if answer_drafts or article_drafts or answer_translation_drafts or article_translation_drafts %}
                 {% if answer_drafts %}
                 <div class="tab-section">
                     <h3 class="tab-subheading">Answers</h3>
@@ -114,7 +114,7 @@
                     <ul class="card-list">
                         {% for draft in article_drafts %}
                         <li>
-                            <h4>{{ draft.title }}</h4>
+                            <h4>{{ draft.title|default:"(untitled)" }}</h4>
                             <p class="tab-section-intro">
                                 {{ draft.body|striptags|truncatechars:140  }}
                             </p>
@@ -127,6 +127,53 @@
                         {% endfor %}
                     </ul>
                 </div>
+                {% endif %}
+                {% if article_translation_drafts or answer_translation_drafts %}
+                <h3 class="tab-subheading">Translations</h3>
+                <p class="tab-section-intro">
+                  Your draft
+                  {% if article_translation_drafts %} article{% endif %}
+                  {% if answer_translation_drafts and article_translation_drafts %} and{% endif %}
+                  {% if answer_translation_drafts %} answer{% endif %}
+                  translations
+                </p>
+                <ul class="card-list">
+                  {% for draft in article_translation_drafts %}
+                  <li>
+                      <h4>
+                        {{ draft.title|default:"(untitled)" }}
+                        <small>({{ draft.source.language }} -> {{ draft.language }})</small>
+                        </h4>
+                      <p class="tab-section-intro">
+                          {{ draft.body|default:""|striptags|truncatechars:140  }}
+                      </p>
+                      <p class="tab-section-intro">
+                        <small>Translated from <a href="{{ draft.source.get_absolute_url }}">{{ draft.source.title }}</a></small>
+                      </p>
+                      <a href="{% url 'dashboard:edit-article-translation' source=draft.id lang_from=draft.source.language lang_to=draft.language%}" class="btn btn-secondary sub-task-button">Continue translating</a>
+                      <form class="inline-block" action="{# url 'dashboard:delete-article-translation' draft.id #}" method="GET">
+                          {% csrf_token %}
+                          <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                      </form>
+                  </li>
+                  {% endfor %}
+                  {% for draft in answer_translation_drafts %}
+                  <li>
+                      <h4>
+                        {{ draft.source.question_id.question_text }}
+                        <small>({{ draft.source.language }} -> {{ draft.language }})</small>
+                        </h4>
+                      <p class="tab-section-intro">
+                          {{ draft.body|default:""|striptags|truncatechars:140  }}
+                      </p>
+                      <a href="{% url 'dashboard:edit-answer-translation' answer=draft.id source=draft.source.id lang_from=draft.source.language lang_to=draft.language %}" class="btn btn-secondary sub-task-button">Continue translating</a>
+                      <form class="inline-block" action="{# url 'dashboard:delete-answer-translation' draft.id #}" method="GET">
+                          {% csrf_token %}
+                          <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                      </form>
+                  </li>
+                  {% endfor %}
+                </ul>
                 {% endif %}
             {% else %}
             <div class="empty-tab">
