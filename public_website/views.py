@@ -444,3 +444,10 @@ class FAQPage(View):
             'page_title': 'Frequently Asked Questions'
         }
         return render(request, 'public_website/faq.html', context)
+
+class ContactPage(View):
+    def get(self, request):
+        context = {
+            'page_title': 'Contact',
+        }
+        return render(request, 'public_website/contact.html', context)
