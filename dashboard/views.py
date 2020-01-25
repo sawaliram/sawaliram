@@ -3,6 +3,7 @@
 import random
 import os
 
+from django import forms
 from django.shortcuts import (
     render,
     redirect,
@@ -14,6 +15,7 @@ from django.utils.decorators import method_decorator
 from django.db.models import Subquery, Q
 from django.views import View
 from django.views.generic import (
+    FormView,
     UpdateView,
 )
 from django.http import (
@@ -1101,6 +1103,154 @@ class DeleteArticleCommentView(View):
 
         return redirect('dashboard:review-article',
             article=article)
+
+# Start Translation
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(volunteer_permission_required, name='dispatch')
+class TranslateAnswersList(SearchView):
+    def get_queryset(self, request):
+        if 'q' in request.GET:
+            query_set = Question.objects.filter(
+                                answers__isnull=False,
+                                answers__translations__isnull=True,
+                            ).distinct()
+            return query_set.filter(
+                    Q(question_text__icontains=request.GET.get('q')) |
+                    Q(question_text_english__icontains=request.GET.get('q')) |
+                    Q(school__icontains=request.GET.get('q')) |
+                    Q(area__icontains=request.GET.get('q')) |
+                    Q(state__icontains=request.GET.get('q')) |
+                    Q(field_of_interest__icontains=request.GET.get('q'))
+            )
+        else:
+            return Question.objects.filter(
+                            answers__isnull=False,
+                            answers__translations__isnull=True,
+                        ).distinct()
+
+    def get_page_title(self, request):
+        return 'Translate Answers'
+
+    def get_enable_breadcrumbs(self, request):
+        return 'Yes'
+
+
+class TranslationLanguagesForm(forms.Form):
+    '''
+    Form to initiate a translation: decides "from" and "to" languages of
+    the translation.
+    '''
+
+    lang_from = forms.ChoiceField(choices=settings.LANGUAGES,
+        widget=forms.Select(attrs={
+            'class': 'custom-select btn-primary',
+        }))
+    lang_to = forms.ChoiceField(choices=settings.LANGUAGES  ,
+        widget=forms.Select(attrs={
+            'class': 'custom-select btn-primary',
+        }))
+
+
+class BaseStartTranslation(FormView):
+    '''
+    A generic view to initiate the translation of a piece
+    '''
+
+    form_class = TranslationLanguagesForm
+
+    def get_source(self, source):
+        return get_object_or_404(self.model, id=source)
+
+    def get_form(self):
+        form = super().get_form()
+
+        # Decide language options
+        available_languages = self.source.list_available_languages()
+        unavailable_languages = []
+        for l in settings.LANGUAGES:
+            if l not in available_languages:
+                unavailable_languages.append(l)
+
+        form.fields.get('lang_from').choices = available_languages
+        form.fields.get('lang_to').choices = unavailable_languages
+
+        return form
+
+    def get(self, request, source, *args, **kwargs):
+        self.source = self.get_source(source, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, source, *args, **kwargs):
+        self.source = self.get_source(source, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['source'] = self.source
+
+        return context
+
+    def get_success_view(self):
+        if not hasattr(self, 'success_view'):
+            raise ImproperlyConfigured((
+                'No success_view set. Please set the success_view '
+                'property or override get_success_view.'
+            ))
+        return self.success_view
+
+    def form_valid(self, form):
+        return redirect(
+            self.get_success_view(),
+            lang_from=form.cleaned_data.get('lang_from'),
+            lang_to=form.cleaned_data.get('lang_to'),
+            source=self.source.id,
+        )
+
+class CreateArticleTranslation(BaseStartTranslation):
+    '''
+    Initiate the translation of an article
+    '''
+
+    model = PublishedArticle
+    answer_model = Answer
+    template_name = 'dashboard/articles/start_translation.html'
+    success_view = 'dashboard:edit-article-translation'
+
+class CreateAnswerTranslation(BaseStartTranslation):
+    '''
+    Initate the translation of an answer (and question)
+    '''
+
+    model = Question
+    answer_model = Answer
+    template_name = 'dashboard/answers/start_translation.html'
+    success_view = 'dashboard:edit-answer-translation'
+
+    def get_source(self, source, answer, *args, **kwargs):
+        question = super().get_source(source, *args, **kwargs)
+        self.answer = get_object_or_404(self.answer_model, id=answer)
+
+        # Check that they match
+        if self.answer.question_id != question:
+            raise Http404('No matching answer found.')
+
+        return question
+
+    def form_valid(self, form):
+        return redirect(
+            self.get_success_view(),
+            lang_from=form.cleaned_data.get('lang_from'),
+            lang_to=form.cleaned_data.get('lang_to'),
+            answer=self.answer.id,
+            source=self.source.id,
+        )
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['answer'] = self.answer
+
+        return context
 
 # Translate Article
 class BaseEditTranslation(UpdateView):

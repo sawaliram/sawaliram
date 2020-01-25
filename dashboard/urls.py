@@ -15,6 +15,7 @@ urlpatterns = [
     path('manage-content', views.ManageContentView.as_view(), name='manage-content'),
     path('view-questions', views.ViewQuestionsView.as_view(), name='view-questions'),
     path('answer-questions', views.AnswerQuestions.as_view(), name='answer-questions'),
+    path('translate/answers', views.TranslateAnswersList.as_view(), name='translate-answers'),
     path('review-answers', views.ReviewAnswersList.as_view(), name='review-answers'),
     path('question/<int:question_id>/answers/<int:answer_id>/review', views.ReviewAnswerView.as_view(), name='review-answer'),
     path('question/<int:question_id>/answers/<int:answer_id>/approve', views.ApproveAnswerView.as_view(), name='approve-answer'),
@@ -30,6 +31,8 @@ urlpatterns = [
     path('article/<int:article>/comment/add', views.AddArticleCommentView.as_view(), name='submit-article-comment'),
     path('article/<int:article>/comment/<int:comment_id>/delete/', views.DeleteArticleCommentView.as_view(), name='delete-article-comment'),
 
+    path('article/<int:source>/translate', views.CreateArticleTranslation.as_view(), name='translate-article'),
+    path('question/<int:source>/answer/<int:answer>/translate', views.CreateAnswerTranslation.as_view(), name='translate-answer'),
     path('article/<int:source>/translate/from/<str:lang_from>/to/<str:lang_to>', views.EditArticleTranslation.as_view(), name='edit-article-translation'),
     path('question/<int:source>/answer/<int:answer>/translate/from/<str:lang_from>/to/<str:lang_to>', views.EditAnswerTranslation.as_view(), name='edit-answer-translation'),
 

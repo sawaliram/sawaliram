@@ -98,6 +98,16 @@ select.input-plain {
     color: inherit;
 }
 
+.input-group > .custom-select,
+.input-group .form-control
+{
+    display: flex;
+    justify-content: center;
+    height: inherit;
+    align-items: center;
+    margin: 0;
+}
+
 textarea {
     border-radius: 5px;
 }
