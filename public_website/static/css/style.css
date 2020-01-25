@@ -76,8 +76,9 @@ input[type=email] {
     margin-bottom: 1rem;
 }
 
-input.input-plain {
-    border: 0;
+/* plain input styles (so they look the same as rendered content) */
+
+.input-plain {
     font-size: inherit;
     font-style: inherit;
     font-family: inherit;
@@ -85,6 +86,11 @@ input.input-plain {
     line-height: inherit;
     margin: 0;
     padding: 0;
+}
+
+input.input-plain {
+    border: 0;
+    margin-bottom: 0;
 }
 
 select.input-plain {
@@ -106,6 +112,12 @@ select.input-plain {
     height: inherit;
     align-items: center;
     margin: 0;
+}
+
+textarea.input-plain {
+    border: none;
+    margin: unset;
+    padding: unset;
 }
 
 textarea {
@@ -2365,6 +2377,7 @@ button.deny-access {
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     border-top: 3px solid #9B63A8;
+    box-shadow: 1px 3px 6px #9B63A852;
     padding: 1rem;
     padding-bottom: 0.5rem;
 }

@@ -17,6 +17,13 @@ from dashboard.mixins.translations import (
     TranslationMixin,
     translatable,
 )
+from django.urls import reverse
+
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import (
+    GenericForeignKey,
+    GenericRelation,
+)
 
 LANGUAGE_CODES = {
     'english': 'en',
@@ -39,6 +46,9 @@ class Dataset(models.Model):
     status = models.CharField(max_length=100)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'Dataset #{}'.format(self.id)
 
 
 class QuestionArchive(models.Model):
@@ -73,6 +83,13 @@ class QuestionArchive(models.Model):
         on_delete=models.PROTECT)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+    @property
+    def en_text(self):
+        if self.language in ('en', 'english'):
+            return self.question_text
+        else:
+            return self.question_text_english
 
     def accept_question(self, acceptor):
         """
@@ -115,7 +132,7 @@ class QuestionArchive(models.Model):
             print('Error accepting question: %s' % e)
 
     def __str__(self):
-        return self.question_text
+        return 'Q{} (uncurated): {}'.format(self.id, self.question_text)
 
 @translatable
 class Question(models.Model):
@@ -181,7 +198,7 @@ class Question(models.Model):
     comments_on_coding_rationale = models.CharField(max_length=500, default='')
 
     def __str__(self):
-        return self.question_text
+        return 'Q{}: {}'.format(self.id, self.question_text)
 
 
 @translatable
@@ -218,6 +235,8 @@ class Answer(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    comments = GenericRelation('dashboard.Comment')
+
     def __str__(self):
         '''Return unicode representation of this Answer'''
 
@@ -225,6 +244,22 @@ class Answer(models.Model):
             self.question_id.language,
             self.question_id.question_text,
         )
+
+    def get_absolute_url(self):
+        if self.status == 'published':
+            return reverse('public_website:view-answer', kwargs={
+                'question_id': self.question_id.id,
+                'answer_id': self.id,
+            })
+        else:
+            return reverse('dashboard:review-answer',kwargs={
+                'question_id': self.question_id.id,
+                'answer_id': self.id,
+            })
+
+    @property
+    def author(self):
+        return self.submitted_by
 
     def get_language_name(self):
         """
@@ -250,24 +285,6 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
     # What we're translating
 
     answer_text = models.TextField()
-
-class AnswerComment(models.Model):
-    """Define the data model for comments on Answers"""
-
-    class Meta:
-        db_table = 'answer_comment'
-
-    text = models.TextField()
-    answer = models.ForeignKey(
-        'Answer',
-        related_name='comments',
-        on_delete=models.CASCADE)
-    author = models.ForeignKey(
-        'sawaliram_auth.User',
-        related_name='answer_comments',
-        on_delete=models.PROTECT)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
 
 class AnswerCredit(models.Model):
@@ -402,46 +419,90 @@ class Article(DraftableModel):
         null=True)
     published_on = models.DateTimeField(auto_now_add=True)
 
-    def get_slug(self):
-        return slugify(self.title)
+    comments = GenericRelation('dashboard.Comment')
 
     class Meta:
         db_table = 'articles'
+
+    def get_slug(self):
+        return slugify(self.title)
+
+    def __str__(self):
+        return 'Article #{}: {}'.format(self.id, self.title)
+
+    def get_absolute_url(self):
+        if self.is_draft:
+            return reverse('dashboard:edit-article', kwargs={
+                'draft_id': self.id,
+            })
+        elif self.is_submitted:
+            return reverse('dashboard:review-article', kwargs={
+                'article': self.id,
+            })
+        else:
+            return reverse('dashboard:review-article', kwargs={
+                'article': self.id,
+            })
 
 class ArticleDraft(Article.get_draft_model(), Article):
     objects = DraftDraftableManager()
     class Meta:
         proxy = True
 
+    def get_absolute_url(self):
+        return reverse('dashboard:edit-article', kwargs={
+            'draft_id': self.id
+        })
+
 class SubmittedArticle(Article.get_submitted_model(), Article):
     objects = SubmittedDraftableManager()
     class Meta:
         proxy = True
+
+    def get_absolute_url(self):
+        return reverse('dashboard:review-article', kwargs={
+            'article': self.id
+        })
 
 class PublishedArticle(Article.get_published_model(), Article):
     objects = PublishedDraftableManager()
     class Meta:
         proxy = True
 
-class ArticleComment(models.Model):
-    """Define the data model for comments on Answers"""
+class Comment(models.Model):
+    '''
+    Generic class for comments on any kind of model 🎉
+    '''
 
-    class Meta:
-        db_table = 'article_comment'
-
+    # Main field
     text = models.TextField()
 
-    article = models.ForeignKey(
-        'Article',
-        related_name='comments',
-        on_delete=models.CASCADE)
+    # Metadata fields
     author = models.ForeignKey(
         'sawaliram_auth.User',
-        related_name='article_comments',
+        related_name='comments',
         on_delete=models.PROTECT)
 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+    # The following fields are used for defining 'target'
+    content_type = models.ForeignKey(ContentType,
+        on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+
+    # And this is the aforementioned 'target', now defined
+    target = GenericForeignKey('content_type', 'object_id')
+
+    def __str__(self):
+        return 'Comment #{} by {} on {}'.format(
+            self.id,
+            self.author,
+            self.target
+        )
+
+    def get_absolute_url(self):
+        return self.target.get_absolute_url()
 
 class ArticleTranslation(DraftableModel, TranslationMixin):
     '''

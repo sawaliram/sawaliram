@@ -17,7 +17,9 @@ from django.views import View
 from django.views.generic import (
     FormView,
     UpdateView,
+    DeleteView,
 )
+from django import forms
 from django.http import (
     HttpResponse,
     Http404, # Page Not found
@@ -43,15 +45,16 @@ from dashboard.models import (
     Question,
     TranslatedQuestion,
     Answer,
-    AnswerComment,
     AnswerCredit,
     AnswerTranslation,
     UnencodedSubmission,
-    PublishedArticle,
+    Article,
     ArticleDraft,
     SubmittedArticle,
-    ArticleComment,
+    PublishedArticle,
+    SubmittedArticle,
     ArticleTranslation,
+    Comment,
     Dataset)
 from sawaliram_auth.models import Notification, User
 from public_website.views import SearchView
@@ -684,10 +687,9 @@ class SubmitAnswerView(View):
                 messages.success(request, ('Your answer has been updated!'))
 
                 # create notifications for users who commented on the answer
-                commentor_id_list = list(AnswerComment.objects
-                                                    .filter(answer=answer.id)
-                                                    .values_list('author')
-                                                    .distinct('author'))
+                commentor_id_list = list(answer.comments.all()
+                                        .values_list('author')
+                                        .distinct('author'))
                 for commentor_id in commentor_id_list:
                     if question_to_answer.language.lower() != 'english':
                         question_text = question_to_answer.question_text_english
@@ -735,6 +737,7 @@ class ReviewAnswerView(View):
         context = {
             'answer': answer,
             'comments': answer.comments.all(),
+            'comment_form': CommentForm(),
             'grey_background': 'True',
             'page_title': 'Submit Review',
             'enable_breadcrumbs': 'Yes'
@@ -798,10 +801,9 @@ class ApproveAnswerView(View):
         published_notification.save()
 
         # create notifications for users who commented on the answer
-        commentor_id_list = list(AnswerComment.objects
-                                              .filter(answer=answer.id)
-                                              .values_list('author')
-                                              .distinct('author'))
+        commentor_id_list = list(answer.comments.all()
+          .values_list('author')
+          .distinct('author'))
         for commentor_id in commentor_id_list:
             # do not create notification for the user who is publishing
             # the answer
@@ -981,6 +983,7 @@ class ReviewSubmittedArticleView(View):
             'grey_background': 'True',
             'comments': article.comments.all(),
             'page_title': 'Review Article',
+            'comment_form': CommentForm(),
             'enable_breadcrumbs': 'Yes'
         }
 
@@ -1011,98 +1014,139 @@ class ApproveSubmittedArticleView(View):
         messages.success(request, self.success_message)
         return redirect('dashboard:review-article', article=a.id)
 
+# Comments
+
+class CommentForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder': 'Enter your comment...',
+        'rows': '4',
+    }))
+
+class CommentMixin:
+    '''
+    Mixin to help create comment-handling views
+    '''
+
+    model = Comment
+
+    def get_target(self, target_type, target):
+
+        if target_type == 'article':
+            target_model = Article
+        elif target_type == 'answer':
+            target_model = Answer
+        else:
+            # What is this‽ Let's get out of here!
+            raise Http404
+
+        return get_object_or_404(target_model, id=target)
+
+    def setup(self, request, target_type, target, *args, **kwargs):
+        self.target = self.get_target(target_type, target)
+        return super().setup(request, *args, **kwargs)
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')
-class AddArticleCommentView(View):
+class CreateCommentView(CommentMixin, FormView):
     '''
-    Add a comment on an article
+    Add a comment to any item
     '''
 
-    model = SubmittedArticle
-    comment_model = ArticleComment
+    form_class = CommentForm
+    template_name = 'dashboard/comments/create.html'
 
-    def get(self, request, article):
+    def get_context(self, form=None):
+        if form is None:
+            form = self.get_form()
+
+        return {
+            'comment': {
+                'target': self.target,
+                'author': self.request.user,
+            },
+            'form': form,
+        }
+
+    def get(self, request, target_type, target):
+        return render(self.request,
+            self.template_name,
+            self.get_context())
+
+    def form_valid(self, form):
         '''
-        Not valid; redirect user back to article
+        Let's create the comment!
         '''
-        return redirect(reverse('dashboard:review-article', kwargs={'article': article}))
 
-    def post(self, request, article):
-        """
-        Save the submitted comment to a particular answer
-        """
-
-        article = get_object_or_404(self.model, id=article)
-
-        comment = self.comment_model()
-        comment.text = request.POST['comment-text']
-        comment.article = article
-        comment.author = request.user
-        comment.save()
-
-        # create notification
-        if article.author != request.user:
-            answered_question = Question.objects.get(pk=question_id)
-
-            comment_notification = Notification(
-                notification_type='comment',
-                title_text=str(request.user.get_full_name()) + ' left a comment on your article',
-                description_text=('{} commented on {}'
-                    .format(request.user.get_full_name(), article.title)),
-                target_url=reverse('dashboard:review-article',
-                    article=article),
-                user=article.author
-            )
-            comment_notification.save()
-
-        return redirect(
-            'dashboard:review-article',
-            article=article.id,
+        c = Comment.objects.create(
+            text=form.cleaned_data.get('text'),
+            author=self.request.user,
+            target=self.target,
         )
 
+        messages.success(self.request, 'Your comment has been posted.')
+
+        if hasattr(self.target, 'author'):
+            # Create notification for the comment
+
+            if self.target.author != self.request.user:
+                Notification.objects.create(
+                    notification_type='comment',
+                    title_text=('{} left a comment on your {}'
+                        .format(
+                            self.request.user.get_full_name(),
+                            self.target._meta.verbose_name,
+                        )),
+                    description_text=('Commented on {}'
+                        .format(self.target)),
+                    target_url=self.target.get_absolute_url(),
+                    user=self.target.author,
+                )
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        '''
+        Let's ask the user to try again!
+        '''
+
+        return render(self.request,
+            self.template_name,
+            self.get_context(form))
+
+    def get_success_url(self):
+        if 'next' in self.request.POST:
+            return self.request.POST.get('next')
+        elif 'next' in self.request.GET:
+            return self.request.GET.get('next')
+        else:
+            return self.target.get_absolute_url()
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')
-class DeleteArticleCommentView(View):
-    def fetch_comment(self, article, comment_id):
-        """
-        Return selected comment
-        """
+class DeleteCommentView(DeleteView):
 
-        article = get_object_or_404(SubmittedArticle, id=article)
+    model = Comment
+    template_name = 'dashboard/comments/delete.html'
 
-        try:
-            comment = article.comments.get(pk=comment_id)
-        except ArticleComment.DoesNotExist:
-            raise Http404('No matching comment')
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
 
-        return comment
+        # Set success_url
+        if not self.success_url:
+            self.success_url = obj.target.get_absolute_url()
 
-    def get(self, request, article, comment_id):
-        """
-        Confirm whether to delete a comment or not
-        """
+        # Carry on
+        return obj
 
-        comment = self.fetch_comment(article, comment_id)
+class CreateAnswerCommentView(CreateCommentView):
+    def get(self, request, target_type, answer, question):
+        return super().get(request, target_type, answer)
 
-        context = {
-            'comment': comment,
-        }
-        return render(request, 'dashboard/articles/delete_comment.html', context)
+    def post(self, request, target_type, answer, question):
+        return super().post(request, target_type, answer)
 
-    def post(self, request, article, comment_id):
-        """
-        Delete a previously published comment on an answer
-        """
-
-        comment = self.fetch_comment(article, comment_id)
-
-        if request.user != comment.author:
-            raise PermissionDenied('You are not authorised to delete that comment.')
-
-        comment.delete()
-
-        return redirect('dashboard:review-article',
-            article=article)
+    def setup(self, request, target_type, answer, question):
+        return super().setup(request, target_type, answer)
 
 # Start Translation
 
@@ -1511,97 +1555,6 @@ def submit_encoded_dataset(request):
     unencoded_submission_entry.save()
 
     return render(request, 'dashboard/excel-submitted-successfully.html')
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(volunteer_permission_required, name='dispatch')
-class AnswerCommentView(View):
-
-    def post(self, request, question_id, answer_id):
-        """
-        Save the submitted comment to a particular answer
-        """
-
-        try:
-            answer = Answer.objects.get(pk=answer_id)
-        except Answer.DoesNotExist:
-            raise Http404('Answer does not exist')
-
-        comment = AnswerComment()
-        comment.text = request.POST['comment-text']
-        comment.answer = answer
-        comment.author = request.user
-        comment.save()
-
-        # create notification
-        if answer.submitted_by.id != request.user.id:
-            answered_question = Question.objects.get(pk=question_id)
-            if answered_question.language.lower() != 'english':
-                question_text = answered_question.question_text_english
-            else:
-                question_text = answered_question.question_text
-
-            comment_notification = Notification(
-                notification_type='comment',
-                title_text=str(request.user.get_full_name()) + ' left a comment on your answer',
-                description_text="On your answer for the question '" + question_text + "'",
-                target_url=reverse('dashboard:review-answer', kwargs={'question_id':question_id, 'answer_id':answer_id}),
-                user=answer.submitted_by
-            )
-            comment_notification.save()
-
-        return redirect(
-            'dashboard:review-answer',
-            question_id=question_id,
-            answer_id=answer_id
-            )
-
-
-class AnswerCommentDeleteView(View):
-
-    def fetch_comment(self, question_id, answer_id, comment_id):
-        """
-        Return selected comment
-        """
-
-        try:
-            answer = Answer.objects.get(pk=answer_id)
-        except Answer.DoesNotexist:
-            raise Http404('Answer does not exist')
-
-        try:
-            comment = answer.comments.get(pk=comment_id)
-        except AnswerComment.DoesNotExist:
-            raise Http404('No matching comment')
-
-        return comment
-
-    def get(self, request, question_id, answer_id, comment_id):
-        """
-        Confirm whether to delete a comment or not
-        """
-
-        comment = self.fetch_comment(question_id, answer_id, comment_id)
-
-        context = {
-            'comment': comment,
-        }
-        return render(request, 'dashboard/answers/delete_comment.html', context)
-
-    def post(self, request, question_id, answer_id, comment_id):
-        """
-        Delete a previously published comment on an answer
-        """
-
-        comment = self.fetch_comment(question_id, answer_id, comment_id)
-
-        if request.user != comment.author:
-            raise PermissionDenied('You are not authorised to delete that comment.')
-
-        comment.delete()
-
-        return redirect('dashboard:review-answer',
-            question_id=question_id,
-            answer_id=answer_id)
 
 
 def get_error_404_view(request, exception):
