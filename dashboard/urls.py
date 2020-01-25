@@ -34,4 +34,8 @@ urlpatterns = [
     path('question/<int:source>/answer/<int:answer>/translate', views.CreateAnswerTranslation.as_view(), name='translate-answer'),
     path('article/<int:source>/translate/from/<str:lang_from>/to/<str:lang_to>', views.EditArticleTranslation.as_view(), name='edit-article-translation'),
     path('question/<int:source>/answer/<int:answer>/translate/from/<str:lang_from>/to/<str:lang_to>', views.EditAnswerTranslation.as_view(), name='edit-answer-translation'),
+
+    path('translate/articles/<int:pk>/delete', views.DeleteArticleTranslation.as_view(), name='delete-article-translation'),
+    path('translate/answers/<int:pk>/delete', views.DeleteAnswerTranslation.as_view(), name='delete-answer-translation'),
+    path('translate/questions/<int:pk>/delete', views.DeleteQuestionTranslation.as_view(), name='delete-question-translation'),
 ]

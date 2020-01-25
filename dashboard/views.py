@@ -1509,6 +1509,63 @@ class EditAnswerTranslation(BaseEditTranslation):
 
         return response
 
+
+class BaseDeleteTranslation(DeleteView):
+    '''
+    View that checks if you're the owner of a translation before
+    allowing you to delete it
+    '''
+
+    def get_success_url(self):
+        if self.success_url:
+            return self.success_url
+
+        if self.object:
+            return self.object.source.get_absolute_url()
+
+        return reverse('dashboard:translate-answers')
+
+    def get_object(self, *args, **kwargs):
+        obj = super().get_object(*args, **kwargs)
+        if obj.translated_by != self.request.user:
+            raise PermissionDenied("That's not your translation!")
+
+        return obj
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteAnswerTranslation(BaseDeleteTranslation):
+    '''
+    Delete the translation of an answer
+    '''
+
+    model = AnswerTranslation
+    template_name = 'dashboard/translations/answer_delete.html'
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteArticleTranslation(BaseDeleteTranslation):
+    '''
+    Delete the translation of an article
+    '''
+
+    model = ArticleTranslation
+    template_name = 'dashboard/translations/article_delete.html'
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteQuestionTranslation(BaseDeleteTranslation):
+    '''
+    Delete the translation of a question
+    '''
+
+    model = TranslatedQuestion
+    template_name = 'dashboard/translations/question_delete.html'
+
+
 # Legacy Functions
 
 @login_required

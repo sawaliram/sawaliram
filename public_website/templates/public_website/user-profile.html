@@ -151,7 +151,7 @@
                         <small>Translated from <a href="{{ draft.source.get_absolute_url }}">{{ draft.source.title }}</a></small>
                       </p>
                       <a href="{% url 'dashboard:edit-article-translation' source=draft.source.id lang_from=draft.source.language lang_to=draft.language %}" class="btn btn-secondary sub-task-button">Continue translating</a>
-                      <form class="inline-block" action="{# url 'dashboard:delete-article-translation' draft.id #}" method="GET">
+                      <form class="inline-block" action="{% url 'dashboard:delete-article-translation' draft.id %}" method="GET">
                           {% csrf_token %}
                           <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
                       </form>
@@ -167,7 +167,7 @@
                           {{ draft.body|default:""|striptags|truncatechars:140  }}
                       </p>
                       <a href="{% url 'dashboard:edit-answer-translation' answer=draft.id source=draft.source.id lang_from=draft.source.language lang_to=draft.language %}" class="btn btn-secondary sub-task-button">Continue translating</a>
-                      <form class="inline-block" action="{# url 'dashboard:delete-answer-translation' draft.id #}" method="GET">
+                      <form class="inline-block" action="{% url 'dashboard:delete-answer-translation' draft.id %}" method="GET">
                           {% csrf_token %}
                           <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
                       </form>

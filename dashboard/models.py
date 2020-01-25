@@ -286,6 +286,40 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
 
     answer_text = models.TextField()
 
+    def get_absolute_url(self):
+        '''
+        Returns the edit page of the translation
+        '''
+
+        if self.status == self.STATUS_PUBLISHED:
+            return '?'.join([
+                reverse(
+                    'public_website:set-language',
+                    kwargs={
+                        'language': self.language,
+                    }
+                ),
+                urlencode({
+                    'next': reverse(
+                        'public_website:view-answer',
+                        kwargs={
+                            'question_id': self.source.question_id.id,
+                            'answer_id': self.source.answer_id.id,
+                        }
+                    ),
+                }),
+            ])
+        else:
+            return reverse(
+                'dashboard:edit-answer-translation',
+                kwargs={
+                    'answer': self.source.id,
+                    'source': self.source.question_id.id,
+                    'lang_from': self.source.language,
+                    'lang_to': self.language,
+                }
+            )
+
 
 class AnswerCredit(models.Model):
     """Define the data model for answer and article credits"""
@@ -440,7 +474,7 @@ class Article(DraftableModel):
                 'article': self.id,
             })
         else:
-            return reverse('dashboard:review-article', kwargs={
+            return reverse('public_website:view-article', kwargs={
                 'article': self.id,
             })
 
@@ -528,6 +562,38 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
             self.language,
             self.title,
         )
+
+    def get_absolute_url(self):
+        '''
+        Returns the edit page of the translation
+        '''
+
+        if self.status == self.STATUS_PUBLISHED:
+            return '?'.join([
+                reverse(
+                    'public_website:set-language',
+                    kwargs={
+                        'language': self.language,
+                    }
+                ),
+                urlencode({
+                    'next': reverse(
+                        'public_website:view-article',
+                        kwargs={
+                            'article': self.source.id,
+                        }
+                    ),
+                }),
+            ])
+        else:
+            return reverse(
+                'dashboard:edit-article-translation',
+                kwargs={
+                    'source': self.source.id,
+                    'lang_from': self.source.language,
+                    'lang_to': self.language,
+                }
+            )
 
 class PublishedArticleTranslation(
     ArticleTranslation.get_published_model(),
