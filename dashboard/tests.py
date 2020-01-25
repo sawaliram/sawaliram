@@ -119,6 +119,7 @@ class QuestionTranslationTestCase(TestCase):
             language='en',
             question_text=self.question_en,
             translated_by=u2,
+            status=TranslatedQuestion.STATUS_PUBLISHED,
         )
 
         a = Answer.objects.create(
@@ -135,6 +136,7 @@ class QuestionTranslationTestCase(TestCase):
             language='bn',
             answer_text=self.answer_bn,
             translated_by=u2,
+            status=AnswerTranslation.STATUS_PUBLISHED,
         )
 
     def test_question_tr_values(self):
@@ -152,6 +154,17 @@ class QuestionTranslationTestCase(TestCase):
         q.set_language('en')
         self.assertEqual(q.tr_question_text, self.question_en)
 
+    def test_question_list_available_languages(self):
+        '''
+        Does the question correctly list all available languages?
+        '''
+
+        q = Question.objects.get(id=1)
+        self.assertEqual(
+            set(dict(q.list_available_languages())),
+            set(('en', 'bn'))
+        )
+
     def test_answer_tr_values(self):
         a = Answer.objects.get(id=1)
         self.assertEqual(a.tr_answer_text, self.answer_en)
@@ -165,3 +178,14 @@ class QuestionTranslationTestCase(TestCase):
         a = Answer.objects.get(id=1)
         a.set_language('bn')
         self.assertEqual(a.tr_answer_text, self.answer_bn)
+
+    def test_answer_list_available_languages(self):
+        '''
+        Does the question correctly list all available languages?
+        '''
+
+        a = Answer.objects.get(id=1)
+        self.assertEqual(
+            set(dict(a.list_available_languages())),
+            set(('en', 'bn'))
+        )
