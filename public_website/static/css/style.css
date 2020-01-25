@@ -2014,7 +2014,7 @@ h1.dashboard-home-greeting {
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta:not(:last-child),
-.answer-section .question-and-meta .meta-section .highlighted-meta:not(:last-child) {
+.meta-section .highlighted-meta:not(:last-child) {
     margin-right: 0.8rem;
 }
 
@@ -2023,7 +2023,7 @@ h1.dashboard-home-greeting {
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta,
-.answer-section .question-and-meta .meta-section .highlighted-meta {
+.meta-section .highlighted-meta {
     background-color: #ebebeb;
     border-radius: 3px;
     padding: 0.3rem 0.5rem;
@@ -2033,19 +2033,19 @@ h1.dashboard-home-greeting {
 
 @media (max-width: 576px) {
     .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta,
-    .answer-section .question-and-meta .meta-section .highlighted-meta {
+    .meta-section .highlighted-meta {
         margin-bottom: 0.4rem;
         font-size: 0.7rem;
     }
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta i,
-.answer-section .question-and-meta .meta-section .highlighted-meta i {
+.meta-section .highlighted-meta i {
     color: #707070;
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta .meta-value,
-.answer-section .question-and-meta .meta-section .highlighted-meta .meta-value {
+.meta-section .highlighted-meta .meta-value {
     font-size: 0.8rem;
 }
 
@@ -2358,6 +2358,13 @@ button.deny-access {
     padding: 2rem;
 }
 
+.comment-area-large {
+    width: unset;
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .comment-area h2 {
     font-size: 1.5rem;
     margin-bottom: 2rem;
@@ -2510,7 +2517,7 @@ button.deny-access {
     }
 }
 
-.answer-section .question-and-meta .meta-section .highlighted-meta {
+.meta-section .highlighted-meta {
     margin-bottom: 0.6rem;
 }
 

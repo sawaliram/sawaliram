@@ -15,6 +15,7 @@ from django.utils.decorators import method_decorator
 from django.db.models import Subquery, Q
 from django.views import View
 from django.views.generic import (
+    DetailView,
     FormView,
     UpdateView,
     DeleteView,
@@ -1035,6 +1036,10 @@ class CommentMixin:
             target_model = Article
         elif target_type == 'answer':
             target_model = Answer
+        elif target_type == 'article-translation':
+            target_model = ArticleTranslation
+        elif target_type == 'answer-translation':
+            target_model = AnswerTranslation
         else:
             # What is this‽ Let's get out of here!
             raise Http404
@@ -1564,6 +1569,81 @@ class DeleteQuestionTranslation(BaseDeleteTranslation):
 
     model = TranslatedQuestion
     template_name = 'dashboard/translations/question_delete.html'
+
+
+class BaseReview(DetailView):
+    '''
+    Add updates to a submitted article
+    '''
+
+    def get_context_data(self, object):
+        context = super().get_context_data()
+
+        context['comments'] = object.comments.all()
+        context['comment_form'] = CommentForm()
+
+        return context
+
+class ReviewAnswerTranslation(BaseReview):
+    '''
+    Review a translated answer
+    '''
+
+    model = AnswerTranslation
+    template_name = 'dashboard/translations/answer_review.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        try:
+            context['question'] = TranslatedQuestion.objects.filter(
+                source=self.object.source.question_id,
+                translated_by=self.object.translated_by,
+                language=self.object.language,
+            )[0]
+        except IndexError:
+            pass
+
+        context['source_question'] = self.object.source.question_id
+        context['source_question'].set_language(
+            self.request.session.get('lang', settings.DEFAULT_LANGUAGE))
+
+        return context
+
+
+
+class ReviewArticleTranslation(BaseReview):
+    '''
+    Review a translated article
+    '''
+
+    model = ArticleTranslation
+    template_name = 'dashboard/translations/article_review.html'
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class ApproveSubmittedArticleView(View):
+
+    model = SubmittedArticle
+    success_message = 'The article has been published successfully'
+
+    def get(self, request, article):
+        '''
+        Not valid; redirect user back to article
+        '''
+        return redirect(reverse('dashboard:review-article', kwargs={'article': article}))
+
+    def post(self, request, article):
+        article = get_object_or_404(self.model, id=article)
+
+        # Check that the publisher is not the author
+        if article.author == request.user:
+            raise PermissionDenied('You cannot publish your own article.')
+
+        a = article.publish(request.user)
+
+        messages.success(request, self.success_message)
+        return redirect('dashboard:review-article', article=a.id)
 
 
 # Legacy Functions

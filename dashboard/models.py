@@ -286,6 +286,10 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
 
     answer_text = models.TextField()
 
+    # Comments (for review process)
+
+    comments = GenericRelation('dashboard.Comment')
+
     def get_absolute_url(self):
         '''
         Returns the edit page of the translation
@@ -553,6 +557,10 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
 
     title = models.CharField(max_length=1000, null=True)
     body = models.TextField(null=True)
+
+    # Comments (for review process)
+
+    comments = GenericRelation('dashboard.Comment')
 
     def __str__(self):
         return 'B{}T{} [{}->{}]: {}'.format(

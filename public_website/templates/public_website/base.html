@@ -18,7 +18,7 @@
 
         <title>{% block title %} {% endblock %}</title>
     </head>
-    <body class="d-flex flex-column {% if grey_background == 'True' %}grey-background{% endif %}">
+    <body class="d-flex flex-column {% block body_styles %}{% if grey_background == 'True' %}grey-background{% endif %}{% endblock %}">
 
         <div class="menu-background slow-transition"></div>
 

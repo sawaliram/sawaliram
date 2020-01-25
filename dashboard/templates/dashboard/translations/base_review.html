@@ -1,0 +1,59 @@
+{% extends "public_website/base.html" %}
+
+{% block body_styles %}grey-background{% endblock %}
+{% block title %} Review Translation | Sawaliram {% endblock %}
+
+{% block content %}
+
+<div class="container wider-container bg-white">
+	{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  {% endif %}
+  <div class="row" action="{{ request.get_full_path }}">
+    <div class="col-md-12 flex ">
+      <div class="mx-auto flex btn btn-secondary mb-3">
+        <i class="fas fa-globe-asia"> </i>
+        {{ object.source.language }}
+        <i class="fas fa-arrow-right"></i>
+        {{ object.language }}
+      </div>
+    </div>
+    <article class="answer-area col-md-6">
+      {% block tr_original %}
+      {# Original/source goes here #}
+      {% endblock %}
+    </article>
+    <div class="col-md-6 answer-area">
+      {% csrf_token %}
+      {% block tr_translation %}
+      {# Final/translation goes here #}
+      {% endblock %}
+    </div>
+  </div>
+</div>
+<div>
+  <div class="comment-area comment-area-large">
+    <h2>Comments</h2>
+    <form action="{% block comment_form_action %}{% endblock %}" method="POST">
+        {% csrf_token %}
+        {{ comment_form.text }}
+        <button type="submit" class="btn btn-secondary">Add Comment</button>
+    </form>
+    {% if comments %}
+      <ul class="comment-list mt-3">
+          {% for comment in comments %}
+          {% include 'dashboard/comments/comment_box.htm' with show_delete=True %}
+          {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

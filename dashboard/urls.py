@@ -35,6 +35,11 @@ urlpatterns = [
     path('article/<int:source>/translate/from/<str:lang_from>/to/<str:lang_to>', views.EditArticleTranslation.as_view(), name='edit-article-translation'),
     path('question/<int:source>/answer/<int:answer>/translate/from/<str:lang_from>/to/<str:lang_to>', views.EditAnswerTranslation.as_view(), name='edit-answer-translation'),
 
+    path('translate/articles/<int:pk>/review', views.ReviewArticleTranslation.as_view(), name='review-article-translation'),
+    path('translate/articles/<int:target>/comment/add', views.CreateCommentView.as_view(), { 'target_type': 'article-translation' }, name='submit-article-translation-comment'),
+    path('translate/answers/<int:pk>/review', views.ReviewAnswerTranslation.as_view(), name='review-answer-translation'),
+    path('translate/answers/<int:target>/comment/add', views.CreateCommentView.as_view(), { 'target_type': 'answer-translation' }, name='submit-answer-translation-comment'),
+
     path('translate/articles/<int:pk>/delete', views.DeleteArticleTranslation.as_view(), name='delete-article-translation'),
     path('translate/answers/<int:pk>/delete', views.DeleteAnswerTranslation.as_view(), name='delete-answer-translation'),
     path('translate/questions/<int:pk>/delete', views.DeleteQuestionTranslation.as_view(), name='delete-question-translation'),

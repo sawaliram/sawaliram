@@ -468,7 +468,9 @@ if (new RegExp('^/dashboard/article/\\d+/translate/from/[A-Za-z-]+/to/[A-Za-z-]+
 
 if (
     new RegExp("^/dashboard/article/\\d+/review").test(window.location.pathname) ||
-    new RegExp("^/dashboard/question/\\d+/answers/\\d+/review").test(window.location.pathname)
+    new RegExp("^/dashboard/question/\\d+/answers/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/translate/articles/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/translate/answers/\\d+/review").test(window.location.pathname)
 ) {
     // setupCommentFormDisplayToggle();
     // setupCommentDeleteButtons();
