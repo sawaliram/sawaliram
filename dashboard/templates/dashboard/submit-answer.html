@@ -122,6 +122,7 @@
 								<option value="author" {% if credit.credit_title == 'author' %}selected{% endif %}>Author</option>
 								<option value="co-author" {% if credit.credit_title == 'co-author' %}selected{% endif %}>Co-author</option>
 								<option value="submitter" {% if credit.credit_title == 'submitter' %}selected{% endif %}>Submitter</option>
+								<option value="publication" {% if credit.credit_title == 'publication' %}selected{% endif %}>Publication</option>
 							</select>
 							<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ credit.credit_user_name }}" placeholder="Full Name" {% if forloop.first %}readonly{% endif %}>
 							<input type="hidden" class="credit-user-id" name="credit-user-id" value="">

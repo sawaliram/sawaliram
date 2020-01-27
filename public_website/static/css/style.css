@@ -1968,7 +1968,8 @@ h1.dashboard-home-greeting {
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .answer-preview h4 {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    color:#acacac;
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .answer-preview .review-answer-controls {
