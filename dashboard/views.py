@@ -268,12 +268,13 @@ class ManageContentView(View):
 
         datasets = Dataset.objects.all().order_by('-created_on')
         articles = (SubmittedArticle
+            .objects.all().order_by('-updated_on'))
+        article_translations = (SubmittedArticleTranslation
             .objects.all()
             .order_by('-updated_on'))
-        article_translations = (SubmittedArticleTranslation
-            .objects.all())
         answer_translations = (SubmittedAnswerTranslation
-            .objects.all())
+            .objects.all()
+            .order_by('-updated_on'))
 
         context = {
             'grey_background': 'True',
