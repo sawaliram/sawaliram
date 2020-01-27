@@ -3,6 +3,7 @@
 {% block title %} {{ page_title }} | Sawaliram {% endblock %}
 
 {% load static %}
+{% load to_language_name %}
 
 {% block content %}
 
@@ -142,7 +143,7 @@
                   <li>
                       <h4>
                         {{ draft.title|default:"(untitled)" }}
-                        <small>({{ draft.source.language }} -> {{ draft.language }})</small>
+                        <small>({{ draft.source.language|to_language_name }} -> {{ draft.language|to_language_name }})</small>
                         </h4>
                       <p class="tab-section-intro">
                           {{ draft.body|default:""|striptags|truncatechars:140  }}
@@ -220,7 +221,7 @@
         </div>
         {% endif %}
         <div class="tab-pane fade {% if request.user.id != selected_user.id %}show active{% endif %}" id="submissions" role="tabpanel" aria-labelledby="submissions">
-            {% if submitted_questions or submitted_answers or submitted_articles or published_articles %}
+            {% if submitted_questions or submitted_answers or submitted_articles or published_articles or article_translation_submissions or answer_translation_submissions %}
                 {% if submitted_questions %}
                 <div class="tab-section">
                     <h3 class="tab-subheading">Questions</h3>
@@ -299,6 +300,59 @@
                     </ul>
                 </div>
                 {% endif %}
+
+
+              {% if article_translation_submissions or answer_translation_submissions %}
+              <div class="tab-section">
+                <h3 class="tab-subheading">Translations</h3>
+                <p class="tab-section-intro">
+                  Your submitted
+                  {% if article_translation_submissions %} article{% endif %}
+                  {% if answer_translation_submissions and article_translation_submissions %} and{% endif %}
+                  {% if answer_translation_submissions %} answer{% endif %}
+                  translations
+                </p>
+                <ul class="card-list">
+                  {% for submission in article_translation_submissions %}
+                  <li>
+                      <a class="task-link" href="{{ submission.get_absolute_url }}">
+                        <h4>
+                          {{ submission.title|default:"(untitled)" }}
+                          <small>({{ submission.source.language }} -> {{ submission.language }})</small>
+                        </h4>
+                      </a>
+                      <p class="tab-section-intro">
+                          {{ submission.body|default:""|striptags|truncatechars:140  }}
+                      </p>
+                      <p class="tab-section-intro">
+                        <small>Translated from <a href="{{ submission.source.get_absolute_url }}">{{ submission.source.title }}</a></small>
+                      </p>
+                      <p class="tab-section-status pending">
+                          Review Pending
+                      </p>
+                  </li>
+                  {% endfor %}
+                  {% for submission in answer_translation_submissions %}
+                  <li>
+                      <a class="task-link" href="{{ submission.get_absolute_url }}">
+                        <h4>
+                          {{ submission.source.question_id.question_text }}
+                          <small>({{ submission.source.language|to_language_name }} -> {{ submission.language|to_language_name }})</small>
+                        </h4>
+                      </a>
+                      <p class="tab-section-intro">
+                          {{ submission.answer_text|default:""|striptags|truncatechars:140  }}
+                      </p>
+                      <p class="tab-section-status pending">
+                          Review Pending
+                      </p>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {% endif %}
+
+
             {% else %}
                 <div class="empty-tab">
                     <h3><i class="far fa-meh"></i> No submissions</h3>

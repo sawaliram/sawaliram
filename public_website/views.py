@@ -32,6 +32,8 @@ from dashboard.models import (
     ArticleDraft,
     SubmittedArticle,
     ArticleTranslation,
+    SubmittedArticleTranslation,
+    SubmittedAnswerTranslation,
     AnswerTranslation,
 )
 from sawaliram_auth.models import User, Bookmark, Notification
@@ -427,6 +429,8 @@ class UserProfileView(View):
             article_drafts = ArticleDraft.objects.filter(author=user_id)
             article_translation_drafts = ArticleTranslation.get_drafts.filter(translated_by=user_id)
             answer_translation_drafts = AnswerTranslation.get_drafts.filter(translated_by=user_id)
+            article_translation_submissions = SubmittedArticleTranslation.objects.filter(translated_by=user_id)
+            answer_translation_submissions = SubmittedAnswerTranslation.objects.filter(translated_by=user_id)
             submitted_articles = SubmittedArticle.objects.filter(author=user_id)
             published_articles = PublishedArticle.objects.filter(author=user_id)
             bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
@@ -444,6 +448,8 @@ class UserProfileView(View):
                 'article_drafts': article_drafts,
                 'article_translation_drafts': article_translation_drafts,
                 'answer_translation_drafts': answer_translation_drafts,
+                'article_translation_submissions': article_translation_submissions,
+                'answer_translation_submissions': answer_translation_submissions,
                 'submitted_articles': submitted_articles,
                 'published_articles': published_articles,
                 'bookmarked_questions': bookmarked_questions,
