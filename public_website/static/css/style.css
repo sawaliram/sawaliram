@@ -1525,9 +1525,9 @@ h1.dashboard-home-greeting {
 }
 
 .rich-text-form .ql-editor img {
-    max-width: 70%;
+    /* max-width: 70%;
     display: block;
-    margin: 0 auto;
+    margin: 0 auto; */
 }
 
 .rich-text-form  .ql-container.ql-snow {
@@ -2296,10 +2296,6 @@ button.deny-access {
     padding-bottom: 0;
     margin: 1.5rem 0;
     text-align: justify;
-}
-
-.review-page-container .answer-area .answer-text img {
-    width: 100%;
 }
 
 .review-page-container .answer-area .credit-card {
