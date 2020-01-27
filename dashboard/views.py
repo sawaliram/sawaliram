@@ -267,7 +267,13 @@ class ManageContentView(View):
     def get(self, request):
 
         datasets = Dataset.objects.all().order_by('-created_on')
-        articles = SubmittedArticle.objects.all().order_by('-updated_on')
+        articles = (SubmittedArticle
+            .objects.all()
+            .order_by('-updated_on'))
+        article_translations = (SubmittedArticleTranslation
+            .objects.all())
+        answer_translations = (SubmittedAnswerTranslation
+            .objects.all())
 
         context = {
             'grey_background': 'True',
@@ -275,6 +281,8 @@ class ManageContentView(View):
             'enable_breadcrumbs': 'Yes',
             'datasets': datasets,
             'articles': articles,
+            'article_translations': article_translations,
+            'answer_translations': answer_translations,
         }
         return render(request, 'dashboard/manage-content.html', context)
 
