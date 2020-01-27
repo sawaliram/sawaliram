@@ -3003,32 +3003,31 @@ footer .footer-main {
 /* ------ wavy footer ------ */
 
 footer.wavy-footer {
-    background-color: #414141;
+    background-color: #41414100;
 }
 
 footer.wavy-footer::before {
     display: block;
     min-height: 3.68vw; /* ratio of height:width = 3.68% */
     content: "";
-    background-color: #414141;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1438.6667 52.904713' preserveAspectRatio='none'%3E%3Crect x='0' y='0' width='1438.6667' height='52.904713' style='stroke: none; fill: %23ffffff;' /%3E%3Cpath d='M 0,52.904714 C 0,46.281852 8.0931875e-4,39.935474 8.0931875e-4,37.716835 0.36268987,37.676433 0.52754667,37.646685 1,37.584948 1.55,37.583848 19.787167,35.194225 41.52704,32.274695 215.66894,8.8885122 340.82565,0.0134522 496.66668,2.8198874e-5 634.26781,-0.0118418 696.01624,3.7157512 931.33335,26.239611 c 183.12845,17.528512 252.88075,21.994416 343.33335,21.981988 47.4555,-0.0065 79.5423,-1.17197 110.6667,-4.019616 17.4204,-1.593831 45.8464,-4.975999 50.3333,-5.988708 l 3,-0.677116 v 15.343155 0.0254 z' style='stroke: none; fill: %23414141;'%3E%3C/path%3E%3C/svg%3E");
+    background-color: #41414100;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1438.6667 52.904713' preserveAspectRatio='none'%3E%3Crect x='0' y='0' width='1438.6667' height='52.904713' style='stroke: none; fill: %23ffffff00;' /%3E%3Cpath d='M 0,52.904714 C 0,46.281852 8.0931875e-4,39.935474 8.0931875e-4,37.716835 0.36268987,37.676433 0.52754667,37.646685 1,37.584948 1.55,37.583848 19.787167,35.194225 41.52704,32.274695 215.66894,8.8885122 340.82565,0.0134522 496.66668,2.8198874e-5 634.26781,-0.0118418 696.01624,3.7157512 931.33335,26.239611 c 183.12845,17.528512 252.88075,21.994416 343.33335,21.981988 47.4555,-0.0065 79.5423,-1.17197 110.6667,-4.019616 17.4204,-1.593831 45.8464,-4.975999 50.3333,-5.988708 l 3,-0.677116 v 15.343155 0.0254 z' style='stroke: none; fill: %23414141;'%3E%3C/path%3E%3C/svg%3E");
 }
 
-.grey-background footer.wavy-footer::before {
-    /* same thing, but with #f2f2f2 instead of #ffffff */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1438.6667 52.904713' preserveAspectRatio='none'%3E%3Crect x='0' y='0' width='1438.6667' height='52.904713' style='stroke: none; fill: %23f2f2f2;' /%3E%3Cpath d='M 0,52.904714 C 0,46.281852 8.0931875e-4,39.935474 8.0931875e-4,37.716835 0.36268987,37.676433 0.52754667,37.646685 1,37.584948 1.55,37.583848 19.787167,35.194225 41.52704,32.274695 215.66894,8.8885122 340.82565,0.0134522 496.66668,2.8198874e-5 634.26781,-0.0118418 696.01624,3.7157512 931.33335,26.239611 c 183.12845,17.528512 252.88075,21.994416 343.33335,21.981988 47.4555,-0.0065 79.5423,-1.17197 110.6667,-4.019616 17.4204,-1.593831 45.8464,-4.975999 50.3333,-5.988708 l 3,-0.677116 v 15.343155 0.0254 z' style='stroke: none; fill: %23414141;'%3E%3C/path%3E%3C/svg%3E")
-    /* TODO: use transparency instead of doing this */
+footer.wavy-footer .footer-main {
+    margin-bottom: -3rem;
+}
+
+footer.wavy-footer .footer-main > * {
+    margin-bottom: 3rem;
 }
 
 @media(max-width: 576px) {
     footer.wavy-footer::before {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 127.26 8.73' preserveAspectRatio='none'%3E%3Crect x='0' y='0' width='481' height='33.000568' style='stroke: none; fill: %23ffffff;' /%3E%3Cpath transform='translate(-45.413677,-136.54897)' d='m 45.413677,140.91459 v -4.36562 l 8.003646,0.004 c 14.964243,0.007 26.318339,0.98441 44.780728,3.85421 18.513229,2.87769 30.573779,4.26652 40.745829,4.69207 1.01865,0.0426 -19.60893,0.10081 -45.839058,0.12931 l -47.691145,0.0518 z m 110.992703,4.07738 c 5.36172,-0.35747 11.7206,-1.27265 15.58937,-2.24365 0.6669,-0.16738 0.68251,-0.1404 0.68251,1.1803 v 1.3516 l -9.72344,-0.0383 c -7.61549,-0.03 -9.03513,-0.0842 -6.54844,-0.24996 z' style='stroke: none; fill: %23414141;'%3E%3C/path%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 127.26 8.73' preserveAspectRatio='none'%3E%3Crect x='0' y='0' width='481' height='33.000568' style='stroke: none; fill: %23ffffff00;' /%3E%3Cpath transform='translate(-45.413677,-136.54897)' d='m 45.413677,140.91459 v -4.36562 l 8.003646,0.004 c 14.964243,0.007 26.318339,0.98441 44.780728,3.85421 18.513229,2.87769 30.573779,4.26652 40.745829,4.69207 1.01865,0.0426 -19.60893,0.10081 -45.839058,0.12931 l -47.691145,0.0518 z m 110.992703,4.07738 c 5.36172,-0.35747 11.7206,-1.27265 15.58937,-2.24365 0.6669,-0.16738 0.68251,-0.1404 0.68251,1.1803 v 1.3516 l -9.72344,-0.0383 c -7.61549,-0.03 -9.03513,-0.0842 -6.54844,-0.24996 z' style='stroke: none; fill: %23414141;'%3E%3C/path%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-size: 100vw;
         height: calc(100vw/481*33 - 1px);
-    }
-    .grey-background footer.wavy-footer::before {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 127.26 8.73' preserveAspectRatio='none'%3E%3Crect x='0' y='0' width='481' height='33.000568' style='stroke: none; fill: %23f2f2f2;' /%3E%3Cpath transform='translate(-45.413677,-136.54897)' d='m 45.413677,140.91459 v -4.36562 l 8.003646,0.004 c 14.964243,0.007 26.318339,0.98441 44.780728,3.85421 18.513229,2.87769 30.573779,4.26652 40.745829,4.69207 1.01865,0.0426 -19.60893,0.10081 -45.839058,0.12931 l -47.691145,0.0518 z m 110.992703,4.07738 c 5.36172,-0.35747 11.7206,-1.27265 15.58937,-2.24365 0.6669,-0.16738 0.68251,-0.1404 0.68251,1.1803 v 1.3516 l -9.72344,-0.0383 c -7.61549,-0.03 -9.03513,-0.0842 -6.54844,-0.24996 z' style='stroke: none; fill: %23414141;'%3E%3C/path%3E%3C/svg%3E");
     }
 }
 
