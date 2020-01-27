@@ -189,8 +189,13 @@
                 {% if page_title == 'Review Answers' %}
                     {% for answer in result.answers.all %}
                     <div class="answer-preview">
-                        <h4>Answered by <b>{{ answer.answered_by.get_full_name }}</b></h4>
+                        <!-- <h4>Answered by <b>{{ answer.answered_by.get_full_name }}</b></h4> -->
                         <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
+                        {% for credit in answer.credits.all %}
+                            <h4>
+                                {{ credit.credit_user_name }} ({{ credit.credit_title|capfirst }})
+                            </h4>
+                        {% endfor %}
                         <div class="review-answer-controls">
                             <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">Review</a>
                         </div>

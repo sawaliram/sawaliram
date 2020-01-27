@@ -239,9 +239,10 @@ class AnswerCredit(models.Model):
 
     class Meta:
         db_table = 'answer_credit'
-        ordering = ['id']
+        ordering = ['credit_title_order']
 
     credit_title = models.CharField(max_length=50)
+    credit_title_order = models.IntegerField(default=0)
     credit_user_name = models.CharField(max_length=50)
     is_user = models.BooleanField(default=False)
     user = models.ForeignKey(
@@ -256,6 +257,16 @@ class AnswerCredit(models.Model):
         on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        credit_sorting_order = {
+            'publication': 1,
+            'author': 2,
+            'co-author': 3,
+            'submitter': 4
+        }
+        self.credit_title_order = credit_sorting_order[self.credit_title]
+        super(AnswerCredit, self).save(*args, **kwargs)
 
 
 class UncuratedSubmission(models.Model):
