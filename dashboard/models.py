@@ -295,7 +295,7 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
         Returns the edit page of the translation
         '''
 
-        if self.status == self.STATUS_PUBLISHED:
+        if self.is_published:
             return '?'.join([
                 reverse(
                     'public_website:set-language',
@@ -313,6 +313,13 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
                     ),
                 }),
             ])
+        elif self.is_submitted:
+            return reverse(
+                'dashboard:review-answer-translation',
+                kwargs={
+                    'pk': self.id,
+                }
+            )
         else:
             return reverse(
                 'dashboard:edit-answer-translation',
@@ -323,6 +330,60 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
                     'lang_to': self.language,
                 }
             )
+
+class DraftAnswerTranslation(
+    AnswerTranslation.get_draft_model(),
+    AnswerTranslation,
+):
+    objects = DraftDraftableManager()
+    class Meta:
+        proxy = True
+
+    def get_absolute_url(self):
+        return reverse(
+            'dashboard:edit-answer-translation',
+            kwargs={
+                'answer': self.source.id,
+                'source': self.source.question_id.id,
+                'lang_from': self.source.language,
+                'lang_to': self.language,
+            }
+        )
+
+class SubmittedAnswerTranslation(
+    AnswerTranslation.get_submitted_model(),
+    AnswerTranslation,
+):
+    objects = SubmittedDraftableManager()
+    class Meta:
+        proxy = True
+
+    def get_absolute_url(self):
+        return reverse(
+            'dashboard:review-answer-translation',
+            kwargs={
+                'pk': self.id,
+            }
+        )
+
+class PublishedAnswerTranslation(
+    AnswerTranslation.get_published_model(),
+    AnswerTranslation,
+):
+    objects = PublishedDraftableManager()
+    class Meta:
+        proxy = True
+
+    def get_absolute_url(self):
+        return reverse(
+            'dashboard:edit-answer-translation',
+            kwargs={
+                'answer': self.source.id,
+                'source': self.source.question_id.id,
+                'lang_from': self.source.language,
+                'lang_to': self.language,
+            }
+        )
 
 
 class AnswerCredit(models.Model):
@@ -416,6 +477,34 @@ class TranslatedQuestion(DraftableModel, TranslationMixin):
             self.language,
             self.question_text,
         )
+
+    def get_absolute_url(self):
+        # TODO: create a view for questions and redirect to that
+        return '/'
+
+class DraftTranslatedQuestion(
+    TranslatedQuestion.get_draft_model(),
+    TranslatedQuestion,
+):
+    objects = DraftDraftableManager()
+    class Meta:
+        proxy = True
+
+class SubmittedTranslatedQuestion(
+    TranslatedQuestion.get_submitted_model(),
+    TranslatedQuestion,
+):
+    objects = SubmittedDraftableManager()
+    class Meta:
+        proxy = True
+
+class PublishedTranslatedQuestion(
+    TranslatedQuestion.get_published_model(),
+    TranslatedQuestion,
+):
+    objects = PublishedDraftableManager()
+    class Meta:
+        proxy = True
 
 @translatable
 class Article(DraftableModel):
@@ -576,7 +665,7 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
         Returns the edit page of the translation
         '''
 
-        if self.status == self.STATUS_PUBLISHED:
+        if self.is_published:
             return '?'.join([
                 reverse(
                     'public_website:set-language',
@@ -593,6 +682,13 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
                     ),
                 }),
             ])
+        elif self.is_submitted:
+            return reverse(
+                'dashboard:review-article-translation',
+                kwargs={
+                    'pk': self.id,
+                }
+            )
         else:
             return reverse(
                 'dashboard:edit-article-translation',
@@ -602,6 +698,22 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
                     'lang_to': self.language,
                 }
             )
+
+class DraftArticleTranslation(
+    ArticleTranslation.get_draft_model(),
+    ArticleTranslation
+):
+    objects = DraftDraftableManager()
+    class Meta:
+        proxy = True
+
+class SubmittedArticleTranslation(
+    ArticleTranslation.get_submitted_model(),
+    ArticleTranslation,
+):
+    objects = SubmittedDraftableManager()
+    class Meta:
+        proxy = True
 
 class PublishedArticleTranslation(
     ArticleTranslation.get_published_model(),

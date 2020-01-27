@@ -45,9 +45,13 @@ from dashboard.models import (
     QuestionArchive,
     Question,
     TranslatedQuestion,
+    DraftTranslatedQuestion,
+    SubmittedTranslatedQuestion,
     Answer,
     AnswerCredit,
     AnswerTranslation,
+    DraftAnswerTranslation,
+    SubmittedAnswerTranslation,
     UnencodedSubmission,
     Article,
     ArticleDraft,
@@ -55,6 +59,8 @@ from dashboard.models import (
     PublishedArticle,
     SubmittedArticle,
     ArticleTranslation,
+    SubmittedArticleTranslation,
+    DraftArticleTranslation,
     Comment,
     Dataset)
 from sawaliram_auth.models import Notification, User
@@ -1324,6 +1330,7 @@ class BaseEditTranslation(UpdateView):
         valid_languages = [l[0] for l in settings.LANGUAGES]
         lang_from = self.kwargs.get('lang_from')
         lang_to = self.kwargs.get('lang_to')
+        user = self.request.user
 
         if lang_from not in valid_languages:
             raise Http404('Invalid language: {}'
@@ -1337,19 +1344,17 @@ class BaseEditTranslation(UpdateView):
         source = get_object_or_404(self.source_model,
             id=self.kwargs.get('source'))
 
-        # Fetch or create the translation object itself
+        # Save the source to object
+        self.source = source
 
-        # Make sure it's not a published object
-        allowed_objects = self.model.objects.filter(
-            Q(status=self.model.STATUS_DRAFT) |
-            Q(status=self.model.STATUS_SUBMITTED)
-        )
+        # Fetch or create the translation object itself
 
         # Select the specific one, if it exists
         query_filters = {
             'source': source,
-            'translated_by': self.request.user,
+            'translated_by': user,
             'language': lang_to,
+            'status': self.model.STATUS_DRAFT,
         }
 
         try:
@@ -1390,6 +1395,7 @@ class BaseEditTranslation(UpdateView):
         changed.
         '''
 
+        # Fetch parameters
         lang_to = self.request.POST.get('lang_to')
         lang_from = self.request.POST.get('lang_from')
 
@@ -1404,7 +1410,30 @@ class BaseEditTranslation(UpdateView):
                 kwargs=kwargs,
             )
 
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        print(self.object.id, self.object.source)
+
+        if self.request.POST.get('mode') == 'submit':
+            # The user wants to submit, so we'll do our own
+            # processing after the default "save" behaviour.
+
+            submission = self.object.submit_draft()
+
+            # Set source, etc. since they don't seem to be getting
+            # unset or vanishing for some reason
+
+            submission.source = self.source
+            submission.translated_by = self.request.user
+            submission.language = lang_to
+            submission.save()
+
+            messages.success(self.request,
+                'Thanks! your draft has been submitted for review.')
+
+            return redirect(submission.get_absolute_url())
+
+        return response
 
     def get_view_name(self):
         if self.view_name is None:
@@ -1434,7 +1463,7 @@ class BaseEditTranslation(UpdateView):
 @method_decorator(permission_required('volunteers'), name='dispatch')
 class EditArticleTranslation(BaseEditTranslation):
     source_model = PublishedArticle
-    model = ArticleTranslation
+    model = DraftArticleTranslation
     fields = ['title', 'body']
     template_name = 'dashboard/translations/article_edit.html'
     view_name = 'dashboard:edit-article-translation'
@@ -1443,7 +1472,7 @@ class EditArticleTranslation(BaseEditTranslation):
 @method_decorator(permission_required('volunteers'), name='dispatch')
 class EditAnswerTranslation(BaseEditTranslation):
     source_model = Question
-    model = TranslatedQuestion
+    model = DraftTranslatedQuestion
     fields = Question.translatable_fields
     template_name = 'dashboard/translations/answer_edit.html'
     view_name = 'dashboard:edit-answer-translation'
@@ -1479,12 +1508,12 @@ class EditAnswerTranslation(BaseEditTranslation):
 
         # Fetch the translated answer and save as 'self.answer'
         try:
-            answer, createdp = (AnswerTranslation.objects
+            answer, createdp = (DraftAnswerTranslation.objects
                 .get_or_create(**query_filters))
-        except AnswerTranslation.MultipleObjectsReturned:
+        except DraftAnswerTranslation.MultipleObjectsReturned:
             # Workaround: select the first object
             # TODO: handle this more systematically
-            answer = AnswerTranslation.objects.filter(**query_filters)[0]
+            answer = DraftAnswerTranslation.objects.filter(**query_filters)[0]
 
         # Set the language of the answer source
         answer.source.set_language(lang_from)
@@ -1511,6 +1540,13 @@ class EditAnswerTranslation(BaseEditTranslation):
         if answer_text:
             self.answer.answer_text = answer_text
             self.answer.save()
+
+        # If submitting, mark the answer as submitted for
+        # review too
+
+        if self.request.POST.get('mode') == 'submit':
+            submission = self.answer.submit_draft()
+            return redirect(submission.get_absolute_url())
 
         return response
 
@@ -1589,17 +1625,19 @@ class ReviewAnswerTranslation(BaseReview):
     Review a translated answer
     '''
 
-    model = AnswerTranslation
+    model = SubmittedAnswerTranslation
     template_name = 'dashboard/translations/answer_review.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         try:
-            context['question'] = TranslatedQuestion.objects.filter(
+            context['question'] = (SubmittedTranslatedQuestion
+            .objects
+            .filter(
                 source=self.object.source.question_id,
                 translated_by=self.object.translated_by,
                 language=self.object.language,
-            )[0]
+            )[0])
         except IndexError:
             pass
 
@@ -1616,7 +1654,7 @@ class ReviewArticleTranslation(BaseReview):
     Review a translated article
     '''
 
-    model = ArticleTranslation
+    model = SubmittedArticleTranslation
     template_name = 'dashboard/translations/article_review.html'
 
 

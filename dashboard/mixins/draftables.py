@@ -82,7 +82,7 @@ class DraftableModel(models.Model):
                     print(error)
                     raise e
 
-                return cls(self.id)
+                return cls.objects.get(id=self.id)
 
         # Return the mixin
         return DraftMixin
