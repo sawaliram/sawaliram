@@ -230,11 +230,21 @@ function setupQuillEditor({ placeholder = null } = {}) {
 
     Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
 
+    class SawaliramImageSpec extends QuillBlotFormatter.ImageSpec {
+        getActions() {
+            return [QuillBlotFormatter.DeleteAction, QuillBlotFormatter.ResizeAction];
+        }
+    }
+
     var quill = new Quill('#editor', {
         theme: 'snow',
         modules: {
             toolbar: '#toolbar',
-            blotFormatter: {},
+            blotFormatter: {
+                specs: [
+                    SawaliramImageSpec,
+                ],
+            },
         },
         placeholder: placeholder,
     });
@@ -242,9 +252,9 @@ function setupQuillEditor({ placeholder = null } = {}) {
     $('.rich-text-form').submit(function(e) {
         var submitted_string = String(quill.root.innerHTML);
         var regex = new RegExp("<p><br></p>", "g");
-        var cleaned_submission = submitted_string.replace(regex, '');
-        if (cleaned_submission != '') {
-            $('[name="rich-text-content"]').val(submitted_string.replace(regex, ''));
+        var cleaned_submitted_string = submitted_string.replace(regex, '');
+        if (cleaned_submitted_string != '') {
+            $('[name="rich-text-content"]').val(cleaned_submitted_string);
         } else {
             return false;
         }
