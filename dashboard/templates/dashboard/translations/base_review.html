@@ -1,0 +1,73 @@
+{% extends "public_website/base.html" %}
+{% load to_language_name %}
+
+{% block body_styles %}grey-background{% endblock %}
+{% block title %} Review Translation | Sawaliram {% endblock %}
+
+{% block content %}
+
+<div class="container wider-container bg-white">
+	{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  {% endif %}
+  <div class="row" action="{{ request.get_full_path }}">
+    <div class="col-md-12 flex ">
+      <div class="mx-auto flex btn btn-secondary mb-3">
+        <span class="mx-1"><i class="fas fa-globe-asia"> </i></span>
+        {{ object.source.language|to_language_name }}
+        <span class="mx-1"><i class="fas fa-arrow-right"> </i></span>
+        {{ object.language|to_language_name }}
+      </div>
+    </div>
+    <article class="answer-area col-md-6">
+      {% block tr_original %}
+      {# Original/source goes here #}
+      {% endblock %}
+    </article>
+    <div class="col-md-6 answer-area">
+      {% csrf_token %}
+      {% block tr_translation %}
+      {# Final/translation goes here #}
+      {% endblock %}
+      {% if object.translated_by == request.user %}
+      <div class="hr-over">
+        <button class="btn" action="{{ object.get_edit_url }}" disabled title="You cannot edit submitted translations yet. We're working on it!" data-toggle="tooltip">
+          Edit Translation
+        </button>
+      </div>
+      {% else %}
+      <form class="hr-over" action="{{ object.get_publish_url }}" method="POST">
+        {% csrf_token %}
+        <p class="publish-info-text">If you think this translation is complete and ready for public viewing, click the 'Publish' button to publish the translation. If you believe the translation can be improved, leave a comment below.</p>
+        <button type="submit" name="action" value="submit" class="btn btn-primary btn-block">Publish</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<div>
+  <div class="comment-area comment-area-large">
+    <h2>Comments</h2>
+    <form action="{% block comment_form_action %}{% endblock %}" method="POST">
+        {% csrf_token %}
+        {{ comment_form.text }}
+        <button type="submit" class="btn btn-secondary">Add Comment</button>
+    </form>
+    {% if comments %}
+      <ul class="comment-list mt-3">
+          {% for comment in comments %}
+          {% include 'dashboard/comments/comment_box.htm' with show_delete=True %}
+          {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

@@ -10,10 +10,13 @@
 <div class="answer-section">
     <div class="question-and-meta">
         <h1>{{ question.question_text }}</h1>
-        {% if question.question_language.lower != 'english' and question.question_text_english %}
+        {% if question.language.lower != 'english' and question.question_text_english %}
             <h2>
                 {{ question.question_text_english }}
-            </h4>
+            </h2>
+        {% endif %}
+        {% if question.tr_question_text != question.question_text %}
+            <h2>{{ question.tr_question_text }}</h2>
         {% endif %}
         <div class="meta-section">
             {% if question.field_of_interest %}
@@ -25,26 +28,26 @@
             </span>
             {% endif %}
 
-            {% if question.school %}
+            {% if question.tr_school %}
             <span class="highlighted-meta">
                 <i class="fas fa-university"></i>
                 <span class="meta-value">
-                    {{ question.school }}
-                    {% if question.curriculum_followed %}
-                        ({{ question.curriculum_followed }})
+                    {{ question.tr_school }}
+                    {% if question.tr_curriculum_followed %}
+                        ({{ question.tr_curriculum_followed }})
                     {% endif %}
                 </span>
             </span>
             {% endif %}
 
-            {% if question.area or question.state %}
+            {% if question.tr_area or question.tr_state %}
             <span class="highlighted-meta">
                 <i class="fas fa-map-marker-alt"></i>
                 <span class="meta-value">
-                    {% if question.area %}
-                        {{ question.area.rstrip }} {% if question.state %}, {{ question.state }} {% endif %}
-                    {% elif question.state %}
-                        {{ question.state }}
+                    {% if question.tr_area %}
+                        {{ question.tr_area.rstrip }} {% if question.tr_state %}, {{ question.tr_state }} {% endif %}
+                    {% elif question.tr_state %}
+                        {{ question.tr_state }}
                     {% endif %}
                 </span>    
             </span>
@@ -71,7 +74,7 @@
     </div>
     <div class="answer-text-wrapper">
         <div class="answer-text">
-            {{ answer.answer_text|safe }}
+            {{ answer.tr_answer_text|safe }}
         </div>
     </div>
 </div>

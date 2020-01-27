@@ -1,0 +1,28 @@
+{% extends "dashboard/translations/base_edit.html" %}
+
+{% block tr_original %}
+<header class="flex">
+  <h1>{{ object.source.tr_title }}</h1>
+</header>
+<section class="hr-over">
+  {{ object.source.tr_body|safe }}
+</section>
+<footer>
+  
+</footer>
+{% endblock %}
+
+{% block tr_translation %}
+<header class="flex">
+  <h1><input type="text" name="{{ form.title.name }}" value="{{ form.title.value }}" placeholder="{{ object.source.tr_title }}" id="{{ form.title.id }}" class="input-plain input-title" /></h1>
+</header>
+{% include 'dashboard/snippets/richtext_editor.html' with value=form.body.value %}
+<footer id="submitbar">
+  <input type="hidden" name="{{ form.body.name }}" value="{{ form.body.value }}" />
+  <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
+  <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+  <a href="{# url 'dashboard:delete-article' object.id #}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete article">
+    <i class="fas fa-trash"></i>
+  </a>
+</footer>
+{% endblock %}

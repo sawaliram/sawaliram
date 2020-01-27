@@ -59,32 +59,13 @@
         <h2>Comments</h2>
         <form action="{% url 'dashboard:submit-answer-comment' question.id answer.id %}" method="POST">
             {% csrf_token %}
-            <textarea name="comment-text" rows="4" placeholder="Join the conversation"></textarea>
+            {{ comment_form.text }}
             <button type="submit" class="btn btn-secondary">Add Comment</button>
         </form>
         {% if comments %}
             <ul class="comment-list">
                 {% for comment in comments %}
-                <li class="comment-box">
-                    <div class="comment-header">
-                        <h3>{{ comment.author.get_full_name }}</h3>
-                        {% if comment.author == request.user %}
-                        <div class="delete-comment-wrapper">
-                            <button type="submit" class="btn delete-comment slow-transition">Delete {{ comment.id}}<i class="far fa-trash-alt"></i></button>
-                            <form action="{% url 'dashboard:delete-answer-comment' question.id answer.id comment.id %}" class="delete-comment-form slow-transition" method="POST">
-                                {% csrf_token %}
-                                <span>Are you sure?</span>
-                                <button class="btn confirm-delete delete-yes">Yes</button> /
-                                <button class="btn confirm-delete delete-no">No</button>
-                            </form>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <p class="commane-date">{{ comment.created_on|date:"j F, Y" }}</p>
-                    <p class="comment-text">
-                        {{ comment.text|escape|render_linebreaks|safe }}
-                    </p>
-                </li>
+                {% include 'dashboard/comments/comment_box.htm' with show_delete=True %}
                 {% endfor %}
             </ul>
         {% endif %}
