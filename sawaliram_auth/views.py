@@ -20,10 +20,12 @@ class SignupView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('public_website:home')
+            return redirect(request.GET.get('next',
+                'public_website:home'))
         form = SignUpForm(auto_id=False)
         context = {
-            'form': form
+            'form': form,
+            'next': request.GET.get('next')
         }
         return render(request, 'sawaliram_auth/signup.html', context)
 
@@ -43,9 +45,12 @@ class SignupView(View):
             users.user_set.add(user)
 
             login(request, user)
-            return redirect(request.POST.get('next', 'public_website:home'))
+            return redirect(
+                request.GET.get('next', 'public_website:home'),
+            )
         context = {
-            'form': form
+            'form': form,
+            'next': request.GET.get('next'),
         }
         return render(request, 'sawaliram_auth/signup.html', context)
 
@@ -55,8 +60,13 @@ class HowCanIHelpView(View):
 
     def get(self, request):
         if request.user.groups.filter(name='volunteers').exists():
-            return redirect('dashboard:home')
-        return render(request, 'sawaliram_auth/how-can-i-help.html')
+            # TODO: display page to request additional permissions
+            return redirect(request.GET.get('next', 'dashboard:home'))
+        return render(request,
+            'sawaliram_auth/how-can-i-help.html',
+            {
+                'next': request.GET.get('next'),
+            })
 
     def post(self, request):
 
@@ -73,17 +83,20 @@ class HowCanIHelpView(View):
         volunteers = Group.objects.get(name='volunteers')
         volunteers.user_set.add(request.user)
 
-        return redirect('dashboard:home')
+        return redirect(request.GET.get('next', 'dashboard:home'))
 
 
 class SigninView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('public_website:home')
+            return redirect(
+                request.GET.get('next', 'public_website:home')
+            )
         form = SignInForm(auto_id=False)
         context = {
-            'form': form
+            'form': form,
+            'next': request.GET.get('next'),
         }
         return render(request, 'sawaliram_auth/signin.html', context)
 
@@ -96,11 +109,14 @@ class SigninView(View):
                 password=form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
-                return redirect(request.POST.get('next', 'public_website:home'))
+                return redirect(
+                    request.GET.get('next', 'public_website:home')
+                )
             else:
                 context = {
                     'form': form,
-                    'validation_error': True
+                    'validation_error': True,
+                    'next': request.GET.get('next'),
                 }
                 return render(request, 'sawaliram_auth/signin.html', context)
 

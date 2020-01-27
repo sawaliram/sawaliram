@@ -1,5 +1,8 @@
+import warnings
 
+from django.urls import reverse
 from django.shortcuts import redirect
+from django.utils.http import urlencode
 from functools import wraps
 
 def permission_required(group_name):
@@ -20,7 +23,11 @@ def permission_required(group_name):
             if request.user.groups.filter(name=group_name).exists():
                 return function(request, *args, **kwargs)
             else:
-                return redirect('sawaliram_auth:how_can_i_help')
+                return redirect(''.join([
+                    reverse('sawaliram_auth:how_can_i_help'),
+                    '?',
+                    urlencode({'next': request.get_full_path()}),
+                ]))
 
             return function(request, *args, **kwargs)
         return wrap
@@ -28,13 +35,9 @@ def permission_required(group_name):
     return _permission_required
 
 def volunteer_permission_required(function):
-    @wraps(function)
-    def wrap(request, *args, **kwargs):
-        if request.user.groups.filter(name='volunteers').exists():
-            return function(request, *args, **kwargs)
-        else:
-            return redirect('sawaliram_auth:how_can_i_help')
-
-        return function(request, *args, **kwargs)
-
-    return wrap
+    '''Deprecated: please use permission_required instead'''
+    warnings.warn(
+        '`volunteer_permission_required` is deprecated. '
+        "Please use `permission_required('volunteer')` instead."
+    )
+    return permission_required('volunteers')(function)

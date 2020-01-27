@@ -19,7 +19,7 @@
         </p>
     </div>
     <div class="col-md onboarding-form-column">
-        <form action="{% url 'sawaliram_auth:how_can_i_help' %}" method="POST">
+        <form action="{% url 'sawaliram_auth:how_can_i_help' %}{% if next %}?next={{ next|urlencode }}{% endif %}" method="POST">
             {% csrf_token %}
             <div class="volunteer-option selected">
                 <input type="checkbox" checked disabled value="volunteer"> <label for="">Submit Questions</label>
