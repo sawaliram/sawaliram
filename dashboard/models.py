@@ -141,7 +141,7 @@ class Question(models.Model):
     class Meta:
         db_table = 'question'
 
-    translation_model = 'dashboard.TranslatedQuestion'
+    translation_model = 'dashboard.PublishedTranslatedQuestion'
     translatable_fields = [
         'question_text',
         'school',
@@ -205,7 +205,7 @@ class Question(models.Model):
 class Answer(models.Model):
     """Define the data model for answers in English"""
 
-    translation_model = 'dashboard.AnswerTranslation'
+    translation_model = 'dashboard.PublishedAnswerTranslation'
     translatable_fields = ['answer_text']
 
     class Meta:
