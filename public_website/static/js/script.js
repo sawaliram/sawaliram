@@ -443,7 +443,10 @@ if (window.location.pathname.includes('/dashboard/question/submit') || window.lo
     processSelectedExcelSheet();
 }
 
-if (new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)) {
+if (
+    new RegExp("^/dashboard/translate/(articles|answers|questions)/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)
+) {
     setupQuillEditor({ placeholder: 'Type your answer here...' });
     setupSubmissionLanguageSelector();
     activateTooltips();
