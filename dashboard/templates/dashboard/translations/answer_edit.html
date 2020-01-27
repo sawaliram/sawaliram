@@ -29,22 +29,22 @@
 
 {% block tr_translation %}
 <header>
-  <h1><input type="text" name="{{ form.question_text.name }}" value="{{ form.question_text.value }}" id="{{ form.question_text.id }}" class="input-plain input-title" /></h1>
-  <div class="credits-card hr-over flex">
-    <span class="credit-title">School</span>
-    <span><input type="text" class="input-plain" name="{{ form.school.name }}" value="{{ form.school.value }}" id="{{ form.school.id }}" /></span>
+  <h1><input type="text" name="{{ form.question_text.name }}" value="{{ form.question_text.value }}" placeholder="{{ object.source.tr_question_text }}" id="{{ form.question_text.id }}" class="input-plain input-title" /></h1>
+  <div class="hr-over flex">
+    <span>School</span>
+    <span><input type="text" class="input-plain" name="{{ form.school.name }}" value="{{ form.school.value }}" placeholder="{{ object.source.tr_school }}" id="{{ form.school.id }}" /></span>
   </div>
-  <div class="credits-card hr-over flex">
-    <span class="credit-title">Area</span>
-    <span><input type="text" class="input-plain" name="{{ form.area.name }}" value="{{ form.area.value }}" id="{{ form.area.id }}" /></span>
+  <div class="hr-over flex">
+    <span>Area</span>
+    <span><input type="text" class="input-plain" name="{{ form.area.name }}" value="{{ form.area.value }}" placeholder="{{ object.source.tr_area }}" id="{{ form.area.id }}" /></span>
   </div>
-  <div class="credits-card hr-over flex">
-    <span class="credit-title">State</span>
-    <span><input type="text" class="input-plain" name="{{ form.state.name }}" value="{{ form.state.value }}" id="{{ form.state.id }}" /></span>
+  <div class="hr-over flex">
+    <span>State</span>
+    <span><input type="text" class="input-plain" name="{{ form.state.name }}" value="{{ form.state.value }}" placeholder="{{ object.source.tr_state }}" id="{{ form.state.id }}" /></span>
   </div>
-  <div class="credits-card hr-over flex">
-    <span class="credit-title">Curriculum</span>
-    <span><input type="text" class="input-plain" name="{{ form.curriculum_followed.name }}" value="{{ form.curriculum_followed.value }}" id="{{ form.curriculum_followed.id }}" /></span>
+  <div class="hr-over flex">
+    <span>Curriculum</span>
+    <span><input type="text" class="input-plain" name="{{ form.curriculum_followed.name }}" value="{{ form.curriculum_followed.value }}" placeholder="{{ object.source.tr_curriculum_followed }}" id="{{ form.curriculum_followed.id }}" /></span>
   </div>
 </header>
 {% include 'dashboard/snippets/richtext_editor.html' with value=answer.answer_text %}

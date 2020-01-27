@@ -14,7 +14,7 @@
 
 {% block tr_translation %}
 <header class="flex">
-  <h1><input type="text" name="{{ form.title.name }}" value="{{ form.title.value }}" id="{{ form.title.id }}" class="input-plain input-title" /></h1>
+  <h1><input type="text" name="{{ form.title.name }}" value="{{ form.title.value }}" placeholder="{{ object.source.tr_title }}" id="{{ form.title.id }}" class="input-plain input-title" /></h1>
 </header>
 {% include 'dashboard/snippets/richtext_editor.html' with value=form.body.value %}
 <footer id="submitbar">
