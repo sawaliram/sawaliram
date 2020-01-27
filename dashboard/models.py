@@ -3,6 +3,7 @@
 import datetime
 from django.db import models
 from django.conf import settings
+from django.utils.http import urlencode
 
 from django.utils.text import slugify
 from django.utils.translation import get_language_info
@@ -308,7 +309,7 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
                         'public_website:view-answer',
                         kwargs={
                             'question_id': self.source.question_id.id,
-                            'answer_id': self.source.answer_id.id,
+                            'answer_id': self.source.id,
                         }
                     ),
                 }),
@@ -361,6 +362,13 @@ class SubmittedAnswerTranslation(
     def get_absolute_url(self):
         return reverse(
             'dashboard:review-answer-translation',
+            kwargs={
+                'pk': self.id,
+            }
+        )
+    def get_publish_url(self):
+        return reverse(
+            'dashboard:publish-answer-translation',
             kwargs={
                 'pk': self.id,
             }
@@ -714,6 +722,14 @@ class SubmittedArticleTranslation(
     objects = SubmittedDraftableManager()
     class Meta:
         proxy = True
+
+    def get_publish_url(self):
+        return reverse(
+            'dashboard:publish-article-translation',
+            kwargs={
+                'pk': self.id,
+            }
+        )
 
 class PublishedArticleTranslation(
     ArticleTranslation.get_published_model(),

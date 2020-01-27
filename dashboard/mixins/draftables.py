@@ -103,15 +103,16 @@ class DraftableModel(models.Model):
                 '''
 
                 try:
-                    self.approved_by = approved_by
-                    self.status = self.STATUS_SUBMITTED
-                    self.save()
+                    published = cls.objects.get(id=self.id)
+                    published.approved_by = approved_by
+                    published.status = self.STATUS_PUBLISHED
+                    published.save()
                 except Exception as e:
                     error = 'Error publishing: {}'.format(e)
                     print(error)
                     raise e
 
-                return cls(self.id)
+                return published
 
         # Return the mixin
         return SubmittedMixin

@@ -36,6 +36,17 @@
       {% block tr_translation %}
       {# Final/translation goes here #}
       {% endblock %}
+      {% if object.translated_by == request.user %}
+      <div class="hr-over">
+        <a class="btn btn-primary" href="{{ object.get_edit_url }}">Edit Translation</a>
+      </div>
+      {% else %}
+      <form class="hr-over" action="{{ object.get_publish_url }}" method="POST">
+        {% csrf_token %}
+        <p class="publish-info-text">If you think this translation is complete and ready for public viewing, click the 'Publish' button to publish the translation. If you believe the translation can be improved, leave a comment below.</p>
+        <button type="submit" name="action" value="submit" class="btn btn-primary btn-block">Publish</button>
+      </form>
+      {% endif %}
     </div>
   </div>
 </div>

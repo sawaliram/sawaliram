@@ -1684,6 +1684,75 @@ class ApproveSubmittedArticleView(View):
         return redirect('dashboard:review-article', article=a.id)
 
 
+class BaseApproveTranslation(View):
+
+    model = None
+    success_message = 'The translation has been published successfully'
+
+    def get_object(self):
+        object_pk = self.kwargs.get('pk')
+        obj = get_object_or_404(self.model, pk=object_pk)
+        self.object = obj
+        return obj
+
+    def get(self, request, pk):
+        '''
+        Not valid; redirect user back to review page
+        '''
+        return redirect(self.get_object()
+            .get_absolute_url())
+
+    def post(self, request, pk):
+        obj = self.get_object()
+
+        # Check that the publisher is not the author
+        if obj.translated_by == request.user:
+            raise PermissionDenied('You cannot approve your own submissions')
+
+        p = obj.publish(request.user)
+
+        messages.success(request, self.success_message)
+        return redirect(p.get_absolute_url())
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class ApproveArticleTranslation(BaseApproveTranslation):
+    model = SubmittedArticleTranslation
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class ApproveAnswerTranslation(BaseApproveTranslation):
+    model = SubmittedAnswerTranslation
+    question_model = SubmittedTranslatedQuestion
+
+    def get_question_object(self):
+        '''
+        Get the (translated) question that matches the linked
+        (translated) answer.
+        '''
+        obj = (SubmittedTranslatedQuestion
+            .objects
+            .filter(
+                source=self.object.source.question_id,
+                translated_by=self.object.translated_by,
+                language=self.object.language,
+            )[0])
+        self.question = obj
+
+        return obj
+
+    def post(self, request, pk):
+        response = super().post(request, pk)
+
+        # Also process and publish the question
+        question = self.get_question_object()
+        question.publish(self.request.user)
+
+        return response
+
+
 # Legacy Functions
 
 @login_required
