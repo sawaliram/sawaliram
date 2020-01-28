@@ -1466,6 +1466,12 @@ class BaseEditTranslation(UpdateView):
         except self.model.MultipleObjectsReturned:
             return redirect(self.get_conflict_url())
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['content_language_choices'] = settings.CONTENT_LANGUAGES
+
+        return context
+
 # TODO: new view for "you have multiple drafts for this answer in this
 # language, please choose one".
 
