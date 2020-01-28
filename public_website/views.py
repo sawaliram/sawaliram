@@ -275,10 +275,10 @@ class ViewAnswer(View):
         answer = Answer.objects.get(pk=answer_id)
 
         # Set languages
-        preferred_language = request.session.get('lang',
-            settings.DEFAULT_LANGUAGE)
-        question.set_language(preferred_language)
-        answer.set_language(preferred_language)
+        preferred_language = request.GET.get('lang')
+        if preferred_language:
+            question.set_language(preferred_language)
+            answer.set_language(preferred_language)
 
         grey_background = 'True' if request.user.is_authenticated else 'False'
 
@@ -311,14 +311,20 @@ class ArticleView(View):
 
         # Set slug if required
         if slug != article.get_slug():
-            return redirect(
-                'public_website:view-article',
-                slug=article.get_slug(),
-                article=article.id
-            )
+            return redirect('?'.join([
+                reverse(
+                    'public_website:view-article',
+                    kwargs={
+                        'slug': article.get_slug(),
+                        'article': article.id,
+                    }
+                ),
+                request.GET.urlencode(),
+            ]))
 
         # Populate with language
-        article.set_language(request.session.get('lang', settings.DEFAULT_LANGUAGE))
+        lang = request.GET.get('lang')
+        if lang: article.set_language(lang)
 
         context = {
             'article': article,

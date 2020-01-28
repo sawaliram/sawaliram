@@ -130,9 +130,23 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Possible languages available in this website
-# (used for models, language fields, etc.)
+# Possible site languages available in this website
+# Buttons, menus, and general interface should be
+# available in the following languages
 LANGUAGES = [
+    ('en', 'English'),
+    ('hi', 'हिंदी'),
+]
+
+
+# Possible languages for content on this website
+# These are the language options for questions, answers,
+# translations, articles, etc.
+#
+# TODO: move this elsewhere to make it database-based
+# and easily updatable
+CONTENT_LANGUAGES = [
+    ('bn', 'বাংলা'),
     ('en', 'English'),
     ('hi', 'हिंदी'),
     ('mr', 'मराठी'),

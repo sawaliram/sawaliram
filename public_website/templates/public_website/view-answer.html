@@ -4,6 +4,7 @@
 
 {% load static %}
 {% load render_linebreaks %}
+{% load to_language_name %}
 
 {% block content %}
 
@@ -71,6 +72,18 @@
             </span>
             {% endif %}
         </div>
+        {% if answer.translations %}
+        <div class="dropdown">
+          <button class="btn btn-secondary btn-small dropdown-toggle" type="button" id="translationSelectorButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Read answer in: {{ answer.tr_language|to_language_name }}
+          </button>
+          <div class="dropdown-menu" aria-labelledby="translationSelectorButton">
+            {% for lang, language in answer.list_available_languages %}
+            <a class="dropdown-item" href="{{ request.get_base_path }}?lang={{ lang }}">{{ language }}</a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
     </div>
     <div class="answer-text-wrapper">
         <div class="answer-text">

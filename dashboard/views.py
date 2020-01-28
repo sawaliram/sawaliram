@@ -1207,11 +1207,11 @@ class TranslationLanguagesForm(forms.Form):
     the translation.
     '''
 
-    lang_from = forms.ChoiceField(choices=settings.LANGUAGES,
+    lang_from = forms.ChoiceField(choices=settings.CONTENT_LANGUAGES,
         widget=forms.Select(attrs={
             'class': 'custom-select btn-primary',
         }))
-    lang_to = forms.ChoiceField(choices=settings.LANGUAGES  ,
+    lang_to = forms.ChoiceField(choices=settings.CONTENT_LANGUAGES  ,
         widget=forms.Select(attrs={
             'class': 'custom-select btn-primary',
         }))
@@ -1233,7 +1233,7 @@ class BaseStartTranslation(FormView):
         # Decide language options
         available_languages = self.source.list_available_languages()
         unavailable_languages = []
-        for l in settings.LANGUAGES:
+        for l in settings.CONTENT_LANGUAGES:
             if l not in available_languages:
                 unavailable_languages.append(l)
 
@@ -1337,7 +1337,7 @@ class BaseEditTranslation(UpdateView):
         '''
 
         # Check validity of languages
-        valid_languages = [l[0] for l in settings.LANGUAGES]
+        valid_languages = [l[0] for l in settings.CONTENT_LANGUAGES]
         lang_from = self.kwargs.get('lang_from')
         lang_to = self.kwargs.get('lang_to')
         user = self.request.user
@@ -1465,6 +1465,12 @@ class BaseEditTranslation(UpdateView):
             return super().get(*args, **kwargs)
         except self.model.MultipleObjectsReturned:
             return redirect(self.get_conflict_url())
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['content_language_choices'] = settings.CONTENT_LANGUAGES
+
+        return context
 
 # TODO: new view for "you have multiple drafts for this answer in this
 # language, please choose one".

@@ -1,5 +1,7 @@
 {% extends "public_website/base.html" %}
 
+{% load to_language_name %}
+
 {% block title %} {{ page_title }} | Sawaliram {% endblock %}
 
 {% block content %}
@@ -54,7 +56,7 @@
                 <button class="btn open-filter" data-target="#filterLanguages" aria-expanded="true" aria-controls="filter-languages">Languages</button>
                 <div class="category-options-list" id="filterLanguages">
                     {% for language in languages %}
-                    <button class="btn category-option {% if language.language in languages_to_filter_by %}active{% endif %}" data-param="language" data-value="{{ language.language|urlencode }}">{{ language.language|capfirst }}</button>
+                    <button class="btn category-option {% if language.language in languages_to_filter_by %}active{% endif %}" data-param="language" data-value="{{ language.language|urlencode }}">{{ language.language|to_language_name }}</button>
                     {% endfor %}
                 </div>
             </div>

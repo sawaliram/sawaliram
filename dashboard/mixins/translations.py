@@ -218,7 +218,7 @@ def translatable(cls):
         langs_dedup.sort()
 
         languages = [
-            (lang, dict(settings.LANGUAGES).get(lang, lang))
+            (lang, dict(settings.CONTENT_LANGUAGES).get(lang, lang))
             for lang in langs_dedup
         ]
 

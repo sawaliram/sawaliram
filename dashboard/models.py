@@ -299,22 +299,15 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
         '''
 
         if self.is_published:
-            return '?'.join([
+            return '?lang='.join([
                 reverse(
-                    'public_website:set-language',
+                    'public_website:view-answer',
                     kwargs={
-                        'language': self.language,
+                        'question_id': self.source.question_id.id,
+                        'answer_id': self.source.id,
                     }
                 ),
-                urlencode({
-                    'next': reverse(
-                        'public_website:view-answer',
-                        kwargs={
-                            'question_id': self.source.question_id.id,
-                            'answer_id': self.source.id,
-                        }
-                    ),
-                }),
+                self.language
             ])
         elif self.is_submitted:
             return reverse(
@@ -342,17 +335,6 @@ class DraftAnswerTranslation(
     class Meta:
         proxy = True
 
-    def get_absolute_url(self):
-        return reverse(
-            'dashboard:edit-answer-translation',
-            kwargs={
-                'answer': self.source.id,
-                'source': self.source.question_id.id,
-                'lang_from': self.source.language,
-                'lang_to': self.language,
-            }
-        )
-
 class SubmittedAnswerTranslation(
     AnswerTranslation.get_submitted_model(),
     AnswerTranslation,
@@ -361,13 +343,6 @@ class SubmittedAnswerTranslation(
     class Meta:
         proxy = True
 
-    def get_absolute_url(self):
-        return reverse(
-            'dashboard:review-answer-translation',
-            kwargs={
-                'pk': self.id,
-            }
-        )
     def get_publish_url(self):
         return reverse(
             'dashboard:publish-answer-translation',
@@ -383,18 +358,6 @@ class PublishedAnswerTranslation(
     objects = PublishedDraftableManager()
     class Meta:
         proxy = True
-
-    def get_absolute_url(self):
-        return reverse(
-            'dashboard:edit-answer-translation',
-            kwargs={
-                'answer': self.source.id,
-                'source': self.source.question_id.id,
-                'lang_from': self.source.language,
-                'lang_to': self.language,
-            }
-        )
-
 
 class AnswerCredit(models.Model):
     """Define the data model for answer and article credits"""
@@ -687,21 +650,14 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
         '''
 
         if self.is_published:
-            return '?'.join([
+            return '?lang='.join([
                 reverse(
-                    'public_website:set-language',
+                    'public_website:view-article',
                     kwargs={
-                        'language': self.language,
+                        'article': self.source.id,
                     }
                 ),
-                urlencode({
-                    'next': reverse(
-                        'public_website:view-article',
-                        kwargs={
-                            'article': self.source.id,
-                        }
-                    ),
-                }),
+                self.language,
             ])
         elif self.is_submitted:
             return reverse(

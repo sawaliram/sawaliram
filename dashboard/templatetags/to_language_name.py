@@ -11,4 +11,4 @@ register = template.Library()
 @register.filter
 @stringfilter
 def to_language_name(value):
-    return dict(settings.LANGUAGES).get(value, value)
+    return dict(settings.CONTENT_LANGUAGES).get(value, value)
