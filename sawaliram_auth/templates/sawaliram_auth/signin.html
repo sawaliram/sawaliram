@@ -8,7 +8,7 @@
 
 <div class="signin-form-section">
     <img src="{% static 'icons/login_icon.png' %}" alt="Sawaliram Login">
-    <form action="{% url 'sawaliram_auth:signin' %}" method="POST">
+    <form action="{% url 'sawaliram_auth:signin' %}{% if next %}?next={{ next|urlencode }}{% endif %}" method="POST">
         {% csrf_token %}
         {{ form }}
         {% if validation_error %}
@@ -22,7 +22,7 @@
         <button class="btn btn-secondary social-login"><i class="fab fa-google"></i> Google</button>
     </div> -->
     <p class="signup-message">
-        Not a member yet? <a href="{% url 'sawaliram_auth:signup' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="link-secondary">Sign up!</a>
+        Not a member yet? <a href="{% url 'sawaliram_auth:signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="link-secondary">Sign up!</a>
     </p>
 </div>
 

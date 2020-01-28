@@ -17,11 +17,11 @@
             Sawaliram
         </p>
         <p class="signin-message">
-            Already a member? <a href="{% url 'sawaliram_auth:signin' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="link-secondary">Sign in!</a>
+            Already a member? <a href="{% url 'sawaliram_auth:signin' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="link-secondary">Sign in!</a>
         </p>
     </div>
     <div class="col-md onboarding-form-column">
-        <form action="{% url 'sawaliram_auth:signup' %}" method="POST">
+        <form action="{% url 'sawaliram_auth:signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}" method="POST">
             {% csrf_token %}
             {% for field in form %}
                 {% if form.errors %}

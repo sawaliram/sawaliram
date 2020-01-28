@@ -91,6 +91,19 @@ DATABASES = {
 AUTH_USER_MODEL = 'sawaliram_auth.User'
 LOGIN_URL = '/users/signin'
 
+
+# OAuth2 Client Settings
+AUTHLIB_OAUTH_CLIENTS = {}
+if (
+    'github_client_id' in os.environ
+    and 'github_client_secret' in os.environ
+):
+    AUTHLIB_OAUTH_CLIENTS['github'] =  {
+        'client_id': os.environ.get('github_client_id'),
+        'client_secret': os.environ.get('github_client_secret')
+    }
+
+
 # Sentry settings
 sentry_sdk.init(
     dsn="https://06e228b93d3644cd83a7d6b4ff1e66a1@sentry.io/1434408",
