@@ -1,59 +1,60 @@
 {% extends "public_website/base.html" %}
 
+{% load i18n %}
 {% load to_language_name %}
 
-{% block title %} {{ page_title }} | Sawaliram {% endblock %}
+{% block title %} {{ page_title }} | {% trans 'Sawaliram' %}{% endblock %}
 
 {% block content %}
 <div class="search-container">
     <div class="mobile-filter-controls">
-        <button class="filter-button">Filters</button>
-        <button class="sort-by-button">Sort By</button>
+        <button class="filter-button">{% trans 'Filters' %}</button>
+        <button class="sort-by-button">{% trans 'Sort By' %}</button>
     </div>
     <div class="filter-sidebar">
         <div class="filter-head">
-            <span><b>Filters</b></span>
-            <button class="btn clear-all">Clear All</button>
+            <span><b>{% trans 'Filters' %}</b></span>
+            <button class="btn clear-all">{% trans 'Clear All' %}</button>
         </div>
         <div class="filter-list">
-            {% if page_title == 'Search' %}
+            {% if page_title == _('Search') %}
             <div class="filter-category">
                 <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">Category</button>
                 <div class="category-options-list" id="filterCategories">
-                    <button class="btn category-option {% if 'questions' in active_categories %}active{% endif %} no-fun" data-param="category" data-value="questions">Questions</button>
-                    <button class="btn category-option" data-param="category" data-value="articles" disabled>Articles</button>
-                    <button class="btn category-option" data-param="category" data-value="research" disabled>Research</button>
-                    <button class="btn category-option" data-param="category" data-value="resources" disabled>Resources</button>
+                    <button class="btn category-option {% if 'questions' in active_categories %}active{% endif %} no-fun" data-param="category" data-value="questions">{% trans 'Questions' %}</button>
+                    <button class="btn category-option" data-param="category" data-value="articles" disabled>{% trans 'Articles' %}</button>
+                    <button class="btn category-option" data-param="category" data-value="research" disabled>{% trans 'Research' %}</button>
+                    <button class="btn category-option" data-param="category" data-value="resources" disabled>{% trans 'Resources' %}</button>
                 </div>
             </div>
             {% endif %}
-            {% if page_title == 'Search' or page_title == 'View Questions' %}
+            {% if page_title == _('Search') or page_title == _('View Questions') %}
             <div class="filter-category">
-                <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">Questions</button>
+                <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">{% trans 'Questions' %}</button>
                 <div class="category-options-list" id="filterCategories">
-                    <button class="btn category-option {% if 'answered' in question_categories %}active{% endif %}" data-param="questions" data-value="answered">Answered</button>
-                    <button class="btn category-option {% if 'unanswered' in question_categories %}active{% endif %}" data-param="questions" data-value="unanswered">Unanswered</button>
+                    <button class="btn category-option {% if 'answered' in question_categories %}active{% endif %}" data-param="questions" data-value="answered">{% trans 'Answered' %}</button>
+                    <button class="btn category-option {% if 'unanswered' in question_categories %}active{% endif %}" data-param="questions" data-value="unanswered">{% trans 'Unanswered' %}</button>
                 </div>
             </div>
             {% endif %}
             <div class="filter-category">
-                <button class="btn open-filter" data-target="#filterSubjects" aria-expanded="true" aria-controls="filter-subjects">Subjects</button>
+                <button class="btn open-filter" data-target="#filterSubjects" aria-expanded="true" aria-controls="filter-subjects">{% trans 'Subjects' %}</button>
                 <div class="category-options-list" id="filterSubjects">
                     {% for subject in subjects %}
-                    <button class="btn category-option {% if subject in subjects_to_filter_by %}active{% endif %} {% if subject|length > 11 %}long-title{% endif %}" data-param="subject" data-value="{{ subject|urlencode }}" {% if subject not in available_subjects %}disabled{% endif %}>{{ subject|capfirst }}</button>
+                    <button class="btn category-option {% if subject in subjects_to_filter_by %}active{% endif %} {% if subject|length > 11 %}long-title{% endif %}" data-param="subject" data-value="{{ subject|urlencode }}" {% if subject not in available_subjects %}disabled{% endif %}>{% trans subject %}</button>
                     {% endfor %}
                 </div>
             </div>
             <div class="filter-category">
-                <button class="btn open-filter" data-target="#filterStates" aria-expanded="true" aria-controls="filter-states">States</button>
+                <button class="btn open-filter" data-target="#filterStates" aria-expanded="true" aria-controls="filter-states">{% trans 'States' %}</button>
                 <div class="category-options-list" id="filterStates">
                     {% for state in states %}
-                    <button class="btn category-option {% if state.state in states_to_filter_by %}active{% endif %}" data-param="state" data-value="{{ state.state|urlencode }}">{{ state.state|capfirst }}</button>
+                    <button class="btn category-option {% if state.state in states_to_filter_by %}active{% endif %}" data-param="state" data-value="{{ state.state|urlencode }}">{{ state.state }}</button>
                     {% endfor %}
                 </div>
             </div>
             <div class="filter-category">
-                <button class="btn open-filter" data-target="#filterLanguages" aria-expanded="true" aria-controls="filter-languages">Languages</button>
+                <button class="btn open-filter" data-target="#filterLanguages" aria-expanded="true" aria-controls="filter-languages">{% trans 'Languages' %}</button>
                 <div class="category-options-list" id="filterLanguages">
                     {% for language in languages %}
                     <button class="btn category-option {% if language.language in languages_to_filter_by %}active{% endif %}" data-param="language" data-value="{{ language.language|urlencode }}">{{ language.language|to_language_name }}</button>
@@ -61,7 +62,7 @@
                 </div>
             </div>
             <div class="filter-category">
-                <button class="btn open-filter" data-target="#filterCurriculum" aria-expanded="true" aria-controls="filter-curriculum">Curriculum Followed</button>
+                <button class="btn open-filter" data-target="#filterCurriculum" aria-expanded="true" aria-controls="filter-curriculum">{% trans 'Curriculum Followed' %}</button>
                 <div class="category-options-list" id="filterCurriculum">
                     {% for curriculum in curriculums %}
                     <button class="btn category-option {% if curriculum.curriculum_followed in curriculums_to_filter_by %}active{% endif %}" data-param="curriculum" data-value="{{ curriculum.curriculum_followed|urlencode }}">{{ curriculum.curriculum_followed|capfirst }}</button>
@@ -96,8 +97,8 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="sortOptionSelector">
-                    <span class="dropdown-item sort-by-option" data-sort="newest">Newest</span>
-                    <span class="dropdown-item sort-by-option" data-sort="oldest">Oldest</span>
+                    <span class="dropdown-item sort-by-option" data-sort="newest">{% trans 'Newest' %}</span>
+                    <span class="dropdown-item sort-by-option" data-sort="oldest">{% trans 'Oldest' %}</span>
                 </div>
             </div>
         </div>
@@ -105,8 +106,8 @@
             {% for result in results %}
             <li class="search-result-item">
                 <div class="search-result-item-header">
-                    <p class="item-number">#{{ result.id }} | Question</p>
-                    <button class="btn bookmark-button {% if result.id in bookmarks %}bookmarked{% endif %}" data-content="question" data-id="{{ result.id }}">{% if result.id in bookmarks %}<i class="fas fa-bookmark"></i> Bookmarked{% else %}<i class="far fa-bookmark"></i> Bookmark{% endif %}</button>
+                    <p class="item-number">#{{ result.id }} | {% trans 'Question' %}</p>
+                    <button class="btn bookmark-button {% if result.id in bookmarks %}bookmarked{% endif %}" data-content="question" data-id="{{ result.id }}">{% if result.id in bookmarks %}<i class="fas fa-bookmark"></i> {% trans 'Bookmarked' %}{% else %}<i class="far fa-bookmark"></i> {% comment %}Translators: this is a verb ("Bookmark this item"){% endcomment %}{% trans 'Bookmark' %}{% endif %}</button>
                 </div>
                 <h3 class="item-title">
                     {{ result.question_text }}
@@ -171,14 +172,14 @@
                         {% endif %}
                     </div>
                     {% endif %}
-                    {% if page_title == 'Answer Questions' %}
+                    {% if page_title == _('Answer Questions') %}
                         <div class="item-context-controls">
                             {% if page_title == 'Answer Questions' %}
                             <a href="{% url 'dashboard:submit-answer' question_id=result.id %}" class="btn btn-small btn-primary">Answer</a>
                             {% endif %}
                         </div>
                     {% endif %}
-                    {% if page_title == 'View Questions' or page_title == 'Search' %}
+                    {% if page_title == _('View Questions') or page_title == _('Search') %}
                         {% for answer in result.answers.all %}
                         {% if answer.approved_by %}
                             <div class="item-context-controls">
@@ -188,29 +189,29 @@
                         {% endfor %}
                     {% endif %}
                 </div>
-                {% if page_title == 'Review Answers' %}
+                {% if page_title == _('Review Answers') %}
                     {% for answer in result.answers.all %}
                     <div class="answer-preview">
                         <!-- <h4>Answered by <b>{{ answer.answered_by.get_full_name }}</b></h4> -->
                         <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
                         {% for credit in answer.credits.all %}
                             <h4>
-                                {{ credit.credit_user_name }} ({{ credit.credit_title|capfirst }})
+                                {{ credit.credit_user_name }} ({% trans credit.credit_title %})
                             </h4>
                         {% endfor %}
                         <div class="review-answer-controls">
-                            <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">Review</a>
+                            <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
                         </div>
                     </div>
                     {% endfor %}
                 {% endif %}
-                {% if page_title == 'Translate Answers' %}
+                {% if page_title == _('Translate Answers') %}
                     {% for answer in result.answers.all %}
                     <div class="answer-preview">
                         <h4>Answered by <b>{{ answer.submitted_by.get_full_name }}</b></h4>
                         <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
                         <div class="review-answer-controls">
-                            <a href="{% url 'dashboard:translate-answer' source=result.id answer=answer.id %}" class="btn btn-small btn-primary">Translate</a>
+                            <a href="{% url 'dashboard:translate-answer' source=result.id answer=answer.id %}" class="btn btn-small btn-primary">{% trans 'Translate' %}</a>
                         </div>
                     </div>
                     {% endfor %}
@@ -233,7 +234,7 @@
         {% else %}
         <div class="no-search-results-container">
             <i class="far fa-frown"></i>
-            <p>No results found. Try changing the filters or search for something else</p>
+            <p>{% blocktrans %}No results found. Try changing the filters or search for something else{% endblocktrans %}</p>
         </div>
         {% endif %}
     </div>

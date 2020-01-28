@@ -226,7 +226,7 @@ class SearchView(View):
 
         # save list of IDs for Submit Answer/Review Answer
         page_title = self.get_page_title(request)
-        if page_title == 'Review Answers' or page_title == 'Answer Questions':
+        if page_title == _('Review Answers') or page_title == _('Answer Questions'):
             result_id_list = [id['id'] for id in result.values('id')]
             request.session['result_id_list'] = result_id_list
 
@@ -263,7 +263,7 @@ class SearchView(View):
         }
 
         # create list of active categories
-        if page_title == 'Search':
+        if page_title == _('Search'):
             active_categories = request.GET.getlist('category')
             context['active_categories'] = active_categories
         return render(request, self.get_template(request), context)
@@ -284,7 +284,7 @@ class ViewAnswer(View):
 
         context = {
             'dashboard': 'False',
-            'page_title': 'View Answer',
+            'page_title': _('View Answer'),
             'question': question,
             'answer': answer,
             'comments': answer.user_comments.all(),
@@ -300,7 +300,7 @@ class ArticleView(View):
 
         # Don't allow other people to see an unpublished draft
         if article.is_draft and article.author != request.user:
-            raise Http404('Article does not exist')
+            raise Http404(_('Article does not exist'))
 
         # If it's under review, redirect to the review page
         if article.is_submitted:
@@ -341,7 +341,7 @@ class SubmitUserCommentOnAnswer(View):
         try:
             answer = Answer.objects.get(pk=answer_id)
         except Answer.DoesNotExist:
-            raise Http404('Answer does not exist')
+            raise Http404(_('Answer does not exist'))
 
         comment = AnswerUserComment()
         comment.text = request.POST['comment-text']
@@ -359,7 +359,9 @@ class SubmitUserCommentOnAnswer(View):
 
             comment_notification = Notification(
                 notification_type='comment',
-                title_text=str(request.user.get_full_name()) + ' left a comment on your answer',
+                title_text=_('%(name)s left a comment on your answer') % {
+                    'name': str(request.user.get_full_name()),
+                },
                 description_text="On your answer for the question '" + question_text + "'",
                 target_url=reverse('public_website:view-answer', kwargs={'question_id': question_id, 'answer_id': answer_id}),
                 user=answer.answered_by
@@ -382,12 +384,12 @@ class DeleteUserCommentOnAnswer(View):
         try:
             answer = Answer.objects.get(pk=answer_id)
         except Answer.DoesNotexist:
-            raise Http404('Answer does not exist')
+            raise Http404(_('Answer does not exist'))
 
         try:
             comment = answer.user_comments.get(pk=comment_id)
         except AnswerUserComment.DoesNotExist:
-            raise Http404('No matching comment')
+            raise Http404(_('No matching comment'))
 
         return comment
 
@@ -411,7 +413,7 @@ class DeleteUserCommentOnAnswer(View):
         comment = self.fetch_comment(question_id, answer_id, comment_id)
 
         if request.user != comment.author:
-            raise PermissionDenied('You are not authorised to delete that comment.')
+            raise PermissionDenied(_('You are not authorised to delete that comment.'))
 
         comment.delete()
 
@@ -444,7 +446,10 @@ class UserProfileView(View):
             notifications = Notification.objects.filter(user=user_id)
             context = {
                 'dashboard': 'False',
-                'page_title': selected_user.first_name + "'s Profile",
+                # Translators: This is the title for the User Profile page
+                'page_title': _("%(name)s's Profile") % {
+                    'name': selected_user.first_name,
+                },
                 'enable_breadcrumbs': 'Yes',
                 'selected_user': selected_user,
                 'answer_drafts': answer_drafts,
@@ -471,23 +476,23 @@ class UserProfileView(View):
             if request.POST.get('organisation-role'):
                 user.organisation_role = request.POST.get('organisation-role')
                 user.save()
-            messages.success(request, ('Your organisation details have been updated!'))
+            messages.success(request, (_('Your organisation details have been updated!')))
         elif request.POST.get('current-password'):
             match_check_old = check_password(request.POST.get('current-password'), request.user.password)
             if match_check_old:
                 if request.POST.get('new-password') == request.POST.get('confirm-new-password'):
                     match_check_new = check_password(request.POST.get('new-password'), request.user.password)
                     if match_check_new:
-                        messages.error(request, ('New password cannot be same as the current password'))
+                        messages.error(request, (_('New password cannot be same as the current password')))
                     else:
                         user.password = make_password(password=request.POST.get('new-password'))
                         user.save()
                         login(request, user)
-                        messages.success(request, ('Your password has been updated!'))
+                        messages.success(request, (_('Your password has been updated!')))
                 else:
-                    messages.error(request, ('Make sure you entered the new password correctly both times'))
+                    messages.error(request, _('Make sure you entered the new password correctly both times'))
             else:
-                messages.error(request, ('The password you entered is incorrect'))
+                messages.error(request, _('The password you entered is incorrect'))
 
         return redirect('public_website:user-profile', user_id=request.user.id)
 
@@ -506,7 +511,7 @@ class ViewNotification(View):
 class GetInvolvedView(View):
     def get(self, request):
         context = {
-            'page_title': 'Get Involved',
+            'page_title': _('Get Involved'),
         }
         return render(request, 'public_website/get-involved.html', context)
 
@@ -514,19 +519,19 @@ class GetInvolvedView(View):
 class About(View):
     def get(self, request):
         context = {
-            'page_title': 'About',
+            'page_title': _('About'),
         }
         return render(request, 'public_website/about.html', context)
 class ResearchPage(View):
     def get(self, request):
         context = {
-            'page_title': 'Research'
+            'page_title': _('Research')
         }
         return render(request, 'public_website/research.html', context)
 
 class FAQPage(View):
     def get(self, request):
         context = {
-            'page_title': 'Frequently Asked Questions'
+            'page_title': _('Frequently Asked Questions')
         }
         return render(request, 'public_website/faq.html', context)

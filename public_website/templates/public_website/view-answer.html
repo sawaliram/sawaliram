@@ -1,10 +1,11 @@
 {% extends "public_website/base.html" %}
 
-{% block title %} View Answer | Sawaliram {% endblock %}
-
+{% load i18n %}
 {% load static %}
 {% load render_linebreaks %}
 {% load to_language_name %}
+
+{% block title %} {% trans 'View Answer' %} | {% trans 'Sawaliram' %}{% endblock %}
 
 {% block content %}
 
@@ -58,7 +59,7 @@
             <span class="highlighted-meta">
                 <i class="fas fa-user-graduate"></i>
                 <span class="meta-value">
-                    Class {{ question.student_class }}
+                    {% trans 'Class' %} {{ question.student_class }}
                 </span>
             </span>
             {% endif %}
@@ -75,7 +76,7 @@
         {% if answer.translations %}
         <div class="dropdown">
           <button class="btn btn-secondary btn-small dropdown-toggle" type="button" id="translationSelectorButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Read answer in: {{ answer.tr_language|to_language_name }}
+            {% trans 'Read answer in:' %} {{ answer.tr_language|to_language_name }}
           </button>
           <div class="dropdown-menu" aria-labelledby="translationSelectorButton">
             {% for lang, language in answer.list_available_languages %}
@@ -95,11 +96,11 @@
 {% if user.is_authenticated %}
 <div class="answer-comment-related-section">
     <div class="comments">
-        <h2>Comments</h2>
+        <h2>{% trans 'Comments' %}</h2>
         <form action="{% url 'public_website:submit-user-comment-answer' question.id answer.id %}" method="POST">
             {% csrf_token %}
             <textarea name="comment-text" rows="4" placeholder="Join the conversation"></textarea>
-            <button type="submit" class="btn btn-secondary">Add Comment</button>
+            <button type="submit" class="btn btn-secondary">{% trans 'Add Comment' %}</button>
         </form>
         {% if comments %}
             <ul class="comment-list">
@@ -109,12 +110,12 @@
                         <h3>{{ comment.author.get_full_name }}</h3>
                         {% if comment.author == request.user %}
                         <div class="delete-comment-wrapper">
-                            <button type="submit" class="btn delete-comment slow-transition">Delete <i class="far fa-trash-alt"></i></button>
+                            <button type="submit" class="btn delete-comment slow-transition">{% trans 'Delete' %} <i class="far fa-trash-alt"></i></button>
                             <form action="{% url 'public_website:delete-user-comment-answer' question.id answer.id comment.id %}" class="delete-comment-form slow-transition" method="POST">
                                 {% csrf_token %}
-                                <span>Are you sure?</span>
-                                <button class="btn confirm-delete delete-yes">Yes</button> /
-                                <button class="btn confirm-delete delete-no">No</button>
+                                <span>{% trans 'Are you sure?' %}</span>
+                                <button class="btn confirm-delete delete-yes">{% trans 'Yes' %}</button> /
+                                <button class="btn confirm-delete delete-no">{% trans 'No' %}</button>
                             </form>
                         </div>
                         {% endif %}

@@ -2,6 +2,7 @@
 
 {% block title %} {{ page_title }} | Sawaliram {% endblock %}
 
+{% load i18n %}
 {% load static %}
 {% load to_language_name %}
 
@@ -12,7 +13,7 @@
         {% for message in messages %}
         <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
             {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-label="{% trans 'Close' %}">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -20,10 +21,14 @@
     {% endif %}
 
     <div class="profile-header">
-        <img src="{% static 'user/default.png' %}" alt="Profile Picture">
+        <img src="{% static 'user/default.png' %}" alt="{% trans 'Profile Picture' %}">
         <h1 class="user-name">{{ selected_user.get_full_name }}</h1>
         {% if selected_user.organisation %}
-            <p class="organisation">{% if selected_user.organisation_role %}{{ selected_user.organisation_role }} at {% endif %}{{ selected_user.organisation }}</p>
+            <p class="organisation">
+              {% if selected_user.organisation_role %}{% blocktrans %}{{ selected_user.organisation_role }} at {{ selected_user.organisation }}{% endblocktrans %}
+              {% else %}{{ selected_user.organisation }}
+              {% endif %}
+            </p>
         {% endif %}
     </div>
     
@@ -31,29 +36,29 @@
         <div class="nav nav-pills user-profile-nav" role="tablist">
             {% if request.user.id == selected_user.id %}
             <a class="nav-item nav-link active" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="true">
-                <img class="slow-transition" src="{% static 'icons/menu_settings.png' %}" alt="User Settings">
-                Settings
+                <img class="slow-transition" src="{% static 'icons/menu_settings.png' %}" alt="{% trans 'User Settings'%}">
+                {% trans 'Settings' %}
             </a>
             <a class="nav-item nav-link" data-toggle="tab" href="#drafts" role="tab" aria-controls="drafts" aria-selected="true">
-                <img class="slow-transition" src="{% static 'icons/menu_drafts.png' %}" alt="User Drafts">
-                Drafts
+                <img class="slow-transition" src="{% static 'icons/menu_drafts.png' %}" alt="{% trans 'User Drafts' %}">
+                {% trans 'Drafts' %}
             </a>
             <a class="nav-item nav-link" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="true">
-                <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="User Notifications">
-                Notifications
+                <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="{% trans 'User Notifications' %}">
+                {% trans 'Notifications' %}
                 {% if request.user.notifications.all|length > 0 %}
                     <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
                 {% endif %}
             </a>
             {% endif %}
             <a class="nav-item nav-link {% if request.user.id != selected_user.id %}active{% endif%}" data-toggle="tab" href="#submissions" role="tab" aria-controls="submissions" aria-selected="true">
-                <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="User Submissions">
-                Submissions
+                <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="{% trans 'User Submissions' %}">
+                {% trans 'Submissions' %}
             </a>
             {% if request.user.id == selected_user.id %}
             <a class="nav-item nav-link" data-toggle="tab" href="#bookmarks" role="tab" aria-controls="bookmarks" aria-selected="true">
-                <img class="slow-transition" src="{% static 'icons/menu_bookmarks.png' %}" alt="User Bookmarks">
-                Bookmarks
+                <img class="slow-transition" src="{% static 'icons/menu_bookmarks.png' %}" alt="{% trans 'User Bookmarks' %}">
+                {% trans 'Bookmarks' %}
             </a>
             {% endif %}
         </div>
@@ -63,24 +68,24 @@
         {% if request.user.id == selected_user.id %}
         <div class="tab-pane fade show active" id="settings" role="tabpanel" aria-labelledby="settings">
             <div class="tab-section">
-                <h3 class="tab-subheading">Organisation</h3>
-                <p class="tab-section-intro">Details of your organisation and your role</p>
+                <h3 class="tab-subheading">{% trans 'Organisation' %}</h3>
+                <p class="tab-section-intro">{% trans 'Details of your organisation and your role' %}</p>
                 <form action="" method="POST">
                     {% csrf_token %}
-                    <input type="text" maxlength="50" name="organisation-role" placeholder="Your role" {% if request.user.organisation_role %}value="{{ request.user.organisation_role }}"{% endif %}>
-                    <input type="text" maxlength="200" name="organisation-name" placeholder="Organisation name" {% if request.user.organisation %}value="{{ request.user.organisation }}"{% endif %}>
-                    <button class="btn btn-secondary sub-task-button">Update organisation info</button>
+                    <input type="text" maxlength="50" name="organisation-role" placeholder="{% trans 'Your role' %}" {% if request.user.organisation_role %}value="{{ request.user.organisation_role }}"{% endif %}>
+                    <input type="text" maxlength="200" name="organisation-name" placeholder="{% trans 'Organisation name' %}" {% if request.user.organisation %}value="{{ request.user.organisation }}"{% endif %}>
+                    <button class="btn btn-secondary sub-task-button">{% trans 'Update organisation info' %}</button>
                 </form>
             </div>
             <div class="tab-section">
-                <h3 class="tab-subheading">Security</h3>
-                <p class="tab-section-intro">Manage your password</p>
+                <h3 class="tab-subheading">{% trans 'Security' %}</h3>
+                <p class="tab-section-intro">{% trans 'Manage your password' %}</p>
                 <form action="" method="POST">
                     {% csrf_token %}
-                    <input type="password" name="current-password" placeholder="Current password" required>
-                    <input type="password" name="new-password" placeholder="New password" required>
-                    <input type="password" name="confirm-new-password" placeholder="Confirm new password" required>
-                    <button class="btn btn-secondary sub-task-button">Update password</button>
+                    <input type="password" name="current-password" placeholder="{% trans 'Current password' %}" required>
+                    <input type="password" name="new-password" placeholder="{% trans 'New password' %}" required>
+                    <input type="password" name="confirm-new-password" placeholder="{% trans 'Confirm new password' %}" required>
+                    <button class="btn btn-secondary sub-task-button">{% trans 'Update password' %}</button>
                 </form>
             </div>
         </div>
@@ -88,8 +93,8 @@
             {% if answer_drafts or article_drafts or answer_translation_drafts or article_translation_drafts %}
                 {% if answer_drafts %}
                 <div class="tab-section">
-                    <h3 class="tab-subheading">Answers</h3>
-                    <p class="tab-section-intro">Your draft answers</p>
+                    <h3 class="tab-subheading">{% trans 'Answers' %}</h3>
+                    <p class="tab-section-intro">{% trans 'Your draft answers' %}</p>
                     <ul class="card-list">
                         {% for draft in answer_drafts %}
                         <li>
@@ -97,11 +102,11 @@
                             <p class="tab-section-intro">
                                 {{ draft.answer_text|striptags|truncatechars:140  }}
                             </p>
-                            <a href="{% url 'dashboard:submit-answer' question_id=draft.question_id.id %}" class="btn btn-secondary sub-task-button">Continue writing</a>
+                            <a href="{% url 'dashboard:submit-answer' question_id=draft.question_id.id %}" class="btn btn-secondary sub-task-button">{% trans 'Continue writing' %}</a>
                             <form class="inline-block" action="{% url 'sawaliram_auth:remove-draft' %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="draft-id" value="{{ draft.id }}">
-                                <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                                <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
                             </form>
                         </li>
                         {% endfor %}
@@ -110,19 +115,19 @@
                 {% endif %}
                 {% if article_drafts %}
                 <div class="tab-section">
-                    <h3 class="tab-subheading">Articles</h3>
-                    <p class="tab-section-intro">Your draft articles</p>
+                    <h3 class="tab-subheading">{% trans 'Articles' %}</h3>
+                    <p class="tab-section-intro">{% trans 'Your draft articles' %}</p>
                     <ul class="card-list">
                         {% for draft in article_drafts %}
                         <li>
-                            <h4>{{ draft.title|default:"(untitled)" }}</h4>
+                            <h4>{{ draft.title|default:_("(untitled)") }}</h4>
                             <p class="tab-section-intro">
                                 {{ draft.body|striptags|truncatechars:140  }}
                             </p>
-                            <a href="{% url 'dashboard:edit-article' draft_id=draft.id %}" class="btn btn-secondary sub-task-button">Continue writing</a>
+                            <a href="{% url 'dashboard:edit-article' draft_id=draft.id %}" class="btn btn-secondary sub-task-button">{% trans 'Continue writing' %}</a>
                             <form class="inline-block" action="{% url 'dashboard:delete-article' draft.id %}" method="GET">
                                 {% csrf_token %}
-                                <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                                <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
                             </form>
                         </li>
                         {% endfor %}
@@ -130,19 +135,17 @@
                 </div>
                 {% endif %}
                 {% if article_translation_drafts or answer_translation_drafts %}
-                <h3 class="tab-subheading">Translations</h3>
+                <h3 class="tab-subheading">{% trans 'Translations' %}</h3>
                 <p class="tab-section-intro">
-                  Your draft
-                  {% if article_translation_drafts %} article{% endif %}
-                  {% if answer_translation_drafts and article_translation_drafts %} and{% endif %}
-                  {% if answer_translation_drafts %} answer{% endif %}
-                  translations
-                </p>
+                  {% if article_translation_drafts and answer_translation_drafts %}{% trans 'Your draft article and answer translations' %}
+                  {% elif article_translation_drafts %}{% trans 'Your draft article translations' %}
+                  {% elif answer_translation_drafts %}{% trans 'Your draft answer translations' %}
+                  {% endif %}                </p>
                 <ul class="card-list">
                   {% for draft in article_translation_drafts %}
                   <li>
                       <h4>
-                        {{ draft.title|default:"(untitled)" }}
+                        {{ draft.title|default:_("(untitled)") }}
                         <small>({{ draft.source.language|to_language_name }} -> {{ draft.language|to_language_name }})</small>
                         </h4>
                       <p class="tab-section-intro">
@@ -151,10 +154,10 @@
                       <p class="tab-section-intro">
                         <small>Translated from <a href="{{ draft.source.get_absolute_url }}">{{ draft.source.title }}</a></small>
                       </p>
-                      <a href="{% url 'dashboard:edit-article-translation' source=draft.source.id lang_from=draft.source.language lang_to=draft.language %}" class="btn btn-secondary sub-task-button">Continue translating</a>
+                      <a href="{% url 'dashboard:edit-article-translation' source=draft.source.id lang_from=draft.source.language lang_to=draft.language %}" class="btn btn-secondary sub-task-button">{% trans 'Continue translating' %}</a>
                       <form class="inline-block" action="{% url 'dashboard:delete-article-translation' draft.id %}" method="GET">
                           {% csrf_token %}
-                          <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                          <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
                       </form>
                   </li>
                   {% endfor %}
@@ -167,10 +170,10 @@
                       <p class="tab-section-intro">
                           {{ draft.body|default:""|striptags|truncatechars:140  }}
                       </p>
-                      <a href="{% url 'dashboard:edit-answer-translation' answer=draft.source.id source=draft.source.question_id.id lang_from=draft.source.language lang_to=draft.language %}" class="btn btn-secondary sub-task-button">Continue translating</a>
+                      <a href="{% url 'dashboard:edit-answer-translation' answer=draft.source.id source=draft.source.question_id.id lang_from=draft.source.language lang_to=draft.language %}" class="btn btn-secondary sub-task-button">{% trans 'Continue translating' %}</a>
                       <form class="inline-block" action="{% url 'dashboard:delete-answer-translation' draft.id %}" method="GET">
                           {% csrf_token %}
-                          <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                          <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
                       </form>
                   </li>
                   {% endfor %}
@@ -178,7 +181,7 @@
                 {% endif %}
             {% else %}
             <div class="empty-tab">
-                <h3><i class="far fa-meh"></i> No drafts</h3>
+                <h3><i class="far fa-meh"></i> {% trans 'No drafts' %}</h3>
             </div>
             {% endif %}
         </div>
@@ -215,7 +218,7 @@
             </div>
             {% else %}
             <div class="empty-tab">
-                <h3><i class="far fa-meh"></i> No notifications</h3>
+                <h3><i class="far fa-meh"></i> {% trans 'No notifications' %}</h3>
             </div>
             {% endif %}
         </div>
@@ -224,20 +227,24 @@
             {% if submitted_questions or submitted_answers or submitted_articles or published_articles or article_translation_submissions or answer_translation_submissions %}
                 {% if submitted_questions %}
                 <div class="tab-section">
-                    <h3 class="tab-subheading">Questions</h3>
-                    <p class="tab-section-intro">Questions submitted by {% if request.user.id != selected_user.id %} {{ selected_user.first_name }}{% else %}you{% endif%}</p>
+                    <h3 class="tab-subheading">{% trans 'Questions' %}</h3>
+                    <p class="tab-section-intro">
+                      {% if request.user.id != selected_user.id %}{% blocktrans %}Questions submitted by {{ selected_user.first_name }}{% endblocktrans %}
+                      {% else %}{% blocktrans %}Questions submitted by you{% endblocktrans %}
+                      {% endif%}
+                    </p>
                     <ul class="card-list">
                         {% for question in submitted_questions %}
                         <li>
                             <h4>{{ question.question_count }} questions</h4>
-                            <p class="tab-section-intro">Submitted on {{ question.created_on|date:"jS F, Y" }}</p>
+                            <p class="tab-section-intro">{% blocktrans %}Submitted on {{ question.created_on|date:"jS F, Y" }}{% endblocktrans %}</p>
                             {% if question.status == 'new' %}
                             <p class="tab-section-status pending">
-                                Review Pending
+                                {% trans 'Review Pending' %}
                             </p>
                             {% elif question.status == 'curated' %}
                             <p class="tab-section-status success">
-                                Ready to answer
+                                {% trans 'Ready to answer' %}
                             </p> 
                             {% endif %}
                         </li>
@@ -247,8 +254,12 @@
                 {% endif %}
                 {% if submitted_answers %}
                 <div class="tab-section">
-                    <h3 class="tab-subheading">Answers</h3>
-                    <p class="tab-section-intro">Answers submitted by {% if request.user.id != selected_user.id %} {{ selected_user.first_name }}{% else %}you{% endif%}</p>
+                    <h3 class="tab-subheading">{% trans 'Answers' %}</h3>
+                    <p class="tab-section-intro">
+                      {% if request.user.id != selected_user.id %}{% blocktrans %}Answers submitted by {{ selected_user.first_name }}{% endblocktrans %}
+                      {% else %}{% blocktrans %}Answers submitted by you{% endblocktrans %}
+                      {% endif%}
+                    </p>
                     <ul class="card-list">
                         {% for answer in submitted_answers %}
                         <li>
@@ -259,7 +270,7 @@
                                     {{ answer.answer_text|striptags|truncatechars:140 }}
                                 </p>
                                 <p class="tab-section-status pending">
-                                    Review Pending
+                                    {% trans 'Review Pending' %}
                                 </p>
                         </li>
                         {% endfor %}
@@ -268,8 +279,10 @@
                 {% endif %}
                 {% if submitted_articles  or published_articles%}
                 <div class="tab-section">
-                    <h3 class="tab-subheading">Articles</h3>
-                    <p class="tab-section-intro">Articles submitted by {% if request.user.id != selected_user.id %} {{ selected_user.first_name }}{% else %}you{% endif%}</p>
+                    <h3 class="tab-subheading">{% trans 'Articles' %}</h3>
+                      {% if request.user.id != selected_user.id %}{% blocktrans %}Articles submitted by {{ selected_user.first_name }}{% endblocktrans %}
+                      {% else %}{% blocktrans %}Articles submitted by you{% endblocktrans %}
+                      {% endif%}
                     <ul class="card-list">
                         {% for article in submitted_articles %}
                         <li>
@@ -280,7 +293,7 @@
                                     {{ article.body|striptags|truncatechars:140 }}
                                 </p>
                                 <p class="tab-section-status pending">
-                                    Review Pending
+                                    {% trans 'Review Pending' %}
                                 </p>
                         </li>
                         {% endfor %}
@@ -293,7 +306,7 @@
                                     {{ article.body|striptags|truncatechars:140 }}
                                 </p>
                                 <p class="tab-section-status success">
-                                    Published
+                                    {% trans 'Published' %}
                                 </p>
                         </li>
                         {% endfor %}
@@ -304,20 +317,19 @@
 
               {% if article_translation_submissions or answer_translation_submissions %}
               <div class="tab-section">
-                <h3 class="tab-subheading">Translations</h3>
+                <h3 class="tab-subheading">{% trans 'Translations' %}</h3>
                 <p class="tab-section-intro">
-                  Your submitted
-                  {% if article_translation_submissions %} article{% endif %}
-                  {% if answer_translation_submissions and article_translation_submissions %} and{% endif %}
-                  {% if answer_translation_submissions %} answer{% endif %}
-                  translations
+                  {% if article_translation_submissions and answer_translation_submissions %}{% trans 'Your submitted article and answer translations' %}
+                  {% elif article_translation_submissions %}{% trans 'Your submitted article translations' %}
+                  {% elif answer_translation_submissions %}{% trans 'Your submitted answer translations' %}
+                  {% endif %} 
                 </p>
                 <ul class="card-list">
                   {% for submission in article_translation_submissions %}
                   <li>
                       <a class="task-link" href="{{ submission.get_absolute_url }}">
                         <h4>
-                          {{ submission.title|default:"(untitled)" }}
+                          {{ submission.title|default:_("(untitled)") }}
                           <small>({{ submission.source.language }} -> {{ submission.language }})</small>
                         </h4>
                       </a>
@@ -325,10 +337,10 @@
                           {{ submission.body|default:""|striptags|truncatechars:140  }}
                       </p>
                       <p class="tab-section-intro">
-                        <small>Translated from <a href="{{ submission.source.get_absolute_url }}">{{ submission.source.title }}</a></small>
+                        <small>{% trans 'Translated from' %} <a href="{{ submission.source.get_absolute_url }}">{{ submission.source.title }}</a></small>
                       </p>
                       <p class="tab-section-status pending">
-                          Review Pending
+                          {% trans 'Review Pending' %}
                       </p>
                   </li>
                   {% endfor %}
@@ -344,7 +356,7 @@
                           {{ submission.answer_text|default:""|striptags|truncatechars:140  }}
                       </p>
                       <p class="tab-section-status pending">
-                          Review Pending
+                          {% trans 'Review Pending' %}
                       </p>
                   </li>
                   {% endfor %}
@@ -355,7 +367,7 @@
 
             {% else %}
                 <div class="empty-tab">
-                    <h3><i class="far fa-meh"></i> No submissions</h3>
+                    <h3><i class="far fa-meh"></i> {% trans 'No submissions' %}</h3>
                 </div>
             {% endif %}
         </div>
@@ -363,15 +375,15 @@
         <div class="tab-pane fade" id="bookmarks" role="tabpanel" aria-labelledby="bookmarks">
             {% if bookmarked_questions %}
             <div class="tab-section">
-                <h3 class="tab-subheading">Questions</h3>
-                <p class="tab-section-intro">Questions you saved</p>
+                <h3 class="tab-subheading">{% trans 'Questions' %}</h3>
+                <p class="tab-section-intro">{% trans 'Questions you saved' %}</p>
                 <ul class="card-list">
                     {% for bookmark in bookmarked_questions %}
                     <li>
                         <h4>{{ bookmark.question }}</h4>
                         <div>
                             <p class="tab-section-status pending">
-                                Not Answered
+                                {% trans 'Not Answered' %}
                             </p>
                         </div>
                         <br>
@@ -379,7 +391,7 @@
                             {% csrf_token %}
                             <input type="hidden" name="content-type" value="question">
                             <input type="hidden" name="question-id" value="{{ bookmark.question.id }}">
-                            <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> Delete</button>
+                            <button class="btn btn-secondary-hollow sub-task-button delete" type="submit"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
                         </form>
                     </li>
                     {% endfor %}
@@ -387,7 +399,7 @@
             </div>
             {% else %}
                 <div class="empty-tab">
-                    <h3><i class="far fa-meh"></i> No bookmarks</h3>
+                    <h3><i class="far fa-meh"></i> {% trans 'No bookmarks' %}</h3>
                 </div>
             {% endif %}
         </div>
