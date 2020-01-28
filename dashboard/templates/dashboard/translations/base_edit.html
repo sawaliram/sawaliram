@@ -54,6 +54,10 @@
 
 {% endblock %}
 
+{% block script_includes %}
+<script src="{% static 'js/quill-blot-formatter.min.js' %}"></script>
+{% endblock %}
+
 {% block footer %}
 <script>
     setupQuillEditor({
