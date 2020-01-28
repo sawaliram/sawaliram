@@ -46,6 +46,10 @@ body.grey-background {
     }
 }
 
+.wider-container {
+    max-width: 100%;
+}
+
 ::-moz-selection { /* For Firefox */
     color: #000000;
     background: #FFBA4B;
@@ -72,11 +76,23 @@ input[type=email] {
     margin-bottom: 1rem;
 }
 
-input.input-plain {
-    border: 0;
+/* plain input styles (so they look the same as rendered content) */
+
+.input-plain {
     font-size: inherit;
     font-style: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+input.input-plain {
+    border: 0;
     margin-bottom: 0;
+    padding: 0;
+    margin: 0;
 }
 
 select.input-plain {
@@ -87,6 +103,23 @@ select.input-plain {
     -moz-appearance: none;
     -webkit-appearance: none;
     width: auto;
+    color: inherit;
+}
+
+.input-group > .custom-select,
+.input-group .form-control
+{
+    display: flex;
+    justify-content: center;
+    height: inherit;
+    align-items: center;
+    margin: 0;
+}
+
+textarea.input-plain {
+    border: none;
+    margin: unset;
+    padding: unset;
 }
 
 textarea {
@@ -95,6 +128,10 @@ textarea {
 
 .text-primary {
     color: #87B24D !important;
+}
+
+.text-secondary {
+    color: #9B63A8 !important;
 }
 
 .badge-primary {
@@ -1511,6 +1548,9 @@ h1.dashboard-home-greeting {
 .rich-text-form {
     background: white;
     border-radius: 0.2rem;
+}
+
+.rich-text-form.padded {
     padding: 0.4em;
     margin-top: 1.2rem;
 }
@@ -1532,6 +1572,7 @@ h1.dashboard-home-greeting {
 
 .rich-text-form  .ql-container.ql-snow {
     border: none;
+    height: unset;
 }
 
 .rich-text-form .ql-toolbar.ql-snow {
@@ -1990,7 +2031,7 @@ h1.dashboard-home-greeting {
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta:not(:last-child),
-.answer-section .question-and-meta .meta-section .highlighted-meta:not(:last-child) {
+.meta-section .highlighted-meta:not(:last-child) {
     margin-right: 0.8rem;
 }
 
@@ -1999,7 +2040,7 @@ h1.dashboard-home-greeting {
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta,
-.answer-section .question-and-meta .meta-section .highlighted-meta {
+.meta-section .highlighted-meta {
     background-color: #ebebeb;
     border-radius: 3px;
     padding: 0.3rem 0.5rem;
@@ -2009,19 +2050,19 @@ h1.dashboard-home-greeting {
 
 @media (max-width: 576px) {
     .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta,
-    .answer-section .question-and-meta .meta-section .highlighted-meta {
+    .meta-section .highlighted-meta {
         margin-bottom: 0.4rem;
         font-size: 0.7rem;
     }
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta i,
-.answer-section .question-and-meta .meta-section .highlighted-meta i {
+.meta-section .highlighted-meta i {
     color: #707070;
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta .meta-value,
-.answer-section .question-and-meta .meta-section .highlighted-meta .meta-value {
+.meta-section .highlighted-meta .meta-value {
     font-size: 0.8rem;
 }
 
@@ -2271,18 +2312,18 @@ button.deny-access {
     padding-bottom: 10rem;
 }
 
-.review-page-container .answer-area h1 {
+.answer-area h1 {
     font-size: 1.8rem;
     font-weight: bold;
 }
 
-.review-page-container .answer-area h1.question-translation {
+.answer-area h1.question-translation {
     font-size: 1.2rem;
     font-weight: 200;
     color: grey;
 }
 
-.review-page-container .answer-area h2 {
+.answer-area h2 {
     font-size: 1rem;
     font-weight: bold;
     color: #424242;
@@ -2290,7 +2331,7 @@ button.deny-access {
     margin-top: 1rem;
 }
 
-.review-page-container .answer-area .answer-text {
+.answer-area .answer-text {
     border-top: 1px solid #D6D6D6;
     border-bottom: 1px solid #D6D6D6;
     padding: 1rem 0;
@@ -2317,20 +2358,27 @@ button.deny-access {
     padding-top: 1rem;
 }
 
-.review-page-container .answer-area .publish-info-text {
+.answer-area .publish-info-text {
     color: #8c8c8c;
 }
 
-.review-page-container .answer-area .published-text {
+.answer-area .published-text {
     color: #87B24D;
 }
 
-.review-page-container .comment-area {
+.comment-area {
     width: 40%;
     padding: 2rem;
 }
 
-.review-page-container .comment-area h2 {
+.comment-area-large {
+    width: unset;
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.comment-area h2 {
     font-size: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -2349,6 +2397,7 @@ button.deny-access {
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     border-top: 3px solid #9B63A8;
+    box-shadow: 1px 3px 6px #9B63A852;
     padding: 1rem;
     padding-bottom: 0.5rem;
 }
@@ -2409,7 +2458,12 @@ button.deny-access {
     color: #a6a6a6;
 }
 
-/* ====== VIEW ANSWER ===== */
+/* === VIEW ANSWER & ARTICLE == */
+.article {
+    padding: 1rem;
+    max-width: 100vw; /* to avoid side-scroll */
+}
+
 .answer-section {
     display: flex;
     background-color: #fff;
@@ -2430,22 +2484,26 @@ button.deny-access {
 }
 
 @media(max-width: 576px) {
+    .article-meta,
     .answer-section .question-and-meta {
         padding: 0 0.8rem;
     }
 }
 
+.article-meta h1,
 .answer-section .question-and-meta h1 {
     font-size: 1.8rem;
     font-weight: bold;
 }
 
 @media(max-width: 576px) {
+    .article-meta h1,
     .answer-section .question-and-meta h1 {
         font-size: 1.2rem;
     }
 }
 
+.article-meta h2,
 .answer-section .question-and-meta h2 {
     font-size: 1.2rem;
     color: #707070;
@@ -2453,6 +2511,7 @@ button.deny-access {
 }
 
 @media(max-width: 576px) {
+    .article-meta h2,
     .answer-section .question-and-meta h2 {
         font-size: 1rem;
     }
@@ -2471,7 +2530,7 @@ button.deny-access {
     }
 }
 
-.answer-section .question-and-meta .meta-section .highlighted-meta {
+.meta-section .highlighted-meta {
     margin-bottom: 0.6rem;
 }
 

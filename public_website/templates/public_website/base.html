@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -18,7 +19,7 @@
 
         <title>{% block title %} {% endblock %}</title>
     </head>
-    <body class="d-flex flex-column {% if grey_background == 'True' %}grey-background{% endif %}">
+    <body class="d-flex flex-column {% block body_styles %}{% if grey_background == 'True' %}grey-background{% endif %}{% endblock %}">
 
         <div class="menu-background slow-transition"></div>
 
@@ -29,46 +30,90 @@
             <div class="navbar-menu-container">
                 <div class="row">
                     <div class="col-sm">
-                        <img src="{% static 'icons/menu_research.png' %}" alt="Research">
-                        <a href="{% url 'public_website:research' %}">Research</a>
+                        <img src="{% static 'icons/menu_research.png' %}" alt="{% trans 'Research' %}">
+                        <a href="{% url 'public_website:research' %}">{% trans 'Research' %}</a>
                     </div>
                     <div class="col-sm">
-                        <img src="{% static 'icons/menu_blog.png' %}" alt="Blog">
-                        <a href="javascript:void(0)">Blog</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm">
-                        <img src="{% static 'icons/menu_resource.png' %}" alt="Resources">
-                        <a href="javascript:void(0)">Resources</a>
-                    </div>
-                    <div class="col-sm">
-                        <img src="{% static 'icons/menu_analytics.png' %}" alt="Analytics">
-                        <a href="javascript:void(0)">Analytics</a>
+                        <img src="{% static 'icons/menu_blog.png' %}" alt="{% trans 'Blog' %}">
+                        <a href="javascript:void(0)">{% trans 'Blog' %}</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm">
-                        <img src="{% static 'icons/menu_about.png' %}" alt="About">
-                        <a href="{% url 'public_website:about' %}">About</a>
+                        <img src="{% static 'icons/menu_resource.png' %}" alt="{% trans 'Resources' %}">
+                        <a href="javascript:void(0)">{% trans 'Resources' %}</a>
                     </div>
                     <div class="col-sm">
-                        <img src="{% static 'icons/menu_team.png' %}" alt="Team">
-                        <a href="javascript:void(0)">Team</a>
+                        <img src="{% static 'icons/menu_analytics.png' %}" alt="{% trans 'Analytics' %}">
+                        <a href="javascript:void(0)">{% trans 'Analytics' %}</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm">
-                        <img src="{% static 'icons/menu_contact.png' %}" alt="Contact Us">
-                        <a href="javascript:void(0)">Contact Us</a>
+                        <img src="{% static 'icons/menu_about.png' %}" alt="{% trans 'About' %}">
+                        <a href="{% url 'public_website:about' %}">{% trans 'About' %}</a>
                     </div>
                     <div class="col-sm">
-                        <img src="{% static 'icons/menu_get_involved.png' %}" alt="Get Involved">
-                        <a href="{% url 'public_website:get-involved' %}">Get Involved!</a>
+                        <img src="{% static 'icons/menu_team.png' %}" alt="{% trans 'Team' %}">
+                        <a href="javascript:void(0)">{% trans 'Team' %}</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <img src="{% static 'icons/menu_contact.png' %}" alt="{% trans 'Contact Us' %}">
+                        <a href="javascript:void(0)">{% trans 'Contact Us' %}</a>
+                    </div>
+                    <div class="col-sm">
+                        <img src="{% static 'icons/menu_get_involved.png' %}" alt="{% trans 'Get Involved' %}">
+                        <a href="{% url 'public_website:get-involved' %}">{% trans 'Get Involved!' %}</a>
                     </div>
                 </div>
             </div>
         </nav>
+
+        {% if request.user.is_authenticated %}
+        <nav class="user-menu slow-transition">
+            <button class="btn user-menu-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="user-menu-container">
+                <div class="user-menu-profile">
+                    <img src="{% static 'user/default.png' %}" alt="{% trans 'Profile Picture' %}">
+                    <p class="user-name">{{ request.user.get_full_name }}</p>
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}" class="btn view-profile">{% trans 'View Profile' %}</a>
+                </div>
+                <div class="user-menu-items">
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#settings">
+                        <img class="slow-transition" src="{% static 'icons/menu_settings.png' %}" alt="{% trans 'User Settings' %}">
+                        {% trans 'Settings' %}
+                    </a>
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#drafts">
+                        <img class="slow-transition" src="{% static 'icons/menu_drafts.png' %}" alt="{% trans 'User Drafts' %}">
+                        {% trans 'Drafts' %}
+                    </a>
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#notifications">
+                        <img class="slow-transition" src="{% static 'icons/menu_notifications.png' %}" alt="{% trans 'User Notifications' %}">
+                        {% trans 'Notifications' %}
+                        {% if request.user.notifications.all|length > 0 %}
+                            <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#submissions">
+                        <img class="slow-transition" src="{% static 'icons/menu_submissions.png' %}" alt="{% trans 'User Submissions' %}">
+                        {% trans 'Submissions' %}
+                    </a>
+                    <a href="{% url 'public_website:user-profile' user_id=request.user.id %}#bookmarks">
+                        <img class="slow-transition" src="{% static 'icons/menu_bookmarks.png' %}" alt="{% trans 'User Bookmarks' %}">
+                        {% trans 'Bookmarks' %}
+                    </a>
+                    <a href="{% url 'sawaliram_auth:signout' %}">
+                        <img class="slow-transition" src="{% static 'icons/menu_signout.png' %}" alt="{% trans 'User Signout' %}">
+                        {% trans 'Signout' %}
+                    </a>
+                </div>
+            </div>
+        </nav>
+        {% endif %}
 
         <div class="navbar-search-box slow-transition">
             <div class="navbar-search-form-wrapper">
@@ -76,7 +121,7 @@
                     <input type="hidden" name="category" value="questions">
                     <input type="hidden" name="questions" value="answered">
                     <input type="hidden" name="questions" value="unanswered">
-                    <input type="text" class="search-field" name="q" placeholder="Search for questions, articles and resources">
+                    <input type="text" class="search-field" name="q" placeholder="{% trans 'Search for questions, articles and resources' %}">
                 </form>
                 <button class="btn close-navbar-search-box"><i class="fas fa-times"></i></button>
             </div>
@@ -87,22 +132,22 @@
                 <div class="left-section">
                     <i class="fas fa-bars navbar-menu-toggle"></i>
                     <a class="navbar-brand slow-transition" href="{% url 'public_website:home' %}">
-                        <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo.png' %}" alt="Sawaliram Home">
+                        <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo.png' %}" alt="{% trans 'Sawaliram Home' %}">
                     </a>
                 </div>
                 <div class="right-section">
                     <i class="fas fa-search navbar-search-icon"></i>
                     <div class="dropdown navbar-element">
                         <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="languageSelector">
-                            English
+                            {{ current_language.1 }}
                             <i class="fas fa-chevron-down"></i>
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="languageSelector">
-                            <span class="dropdown-item">हिंदी</span>
-                            <span class="dropdown-item">मराठी</span>
-                            <span class="dropdown-item">മലയാളം</span>
-                            <span class="dropdown-item">தமிழ்</span>
-                        </div>
+                        <form class="dropdown-menu" aria-labelledby="languageSelector">
+                            <input type="hidden" name="next" value="{{ current_path }}" />
+                            {% for lang_code, language in language_choices %}
+                            <button type="submit" class="dropdown-item" formaction="{% url 'public_website:set-language' lang_code %}">{{ language }}</a>
+                            {% endfor %}
+                        </form>
                     </div>
                     {% if request.user.is_authenticated %}
                     <div class="navbar-user-wrapper">
@@ -116,13 +161,13 @@
                         <div class="dropdown-menu" aria-labelledby="navbarUserButton">
                             <p class="user-name">{{ request.user.get_full_name }}</p>
                             <span class="dropdown-item">
-                                <a href="{% url 'public_website:user-profile' user_id=request.user.id %}"><i class="fas fa-user-circle"></i> My Profile</a>
+                                <a href="{% url 'public_website:user-profile' user_id=request.user.id %}"><i class="fas fa-user-circle"></i> {% trans 'My Profile' %}</a>
                             </span>
                             <span class="dropdown-item">
-                                <a href="{% url 'dashboard:home' %}"><i class="fas fa-pencil-ruler"></i> Dashboard</a>
+                                <a href="{% url 'dashboard:home' %}"><i class="fas fa-pencil-ruler"></i> {% trans 'Dashboard' %}</a>
                             </span>
                             <span class="dropdown-item">
-                                <a href="{% url 'sawaliram_auth:signout' %}"><i class="fas fa-sign-out-alt"></i> Signout</a>
+                                <a href="{% url 'sawaliram_auth:signout' %}"><i class="fas fa-sign-out-alt"></i> {% trans 'Signout' %}</a>
                             </span>
                         </div>
                     </div>
@@ -139,13 +184,13 @@
                 <p class="page-title">
                     {% if enable_breadcrumbs == 'Yes' and page_title != 'Dashboard Home' %}
                         {% if page_title != 'Dashboard Home' %}
-                            <a href="{% url 'dashboard:home' %}">Dashboard Home</a> >
+                            <a href="{% url 'dashboard:home' %}">{% trans 'Dashboard Home' %}</a> >
                         {% endif %}
                         {% if page_title == 'Submit Answer' %}
-                            <a href="{% url 'dashboard:answer-questions' %}">Answer Questions</a> >
+                            <a href="{% url 'dashboard:answer-questions' %}">{% trans 'Answer Questions' %}</a> >
                         {% endif %}
                         {% if page_title == 'Submit Review' %}
-                            <a href="{% url 'dashboard:review-answers' %}">Review Answers</a> >
+                            <a href="{% url 'dashboard:review-answers' %}">{% trans 'Review Answers' %}</a> >
                         {% endif %}
                         {% if page_title == 'Review Article' %}
                             <a href="{% url 'dashboard:manage-content' %}">Manage Content</a> >
@@ -162,16 +207,16 @@
             <div class="row no-gutters footer-main">
                 <div class="col-12 col-sm-7 footer-column">
                     <p class="footer-text">
-                        You too can volunteer to collect or answer questions, translate content or help build this website!
+                        {% blocktrans %}You too can volunteer to collect or answer questions, translate content or help build this website!{% endblocktrans %}
                     </p>
-                    <a href="{% url 'public_website:get-involved' %}" class="btn btn-yellow">Get Involved!</a>
+                    <a href="{% url 'public_website:get-involved' %}" class="btn btn-yellow">{% trans 'Get Involved!' %}</a>
                 </div>
                 <div class="col-12 col-sm-5 footer-column">
                     <div class="footer-links">
-                        <a href="javascript:void(0)">Team</a>
-                        <a href="javascript:void(0)">Contact</a>
-                        <a href="{% url 'public_website:faq' %}">FAQ</a>
-                        <a class="dashboard-link" href="{% url 'dashboard:home' %}">Dashboard</a>
+                        <a href="javascript:void(0)">{% trans 'Team' %}</a>
+                        <a href="javascript:void(0)">{% trans 'Contact' %}</a>
+                        <a href="{% url 'public_website:faq' %}">{% trans 'FAQ' %}</a>
+                        <a class="dashboard-link" href="{% url 'dashboard:home' %}">{% trans 'Dashboard' %}</a>
                     </div>
                     <a class="social-media facebook" href="javascript:void(0)"><i class="fab fa-facebook-f"></i></a>
                     <a class="social-media youtube" href="javascript:void(0)"><i class="fab fa-youtube"></i></a>
@@ -179,7 +224,7 @@
                 </div>
             </div>
             <div class="footer-base">
-                <p>&copy; Copyright Sawaliram 2019</p>
+                <p>&copy; {% trans 'Copyright Sawaliram 2019' %}</p>
             </div>
         </footer>
 

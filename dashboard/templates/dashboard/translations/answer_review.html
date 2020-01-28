@@ -1,0 +1,76 @@
+{% extends "dashboard/translations/base_review.html" %}
+
+{% block comment_form_action %}{% url 'dashboard:submit-answer-translation-comment' target=object.id %}{% endblock %}
+{% block tr_original %}
+<header>
+  <h1>{{ source_question.tr_question_text }}</h1>
+  <div class="meta-section">
+
+    {% if source_question.tr_school %}
+    <span class="highlighted-meta">
+        <i class="fas fa-university"></i>
+        <span class="meta-value">
+            {{ source_question.tr_school }}
+            {% if source_question.tr_curriculum_followed %}
+                ({{ source_question.tr_curriculum_followed }})
+            {% endif %}
+        </span>
+    </span>
+    {% endif %}
+
+    {% if source_question.tr_area or source_question.tr_state %}
+    <span class="highlighted-meta">
+        <i class="fas fa-map-marker-alt"></i>
+        <span class="meta-value">
+            {% if source_question.tr_area %}
+                {{ source_question.tr_area.rstrip }} {% if source_question.tr_state %}, {{ source_question.tr_state }} {% endif %}
+            {% elif source_question.tr_state %}
+                {{ source_question.tr_state }}
+            {% endif %}
+        </span>    
+    </span>
+    {% endif %}
+
+  </div>
+</header>
+<section class="hr-over">
+  {{ object.source.tr_answer_text|safe }}
+</section>
+{% endblock %}
+
+{% block tr_translation %}
+<header>
+    <h1>{{ question.question_text|default:source_question.question_text }}</h1>
+    <div class="meta-section">
+
+    {% if source_question.tr_school %}
+    <span class="highlighted-meta">
+        <i class="fas fa-university"></i>
+        <span class="meta-value">
+            {{ question.school|default:source_question.tr_school }}
+            {% if source_question.tr_curriculum_followed %}
+                ({{ question.curriculum_followed|default:source_question.tr_curriculum_followed }})
+            {% endif %}
+        </span>
+    </span>
+    {% endif %}
+
+    {% if source_question.tr_area or source_question.tr_state %}
+    <span class="highlighted-meta">
+        <i class="fas fa-map-marker-alt"></i>
+        <span class="meta-value">
+            {% if source_question.tr_area %}
+                {{ question.area.rstrip|default:source_question.tr_area.rstrip }} {% if source_question.tr_state %}, {{ question.state|default:source_question.tr_state }} {% endif %}
+            {% elif source_question.tr_state %}
+                {{ question.state|default:source_question.tr_state }}
+            {% endif %}
+        </span>    
+    </span>
+    {% endif %}
+
+  </div>
+</header>
+<section class="hr-over">
+    {{ object.answer_text|safe }}
+</section>
+{% endblock %}

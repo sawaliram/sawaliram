@@ -226,7 +226,9 @@ function setupSearchResultsClearAll() {
     });
 }
 
-function setupQuillEditor({ placeholder = null } = {}) {
+function setupQuillEditor({ 
+    placeholder = null,
+    inputName = 'rich-text-content' } = {}) {
 
     Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
 
@@ -254,7 +256,7 @@ function setupQuillEditor({ placeholder = null } = {}) {
         var regex = new RegExp("<p><br></p>", "g");
         var cleaned_submitted_string = submitted_string.replace(regex, '');
         if (cleaned_submitted_string != '') {
-            $('[name="rich-text-content"]').val(cleaned_submitted_string);
+            $('[name="' + inputName + '"]').val(cleaned_submitted_string);
         } else {
             return false;
         }
@@ -470,7 +472,10 @@ if (window.location.pathname.includes('/dashboard/question/submit') || window.lo
     processSelectedExcelSheet();
 }
 
-if (new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)) {
+if (
+    new RegExp("^/dashboard/translate/(articles|answers|questions)/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)
+) {
     setupQuillEditor({ placeholder: 'Type your answer here...' });
     setupSubmissionLanguageSelector();
     setupPublicationAutoFill();
@@ -482,9 +487,23 @@ if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) 
     activateTooltips();
 }
 
+/* Breaking from tradition, this function is going intot the template so
+ * that it can be better fine-tuned and generalised.
+
+if (new RegExp('^/dashboard/article/\\d+/translate/from/[A-Za-z-]+/to/[A-Za-z-]+').test(window.location.pathname)) {
+    setupQuillEditor({
+        placeholder: 'Translation goes here...',
+        inputName: 'body'
+    })
+}
+*/
+
+
 if (
     new RegExp("^/dashboard/article/\\d+/review").test(window.location.pathname) ||
-    new RegExp("^/dashboard/question/\\d+/answers/\\d+/review").test(window.location.pathname)
+    new RegExp("^/dashboard/question/\\d+/answers/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/translate/articles/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/translate/answers/\\d+/review").test(window.location.pathname)
 ) {
     // setupCommentFormDisplayToggle();
     // setupCommentDeleteButtons();

@@ -2,13 +2,29 @@
 
 import datetime
 from django.db import models
+from django.conf import settings
+from django.utils.http import urlencode
 
-LANGUAGE_CHOICES = [
-    ('en', 'English'),
-    ('hi', 'Hindi'),
-    ('ta', 'Tamil'),
-    ('te', 'Telugu')
-]
+from django.utils.text import slugify
+from django.utils.translation import get_language_info
+
+from dashboard.mixins.draftables import (
+    DraftableModel,
+    PublishedDraftableManager,
+    SubmittedDraftableManager,
+    DraftDraftableManager,
+)
+from dashboard.mixins.translations import (
+    TranslationMixin,
+    translatable,
+)
+from django.urls import reverse
+
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import (
+    GenericForeignKey,
+    GenericRelation,
+)
 
 LANGUAGE_CODES = {
     'english': 'en',
@@ -33,6 +49,9 @@ class Dataset(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return 'Dataset #{}'.format(self.id)
+
 
 class QuestionArchive(models.Model):
     """Define the data model for raw submissions by volunteers"""
@@ -49,7 +68,7 @@ class QuestionArchive(models.Model):
     question_text = models.CharField(max_length=1000, blank=True)
     question_text_english = models.CharField(max_length=1000, default='', blank=True)
     question_format = models.CharField(max_length=100, blank=True)
-    question_language = models.CharField(max_length=100, blank=True)
+    language = models.CharField(max_length=100, blank=True)
     contributor = models.CharField(max_length=100, blank=True)
     contributor_role = models.CharField(max_length=100, blank=True)
     context = models.CharField(max_length=100, blank=True)
@@ -66,6 +85,13 @@ class QuestionArchive(models.Model):
         on_delete=models.PROTECT)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+    @property
+    def en_text(self):
+        if self.language in ('en', 'english'):
+            return self.question_text
+        else:
+            return self.question_text_english
 
     def accept_question(self, acceptor):
         """
@@ -86,7 +112,7 @@ class QuestionArchive(models.Model):
         q.question_text = self.question_text
         q.question_text_english = self.question_text_english
         q.question_format = self.question_format
-        q.question_language = self.question_language
+        q.language = self.language
         q.contributor = self.contributor
         q.contributor_role = self.contributor_role
         q.context = self.context
@@ -108,14 +134,24 @@ class QuestionArchive(models.Model):
             print('Error accepting question: %s' % e)
 
     def __str__(self):
-        return self.question_text
+        return 'Q{} (uncurated): {}'.format(self.id, self.question_text)
 
 
+@translatable
 class Question(models.Model):
     """Define the data model for questions curated by admins."""
 
     class Meta:
         db_table = 'question'
+
+    translation_model = 'dashboard.PublishedTranslatedQuestion'
+    translatable_fields = [
+        'question_text',
+        'school',
+        'area',
+        'state',
+        'curriculum_followed',
+    ]
 
     school = models.CharField(max_length=100, blank=True)
     area = models.CharField(max_length=100, blank=True)
@@ -126,7 +162,7 @@ class Question(models.Model):
     question_text = models.CharField(max_length=1000, blank=True)
     question_text_english = models.CharField(max_length=1000, default='', blank=True)
     question_format = models.CharField(max_length=100, blank=True)
-    question_language = models.CharField(max_length=100, blank=True)
+    language = models.CharField(max_length=100, blank=True)
     contributor = models.CharField(max_length=100, blank=True)
     contributor_role = models.CharField(max_length=100, blank=True)
     context = models.CharField(max_length=100, blank=True)
@@ -165,11 +201,15 @@ class Question(models.Model):
     comments_on_coding_rationale = models.CharField(max_length=500, default='', blank=True)
 
     def __str__(self):
-        return self.question_text
+        return 'Q{}: {}'.format(self.id, self.question_text)
 
 
+@translatable
 class Answer(models.Model):
     """Define the data model for answers in English"""
+
+    translation_model = 'dashboard.PublishedAnswerTranslation'
+    translatable_fields = ['answer_text']
 
     class Meta:
         db_table = 'answer'
@@ -198,13 +238,31 @@ class Answer(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    comments = GenericRelation('dashboard.Comment')
+
     def __str__(self):
         '''Return unicode representation of this Answer'''
 
         return 'Answer [{}]: {}'.format(
-            self.question_id.question_language,
+            self.question_id.language,
             self.question_id.question_text,
         )
+
+    def get_absolute_url(self):
+        if self.status == 'published':
+            return reverse('public_website:view-answer', kwargs={
+                'question_id': self.question_id.id,
+                'answer_id': self.id,
+            })
+        else:
+            return reverse('dashboard:review-answer',kwargs={
+                'question_id': self.question_id.id,
+                'answer_id': self.id,
+            })
+
+    @property
+    def author(self):
+        return self.submitted_by
 
     def get_language_name(self):
         """
@@ -214,24 +272,128 @@ class Answer(models.Model):
             if code == self.language:
                 return language
 
+class AnswerTranslation(DraftableModel, TranslationMixin):
+    '''
+    Stores translated data for a given Answer
+    '''
 
-class AnswerComment(models.Model):
-    """Define the data model for comments on Answers"""
+    # Where we're translating from
 
-    class Meta:
-        db_table = 'answer_comment'
-
-    text = models.TextField()
-    answer = models.ForeignKey(
+    source = models.ForeignKey(
         'Answer',
-        related_name='comments',
-        on_delete=models.CASCADE)
-    author = models.ForeignKey(
-        'sawaliram_auth.User',
-        related_name='answer_comments',
-        on_delete=models.PROTECT)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+        related_name='translations',
+        on_delete=models.PROTECT,
+        default='')
+
+    # What we're translating
+
+    answer_text = models.TextField()
+
+    # Comments (for review process)
+
+    comments = GenericRelation('dashboard.Comment')
+
+    def get_absolute_url(self):
+        '''
+        Returns the edit page of the translation
+        '''
+
+        if self.is_published:
+            return '?'.join([
+                reverse(
+                    'public_website:set-language',
+                    kwargs={
+                        'language': self.language,
+                    }
+                ),
+                urlencode({
+                    'next': reverse(
+                        'public_website:view-answer',
+                        kwargs={
+                            'question_id': self.source.question_id.id,
+                            'answer_id': self.source.id,
+                        }
+                    ),
+                }),
+            ])
+        elif self.is_submitted:
+            return reverse(
+                'dashboard:review-answer-translation',
+                kwargs={
+                    'pk': self.id,
+                }
+            )
+        else:
+            return reverse(
+                'dashboard:edit-answer-translation',
+                kwargs={
+                    'answer': self.source.id,
+                    'source': self.source.question_id.id,
+                    'lang_from': self.source.language,
+                    'lang_to': self.language,
+                }
+            )
+
+class DraftAnswerTranslation(
+    AnswerTranslation.get_draft_model(),
+    AnswerTranslation,
+):
+    objects = DraftDraftableManager()
+    class Meta:
+        proxy = True
+
+    def get_absolute_url(self):
+        return reverse(
+            'dashboard:edit-answer-translation',
+            kwargs={
+                'answer': self.source.id,
+                'source': self.source.question_id.id,
+                'lang_from': self.source.language,
+                'lang_to': self.language,
+            }
+        )
+
+class SubmittedAnswerTranslation(
+    AnswerTranslation.get_submitted_model(),
+    AnswerTranslation,
+):
+    objects = SubmittedDraftableManager()
+    class Meta:
+        proxy = True
+
+    def get_absolute_url(self):
+        return reverse(
+            'dashboard:review-answer-translation',
+            kwargs={
+                'pk': self.id,
+            }
+        )
+    def get_publish_url(self):
+        return reverse(
+            'dashboard:publish-answer-translation',
+            kwargs={
+                'pk': self.id,
+            }
+        )
+
+class PublishedAnswerTranslation(
+    AnswerTranslation.get_published_model(),
+    AnswerTranslation,
+):
+    objects = PublishedDraftableManager()
+    class Meta:
+        proxy = True
+
+    def get_absolute_url(self):
+        return reverse(
+            'dashboard:edit-answer-translation',
+            kwargs={
+                'answer': self.source.id,
+                'source': self.source.question_id.id,
+                'lang_from': self.source.language,
+                'lang_to': self.language,
+            }
+        )
 
 
 class AnswerCredit(models.Model):
@@ -303,41 +465,70 @@ class UnencodedSubmission(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
 
 
-class TranslatedQuestion(models.Model):
+class TranslatedQuestion(DraftableModel, TranslationMixin):
     """Define the data model to store translated questions"""
 
     class Meta:
         db_table = 'translated_question'
 
-    question_id = models.ForeignKey(
+    # Where we're translating from
+
+    source = models.ForeignKey(
         'Question',
         related_name='translations',
         on_delete=models.PROTECT,
         default='')
-    question_text = models.CharField(max_length=1000)
-    language = models.CharField(max_length=100)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
-class PublishedArticleManager(models.Manager):
-    def get_queryset(self):
-        return (super()
-            .get_queryset()
-            .filter(status=Article.STATUS_PUBLISHED))
+    # What we're translating
 
-class ArticleDraftManager(models.Manager):
-    def get_queryset(self):
-        return (super()
-            .get_queryset()
-            .filter(status=Article.STATUS_DRAFT))
+    question_text = models.CharField(max_length=1000, blank=True)
+    school = models.CharField(max_length=100, blank=True)
+    area = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=100, default='', blank=True)
+    curriculum_followed = models.CharField(
+        max_length=100,
+        default='',
+        blank=True)
 
-class SubmittedArticleManager(models.Manager):
-    def get_queryset(self):
-        return (super()
-            .get_queryset()
-            .filter(status=Article.STATUS_SUBMITTED))
+    def __str__(self):
+        return 'Q{}T{} [{}->{}]: {}'.format(
+            self.source.id,
+            self.id,
+            self.source.language,
+            self.language,
+            self.question_text,
+        )
 
-class Article(models.Model):
+    def get_absolute_url(self):
+        # TODO: create a view for questions and redirect to that
+        return '/'
+
+class DraftTranslatedQuestion(
+    TranslatedQuestion.get_draft_model(),
+    TranslatedQuestion,
+):
+    objects = DraftDraftableManager()
+    class Meta:
+        proxy = True
+
+class SubmittedTranslatedQuestion(
+    TranslatedQuestion.get_submitted_model(),
+    TranslatedQuestion,
+):
+    objects = SubmittedDraftableManager()
+    class Meta:
+        proxy = True
+
+class PublishedTranslatedQuestion(
+    TranslatedQuestion.get_published_model(),
+    TranslatedQuestion,
+):
+    objects = PublishedDraftableManager()
+    class Meta:
+        proxy = True
+
+@translatable
+class Article(DraftableModel):
     '''
     Complete data model holding all kinds of articles. This includes:
       * ArticleDraft
@@ -350,13 +541,12 @@ class Article(models.Model):
     returning results).
     '''
 
-    STATUS_DRAFT = -1
-    STATUS_SUBMITTED = 0
-    STATUS_PUBLISHED = 1
+    translation_model = 'dashboard.PublishedArticleTranslation'
+    translatable_fields = ['title', 'body']
 
     title = models.CharField(max_length=1000, null=True)
     language = models.CharField(max_length=100,
-        choices=LANGUAGE_CHOICES,
+        choices=settings.LANGUAGE_CHOICES,
         default='en')
     author = models.ForeignKey('sawaliram_auth.User',
         related_name='articles',
@@ -377,135 +567,187 @@ class Article(models.Model):
         null=True)
     published_on = models.DateTimeField(auto_now_add=True)
 
-    status = models.IntegerField(default=-1) # draft
-
-    get_published = PublishedArticleManager()
-    get_drafts = ArticleDraftManager()
-    get_submitted = SubmittedArticleManager()
-
-    @property
-    def is_draft(self):
-        return self.status == self.STATUS_DRAFT
-
-    @property
-    def is_submitted(self):
-        return self.status == self.STATUS_SUBMITTED
-
-    @property
-    def is_published(self):
-        return self.status == self.STATUS_PUBLISHED
+    comments = GenericRelation('dashboard.Comment')
 
     class Meta:
         db_table = 'articles'
 
-class ArticleDraft(Article):
-    '''
-    Draft articles are visible only to the user who creates them.
-    Once ready, they can be submitted by converting to a
-    SubmittedArticle which, upon approval, will be finally released
-    to the world as a published Article.
+    def get_slug(self):
+        return slugify(self.title)
 
-    The complete sequence is:
-        ArticleDraft -> SubmittedArticle -> Article
-    '''
+    def __str__(self):
+        return 'Article #{}: {}'.format(self.id, self.title)
 
+    def get_absolute_url(self):
+        if self.is_draft:
+            return reverse('dashboard:edit-article', kwargs={
+                'draft_id': self.id,
+            })
+        elif self.is_submitted:
+            return reverse('dashboard:review-article', kwargs={
+                'article': self.id,
+            })
+        else:
+            return reverse('public_website:view-article', kwargs={
+                'article': self.id,
+            })
+
+class ArticleDraft(Article.get_draft_model(), Article):
+    objects = DraftDraftableManager()
     class Meta:
-        db_table = 'articles'
-        proxy=True
-
-    objects = ArticleDraftManager()
-
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('status').default = self.STATUS_DRAFT
-        super().__init__(*args, **kwargs)
-
-    def submit_draft(self):
-        '''
-        Submit the draft. In other words, copy over content to a new
-        SubmittedArticle object and destroy self.
-        '''
-
-        try:
-            self.status = self.STATUS_SUBMITTED
-            self.save()
-        except Exception as e:
-            error = 'Error submitting article: %s' % e
-            print(error)
-            raise e
-
-        return SubmittedArticle.objects.get(pk=self.pk)
-
-class SubmittedArticle(Article):
-    '''
-    Submitted articles are article which are ready to publish, but which
-    have to be vetted by an editor or manager before they are released
-    to the world as a published Article
-
-    The complete sequence is:
-        ArticleDraft -> SubmittedArticle -> Article
-    '''
-
-    class Meta:
-        db_table = 'articles'
-        proxy=True
-
-    objects = SubmittedArticleManager()
-
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('status').default = self.STATUS_SUBMITTED
-        super().__init__(*args, **kwargs)
-
-    def publish(self, approved_by):
-        '''
-        Publish the article. In other words, copy over content to a new
-        Article object and destroy self.
-        '''
-
-        try:
-            self.approved_by = approved_by
-            self.status = self.STATUS_PUBLISHED
-            self.save()
-        except Exception as e:
-            error = 'Error publishing article: %s' % e
-            print(error)
-            raise e
-
-        return Article(self)
-
-class PublishedArticle(Article):
-    '''
-    Articles are published articles, visible to the world after having
-    gone through the full editorial process
-
-    The complete sequence is:
-        ArticleDraft -> SubmittedArticle -> PublishedArticle
-    '''
-
-    class Meta:
-        db_table = 'articles'
         proxy = True
 
-    objects = PublishedArticleManager()
+    def get_absolute_url(self):
+        return reverse('dashboard:edit-article', kwargs={
+            'draft_id': self.id
+        })
 
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('status').default = self.STATUS_PUBLISHED
-        super().__init__(*args, **kwargs)
-class ArticleComment(models.Model):
-    """Define the data model for comments on Answers"""
-
+class SubmittedArticle(Article.get_submitted_model(), Article):
+    objects = SubmittedDraftableManager()
     class Meta:
-        db_table = 'article_comment'
+        proxy = True
 
+    def get_absolute_url(self):
+        return reverse('dashboard:review-article', kwargs={
+            'article': self.id
+        })
+
+class PublishedArticle(Article.get_published_model(), Article):
+    objects = PublishedDraftableManager()
+    class Meta:
+        proxy = True
+
+class Comment(models.Model):
+    '''
+    Generic class for comments on any kind of model 🎉
+    '''
+
+    # Main field
     text = models.TextField()
 
-    article = models.ForeignKey(
-        'Article',
-        related_name='comments',
-        on_delete=models.CASCADE)
+    # Metadata fields
     author = models.ForeignKey(
         'sawaliram_auth.User',
-        related_name='article_comments',
+        related_name='comments',
         on_delete=models.PROTECT)
 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+    # The following fields are used for defining 'target'
+    content_type = models.ForeignKey(ContentType,
+        on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+
+    # And this is the aforementioned 'target', now defined
+    target = GenericForeignKey('content_type', 'object_id')
+
+    def __str__(self):
+        return 'Comment #{} by {} on {}'.format(
+            self.id,
+            self.author,
+            self.target
+        )
+
+    def get_absolute_url(self):
+        return self.target.get_absolute_url()
+
+class ArticleTranslation(DraftableModel, TranslationMixin):
+    '''
+    Stores translated data for a given article
+    '''
+
+    # What we're translating
+    source = models.ForeignKey(
+        'Article',
+        related_name='translations',
+        on_delete=models.CASCADE)
+
+    # Translated Fields
+
+    title = models.CharField(max_length=1000, null=True)
+    body = models.TextField(null=True)
+
+    # Comments (for review process)
+
+    comments = GenericRelation('dashboard.Comment')
+
+    def __str__(self):
+        return 'B{}T{} [{}->{}]: {}'.format(
+            self.source.id,
+            self.id,
+            self.source.language,
+            self.language,
+            self.title,
+        )
+
+    def get_absolute_url(self):
+        '''
+        Returns the edit page of the translation
+        '''
+
+        if self.is_published:
+            return '?'.join([
+                reverse(
+                    'public_website:set-language',
+                    kwargs={
+                        'language': self.language,
+                    }
+                ),
+                urlencode({
+                    'next': reverse(
+                        'public_website:view-article',
+                        kwargs={
+                            'article': self.source.id,
+                        }
+                    ),
+                }),
+            ])
+        elif self.is_submitted:
+            return reverse(
+                'dashboard:review-article-translation',
+                kwargs={
+                    'pk': self.id,
+                }
+            )
+        else:
+            return reverse(
+                'dashboard:edit-article-translation',
+                kwargs={
+                    'source': self.source.id,
+                    'lang_from': self.source.language,
+                    'lang_to': self.language,
+                }
+            )
+
+class DraftArticleTranslation(
+    ArticleTranslation.get_draft_model(),
+    ArticleTranslation
+):
+    objects = DraftDraftableManager()
+    class Meta:
+        proxy = True
+
+class SubmittedArticleTranslation(
+    ArticleTranslation.get_submitted_model(),
+    ArticleTranslation,
+):
+    objects = SubmittedDraftableManager()
+    class Meta:
+        proxy = True
+
+    def get_publish_url(self):
+        return reverse(
+            'dashboard:publish-article-translation',
+            kwargs={
+                'pk': self.id,
+            }
+        )
+
+class PublishedArticleTranslation(
+    ArticleTranslation.get_published_model(),
+    ArticleTranslation
+):
+    objects = PublishedDraftableManager()
+    class Meta:
+        proxy = True

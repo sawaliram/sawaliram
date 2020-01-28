@@ -1,0 +1,20 @@
+{% extends "dashboard/translations/base_review.html" %}
+
+{% block comment_form_action %}{% url 'dashboard:submit-article-translation-comment' target=object.id %}{% endblock %}
+{% block tr_original %}
+<header>
+  <h1>{{ object.source.tr_title }}</h1>
+</header>
+<section class="hr-over">
+  {{ object.source.tr_body|safe }}
+</section>
+{% endblock %}
+
+{% block tr_translation %}
+<header>
+    <h1>{{ object.title }}</h1>
+</header>
+<section class="hr-over">
+    {{ object.body|safe }}
+</section>
+{% endblock %}

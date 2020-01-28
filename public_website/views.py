@@ -1,7 +1,16 @@
 """Define the View classes that will handle the public website pages"""
 
-from django.shortcuts import render, redirect
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404
+)
 from django.views import View
+from django.utils.translation import gettext as _
+from django.utils.translation import (
+    ngettext,
+    pgettext,
+)
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password, make_password
@@ -12,13 +21,20 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 
+from django.conf import settings
+
 from dashboard.models import (
     Dataset,
     Answer,
     Question,
+    Article,
     PublishedArticle,
     ArticleDraft,
     SubmittedArticle,
+    ArticleTranslation,
+    SubmittedArticleTranslation,
+    SubmittedAnswerTranslation,
+    AnswerTranslation,
 )
 from sawaliram_auth.models import User, Bookmark, Notification
 from public_website.models import AnswerUserComment
@@ -31,19 +47,36 @@ from pprint import pprint
 class HomeView(View):
     def get(self, request):
         banner_texts_list = [
-            'Leaves or fruits or sprouting shoots?',
-            'Sun or stars or life on Mars?',
-            'Constellations or the fate of nations?',
-            'Curly tresses or yellow school buses?',
-            'Birds in the sky or a firefly?'
+            _('Leaves or fruits or sprouting shoots?'),
+            _('Sun or stars or life on Mars?'),
+            _('Constellations or the fate of nations?'),
+            _('Curly tresses or yellow school buses?'),
+            _('Birds in the sky or a firefly?'),
         ]
         context = {
             'dashboard': 'False',
-            'page_title': 'Home',
+            'page_title': pgettext('website homepage', 'Home'),
             'first_banner_text': random.choice(banner_texts_list)
         }
         return render(request, 'public_website/home.html', context)
 
+
+class SetLanguageView(View):
+    def post(self, request, language):
+        request.session['lang'] = language
+
+        response = redirect(request.POST.get('next')
+            or request.GET.get('next')
+            or 'public_website:home')
+        response.set_cookie('lang', language)
+
+        return response
+
+    def get(self, request, language):
+        # TODO: display language picker or something
+        # it's bad practice to set params on a GET request
+        # or maybe it doesn't matter in this case?
+        return self.post(request, language)
 
 class SearchView(View):
     def get_queryset(self, request):
@@ -163,9 +196,9 @@ class SearchView(View):
                             .values('curriculum_followed')
 
         languages = result.order_by() \
-                          .values_list('question_language') \
-                          .distinct('question_language') \
-                          .values('question_language')
+                          .values_list('language') \
+                          .distinct('language') \
+                          .values('language')
 
         # apply filters if any
         subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
@@ -182,7 +215,7 @@ class SearchView(View):
 
         languages_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('language')]
         if languages_to_filter_by:
-            result = result.filter(question_language__in=languages_to_filter_by)
+            result = result.filter(language__in=languages_to_filter_by)
 
         # sort the results if sort-by parameter exists
         # default: newest
@@ -241,6 +274,12 @@ class ViewAnswer(View):
         question = Question.objects.get(pk=question_id)
         answer = Answer.objects.get(pk=answer_id)
 
+        # Set languages
+        preferred_language = request.session.get('lang',
+            settings.DEFAULT_LANGUAGE)
+        question.set_language(preferred_language)
+        answer.set_language(preferred_language)
+
         grey_background = 'True' if request.user.is_authenticated else 'False'
 
         context = {
@@ -253,6 +292,39 @@ class ViewAnswer(View):
         }
 
         return render(request, 'public_website/view-answer.html', context)
+
+
+class ArticleView(View):
+    def get (self, request, article, slug=None):
+        article = get_object_or_404(Article, id=article)
+
+        # Don't allow other people to see an unpublished draft
+        if article.is_draft and article.author != request.user:
+            raise Http404('Article does not exist')
+
+        # If it's under review, redirect to the review page
+        if article.is_submitted:
+            return redirect(
+                'dashboard:review-article',
+                article=article.id
+            )
+
+        # Set slug if required
+        if slug != article.get_slug():
+            return redirect(
+                'public_website:view-article',
+                slug=article.get_slug(),
+                article=article.id
+            )
+
+        # Populate with language
+        article.set_language(request.session.get('lang', settings.DEFAULT_LANGUAGE))
+
+        context = {
+            'article': article,
+        }
+
+        return render(request, 'public_website/article.html', context)
 
 
 class SubmitUserCommentOnAnswer(View):
@@ -274,7 +346,7 @@ class SubmitUserCommentOnAnswer(View):
         # create notification
         if answer.answered_by.id != request.user.id:
             answered_question = Question.objects.get(pk=question_id)
-            if answered_question.question_language.lower() != 'english':
+            if answered_question.language.lower() != 'english':
                 question_text = answered_question.question_text_english
             else:
                 question_text = answered_question.question_text
@@ -355,6 +427,10 @@ class UserProfileView(View):
             submitted_questions = Dataset.objects.filter(submitted_by=user_id)
             submitted_answers = Answer.objects.filter(submitted_by=user_id)
             article_drafts = ArticleDraft.objects.filter(author=user_id)
+            article_translation_drafts = ArticleTranslation.get_drafts.filter(translated_by=user_id)
+            answer_translation_drafts = AnswerTranslation.get_drafts.filter(translated_by=user_id)
+            article_translation_submissions = SubmittedArticleTranslation.objects.filter(translated_by=user_id)
+            answer_translation_submissions = SubmittedAnswerTranslation.objects.filter(translated_by=user_id)
             submitted_articles = SubmittedArticle.objects.filter(author=user_id)
             published_articles = PublishedArticle.objects.filter(author=user_id)
             bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
@@ -370,6 +446,10 @@ class UserProfileView(View):
                 'submitted_questions': submitted_questions,
                 'submitted_answers': submitted_answers,
                 'article_drafts': article_drafts,
+                'article_translation_drafts': article_translation_drafts,
+                'answer_translation_drafts': answer_translation_drafts,
+                'article_translation_submissions': article_translation_submissions,
+                'answer_translation_submissions': answer_translation_submissions,
                 'submitted_articles': submitted_articles,
                 'published_articles': published_articles,
                 'bookmarked_questions': bookmarked_questions,
