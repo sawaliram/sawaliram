@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='question',
-            name='question_language',
+            name='language',
             field=models.CharField(blank=True, max_length=100),
         ),
         migrations.AlterField(
@@ -192,7 +192,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='questionarchive',
-            name='question_language',
+            name='language',
             field=models.CharField(blank=True, max_length=100),
         ),
         migrations.AlterField(
