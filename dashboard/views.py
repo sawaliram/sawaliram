@@ -1600,6 +1600,31 @@ class DeleteAnswerTranslation(BaseDeleteTranslation):
     model = AnswerTranslation
     template_name = 'dashboard/translations/answer_delete.html'
 
+    def delete(self, request, *args, **kwargs):
+        '''
+        Also delete the question object while we're about it
+        '''
+
+        obj = self.get_object()
+
+        if obj.is_published:
+            question_model = PublishedTranslatedQuestion
+        elif obj.is_submitted:
+            question_model = SubmittedTranslatedQuestion
+        else:
+            question_model = DraftTranslatedQuestion
+
+        q = question_model.objects.filter(
+            translated_by=request.user,
+            source=obj.source.question_id,
+            language=obj.language,
+        )
+
+        if q.count() > 0:
+            q[0].delete()
+
+        return super().delete(request, *args, **kwargs)
+
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')

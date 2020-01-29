@@ -52,7 +52,7 @@
   <input type="hidden" name="answer-text" value="{{ answer.answer_text }}" />
   <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
   <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
-  <a href="{% url 'dashboard:delete-answer-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete translation">
+  <a href="{% url 'dashboard:delete-answer-translation' answer.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete translation">
     <i class="fas fa-trash"></i>
   </a>
 </footer>
