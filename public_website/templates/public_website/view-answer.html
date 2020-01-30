@@ -75,6 +75,14 @@
     <div class="answer-text-wrapper">
         <div class="answer-text">
             {{ answer.tr_answer_text|safe }}
+            <div class="credits-section">
+                {% for credit in answer.credits.all %}
+                    <div class="credit-card">
+                        <p>{{ credit.credit_user_name }}</p>
+                        <span>{{ credit.credit_title|capfirst }}</span>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>

@@ -2323,14 +2323,6 @@ button.deny-access {
     color: grey;
 }
 
-.answer-area h2 {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #424242;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-}
-
 .answer-area .answer-text {
     border-top: 1px solid #D6D6D6;
     border-bottom: 1px solid #D6D6D6;
@@ -2340,15 +2332,16 @@ button.deny-access {
     text-align: justify;
 }
 
-.review-page-container .answer-area .credit-card {
+.credit-card {
     margin-bottom: 1rem;
 }
 
-.review-page-container .answer-area .credit-card p {
+.credit-card p {
     margin-bottom: 0;
+    font-weight: bold;
 }
 
-.review-page-container .answer-area .credit-card span {
+.credit-card span {
     color: grey;
 }
 
@@ -2562,6 +2555,10 @@ button.deny-access {
 
 .answer-section .answer-text-wrapper .answer-text img {
     width: 100%;
+}
+
+.answer-section .answer-text-wrapper .answer-text .credits-section {
+    margin-top: 2rem;
 }
 
 @media(max-width: 576px) {

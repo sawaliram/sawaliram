@@ -189,7 +189,6 @@
                 {% if page_title == 'Review Answers' %}
                     {% for answer in result.answers.all %}
                     <div class="answer-preview">
-                        <!-- <h4>Answered by <b>{{ answer.answered_by.get_full_name }}</b></h4> -->
                         <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
                         {% for credit in answer.credits.all %}
                             <h4>

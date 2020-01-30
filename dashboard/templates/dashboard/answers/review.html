@@ -28,7 +28,6 @@
         <div class="answer-text">
             {{ answer.answer_text|safe }}
         </div>
-        <h2>Credits</h2>
         {% for credit in answer.credits.all %}
             <div class="credit-card">
                 <p>{{ credit.credit_user_name }}</p>

@@ -322,6 +322,7 @@ class ArticleView(View):
 
         context = {
             'article': article,
+            'page_title': 'View Article',
         }
 
         return render(request, 'public_website/article.html', context)
