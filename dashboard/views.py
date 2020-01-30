@@ -794,6 +794,7 @@ class ApproveAnswerView(View):
                 answer_id=answer_id)
 
         answer.approved_by = request.user
+        answer.status = 'published'
         answer.save()
 
         messages.success(request, ('Thanks ' + request.user.first_name + ' for publishing the answer, it will now be visible to all users'))
