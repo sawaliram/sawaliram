@@ -12,7 +12,10 @@
         <div class="answer-text">
             {{ article.body|safe }}
         </div>
-        <h2 class="answered-by">Written by <b>{{ article.author.get_full_name }}</b></h2>
+        <div class="credit-card">
+            <p>{{ article.author.get_full_name }}</p>
+            <span>Author</span>
+        </div>
         {% if article.status == article.STATUS_PUBLISHED %}
             <p class="published-text"><i class="far fa-check-circle"></i> Published by <b>{{ article.approved_by.get_full_name }}</b></p>
         {% else %}
