@@ -20,3 +20,13 @@ class AnswerUserComment(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+
+class ContactUsSubmission(models.Model):
+    """Defines models for contact us page submissions by users"""
+
+    name = models.CharField(max_length=100)
+    email_id = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+        

@@ -11,6 +11,9 @@ from django.db.models.query import QuerySet
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
+from public_website.forms import ContactPageForm
+from django.views.generic import FormView
+from django.urls import reverse
 
 from dashboard.models import (
     Dataset,
@@ -21,7 +24,7 @@ from dashboard.models import (
     SubmittedArticle,
 )
 from sawaliram_auth.models import User, Bookmark, Notification
-from public_website.models import AnswerUserComment
+from public_website.models import AnswerUserComment, ContactUsSubmission
 
 import random
 import urllib
@@ -445,9 +448,21 @@ class FAQPage(View):
         }
         return render(request, 'public_website/faq.html', context)
 
-class ContactPage(View):
-    def get(self, request):
-        context = {
-            'page_title': 'Contact',
-        }
-        return render(request, 'public_website/contact.html', context)
+class ContactPage(FormView):
+
+    template_name = 'public_website/contact.html'
+    form_class = ContactPageForm
+    def get_success_url(self):
+        return reverse('public_website:contact')
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        c = ContactUsSubmission()
+        c.name = form.cleaned_data.get('name')
+        c.email_id = form.cleaned_data.get('email_id')
+        c.subject = form.cleaned_data.get('subject')
+        c.message = form.cleaned_data.get('message')
+        c.save()
+        return super().form_valid(form)
+    
