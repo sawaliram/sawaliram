@@ -500,7 +500,7 @@ class Article(DraftableModel):
 
     This is internally tracked via the 'status' parameter. You can
     also query articles with the specified status by using its proxy
-    model (which internally checks the 'status' prameter before
+    model (which internally checks the 'status' parameter before
     returning results).
     '''
 
