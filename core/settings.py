@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'public_website.apps.PublicWebsiteConfig',
     'sawaliram_auth.apps.SawaliramAuthConfig',
     'dashboard.apps.DashboardConfig',
+    'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
