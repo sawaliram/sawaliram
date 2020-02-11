@@ -1175,13 +1175,15 @@ class CreateAnswerCommentView(CreateCommentView):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class TranslateAnswersList(SearchView):
-    def get_queryset(self, request):
-        if 'q' in request.GET:
+    def get_querysets(self, request):
+        results = {}
+        if 'q' in request.GET and request.GET.get('q') != '':
             query_set = Question.objects.filter(
                                 answers__isnull=False,
                                 answers__translations__isnull=True,
                             ).distinct()
-            return query_set.filter(
+
+            results['questions'] = query_set.filter(
                     Q(question_text__icontains=request.GET.get('q')) |
                     Q(question_text_english__icontains=request.GET.get('q')) |
                     Q(school__icontains=request.GET.get('q')) |
@@ -1189,11 +1191,25 @@ class TranslateAnswersList(SearchView):
                     Q(state__icontains=request.GET.get('q')) |
                     Q(field_of_interest__icontains=request.GET.get('q'))
             )
+            
+            results['articles'] = (PublishedArticle.objects.filter(
+                translations__isnull=True,
+            )
+            .filter(
+                Q(title__search=request.GET.get('q')) |
+                Q(body__search=request.GET.get('q'))
+            )
+            .distinct())
         else:
-            return Question.objects.filter(
+            results['questions'] = Question.objects.filter(
                             answers__isnull=False,
                             answers__translations__isnull=True,
                         ).distinct()
+            results['articles'] = PublishedArticle.objects.filter(
+                translations__isnull=True,
+            ).distinct()
+
+        return results
 
     def get_page_title(self, request):
         return 'Translate Answers'

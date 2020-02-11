@@ -1,5 +1,7 @@
 """Define the View classes that will handle the public website pages"""
 
+import warnings
+
 from django.shortcuts import (
     render,
     redirect,
@@ -79,10 +81,29 @@ class SetLanguageView(View):
         return self.post(request, language)
 
 class SearchView(View):
-    def get_queryset(self, request):
-        if 'q' in request.GET:
-            if 'category' in request.GET and request.GET.get('category') == 'questions':
-                return Question.objects \
+
+    def get_querysets(self, request):
+        '''
+        Returns a dict of querysets, one for each data type
+        '''
+
+        results = {}
+
+        # Backwards-compatibility for the old 'get_queryset' function
+        if hasattr(self, 'get_queryset'):
+            warnings.warn('get_queryset is deprecated. Please use get_querysets instead.')
+
+            results['questions'] = self.get_queryset(request)
+            return results
+
+        search_categories = request.GET.getlist('category')
+
+        articles = 'articles' in search_categories
+        questions = 'question' in search_categories
+
+        if 'q' in request.GET and request.GET.get('q') != '':
+            if questions:
+                results['questions'] = Question.objects \
                         .filter(
                             Q(question_text__icontains=request.GET.get('q')) |
                             Q(question_text_english__icontains=request.GET.get('q')) |
@@ -93,10 +114,25 @@ class SearchView(View):
                             Q(published_source__icontains=request.GET.get('q'))
                         )
             else:
-                # return an arbitrary empty queryset
-                return Question.objects.none()
+                # return arbitrary empty querysets
+                results['questions'] = Question.objects.none()
+
+            if articles:
+                results['articles'] = PublishedArticle.objects.filter(
+                    Q(title__search=request.GET.get('q')) |
+                    Q(body__search=request.GET.get('q'))
+                )
+            else:
+                # return arbitrary empty queryset
+                if articles: results['articles'] = PublishedArticle.objects.none()
         else:
-            return Question.objects.all()
+            # no 'q', so we'll default to listing all questions
+            results['questions'] = Question.objects.all()
+            if articles: results['articles'] = PublishedArticle.objects.all()
+
+        if articles: results['articles'] = results['articles'].order_by('-updated_on')
+
+        return results            
 
     def get_template(self, request):
         '''
@@ -140,7 +176,10 @@ class SearchView(View):
                 del request.session['review_answers_url']
                 return redirect(redirect_url)
 
-        result = self.get_queryset(request)
+        results = self.get_querysets(request)
+
+        result = results.get('questions')
+        articles = results.get('articles')
 
         # get values for filter
         subjects = [
@@ -261,6 +300,13 @@ class SearchView(View):
             'sort_by': sort_by,
             'question_categories': question_categories
         }
+
+        # only show articles on first page
+        # TODO: make pagination smarter and inclusive
+        # of all data types
+        if articles and page == 1:
+            context['articles'] = articles
+            context['result_size'] = context['result_size'] + articles.count()
 
         # create list of active categories
         if page_title == _('Search'):

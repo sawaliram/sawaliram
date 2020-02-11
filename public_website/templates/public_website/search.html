@@ -22,7 +22,7 @@
                 <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">Category</button>
                 <div class="category-options-list" id="filterCategories">
                     <button class="btn category-option {% if 'questions' in active_categories %}active{% endif %} no-fun" data-param="category" data-value="questions">{% trans 'Questions' %}</button>
-                    <button class="btn category-option" data-param="category" data-value="articles" disabled>{% trans 'Articles' %}</button>
+                    <button class="btn category-option{% if 'articles' in active_categories %} active{% endif %}" data-param="category" data-value="articles">{% trans 'Articles' %}</button>
                     <button class="btn category-option" data-param="category" data-value="research" disabled>{% trans 'Research' %}</button>
                     <button class="btn category-option" data-param="category" data-value="resources" disabled>{% trans 'Resources' %}</button>
                 </div>
@@ -88,7 +88,7 @@
                 <i class="fas fa-search"></i>
             </button>
         </form>
-        {% if results %}
+        {% if results or articles %}
         <div class="head-area">
             <span class="results-count">Showing {{ results.start_index}}-{{ results.end_index }} of {{ result_size }} results</span>
             <div class="dropdown">
@@ -103,6 +103,26 @@
             </div>
         </div>
         <ul class="search-results-list">
+            {% for article in articles %}
+            <li class="search-result-item">
+                <div class="search-result-item-header">
+                    <p class="item-number">#{{ article.id }} | {% trans 'Article' %}</p>
+                </div>
+                <h3 class="item-title">
+                    {{ article.title }}
+                </h3>
+                <div class="search-result-item-content">
+                    {{ article.body|striptags|truncatechars:140 }}
+                    <div class="item-context-controls">
+						{% if page_title == _('Translate Answers') %}
+		                <a href="{% url 'dashboard:translate-article' source=article.id %}" class="btn btn-small btn-primary">{% trans 'Translate' %}</a>
+		                {% else %}
+		                <a href="{{ article.get_absolute_url }}" class="btn btn-small btn-primary">View Article</a>
+		                {% endif %}
+					</div>
+                </div>
+            </li>
+            {% endfor %}
             {% for result in results %}
             <li class="search-result-item">
                 <div class="search-result-item-header">
