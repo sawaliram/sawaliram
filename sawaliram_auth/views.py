@@ -5,15 +5,45 @@ from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.utils.decorators import method_decorator
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.http import HttpResponse
+from django.core.mail import send_mail
 
-from sawaliram_auth.models import User, VolunteerRequest, Bookmark
+from sawaliram_auth.models import User, VolunteerRequest, Bookmark, Profile
 from sawaliram_auth.forms import SignInForm, SignUpForm
 from sawaliram_auth.decorators import volunteer_permission_required
 from dashboard.models import Question, Answer
+
+from pprint import pprint
+import hashlib
+import random
+import datetime
+
+
+def send_verification_email(user):
+
+    salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:5]
+    verification_code = hashlib.sha1((salt + user.get_full_name()).encode('utf-8')).hexdigest()
+
+    profile, created = Profile.objects.get_or_create(user=user)
+    profile.verification_code = verification_code
+    profile.verification_code_expiry = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=3), "%Y-%m-%d %H:%M:%S")
+    profile.save()
+
+    message = 'Hello ' + user.first_name + ',<br>'
+    message += 'Thank you signing up with Sawaliram! Please click on this link: https://sawaliram.org/users/verify/' + verification_code + ' to verify your email. <br><br>Yours truly,<br>Sawaliram'
+
+    send_mail(
+        subject='Sawaliram - verify your email',
+        message='',
+        html_message=message,
+        from_email='"Sawaliram" <mail@sawaliram.org>',
+        recipient_list=[user.email],
+        fail_silently=False,
+    )
 
 
 class SignupView(View):
@@ -42,12 +72,65 @@ class SignupView(View):
             users = Group.objects.get(name='users')
             users.user_set.add(user)
 
-            login(request, user)
-            return redirect(request.POST.get('next', 'public_website:home'))
+            send_verification_email(user)
+
+            context = {
+                'message': 'Thank you for joining Sawaliram! A verification mail will be sent to your registered email address. Make sure to check the spam folder if you do not receive the email shortly.',
+                'show_resend': True,
+                'resend_message': "Did not receive the verification mail?",
+                'user_id': user.id
+            }
+            return render(request, 'sawaliram_auth/verify-email-info.html', context)
         context = {
             'form': form
         }
         return render(request, 'sawaliram_auth/signup.html', context)
+
+
+class VerifyEmailMessagesView(View):
+
+    def get(self, request, message, show_resend=True):
+        context = {
+            'message': message,
+            'show_resend': show_resend
+        }
+        return render(request, 'sawaliram_auth/verify-email-info.html', context)
+
+    def post(self, request):
+        user = User.objects.get(pk=request.POST.get('user-id'))
+        send_verification_email(user)
+
+        context = {
+            'message': 'A verification mail will be sent to your registered email address. Make sure to check the spam folder if you do not receive the email shortly.',
+            'show_resend': False
+        }
+        return render(request, 'sawaliram_auth/verify-email-info.html', context)
+
+
+class VerifyEmailView(View):
+
+    def get(self, request, verification_code):
+
+        try:
+            user_profile = Profile.objects.get(verification_code=verification_code)
+            if timezone.now() > user_profile.verification_code_expiry:
+                context = {
+                    'message': "This verification mail expired! Click the 'Resend Mail' button to generate a new verification mail.",
+                    'show_resend': True,
+                    'resend_message': '',
+                    'user_id': user_profile.user.id
+                }
+                return render(request, 'sawaliram_auth/verify-email-info.html', context)
+            else:
+                user_profile.email_verified = True
+                user_profile.save()
+                return render(request, 'sawaliram_auth/verify-email-success.html')
+        except Profile.DoesNotExist:
+            context = {
+                'message': "Something's wrong with the verification link. Make sure the link from the verification mail is correctly copied into the address bar. If the problem persists, please <a href=\"\\users\\signin\">sign-in</a> and generate a new verification mail",
+                'show_resend': False
+            }
+            return render(request, 'sawaliram_auth/verify-email-info.html', context)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -95,8 +178,20 @@ class SigninView(View):
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password'])
             if user is not None:
-                login(request, user)
-                return redirect(request.POST.get('next', 'public_website:home'))
+                if not user.profile.email_verified:
+                    context = {
+                        'message': 'Verify your registered email address to login to your Sawaliram account. Make sure to check your spam folder if you did not receive the email.',
+                        'show_resend': True,
+                        'resend_message': "Did not receive the verification mail?",
+                        'user_id': user.id
+                    }
+                    return render(request, 'sawaliram_auth/verify-email-info.html', context)
+                else:
+                    login(request, user)
+                    if request.POST.get('next') != '':
+                        return redirect(request.POST.get('next'))
+                    else:
+                        return redirect('public_website:home')
             else:
                 context = {
                     'form': form,

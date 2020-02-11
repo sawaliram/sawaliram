@@ -19,4 +19,6 @@ urlpatterns = [
     path('bookmark/remove', views.RemoveBookmark.as_view(), name='remove-bookmark'),
     path('bookmark/delete', views.DeleteBookmark.as_view(), name='delete-bookmark'),
     path('draft/remove', views.RemoveDraft.as_view(), name='remove-draft'),
+    path('verify-email', views.VerifyEmailMessagesView.as_view(), name='verify-email-info'),
+    path('verify/<str:verification_code>', views.VerifyEmailView.as_view(), name='verify-email'),
 ]

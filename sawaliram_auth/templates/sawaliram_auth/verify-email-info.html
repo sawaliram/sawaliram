@@ -12,15 +12,22 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
 
-        <title>{% block title %} {% endblock %}</title>
+        <title>Verify Email | Sawaliram</title>
     </head>
-    <body>
-        <div class="container auth-container">
-            {% block content %} {% endblock %}
+    <body class="verify-email-body">
+        <div class="verify-email-content">
+            <div class="message-section">
+                <img src="{% static 'icons/verify_email_pending.png' %}" alt="Verify Email">
+                <p>{{ message|safe }}</p>
+            </div>
+            {% if show_resend == True %}
+            <form action="{% url 'sawaliram_auth:verify-email-info' %}" method="POST">
+                {% csrf_token %}
+                <span>{{ resend_message }}</span>
+                <input type="hidden" name="user-id" value="{{ user_id }}">
+                <button class="btn btn-small btn-primary" type="submit">Resend Mail</button>
+            </form>
+            {% endif %}
         </div>
-
-        <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-        <script src="{% static 'js/script.js' %}"></script>
     </body>
 </html>

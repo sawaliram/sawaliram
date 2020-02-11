@@ -3415,3 +3415,42 @@ button.social-login i {
 .onboarding-form-column .volunteer-option .volunteer-dialog textarea {
     border-radius: 5px;
 }
+
+.verify-email-body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:#f2f2f2;
+}
+
+.verify-email-body .verify-email-content {
+    width: 50%;
+    background-color:#fff;
+    border-radius: 5px;
+    padding: 2rem;
+}
+
+.verify-email-body .verify-email-content .message-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.verify-email-body .verify-email-content .message-section img {
+    width: 64px;
+    height: 64px;
+}
+
+.verify-email-body .verify-email-content .message-section p {
+    flex-basis: 85%;
+}
+
+.verify-email-body .verify-email-content form {
+    color: #a8a8a8;
+    text-align: center;
+}
+
+.verify-email-body .verify-email-content form button {
+    margin-left: 0.5rem;
+}

@@ -12,15 +12,14 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
 
-        <title>{% block title %} {% endblock %}</title>
+        <title>Email Verified | Sawaliram</title>
     </head>
-    <body>
-        <div class="container auth-container">
-            {% block content %} {% endblock %}
+    <body class="verify-email-body">
+        <div class="verify-email-content">
+            <div class="message-section">
+                <img src="{% static 'icons/verify_email_success.png' %}" alt="Verify Email">
+                <p>Thank you for verifying your email! Now you can <a href="{% url 'sawaliram_auth:signin' %}">sign-in</a> and access all the features of Sawaliram!</p>
+            </div>
         </div>
-
-        <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-        <script src="{% static 'js/script.js' %}"></script>
     </body>
 </html>
