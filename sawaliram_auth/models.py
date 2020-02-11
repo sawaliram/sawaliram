@@ -72,6 +72,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_superuser
 
 
+class Profile(models.Model):
+    """Define the data model for user profile"""
+
+    class Meta:
+        db_table = 'user_profile'
+
+    verification_code = models.TextField(null=True)
+    verification_code_expiry = models.DateTimeField(null=True)
+    email_verified = models.BooleanField(default=False)
+    user = models.OneToOneField(
+        'sawaliram_auth.User',
+        related_name='profile',
+        on_delete=models.CASCADE
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+
 class VolunteerRequest(models.Model):
     """Define the data model for a volunteer request by a user"""
 

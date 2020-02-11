@@ -14,6 +14,7 @@
         {% if validation_error %}
             <p class="login-error">Invalid login credentials!</p>
         {% endif %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
         <input class="btn btn-primary" type="submit" value="Sign-in">
     </form>
     <!-- <p class="alternate-login-options-heading"><span>or sign-in with</span></p>
@@ -22,7 +23,7 @@
         <button class="btn btn-secondary social-login"><i class="fab fa-google"></i> Google</button>
     </div> -->
     <p class="signup-message">
-        Not a member yet? <a href="{% url 'sawaliram_auth:signup' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="link-secondary">Sign up!</a>
+        Not a member yet? <a href="{% url 'sawaliram_auth:signup' %}" class="link-secondary">Sign up!</a>
     </p>
 </div>
 

@@ -18,8 +18,8 @@ DEBUG = os.environ.get('sawaliram_debug_value') == 'True'
 
 ALLOWED_HOSTS = ['10.10.9.33', '117.198.100.10', '.sawaliram.org', 'localhost', '127.0.0.1']
 
+# SSL/HTTPS Configuration
 if not DEBUG:
-    # SSL/HTTPS Configuration
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
@@ -98,6 +98,11 @@ sentry_sdk.init(
     integrations=[DjangoIntegration()]
 )
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.tifrh.res.in'
+EMAIL_HOST_USER = 'nitinpaul@tifrh.res.in'
+EMAIL_PORT = 25
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
