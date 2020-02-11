@@ -178,7 +178,24 @@ class SigninView(View):
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password'])
             if user is not None:
-                if not user.profile.email_verified:
+                try:
+                    user_profile = Profile.objects.get(user=user.id)
+                    if not user_profile.email_verified:
+                        context = {
+                            'message': 'Verify your registered email address to login to your Sawaliram account. Make sure to check your spam folder if you did not receive the email.',
+                            'show_resend': True,
+                            'resend_message': "Did not receive the verification mail?",
+                            'user_id': user.id
+                        }
+                        return render(request, 'sawaliram_auth/verify-email-info.html', context)
+                    else:
+                        login(request, user)
+                        if request.POST.get('next') != '':
+                            return redirect(request.POST.get('next'))
+                        else:
+                            return redirect('public_website:home')
+                except Profile.DoesNotExist:
+                    send_verification_email(user)
                     context = {
                         'message': 'Verify your registered email address to login to your Sawaliram account. Make sure to check your spam folder if you did not receive the email.',
                         'show_resend': True,
@@ -186,12 +203,6 @@ class SigninView(View):
                         'user_id': user.id
                     }
                     return render(request, 'sawaliram_auth/verify-email-info.html', context)
-                else:
-                    login(request, user)
-                    if request.POST.get('next') != '':
-                        return redirect(request.POST.get('next'))
-                    else:
-                        return redirect('public_website:home')
             else:
                 context = {
                     'form': form,
