@@ -5,4 +5,3 @@ class ContactPageForm(ModelForm):
     class Meta:
         model = ContactUsSubmission
         exclude = ['created_on']
-        

@@ -22,7 +22,25 @@
     <div class="col-6">
       <form method="post">
         {% csrf_token %}
-        {{ form }}
+        <div class="row">
+          <div class="col">
+              <label for="id_username">Username*</label><br>
+              <input type="text" class="form-control" id="id_name" name="name" placeholder="Username" required>
+          </div>
+          <div class="col">
+              <label for="id_email">Email*</label>
+              <input type="email" class="form-control" id="id_emailid" name="emailid" placeholder="eg. Username@gmail.com" required>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="id_sub">Subject*</label>
+          <input type="text" class="form-control" id="id_subject" name="subject" placeholder="Title of your message" required>
+
+          <label for="id_message">Message*</label>
+          <textarea class="form-control rounded-2 " rows="8" id="id_message" name="message" placeholder="What do you want to ask Sawaliram? (Upto 200 characters)" required></textarea>
+        </div>
+        <br>
         <button type="submit" class="btn btn-primary submit-excel">Submit</button>
       </form>
     </div>

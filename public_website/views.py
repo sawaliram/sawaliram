@@ -455,14 +455,18 @@ class ContactPage(FormView):
     def get_success_url(self):
         return reverse('public_website:contact')
 
-    def form_valid(self, form):
+    def form_valid(self, form): 
         # This method is called when valid form data has been POSTed.
         # It should return an HttpResponse.
         c = ContactUsSubmission()
         c.name = form.cleaned_data.get('name')
-        c.email_id = form.cleaned_data.get('email_id')
+        c.emailid = form.cleaned_data.get('email_id')
         c.subject = form.cleaned_data.get('subject')
         c.message = form.cleaned_data.get('message')
         c.save()
+        print("NAME = ", c.name)
+        print("EMAIL = ", c.emailid)
+        print("SUBJECT = ", c.subject)
+        print("MESSAGE = ", c.message)        
         return super().form_valid(form)
     
