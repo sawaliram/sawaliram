@@ -21,4 +21,7 @@ urlpatterns = [
     path('draft/remove', views.RemoveDraft.as_view(), name='remove-draft'),
     path('verify-email', views.VerifyEmailMessagesView.as_view(), name='verify-email-info'),
     path('verify/<str:verification_code>', views.VerifyEmailView.as_view(), name='verify-email'),
+    path('reset-password', views.ResetPasswordView.as_view(), name='reset-password'),
+    path('change-password-form/<str:password_reset_code>', views.ChangePasswordFormView.as_view(), name='change-password-form'),
+    path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
 ]

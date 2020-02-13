@@ -80,6 +80,8 @@ class Profile(models.Model):
 
     verification_code = models.TextField(null=True)
     verification_code_expiry = models.DateTimeField(null=True)
+    password_reset_code = models.TextField(null=True)
+    password_reset_code_expiry = models.DateTimeField(null=True)
     email_verified = models.BooleanField(default=False)
     user = models.OneToOneField(
         'sawaliram_auth.User',
