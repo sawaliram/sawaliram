@@ -14,6 +14,7 @@
         {% if validation_error %}
             <p class="login-error">Invalid login credentials!</p>
         {% endif %}
+        <a class="forgot-password-link" href="{% url 'sawaliram_auth:reset-password' %}">Forgot Password?</a>
         <input type="hidden" name="next" value="{{ request.GET.next }}">
         <input class="btn btn-primary" type="submit" value="Sign-in">
     </form>

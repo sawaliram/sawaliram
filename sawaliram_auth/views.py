@@ -13,7 +13,11 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 
 from sawaliram_auth.models import User, VolunteerRequest, Bookmark, Profile
-from sawaliram_auth.forms import SignInForm, SignUpForm
+from sawaliram_auth.forms import (
+    SignInForm,
+    SignUpForm,
+    ResetPasswordForm,
+    ChangePasswordForm)
 from sawaliram_auth.decorators import volunteer_permission_required
 from dashboard.models import Question, Answer
 
@@ -34,7 +38,7 @@ def send_verification_email(user):
     profile.save()
 
     message = 'Hello ' + user.first_name + ',<br>'
-    message += 'Thank you signing up with Sawaliram! Please click on this link: https://sawaliram.org/users/verify/' + verification_code + ' to verify your email. <br><br>Yours truly,<br>Sawaliram'
+    message += 'Thank you for signing up with Sawaliram! Please click on this link: https://sawaliram.org/users/verify/' + verification_code + ' to verify your email. <br><br>Yours truly,<br>Sawaliram'
 
     send_mail(
         subject='Sawaliram - verify your email',
@@ -203,12 +207,12 @@ class SigninView(View):
                         'user_id': user.id
                     }
                     return render(request, 'sawaliram_auth/verify-email-info.html', context)
-            else:
-                context = {
-                    'form': form,
-                    'validation_error': True
-                }
-                return render(request, 'sawaliram_auth/signin.html', context)
+        else:
+            context = {
+                'form': form,
+                'validation_error': True
+            }
+            return render(request, 'sawaliram_auth/signin.html', context)
 
 
 class SignoutView(View):
@@ -216,6 +220,90 @@ class SignoutView(View):
     def get(self, request):
         logout(request)
         return redirect('public_website:home')
+
+
+class ResetPasswordView(View):
+
+    def get(self, request):
+        form = ResetPasswordForm(auto_id=False)
+        context = {
+            'form': form
+        }
+        return render(request, 'sawaliram_auth/reset-password.html', context)
+
+    def post(self, request):
+        form = ResetPasswordForm(request.POST, auto_id=False)
+        if form.is_valid():
+            user = User.objects.get(email=request.POST.get('email'))
+            salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:5]
+            password_reset_code = hashlib.sha1((salt + user.email).encode('utf-8')).hexdigest()
+
+            profile, created = Profile.objects.get_or_create(user=user)
+            profile.password_reset_code = password_reset_code
+            profile.password_reset_code_expiry = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=3), "%Y-%m-%d %H:%M:%S")
+            profile.save()
+
+            message = 'Hello ' + user.first_name + ',<br>'
+            message += 'Please click on this link: https://sawaliram.org/users/change-password-form/' + password_reset_code + ' to reset your password. <br><br>Yours truly,<br>Sawaliram'
+
+            send_mail(
+                subject='Sawaliram - reset your password',
+                message='',
+                html_message=message,
+                from_email='"Sawaliram" <mail@sawaliram.org>',
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+
+            return render(request, 'sawaliram_auth/reset-password-sent.html')
+        else:
+            context = {
+                'form': form
+            }
+            return render(request, 'sawaliram_auth/reset-password.html', context)
+
+
+class ChangePasswordFormView(View):
+
+    def get(self, request, password_reset_code):
+        try:
+            user_profile = Profile.objects.get(password_reset_code=password_reset_code)
+            if timezone.now() > user_profile.password_reset_code_expiry:
+                context = {
+                    'message': "This password reset link has expired! Click <a href=\"\\users\\reset-password\">here</a> to generate a new link.",
+                    'success': False
+                }
+                return render(request, 'sawaliram_auth/change-password-info.html', context)
+            else:
+                form = ChangePasswordForm(auto_id=False)
+                context = {
+                    'form': form,
+                    'user_id': user_profile.user.id
+                }
+                return render(request, 'sawaliram_auth/change-password.html', context)
+        except Profile.DoesNotExist:
+            context = {
+                'message': "Something's wrong with the password reset link. Make sure the link from the mail is correctly copied into the address bar. If the problem persists, please click <a href=\"\\users\\reset-password\">here</a> and generate a new verification mail.",
+                'success': False
+            }
+            return render(request, 'sawaliram_auth/change-password-info.html', context)
+
+
+class ChangePasswordView(View):
+
+    def post(self, request):
+        form = ChangePasswordForm(request.POST, auto_id=False)
+        if form.is_valid():
+            user = User.objects.get(pk=request.POST.get('user'))
+            user.set_password(request.POST.get('confirm_new_password'))
+            user.save()
+            return render(request, 'sawaliram_auth/change-password-success.html')
+        else:
+            context = {
+                'form': form,
+                'user_id': request.POST.get('user')
+            }
+            return render(request, 'sawaliram_auth/change-password.html', context)
 
 
 @method_decorator(login_required, name='dispatch')

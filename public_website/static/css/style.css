@@ -291,8 +291,6 @@ textarea {
     cursor: pointer;
 }
 
-@
-
 .inline-block {
     display: inline-block;
 }
@@ -3269,6 +3267,14 @@ footer .footer-base p {
     font-size: 0.8rem;
 }
 
+.signin-form-section a.forgot-password-link {
+    color:#808080;
+    text-decoration: underline;
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
 .alternate-login-options-heading {
     border-bottom: 1px solid #CACACA;
     color: #808080;
@@ -3349,7 +3355,7 @@ button.social-login i {
     }
 }
 
-.onboarding-form-column .error {
+.form-error {
     font-size: 0.8rem;
     text-align: right;
     padding: 0 1rem;
@@ -3357,8 +3363,8 @@ button.social-login i {
     color: #d00000;
 }
 
-.onboarding-form-column .error-field input,
-.onboarding-form-column .error-field input:focus {
+.error-field input,
+.error-field input:focus {
     border: 2px solid #d00000;
     box-shadow: none;
 }
@@ -3416,7 +3422,7 @@ button.social-login i {
     border-radius: 5px;
 }
 
-.verify-email-body {
+.auth-interstitial-body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -3424,33 +3430,121 @@ button.social-login i {
     background-color:#f2f2f2;
 }
 
-.verify-email-body .verify-email-content {
+.auth-interstitial-body.centered {
+    text-align: center;
+}
+
+.auth-interstitial-body .auth-interstitial-content {
     width: 50%;
     background-color:#fff;
     border-radius: 5px;
     padding: 2rem;
 }
 
-.verify-email-body .verify-email-content .message-section {
+@media (max-width: 768px) {
+    .auth-interstitial-body .auth-interstitial-content {
+        width: 95%;
+        padding: 0.5rem;
+    }
+}
+
+.auth-interstitial-body .auth-interstitial-content h1 {
+    font-size: 1.7rem;
+    margin-bottom: 2rem;
+}
+
+.auth-interstitial-body .auth-interstitial-content .message-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.verify-email-body .verify-email-content .message-section img {
+@media (max-width: 768px) {
+    .auth-interstitial-body .auth-interstitial-content .message-section {
+        flex-direction: column;
+    }
+}
+
+.auth-interstitial-body .auth-interstitial-content .message-section img {
     width: 64px;
     height: 64px;
 }
 
-.verify-email-body .verify-email-content .message-section p {
-    flex-basis: 85%;
+@media (max-width: 768px) {
+    .auth-interstitial-body .auth-interstitial-content .message-section img {
+        margin-bottom: 1rem;
+    }
 }
 
-.verify-email-body .verify-email-content form {
+.auth-interstitial-body .auth-interstitial-content .message-section p {
+    flex-basis: 85%;
+    margin-bottom: 0;
+}
+
+.auth-interstitial-body .auth-interstitial-content .message-section i {
+    font-size: 3rem;
+}
+
+.auth-interstitial-body .auth-interstitial-content .message-section i.fa-times-circle {
+    color:#d00000;
+}
+
+.auth-interstitial-body .auth-interstitial-content form.resend-mail {
     color: #a8a8a8;
     text-align: center;
+    margin-top: 1rem;
 }
 
-.verify-email-body .verify-email-content form button {
+.auth-interstitial-body .auth-interstitial-content form.resend-mail {
+    color: #a8a8a8;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.auth-interstitial-body .auth-interstitial-content form.change-password-form {
+    width: 60%;
+    margin: auto;
+}
+
+.auth-interstitial-body .auth-interstitial-content form.change-password-form .form-fields input[name="confirm_new_password"]{
+    margin-bottom: 0;
+}
+
+.auth-interstitial-body .auth-interstitial-content form.change-password-form button[type="submit"] {
+    margin-top: 1rem;
+}
+
+.auth-interstitial-body .auth-interstitial-content form.resend-mail button {
     margin-left: 0.5rem;
+}
+
+.auth-interstitial-body .auth-interstitial-content form.reset-password-form {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .auth-interstitial-body .auth-interstitial-content form.reset-password-form {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.auth-interstitial-body .auth-interstitial-content form.reset-password-form .form-fields {
+    flex-basis: 65%;
+    margin-right: 1rem;
+}
+
+@media (max-width: 768px) {
+    .auth-interstitial-body .auth-interstitial-content form.reset-password-form .form-fields {
+        margin-bottom: 0.5rem;
+        margin-right: 0;
+        width: 100%;
+    }
+}
+
+.auth-interstitial-body .auth-interstitial-content input.registered-email {
+    margin-bottom: 0.3rem;
 }
