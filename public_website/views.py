@@ -438,6 +438,13 @@ class ChildrensBooksPage_books(View):
         }
         return render(request, 'public_website/childrensbooks.html', context)
 
+class AdultsBooksPage_books(View):
+    def get(self, request):
+        context = {
+            'page_title': 'Resources'
+        }
+        return render(request, 'public_website/adultsbooks.html', context)
+
 class ResourcesPage_weblinks(View):
     def get(self, request):
         context = {

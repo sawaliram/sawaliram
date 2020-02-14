@@ -13,6 +13,7 @@ urlpatterns = [
     path('GlobalStudiesCQ', views.GlobalStudiesCQPage.as_view(), name='GlobalStudiesCQ'),
     path('resources', views.ResourcesPage_books.as_view(), name='resources'),
     path('resources_books#childrensbooks', views.ChildrensBooksPage_books.as_view(), name='childrensbooks'),
+    path('resources_books#adultsbooks', views.AdultsBooksPage_books.as_view(), name='adultsbooks'),
     path('resources#weblinks', views.ResourcesPage_weblinks.as_view(), name='resources_weblinks'),
     path('resources/magazines', views.ResourcesPage_magazines.as_view(), name='resources_magazines'),
     path('contact', views.ContactPage.as_view(), name='contact'),
