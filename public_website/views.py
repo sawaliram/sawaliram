@@ -102,12 +102,23 @@ class SearchView(View):
         if request.GET.getlist('questions') and not search_categories:
             search_categories.append('questions')
 
-        if not search_categories:
-            results['questions'] = Question.objects.all()
-            results['articles'] = PublishedArticle.objects.all()
-        else:
-            if 'questions' in search_categories:
-                if 'q' in request.GET and request.GET.get('q') != '':
+        if 'q' in request.GET and request.GET.get('q') != '':
+            if not search_categories:
+                results['questions'] = Question.objects.filter(
+                            Q(question_text__icontains=request.GET.get('q')) |
+                            Q(question_text_english__icontains=request.GET.get('q')) |
+                            Q(school__icontains=request.GET.get('q')) |
+                            Q(area__icontains=request.GET.get('q')) |
+                            Q(state__icontains=request.GET.get('q')) |
+                            Q(field_of_interest__icontains=request.GET.get('q')) |
+                            Q(published_source__icontains=request.GET.get('q'))
+                        )
+                results['articles'] = PublishedArticle.objects.filter(
+                            Q(title__search=request.GET.get('q')) |
+                            Q(body__search=request.GET.get('q'))
+                        ).order_by('-updated_on')
+            else:
+                if 'questions' in search_categories:
                     results['questions'] = Question.objects.filter(
                             Q(question_text__icontains=request.GET.get('q')) |
                             Q(question_text_english__icontains=request.GET.get('q')) |
@@ -118,20 +129,18 @@ class SearchView(View):
                             Q(published_source__icontains=request.GET.get('q'))
                         )
                 else:
-                    results['questions'] = Question.objects.all()
-            else:
-                results['questions'] = Question.objects.none()
+                    results['questions'] = Question.objects.none()
 
-            if 'articles' in search_categories:
-                if 'q' in request.GET and request.GET.get('q') != '':
+                if 'articles' in search_categories:
                     results['articles'] = PublishedArticle.objects.filter(
                             Q(title__search=request.GET.get('q')) |
                             Q(body__search=request.GET.get('q'))
                         ).order_by('-updated_on')
                 else:
-                    results['articles'] = PublishedArticle.objects.all()
-            else:
-                results['articles'] = PublishedArticle.objects.none()
+                    results['articles'] = PublishedArticle.objects.none()
+        else:
+            results['questions'] = Question.objects.all()
+            results['articles'] = PublishedArticle.objects.all()
 
         return results
 
@@ -313,6 +322,9 @@ class SearchView(View):
         if page_title == _('Search'):
             active_categories = request.GET.getlist('category')
             context['active_categories'] = active_categories
+
+            if request.GET.getlist('questions') and not active_categories:
+                context['active_categories'].append('questions')
 
         return render(request, self.get_template(request), context)
 
