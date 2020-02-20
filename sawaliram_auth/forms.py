@@ -7,8 +7,15 @@ from sawaliram_auth.models import User
 
 class SignInForm(forms.Form):
 
+    def check_if_email_exists(email):
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError(
+                'Email address not found', code='email_not_found'
+            )
+
     email = forms.CharField(
         widget=forms.EmailInput(attrs={'placeholder': 'Email'}),
+        validators=[check_if_email_exists],
         label=''
     )
     password = forms.CharField(

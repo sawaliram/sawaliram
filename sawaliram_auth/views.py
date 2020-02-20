@@ -207,6 +207,12 @@ class SigninView(View):
                         'user_id': user.id
                     }
                     return render(request, 'sawaliram_auth/verify-email-info.html', context)
+            else:
+                context = {
+                    'form': form,
+                    'validation_error': True
+                }
+                return render(request, 'sawaliram_auth/signin.html', context)
         else:
             context = {
                 'form': form,

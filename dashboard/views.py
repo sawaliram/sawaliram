@@ -471,9 +471,10 @@ class CurateDataset(View):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class ViewQuestionsView(SearchView):
-    def get_queryset(self, request):
+    def get_querysets(self, request):
+        results = {}
         if 'q' in request.GET:
-            return Question.objects.filter(
+            results['questions'] = Question.objects.filter(
                     Q(question_text__icontains=request.GET.get('q')) |
                     Q(question_text_english__icontains=request.GET.get('q')) |
                     Q(school__icontains=request.GET.get('q')) |
@@ -482,8 +483,10 @@ class ViewQuestionsView(SearchView):
                     Q(field_of_interest__icontains=request.GET.get('q')) |
                     Q(published_source__icontains=request.GET.get('q'))
             )
+            return results
         else:
-            return Question.objects.all()
+            results['questions'] = Question.objects.all()
+            return results
 
     def get_page_title(self, request):
         return 'View Questions'
@@ -495,11 +498,12 @@ class ViewQuestionsView(SearchView):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class AnswerQuestions(SearchView):
-    def get_queryset(self, request):
+    def get_querysets(self, request):
+        results = {}
         if 'q' in request.GET:
             query_set = Question.objects.exclude(id__in=Subquery(
                                     Answer.objects.all().values('question_id')))
-            return query_set.filter(
+            results['questions'] = query_set.filter(
                     Q(question_text__icontains=request.GET.get('q')) |
                     Q(question_text_english__icontains=request.GET.get('q')) |
                     Q(school__icontains=request.GET.get('q')) |
@@ -508,9 +512,11 @@ class AnswerQuestions(SearchView):
                     Q(field_of_interest__icontains=request.GET.get('q')) |
                     Q(published_source__icontains=request.GET.get('q'))
             )
+            return results
         else:
-            return Question.objects.exclude(id__in=Subquery(
+            results['questions'] = Question.objects.exclude(id__in=Subquery(
                                     Answer.objects.all().values('question_id')))
+            return results
 
     def get_page_title(self, request):
         return 'Answer Questions'
@@ -522,7 +528,8 @@ class AnswerQuestions(SearchView):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class ReviewAnswersList(SearchView):
-    def get_queryset(self, request):
+    def get_querysets(self, request):
+        results = {}
         if 'q' in request.GET:
             query_set = Question.objects.filter(
                                 answers__approved_by__isnull=True,
@@ -530,7 +537,7 @@ class ReviewAnswersList(SearchView):
                             ).exclude(
                                 answers__submitted_by=request.user,
                             ).distinct()
-            return query_set.filter(
+            results['questions'] = query_set.filter(
                     Q(question_text__icontains=request.GET.get('q')) |
                     Q(question_text_english__icontains=request.GET.get('q')) |
                     Q(school__icontains=request.GET.get('q')) |
@@ -538,13 +545,15 @@ class ReviewAnswersList(SearchView):
                     Q(state__icontains=request.GET.get('q')) |
                     Q(field_of_interest__icontains=request.GET.get('q'))
             )
+            return results
         else:
-            return Question.objects.filter(
+            results['questions'] = Question.objects.filter(
                             answers__approved_by__isnull=True,
                             answers__submitted_by__isnull=False,
                         ).exclude(
                             answers__submitted_by=request.user,
                         ).distinct()
+            return results
 
     def get_page_title(self, request):
         return 'Review Answers'
@@ -586,13 +595,21 @@ class SubmitAnswerView(View):
             'submission_mode': 'submit'
         }
 
+        # Prefill draft answer if in edit mode
+        if request.GET.get('mode') == 'edit':
+            try:
+                draft_answer = Answer.objects.get(pk=request.GET.get('answer'))
+                if draft_answer:
+                    context['draft_answer'] = draft_answer
+            except Answer.DoesNotExist:
+                pass
+
         # Prefill draft answer, if any
         try:
-            if request.GET.get('mode') == 'edit':
-                context['draft_answer'] = Answer.objects.get(pk=request.GET.get('answer'))
-            else:
-                context['draft_answer'] = request.user.answers.get(
+            draft_answer = request.user.answers.get(
                     question_id=question_to_answer, status='draft')
+            if draft_answer:
+                context['draft_answer'] = draft_answer
         except Answer.DoesNotExist:
             pass
 
@@ -630,7 +647,7 @@ class SubmitAnswerView(View):
 
             # Update values and save
             draft.answer_text = request.POST.get('rich-text-content')
-            draft.language = LANGUAGE_CODES[request.POST.get('submission-language')]
+            draft.language = request.POST.get('submission-language')
             draft.submitted_by = request.user
             draft.save()
 
@@ -675,7 +692,7 @@ class SubmitAnswerView(View):
                 answer.status = 'submitted'
 
             answer.answer_text = request.POST.get('rich-text-content')
-            answer.language = LANGUAGE_CODES[request.POST.get('submission-language')]
+            answer.language = request.POST.get('submission-language')
             answer.save()
 
             # Save credits

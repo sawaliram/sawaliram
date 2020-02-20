@@ -1589,8 +1589,7 @@ h1.dashboard-home-greeting {
 }
 
 .rich-text-form #submitbar {
-    margin-bottom: 1rem;
-    padding: 0 1rem;
+    padding: 0 1rem 1rem 1rem;
 }
 
 .rich-text-form #credits-bar {
@@ -3261,6 +3260,10 @@ footer .footer-base p {
 .signin-form-section {
     min-width: 20rem;
     text-align: center;
+}
+
+.signin-form-section ul.errorlist {
+    display: none;
 }
 
 .signin-form-section img {

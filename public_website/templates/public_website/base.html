@@ -118,9 +118,6 @@
         <div class="navbar-search-box slow-transition">
             <div class="navbar-search-form-wrapper">
                 <form action="{% url 'public_website:search' %}" class="navbar-search-form slow-transition" method="GET">
-                    <input type="hidden" name="category" value="questions">
-                    <input type="hidden" name="questions" value="answered">
-                    <input type="hidden" name="questions" value="unanswered">
                     <input type="text" class="search-field" name="q" placeholder="{% trans 'Search for questions, articles and resources' %}">
                 </form>
                 <button class="btn close-navbar-search-box"><i class="fas fa-times"></i></button>

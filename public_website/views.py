@@ -80,6 +80,7 @@ class SetLanguageView(View):
         # or maybe it doesn't matter in this case?
         return self.post(request, language)
 
+
 class SearchView(View):
 
     def get_querysets(self, request):
@@ -98,13 +99,16 @@ class SearchView(View):
 
         search_categories = request.GET.getlist('category')
 
-        articles = 'articles' in search_categories
-        questions = 'question' in search_categories
+        if request.GET.getlist('questions') and not search_categories:
+            search_categories.append('questions')
 
-        if 'q' in request.GET and request.GET.get('q') != '':
-            if questions:
-                results['questions'] = Question.objects \
-                        .filter(
+        if not search_categories:
+            results['questions'] = Question.objects.all()
+            results['articles'] = PublishedArticle.objects.all()
+        else:
+            if 'questions' in search_categories:
+                if 'q' in request.GET and request.GET.get('q') != '':
+                    results['questions'] = Question.objects.filter(
                             Q(question_text__icontains=request.GET.get('q')) |
                             Q(question_text_english__icontains=request.GET.get('q')) |
                             Q(school__icontains=request.GET.get('q')) |
@@ -113,26 +117,23 @@ class SearchView(View):
                             Q(field_of_interest__icontains=request.GET.get('q')) |
                             Q(published_source__icontains=request.GET.get('q'))
                         )
+                else:
+                    results['questions'] = Question.objects.all()
             else:
-                # return arbitrary empty querysets
                 results['questions'] = Question.objects.none()
 
-            if articles:
-                results['articles'] = PublishedArticle.objects.filter(
-                    Q(title__search=request.GET.get('q')) |
-                    Q(body__search=request.GET.get('q'))
-                )
+            if 'articles' in search_categories:
+                if 'q' in request.GET and request.GET.get('q') != '':
+                    results['articles'] = PublishedArticle.objects.filter(
+                            Q(title__search=request.GET.get('q')) |
+                            Q(body__search=request.GET.get('q'))
+                        ).order_by('-updated_on')
+                else:
+                    results['articles'] = PublishedArticle.objects.all()
             else:
-                # return arbitrary empty queryset
-                if articles: results['articles'] = PublishedArticle.objects.none()
-        else:
-            # no 'q', so we'll default to listing all questions
-            results['questions'] = Question.objects.all()
-            if articles: results['articles'] = PublishedArticle.objects.all()
+                results['articles'] = PublishedArticle.objects.none()
 
-        if articles: results['articles'] = results['articles'].order_by('-updated_on')
-
-        return results            
+        return results
 
     def get_template(self, request):
         '''
@@ -312,6 +313,7 @@ class SearchView(View):
         if page_title == _('Search'):
             active_categories = request.GET.getlist('category')
             context['active_categories'] = active_categories
+
         return render(request, self.get_template(request), context)
 
 
@@ -341,7 +343,7 @@ class ViewAnswer(View):
 
 
 class ArticleView(View):
-    def get (self, request, article, slug=None):
+    def get(self, request, article, slug=None):
         article = get_object_or_404(Article, id=article)
 
         # Don't allow other people to see an unpublished draft
@@ -569,12 +571,15 @@ class About(View):
             'page_title': _('About'),
         }
         return render(request, 'public_website/about.html', context)
+
+
 class ResearchPage(View):
     def get(self, request):
         context = {
             'page_title': _('Research')
         }
         return render(request, 'public_website/research.html', context)
+
 
 class FAQPage(View):
     def get(self, request):

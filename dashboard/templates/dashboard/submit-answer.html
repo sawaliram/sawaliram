@@ -1,6 +1,7 @@
 {% extends "public_website/base.html" %}
 
 {% load static %}
+{% load to_language_name %}
 
 {% block head_includes %}
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -31,11 +32,11 @@
 						{{ draft_answer.get_language_name|capfirst }}
 					</option>
 					{% else %}
-						<option value="{{ question.language.lower }}" selected>
-							{{ question.language }}
+						<option value="{{ question.language }}" selected>
+							{{ question.language|to_language_name }}
 						</option>
-						{% if question.language.lower != 'english' %}
-						<option value="english">English</option>
+						{% if question.language != 'en' %}
+						<option value="en">English</option>
 						{% endif %}
 					{% endif %}
 				</select>
