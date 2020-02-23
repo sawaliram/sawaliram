@@ -452,6 +452,20 @@ function setupRemoveCredit() {
 setupAddCredit();
 setupRemoveCredit();
 
+function setupUserProfileMenuTabs() {
+    $('#userProfileMenuTabs .nav-link').click(function(event) {
+        event.preventDefault();
+        if ($(window).width() > 768) {
+            $(this).tab('show');
+        }
+        else {
+            // mobile JS
+        }
+    });
+}
+
+setupUserProfileMenuTabs();
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();

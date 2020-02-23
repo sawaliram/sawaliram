@@ -7,6 +7,7 @@ app_name = 'public_website'
 
 urlpatterns = [
     path('user/<int:user_id>', views.UserProfileView.as_view(), name='user-profile'),
+    path('user/<int:user_id>/profile', views.NewUserProfileView.as_view(), name='new-user-profile'),
     path('', views.HomeView.as_view(), name='home'),
     path('get-involved', views.GetInvolvedView.as_view(), name='get-involved'),
     path('research', views.ResearchPage.as_view(), name='research'),

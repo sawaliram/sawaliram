@@ -1,0 +1,73 @@
+{% extends "public_website/base.html" %}
+
+{% block title %} {{ page_title }} | Sawaliram {% endblock %}
+
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+
+<div class="user-profile-container">
+    <div class="user-profile-menu">
+        <img class="profile-picture" src="{% static 'user/default_profile_pictures/raccoon.png' %}" alt="{% trans 'Profile Picture' %}">
+        <h1 class="user-name">{{ selected_user.get_full_name }}</h1>
+        <ul class="nav nav-tabs flex-column" id="userProfileMenuTabs" role="tablist">
+            <li class="nav-item">
+                <a href="#settings" class="nav-link active" id="settings-tab" role="tab" aria-controls="settings" aria-selected="true">
+                    <img src="{% static 'icons/menu_settings.png' %}" alt="{% trans 'User Settings'%}">
+                    {% trans 'Settings' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#drafts" class="nav-link" id="drafts-tab" role="tab" aria-controls="drafts" aria-selected="false">
+                    <img src="{% static 'icons/menu_drafts.png' %}" alt="{% trans 'User Drafts'%}">
+                    {% trans 'Drafts' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#notifications" class="nav-link" id="notifications-tab" role="tab" aria-controls="notifications" aria-selected="false">
+                    <img src="{% static 'icons/menu_notifications.png' %}" alt="{% trans 'User Notifications'%}">
+                    {% trans 'Notifications' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#submissions" class="nav-link" id="submissions-tab" role="tab" aria-controls="submissions" aria-selected="false">
+                    <img src="{% static 'icons/menu_submissions.png' %}" alt="{% trans 'User Submissions'%}">
+                    {% trans 'Submissions' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#bookmarks" class="nav-link" id="bookmarks-tab" role="tab" aria-controls="bookmarks" aria-selected="false">
+                    <img src="{% static 'icons/menu_bookmarks.png' %}" alt="{% trans 'User Bookmarks'%}">
+                    {% trans 'Bookmarks' %}
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="user-profile-content">
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                <div class="card">
+                    <h2>Organisation</h2>
+                    <p class="small">
+                        Details of your affiliated school, institute or organisation
+                    </p>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="drafts" role="tabpanel" aria-labelledby="drafts-tab">
+                Draft
+            </div>
+            <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+                Notifications
+            </div>
+            <div class="tab-pane fade" id="submissions" role="tabpanel" aria-labelledby="submissions-tab">
+                Submissions
+            </div>
+            <div class="tab-pane fade" id="bookmarks" role="tabpanel" aria-labelledby="bookmarks-tab">
+                Bookmarks
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

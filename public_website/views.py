@@ -471,6 +471,26 @@ class DeleteUserCommentOnAnswer(View):
         )
 
 
+class NewUserProfileView(View):
+
+    def get(self, request, user_id):
+
+        if not User.objects.filter(id=user_id).exists():
+            raise Http404
+        else:
+            selected_user = User.objects.get(id=user_id)
+            context = {
+                'dashboard': 'False',
+                # Translators: This is the title for the User Profile page
+                'page_title': _("%(name)s's Profile") % {
+                    'name': selected_user.first_name,
+                },
+                'enable_breadcrumbs': 'Yes',
+                'selected_user': selected_user,
+            }
+            return render(request, 'public_website/new-user-profile.html', context)
+
+
 class UserProfileView(View):
     def get(self, request, user_id):
 
