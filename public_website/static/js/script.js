@@ -205,6 +205,22 @@ function setupSearchResultsFilter() {
     });
 }
 
+function setupSearchResultsMobileFilter() {
+    // display mobile filter
+    $('.mobile-filter-controls .filter-button').click(() => {
+		if ($(this).data('show-filter')) {
+			//$('.search-results').show()
+			$('.filter-sidebar').hide()
+			$(this).data('show-filter', false)
+		} else {
+			$('.filter-sidebar').show()
+			$('.filter-sidebar').css('width', '100%')
+			//$('.search-results').hide()
+			$(this).data('show-filter', true)
+		}
+	})
+}
+
 function setupSearchResultsClearAll() {
     $('.clear-all').click(function() {
         var current_params = new URLSearchParams(location.search);
@@ -528,6 +544,7 @@ if (
     setupSearchResultsPagination();
     setupSearchResultsSort();
     setupSearchResultsFilter();
+    setupSearchResultsMobileFilter();
     setupSearchResultsClearAll();
     setupBookmarkContentFunctionality();
 }
