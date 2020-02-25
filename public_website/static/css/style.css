@@ -3363,3 +3363,10 @@ button.social-login i {
 .onboarding-form-column .volunteer-option .volunteer-dialog textarea {
     border-radius: 5px;
 }
+
+@media (max-width: 768px) {
+    .map-col{
+        width: 100%;
+        padding: 0.8rem 0.5rem;
+    }
+}

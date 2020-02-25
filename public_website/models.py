@@ -23,10 +23,10 @@ class AnswerUserComment(models.Model):
 
 class ContactUsSubmission(models.Model):
     """Defines models for contact us page submissions by users"""
-
-    name = models.CharField(max_length=100)
+    
+    fullname = models.CharField(max_length=100)
     emailid = models.EmailField()
     subject = models.CharField(max_length=200)
     message = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
-        
+    updated_on = models.DateTimeField(auto_now=True)
