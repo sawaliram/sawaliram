@@ -1,5 +1,7 @@
 """Define the View classes that handle auth requests"""
 
+from django.utils.translation import gettext as _
+
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
@@ -129,7 +131,7 @@ class ManageUsersView(View):
         context = {
             'users': users,
             'pending_requests': pending_requests,
-            'page_title': 'Manage Users',
+            'page_title': _('Manage Users'),
             'enable_breadcrumbs': 'Yes',
             'grey_background': 'True'
         }
@@ -162,7 +164,7 @@ class UpdateUserPermissions(View):
                 pass
                 Group.objects.get(name=permission).user_set.remove(user)
 
-        messages.success(request, 'User permissions updated for ' + user.first_name + ' ' + user.last_name)
+        messages.success(request, (_('User permissions updated for ' + user.first_name + ' ' + user.last_name)))
         return redirect('sawaliram_auth:manage-users')
 
 
@@ -182,7 +184,7 @@ class GrantOrDenyUserPermission(View):
         request_entry.status = 'processed'
         request_entry.save()
 
-        messages.success(request, user.first_name + ' ' + user.last_name + ' was granted ' + request.POST.get('permission') + ' access')
+        messages.success(request, (_(user.first_name + ' ' + user.last_name + ' was granted ' + request.POST.get('permission') + ' access')))
         return redirect('sawaliram_auth:manage-users')
 
 
@@ -218,7 +220,7 @@ class DeleteBookmark(View):
             content_type=request.POST.get('content-type'),
             question=request.POST.get('question-id'))
         bookmark_to_remove.delete()
-        messages.success(request, 'Bookmark has been deleted!')
+        messages.success(request, (_('Bookmark has been deleted!')))
         return redirect('public_website:user-profile', user_id=request.user.id)
 
 
@@ -228,5 +230,5 @@ class RemoveDraft(View):
     def post(self, request):
         draft_to_remove = Answer.objects.get(id=request.POST.get('draft-id'))
         draft_to_remove.delete()
-        messages.success(request, 'Draft has been deleted!')
+        messages.success(request, (_('Draft has been deleted!')))
         return redirect('public_website:user-profile', user_id=request.user.id)

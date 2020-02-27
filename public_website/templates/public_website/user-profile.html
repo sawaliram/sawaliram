@@ -1,3 +1,4 @@
+
 {% extends "public_website/base.html" %}
 
 {% block title %} {{ page_title }} | Sawaliram {% endblock %}
@@ -25,7 +26,7 @@
         <h1 class="user-name">{{ selected_user.get_full_name }}</h1>
         {% if selected_user.organisation %}
             <p class="organisation">
-              {% if selected_user.organisation_role %}{% blocktrans %}{{ selected_user.organisation_role }} at {{ selected_user.organisation }}{% endblocktrans %}
+              {% if selected_user.organisation_role %}{{ selected_user.organisation_role }} at {{ selected_user.organisation }}
               {% else %}{{ selected_user.organisation }}
               {% endif %}
             </p>
@@ -120,7 +121,7 @@
                     <ul class="card-list">
                         {% for draft in article_drafts %}
                         <li>
-                            <h4>{{ draft.title|default:_("(untitled)") }}</h4>
+                            <h4>{{ draft.title|default:"(untitled)" }}</h4>
                             <p class="tab-section-intro">
                                 {{ draft.body|striptags|truncatechars:140  }}
                             </p>
@@ -229,15 +230,15 @@
                 <div class="tab-section">
                     <h3 class="tab-subheading">{% trans 'Questions' %}</h3>
                     <p class="tab-section-intro">
-                      {% if request.user.id != selected_user.id %}{% blocktrans %}Questions submitted by {{ selected_user.first_name }}{% endblocktrans %}
-                      {% else %}{% blocktrans %}Questions submitted by you{% endblocktrans %}
+                      {% if request.user.id != selected_user.id %}{% trans 'Questions submitted by' %} {{ selected_user.first_name }}
+                      {% else %}{% trans 'Questions submitted by you' %}
                       {% endif%}
                     </p>
                     <ul class="card-list">
                         {% for question in submitted_questions %}
                         <li>
                             <h4>{{ question.question_count }} questions</h4>
-                            <p class="tab-section-intro">{% blocktrans %}Submitted on {{ question.created_on|date:"jS F, Y" }}{% endblocktrans %}</p>
+                            <p class="tab-section-intro">{% trans 'Submitted on' %} {{ question.created_on|date:"jS F, Y" }}</p>
                             {% if question.status == 'new' %}
                             <p class="tab-section-status pending">
                                 {% trans 'Review Pending' %}
@@ -256,8 +257,8 @@
                 <div class="tab-section">
                     <h3 class="tab-subheading">{% trans 'Answers' %}</h3>
                     <p class="tab-section-intro">
-                      {% if request.user.id != selected_user.id %}{% blocktrans %}Answers submitted by {{ selected_user.first_name }}{% endblocktrans %}
-                      {% else %}{% blocktrans %}Answers submitted by you{% endblocktrans %}
+                      {% if request.user.id != selected_user.id %}{% trans 'Answers submitted by' %} {{ selected_user.first_name }}
+                      {% else %}{% trans 'Answers submitted by you' %}
                       {% endif%}
                     </p>
                     <ul class="card-list">
@@ -280,8 +281,8 @@
                 {% if submitted_articles  or published_articles%}
                 <div class="tab-section">
                     <h3 class="tab-subheading">{% trans 'Articles' %}</h3>
-                      {% if request.user.id != selected_user.id %}{% blocktrans %}Articles submitted by {{ selected_user.first_name }}{% endblocktrans %}
-                      {% else %}{% blocktrans %}Articles submitted by you{% endblocktrans %}
+                      {% if request.user.id != selected_user.id %}{% trans 'Articles submitted by' %} {{ selected_user.first_name }}
+                      {% else %}{% trans 'Articles submitted by you' %}
                       {% endif%}
                     <ul class="card-list">
                         {% for article in submitted_articles %}
@@ -329,7 +330,7 @@
                   <li>
                       <a class="task-link" href="{{ submission.get_absolute_url }}">
                         <h4>
-                          {{ submission.title|default:_("(untitled)") }}
+                          {{ submission.title|default:"(untitled)" }}
                           <small>({{ submission.source.language }} -> {{ submission.language }})</small>
                         </h4>
                       </a>

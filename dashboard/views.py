@@ -3,6 +3,8 @@
 import random
 import os
 
+from django.utils.translation import gettext as _
+
 from django import forms
 from django.shortcuts import (
     render,
@@ -80,7 +82,7 @@ class DashboardHome(View):
         """Return the dashboard home view."""
         context = {
             'grey_background': 'True',
-            'page_title': 'Dashboard Home',
+            'page_title': _('Dashboard Home'),
             'enable_breadcrumbs': 'Yes'
         }
         return render(request, 'dashboard/home.html', context)
@@ -96,7 +98,7 @@ class SubmitQuestionsView(View):
         """Return the submit questions view."""
         context = {
             'grey_background': 'True',
-            'page_title': 'Submit Questions',
+            'page_title': _('Submit Questions'),
             'enable_breadcrumbs': 'Yes',
         }
         return render(request, 'dashboard/submit-questions.html', context)
@@ -181,10 +183,10 @@ class SubmitQuestionsView(View):
         excel_sheet.to_excel(writer, 'Sheet 1')
         writer.save()
 
-        messages.success(request, 'Thank you for the questions! We will get to work preparing the questions to be answered and translated.')
+        messages.success(request, (_('Thank you for the questions! We will get to work preparing the questions to be answered and translated.')))
         context = {
             'grey_background': 'True',
-            'page_title': 'Submit Questions',
+            'page_title': _('Submit Questions'),
             'enable_breadcrumbs': 'Yes',
         }
         return render(request, 'dashboard/submit-questions.html', context)
@@ -278,7 +280,7 @@ class ManageContentView(View):
 
         context = {
             'grey_background': 'True',
-            'page_title': 'Manage Content',
+            'page_title': _('Manage Content'),
             'enable_breadcrumbs': 'Yes',
             'datasets': datasets,
             'articles': articles,
@@ -399,23 +401,23 @@ class CurateDataset(View):
         try:
             dataset = Dataset.objects.get(id=dataset_id)
         except ObjectDoesNotExist:
-            messages.error(request, 'We could not find that dataset by ID. Make sure you did not edit any other field except "Field of Interest"')
+            messages.error(request, (_('We could not find that dataset by ID. Make sure you did not edit any other field except "Field of Interest"')))
 
             datasets = Dataset.objects.all().order_by('-created_on')
             context = {
                 'grey_background': 'True',
-                'page_title': 'Manage Content',
+                'page_title': _('Manage Content'),
                 'datasets': datasets
             }
             return render(request, 'dashboard/manage-content.html', context)
 
         if dataset.status == 'curated':
-            messages.error(request, 'This dataset is already curated. Make sure you are uploading the correct file.')
+            messages.error(request, (_('This dataset is already curated. Make sure you are uploading the correct file.')))
 
             datasets = Dataset.objects.all().order_by('-created_on')
             context = {
                 'grey_background': 'True',
-                'page_title': 'Manage Content',
+                'page_title': _('Manage Content'),
                 'datasets': datasets
             }
             return render(request, 'dashboard/manage-content.html', context)
@@ -457,12 +459,12 @@ class CurateDataset(View):
         dataset.save()
 
         # return to Manage Content and show success message
-        messages.success(request, 'Questions saved successfully! These will now be available for answering and translation.')
+        messages.success(request, (_('Questions saved successfully! These will now be available for answering and translation.')))
 
         datasets = Dataset.objects.all().order_by('-created_on')
         context = {
             'grey_background': 'True',
-            'page_title': 'Manage Content',
+            'page_title': _('Manage Content'),
             'datasets': datasets
         }
         return render(request, 'dashboard/manage-content.html', context)
@@ -580,7 +582,7 @@ class SubmitAnswerView(View):
             'question': question_to_answer,
             'grey_background': 'True',
             'enable_breadcrumbs': 'Yes',
-            'page_title': 'Submit Answer',
+            'page_title': _('Submit Answer'),
             'prev_item_id': prev_item_id,
             'next_item_id': next_item_id,
             'submission_mode': 'submit'
@@ -596,7 +598,7 @@ class SubmitAnswerView(View):
         except Answer.DoesNotExist:
             pass
 
-        return render(request, 'dashboard/submit-answer.html', context)
+        return render(request, 'submit-answer.html', context)
 
     def post(self, request, question_id):
         """Save the submitted answer for review or as draft"""
@@ -618,7 +620,7 @@ class SubmitAnswerView(View):
             'question': question_to_answer,
             'grey_background': 'True',
             'enable_breadcrumbs': 'Yes',
-            'page_title': 'Submit Answer',
+            'page_title': _('Submit Answer'),
         }
 
         if request.POST.get('mode') == 'draft':
@@ -654,9 +656,9 @@ class SubmitAnswerView(View):
                 credit.save()
 
             # show success message to the user
-            messages.success(request, ('Your answer has been saved!'
+            messages.success(request, (_('Your answer has been saved!'
                 ' You can return to this page any time to '
-                'continue editing, or go to "Drafts" in your User Profile.'))
+                'continue editing, or go to "Drafts" in your User Profile.')))
 
             # Set draft in context to re-display
             context['draft_answer'] = draft
@@ -699,7 +701,7 @@ class SubmitAnswerView(View):
 
             # show message to the user
             if request.POST.get('mode') == 'edit':
-                messages.success(request, ('Your answer has been updated!'))
+                messages.success(request, (_('Your answer has been updated!')))
 
                 # create notifications for users who commented on the answer
                 commentor_id_list = list(answer.comments.all()
@@ -722,7 +724,7 @@ class SubmitAnswerView(View):
 
                 return redirect('dashboard:review-answer', question_id=question_to_answer.id, answer_id=answer.id)
             else:
-                messages.success(request, ('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!'))
+                messages.success(request, (_('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!')))
 
             if next_item_id:
                 question_to_answer = Question.objects.get(pk=next_item_id)
@@ -754,7 +756,7 @@ class ReviewAnswerView(View):
             'comments': answer.comments.all(),
             'comment_form': CommentForm(),
             'grey_background': 'True',
-            'page_title': 'Submit Review',
+            'page_title': _('Submit Review'),
             'enable_breadcrumbs': 'Yes'
         }
 
@@ -782,10 +784,10 @@ class ApproveAnswerView(View):
                 pk=answer_id,
                 approved_by__isnull=True)
         except Answer.DoesNotExist:
-            raise Http404('Answer does not exist')
+            raise Http404(_('Answer does not exist'))
 
         if request.user == answer.submitted_by:
-            raise PermissionDenied('You cannot approve your own answer')
+            raise PermissionDenied(_('You cannot approve your own answer'))
 
         if request.method != 'POST':
             return redirect(
@@ -797,7 +799,7 @@ class ApproveAnswerView(View):
         answer.status = 'published'
         answer.save()
 
-        messages.success(request, ('Thanks ' + request.user.first_name + ' for publishing the answer, it will now be visible to all users'))
+        messages.success(request, (_('Thanks ' + request.user.first_name + ' for publishing the answer, it will now be visible to all users')))
 
         question_answered = Question.objects.get(pk=question_id)
 
@@ -897,7 +899,7 @@ class EditArticleView(View):
         context = {
             'article': article,
             'grey_background': 'True',
-            'page_title': 'Write Article',
+            'page_title': _('Write Article'),
             'enable_breadcrumbs': 'Yes',
             'language_choices': settings.LANGUAGE_CHOICES,
         }
@@ -914,7 +916,7 @@ class EditArticleView(View):
             'article': article,
             'grey_background': 'True',
             'language_choices': settings.LANGUAGE_CHOICES,
-            'page_title': 'Write Article',
+            'page_title': _('Write Article'),
             'enable_breadcrumbs': 'Yes'
         }
 
@@ -943,7 +945,7 @@ class EditArticleView(View):
             return redirect('dashboard:review-article', article=submitted_article.id)
 
         else:
-            raise SuspiciousOperation('Are you trying to save draft or submit?')
+            raise SuspiciousOperation(_('Are you trying to save draft or submit?'))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -978,7 +980,7 @@ class DeleteArticleView(View):
         article = self.fetch_article(article)
 
         if request.user != article.author:
-            raise PermissionDenied('You are not authorised to delete that comment.')
+            raise PermissionDenied(_('You are not authorised to delete that comment.'))
 
         article.delete()
 
@@ -1000,7 +1002,7 @@ class ReviewSubmittedArticleView(View):
             'article': article,
             'grey_background': 'True',
             'comments': article.comments.all(),
-            'page_title': 'Review Article',
+            'page_title': _('Review Article'),
             'comment_form': CommentForm(),
             'enable_breadcrumbs': 'Yes'
         }
@@ -1025,7 +1027,7 @@ class ApproveSubmittedArticleView(View):
 
         # Check that the publisher is not the author
         if article.author == request.user:
-            raise PermissionDenied('You cannot publish your own article.')
+            raise PermissionDenied(_('You cannot publish your own article.'))
 
         a = article.publish(request.user)
 
@@ -1260,8 +1262,8 @@ class BaseStartTranslation(FormView):
     def get_success_view(self):
         if not hasattr(self, 'success_view'):
             raise ImproperlyConfigured((
-                'No success_view set. Please set the success_view '
-                'property or override get_success_view.'
+                _('No success_view set. Please set the success_view '
+                'property or override get_success_view.')
             ))
         return self.success_view
 
@@ -1299,7 +1301,7 @@ class CreateAnswerTranslation(BaseStartTranslation):
 
         # Check that they match
         if self.answer.question_id != question:
-            raise Http404('No matching answer found.')
+            raise Http404(_('No matching answer found.'))
 
         return question
 
@@ -1344,12 +1346,12 @@ class BaseEditTranslation(UpdateView):
         user = self.request.user
 
         if lang_from not in valid_languages:
-            raise Http404('Invalid language: {}'
-                .format(lang_from))
+            raise Http404(_('Invalid language: {}'
+                .format(lang_from)))
 
         if lang_to not in valid_languages:
-            raise Http404('Invalid language: {}'
-                .format(lang_to))
+            raise Http404(_('Invalid language: {}'
+                .format(lang_to)))
 
         # Fetch source model
         source = get_object_or_404(self.source_model,
@@ -1393,8 +1395,8 @@ class BaseEditTranslation(UpdateView):
         '''
         if self.conflict_url is None:
             raise ImproperlyConfigured((
-                'No URL to redirect to. Either provide a URL or '
-                'define a get_conflict_url method on the Model.'
+                _('No URL to redirect to. Either provide a URL or '
+                'define a get_conflict_url method on the Model.')
             ))
 
         return self.conflict_url
@@ -1449,8 +1451,8 @@ class BaseEditTranslation(UpdateView):
     def get_view_name(self):
         if self.view_name is None:
             raise ImproperlyConfigured((
-                'No view name specified. Please set view_name as '
-                'found in the urlconf.'
+                _('No view name specified. Please set view_name as '
+                'found in the urlconf.')
             ))
 
         return self.view_name
@@ -1513,7 +1515,7 @@ class EditAnswerTranslation(BaseEditTranslation):
 
         # Make sure the question and answer match
         if source_answer.question_id != question.source:
-            raise Http404('No matching answer found')
+            raise Http404(_('No matching answer found'))
 
         # Select the specific translated answer, if it exists
         # This will be saved as self.answer
@@ -1586,7 +1588,7 @@ class BaseDeleteTranslation(DeleteView):
     def get_object(self, *args, **kwargs):
         obj = super().get_object(*args, **kwargs)
         if obj.translated_by != self.request.user:
-            raise PermissionDenied("That's not your translation!")
+            raise PermissionDenied(_("That's not your translation!"))
 
         return obj
 
@@ -1693,7 +1695,7 @@ class ApproveSubmittedArticleView(View):
 
         # Check that the publisher is not the author
         if article.author == request.user:
-            raise PermissionDenied('You cannot publish your own article.')
+            raise PermissionDenied(_('You cannot publish your own article.'))
 
         a = article.publish(request.user)
 
@@ -1724,7 +1726,7 @@ class BaseApproveTranslation(View):
 
         # Check that the publisher is not the author
         if obj.translated_by == request.user:
-            raise PermissionDenied('You cannot approve your own submissions')
+            raise PermissionDenied(_('You cannot approve your own submissions'))
 
         p = obj.publish(request.user)
 

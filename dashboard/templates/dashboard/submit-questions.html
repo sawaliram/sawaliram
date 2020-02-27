@@ -2,8 +2,10 @@
 {% extends "public_website/base.html" %}
 
 {% load static %}
+{% load i18n %}
+{% load to_language_name %}
 
-{% block title %} Submit Questions | Sawaliram {% endblock %}
+{% block title %} {% trans 'Submit Questions'%} | {% trans 'Sawaliram' %} {% endblock %}
 
 {% block content %}
 
@@ -12,9 +14,9 @@
     {% if messages %}
     <div class="alert alert-success alert-dismissible fade show task-success-message" role="alert">
         {% for message in messages %}
-        <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+        <span {% if message.tags %} class="{{ message.tags }}"{% endif %}>
             <i class="far fa-check-circle"></i>
-            {{ message }}
+            {% trans '{{ message }}' %}
         </span>
         {% endfor %}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -24,17 +26,17 @@
     {% endif %}
     
     <div class="task-help-button-wrapper">
-        <button class="btn btn-secondary-hollow task-help task-page-help">Help?</button>
+        <button class="btn btn-secondary-hollow task-help task-page-help">{% trans 'Help?' %}</button>
     </div>
     
     <div class="submit-questions-help">
-        <p>The easiest way to submit questions to Sawaliram is by downloading the Excel Template below, collecting questions over a period of time from the students and submit the filled Excel sheet on this page. The Excel sheet has pre-filled column headers that indicate the information that needs to be filled out. It will also validate your entries, making sure the data is correct. If any errors still manage to slip through, your Excel sheet will be checked again before uploading it and any mistakes will be clearly pointed out for you to correct!</p>
+        <p>{% trans 'The easiest way to submit questions to Sawaliram is by downloading the Excel Template below, collecting questions over a period of time from the students and submit the filled Excel sheet on this page. The Excel sheet has pre-filled column headers that indicate the information that needs to be filled out. It will also validate your entries, making sure the data is correct. If any errors still manage to slip through, your Excel sheet will be checked again before uploading it and any mistakes will be clearly pointed out for you to correct!' %}</p>
     
         <a href="{% static 'files/sawaliram_template.xlsx' %}" class="btn btn-secondary download-file">
-            <i class="fas fa-download"></i> Download Excel Template
+            <i class="fas fa-download"></i> {% trans 'Download Excel Template' %}
         </a>
         <a href="{% static 'files/Guidelines_to_submit_questions.pdf' %}" class="btn btn-secondary-hollow download-file">
-            <i class="fas fa-download"></i> Download Guidelines
+            <i class="fas fa-download"></i> {% trans 'Download Guidelines' %}
         </a>
     </div>
     
@@ -44,14 +46,14 @@
             <input type="file" class="custom-file-input" id="excelFileBrowser" name="excel_file" data-url="validate-new" required>
             <label class="excel-file-label" for="excelFileBrowser">
                 <i class="fas fa-file-excel"></i> 
-                <span>Click to select your excel sheet</span>
+                <span>{% trans 'Click to select your excel sheet' %}</span>
             </label>
             <div class="validation-errors">
                 <h5></h5>
                 <div class="error-list"></div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary submit-excel" disabled>Submit</button>
+        <button type="submit" class="btn btn-primary submit-excel" disabled>{% trans 'Submit' %}</button>
     </form>
     
 </div>
