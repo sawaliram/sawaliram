@@ -424,12 +424,12 @@ class GlobalStudiesCQPage(View):
         }
         return render(request, 'public_website/research.html/GlobalStudiesCQ.html', context)
 
-class ResourcesPage_books(View):
+class ResourcesPage(View):
     def get(self, request):
         context = {
             'page_title': 'Resources'
         }
-        return render(request, 'public_website/resources_books.html', context)
+        return render(request, 'public_website/resources.html', context)
 
 class ChildrensBooksPage_books(View):
     def get(self, request):
@@ -444,27 +444,6 @@ class AdultsBooksPage_books(View):
             'page_title': 'Resources'
         }
         return render(request, 'public_website/adultsbooks.html', context)
-
-class ResourcesPage_weblinks(View):
-    def get(self, request):
-        context = {
-            'page_title': 'Resources'
-        }
-        return render(request, 'public_website/resources_weblinks.html', context)
-
-class ResourcesPage_magazines(View):
-    def get(self, request):
-        context = {
-            'page_title': 'Resources'
-        }
-        return render(request, 'public_website/resources_magazines.html', context)
-
-#class ResourcesPage_books(View):
-#    def get(self, request):
-#        context = {
-#            'page_title': 'Resources'
-#        }
-#        return render(request, 'public_website/resources_books.html', context)
 
 class ContactPage(View):
     def get(self, request):

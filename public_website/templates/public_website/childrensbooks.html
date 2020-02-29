@@ -6,67 +6,92 @@
 {% load static %}
 
 {% block content %}
-<ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="font-weight-bold nav-link text-success active" href="{% url 'public_website:resources' %}">Books</a>
-  </li>
-  <li class="nav-item">
-    <a class="font-weight-bold nav-link text-success" href="{% url 'public_website:resources_magazines' %}">Magazines</a>
-  </li>
-  <li class="nav-item">
-    <a class="font-weight-bold nav-link text-success" href="{% url 'public_website:resources_weblinks' %}">Weblinks</a>
-  </li>
-</ul>
+<nav>
+       <div class="nav nav-pills" role="tablist">
+           <a class="nav-item nav-link active font-weight-bold text-success" href="{% url 'public_website:resources' %}#books-tab" role="tab" aria-controls="books-tab" aria-selected="true">
+               Books
+           </a>
+           <a class="nav-item nav-link font-weight-bold text-success" href="{% url 'public_website:resources' %}#magazines-tab" role="tab" aria-controls="magazines-tab" aria-selected="true">
+               Magazines
+           </a>
+           <a class="nav-item nav-link font-weight-bold text-success" href="{% url 'public_website:resources' %}#weblinks-tab" role="tab" aria-controls="weblinks-tab" aria-selected="true">
+               Weblinks
+           </a>
+           <li class="nav-item" style="margin-left: auto;">
+                   <div class="container">
+                   <div class="row">
+                       <div class="col-lg-12">
+                       <div class="dropdown navbar-element">
+                           <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="languageSelector">
+                           <span style="color: purple; font-weight: bold; font-style: Times New Roman; font-size: 13px; float: center;">Select Language<i class="fas fa-chevron-down"></i></span>
+                           </button>
+                           <div class="dropdown-menu" aria-labelledby="languageSelector">
+                           <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option1" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>English</b></a></span>
+                           <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option2" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>Hindi</b></a></span>
+                           <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option3" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>Marathi</b></a></span>
+                           <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option4" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>Tamil</b></a></span>
+                           <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option5" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>Telegu</b></a></span>
+                           <span class="dropdown-item"><a style="color: black;" href="#" class="small" data-value="option6" tabIndex="-1"><input type="checkbox"/>&nbsp;<b>Malayalam</b></a></span>
+                       </div>
+                       </div>
+                       </div>
+                   </div>
+                   </div>
+               </li>
+           </ul>
+       </div>
+   </nav>
 
-<div class="container"> 
+<div class="container- fluid" style="background-color: #f2f2f2;"> 
+<div class="container- fluid" style="background-color: #f2f2f2; margin-right: 300px; margin-left: 300px;"> 
 <br>
 <br>
 <div>
-<p class="font-weight-bold">Books for children <a class="font-weight-bold" href="#">&emsp; see more</a> </p>
+<p class="font-weight-bold" style="margin-left: 43px">Books for children </p>
 </div>
 <div class="card-deck">
   
-  <div class="card" style="height: 400px;width: 18rem;">
-    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;" src="https://www.tulikabooks.com/3223-large_default/the-why-why-girl-english.jpg" alt="The Why-Why Girl">
-    <div style="padding: 11px;">
+  <div class="resources-books-card">
+    <img class="resources-books-card-img-bottom" src="https://www.tulikabooks.com/3223-large_default/the-why-why-girl-english.jpg" alt="The Why-Why Girl">
+    <div class="resources-books-card-body">
       <p class="card-title"><b>The Why-Why Girl</b></p>
-      <p class="small" style="color: grey;">by Mahashweta Devi</p>
-      <p class="text-truncate"><a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-english.html" target="_blank">English</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kyun-kyun-ladki-hindi.html" target="_blank">Hindi</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kame-kame-chhokri-gujarati.html" target="_blank">Gujarati</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-yaake-yaake-hudugi-kannada.html" target="_blank">Kannada</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-oru-endendinu-pennkutti-malayalam.html" target="_blank">Malayalam</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kaan-kaan-kumari-marathi.html" target="_blank">Marathi</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-yain-yain-sirumi-tamil.html" target="_blank">Tamil</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-enduku-enduku-ammaayi-telugu.html" target="_blank">Telugu</a> </p>
+      <p class="resources-books-card-author">by Mahashweta Devi</p>
+      <p class="resources-books-card-text-truncate"><a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-english.html" target="_blank">English</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kyun-kyun-ladki-hindi.html" target="_blank">Hindi</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kame-kame-chhokri-gujarati.html" target="_blank">Gujarati</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-yaake-yaake-hudugi-kannada.html" target="_blank">Kannada</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-oru-endendinu-pennkutti-malayalam.html" target="_blank">Malayalam</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kaan-kaan-kumari-marathi.html" target="_blank">Marathi</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-yain-yain-sirumi-tamil.html" target="_blank">Tamil</a>, <a href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-enduku-enduku-ammaayi-telugu.html" target="_blank">Telugu</a> </p>
     </div>
   </div>
 
-  <div class="card" style="height: 400px; width: 18rem;">
-    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;" src="https://archive.org/services/img/DiscoveredQuestions" alt="Discovered questions">
-    <div style="padding: 11px;">
+  <div class="resources-books-card">
+    <img class="resources-books-card-img-bottom" src="https://archive.org/services/img/DiscoveredQuestions" alt="Discovered questions">
+    <div class="resources-books-card-body">
       <p class="card-title"><b>Discovered questions</b></p>
-      <p class="small" style="color: grey;">by Yash Pal</p>
+      <p class="resources-books-card-author">by Yash Pal</p>
       <p><a href="https://archive.org/details/DiscoveredQuestions" target="_blank">English</a>, <a href="#" target="_blank">Hindi</a>, <a href="#" target="_blank">Malayalam </a></p>
     </div>
   </div>
 
-  <div class="card" style="height: 400px; width: 18rem;">
-    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;"  src="https://scipop.iucaa.in/Literature/f18.jpg" alt="Science through postcards">
-    <div style="padding: 11px;">
-      <p class="card-title text-bottom" style="float: bottom"><b>Science through postcards</b></p>
-      <p class="small" style="color: grey;">by Jayant Narlikar</p>
+  <div class="resources-books-card">
+    <img class="resources-books-card-img-bottom"  src="https://scipop.iucaa.in/Literature/f18.jpg" alt="Science through postcards">
+    <div class="resources-books-card-body">
+      <p class="resources-books-card-title"><b>Science through postcards</b></p>
+      <p class="resources-books-card-author">by Jayant Narlikar</p>
       <p><a href="https://scipop.iucaa.in/Literature/jvn-postcardbook.htm" target="_blank">English</a>, <a href="#" target="_blank">Hindi</a>, <a href="#" target="_blank">Marathi</a> </p>
     </div>
   </div>
 
-  <div class="card" style="height: 400px; width: 18rem;">
-    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;"  src="#" alt="Chinnara Lokadalli Karantu">
-    <div style="padding: 11px;">
-      <p class="card-title text-bottom" style="float: bottom"><b>Chinnara Lokadalli Karantu</b></p>
-      <p class="small" style="color: grey;">by Shivaram Karanth</p>
+  <div class="resources-books-card">
+    <img class="resources-books-card-img-bottom"  src="#" alt="Chinnara Lokadalli Karantu">
+    <div class="resources-books-card-body">
+      <p class="resources-books-card-title"><b>Chinnara Lokadalli Karantu</b></p>
+      <p class="resources-books-card-author">by Shivaram Karanth</p>
       <p><a href="#" target="_blank">Kannada</a></p>
     </div>
   </div>
 
-  <div class="card" style="height: 400px; width: 18rem;">
-    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;"  src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1546081615l/328802.jpg" alt="Totto Chan">
-    <div style="padding: 11px;">
-      <p class="card-title text-bottom" style="float: bottom"><b>Totto Chan</b></p>
-      <p class="small" style="color: grey;">by Tetsuko Kuroyanagi</p>
+  <div class="resources-books-card">
+    <img class="resources-books-card-img-bottom"  src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1546081615l/328802.jpg" alt="Totto Chan">
+    <div class="resources-books-card-body">
+      <p class="resources-books-card-title"><b>Totto Chan</b></p>
+      <p class="resources-books-card-author">by Tetsuko Kuroyanagi</p>
       <p><a href="#" target="_blank">English</a>, <a href="#" target="_blank">Japanese</a>, <a href="#" target="_blank">Hindi</a>, <a href="#" target="_blank">Marathi</a>, <a href="#" target="_blank">Gujarati</a>, <a href="#" target="_blank">Telugu</a>, <a href="#" target="_blank">Assamese</a>, <a href="#" target="_blank">Kannada</a>, <a href="#" target="_blank">Tamil</a>, <a href="#" target="_blank"> Malayalam</a>, <a href="#" target="_blank">Bengali</a>, <a href="#" target="_blank">Oriya</a> </p>
     </div>
   </div> 
@@ -76,15 +101,13 @@
 <br>
 <div>
 </div>
-<div class="card-deck">
-  
+
  <div class="card-deck">
-  
-  <div class="card" style="height: 400px; width: 18rem;">
-    <img class="card-img-bottom" style="margin: 16px; height: 158px; width: 158px;"  src="data:image/webp;base64,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" alt="A Summer Story">
-    <div style="padding: 11px;">
-      <p class="card-title text-bottom" style="float: bottom"><b>A Summer Story</b></p>
-      <p class="small" style="color: grey;">by K. G. Subramanyan</p>
+  <div class="resources-books-card" style="margin-left: 43px">
+    <img class="resources-books-card-img-bottom"  src="data:image/webp;base64,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" alt="A Summer Story">
+    <div class="resources-books-card-body">
+      <p class="resources-books-card-title"><b>A Summer Story</b></p>
+      <p class="resources-books-card-author">by K. G. Subramanyan</p>
       <p><a href="https://archive.org/details/Tottochan-English " target="_blank">English</a></p>
     </div>
   </div>  
@@ -93,5 +116,6 @@
 <br>
 <br>
 <br>
+</div>
 
 {% endblock %}

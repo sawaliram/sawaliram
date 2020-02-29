@@ -2989,3 +2989,117 @@ button.social-login i {
 .onboarding-form-column .volunteer-option .volunteer-dialog textarea {
     border-radius: 5px;
 }
+
+.resources-books-card{
+    height: 400px; 
+    width: 12.2rem; 
+    border: none;
+    background-color: white;
+    margin-left: auto;
+    margin-right: 27px;
+}
+
+.resources-books-card-img-bottom{
+    margin-left: 16px;
+    margin-right: 16px;
+    margin-top: 16px; 
+    height: 158px; 
+    width: 158px;
+}
+
+.resources-books-card-body{
+    margin-left: 14px;
+    padding: 0px;
+}
+
+.resources-books-card-title{
+    padding-top: 0px;
+    margin-bottom: 5px;
+    margin-left: 14px;
+    margin-top: 16px; 
+    font-weight: bold;
+}
+
+.resources-books-card-author{
+    padding-top: 0px;
+    margin-top: 0px;
+    margin-left: 14px;
+    color: grey;
+    font-size: 13px;
+}
+.resources-books-card-text-truncate{
+    margin: 16px; 
+    height: 158px; 
+    width: 158px;
+    font-size: 14px;
+}
+
+.resources-magazines-card mb-2{
+    height: 280px; 
+    width: 156px; 
+    border: none;
+}
+
+.resources-magazines-card-img-top{
+    margin-top: 15px; 
+    margin-left: 16px; 
+    margin-right: 16px; 
+    margin-bottom: 0px; 
+    height: 150px; 
+    width: 120px;
+}
+
+.resources-magazines-card-body{
+    padding: 0px; 
+    margin-top: 0px; 
+    margin-bottom: 0px; 
+    margin-left: 10px;
+}
+
+.resources-magazines-card-title{
+    font-size: 13px; 
+    margin-top: 7px; 
+    margin-bottom: 0px;
+}
+
+.resources-magazines-card-text-truncate{
+    font-size: 11px; 
+    margin-top: 0px; 
+    margin-bottom: 0px;
+}
+
+.resources-magazines-card-link{
+    color: purple;
+}
+
+.resources-weblinks-card{
+    height: 105px; 
+    width: 250px; 
+    border: none;
+    background-color: white;
+    margin-right: 40px;
+}
+
+.resources-weblinks-card-img{
+    margin: 12px; 
+    height: 80px; 
+    width: 80px;
+}
+
+.resources-weblinks-card-title{
+    text-align: left; 
+    font-size: 15px; 
+    font-family: Times New Roman; 
+    margin-top: 20px;
+    margin-left: 0px;
+    margin-bottom: 2px;
+}
+
+.resources-weblinks-card-text-truncate{
+    text-align: left; 
+    font-size: 9px;
+}
+
+.resources-weblinks-card-link{
+    color: grey;
+}
