@@ -1229,7 +1229,7 @@ class TranslateAnswersList(SearchView):
         return results
 
     def get_page_title(self, request):
-        return 'Translate Answers'
+        return 'Translate Content'
 
     def get_enable_breadcrumbs(self, request):
         return 'Yes'

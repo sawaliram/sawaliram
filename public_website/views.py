@@ -101,6 +101,7 @@ class SearchView(View):
 
         if request.GET.getlist('questions') and not search_categories:
             search_categories.append('questions')
+            search_categories.append('articles')
 
         if 'q' in request.GET and request.GET.get('q') != '':
             if not search_categories:
@@ -319,7 +320,7 @@ class SearchView(View):
             context['result_size'] = context['result_size'] + articles.count()
 
         # create list of active categories
-        if page_title == _('Search'):
+        if page_title == _('Search') or page_title == _('Translate Content'):
             active_categories = request.GET.getlist('category')
             context['active_categories'] = active_categories
 

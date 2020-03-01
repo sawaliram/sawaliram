@@ -522,7 +522,8 @@ if (window.location.pathname.includes('/users/how-can-i-help')) {
 if (
     window.location.pathname.includes('/dashboard/view-questions') ||
     window.location.pathname.includes('/dashboard/answer-questions') ||
-    window.location.pathname.includes('/dashboard/review-answers') ||
+    window.location.pathname.includes('/dashboard/review-answers') || 
+    window.location.pathname.includes('/dashboard/translate/answers') || 
     window.location.pathname.includes('/search')
    ) {
     setupSearchResultsPagination();
