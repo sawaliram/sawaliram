@@ -156,7 +156,7 @@ class SearchView(View):
         """
         Returns the page title for  breadcrumbs and <title> tag
         """
-        return 'Search'
+        return _('Search')
 
     def get_enable_breadcrumbs(self, request):
         """
