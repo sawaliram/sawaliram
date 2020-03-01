@@ -32,8 +32,8 @@
             <div class="filter-category">
                 <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">{% trans 'Questions' %}</button>
                 <div class="category-options-list" id="filterCategories">
-                    <button class="btn category-option {% if 'answered' in question_categories %}active{% endif %}" data-param="questions" data-value="answered">{% trans 'Answered' %}</button>
-                    <button class="btn category-option {% if 'unanswered' in question_categories %}active{% endif %}" data-param="questions" data-value="unanswered">{% trans 'Unanswered' %}</button>
+                    <button class="btn category-option {% if 'answered' in question_categories %}active{% endif %}" data-param="questions" data-value="answered" {% if 'questions' not in active_categories %}disabled{% endif %}>{% trans 'Answered' %}</button>
+                    <button class="btn category-option {% if 'unanswered' in question_categories %}active{% endif %}" data-param="questions" data-value="unanswered" {% if 'questions' not in active_categories %}disabled{% endif %}>{% trans 'Unanswered' %}</button>
                 </div>
             </div>
             {% endif %}
@@ -41,7 +41,7 @@
                 <button class="btn open-filter" data-target="#filterSubjects" aria-expanded="true" aria-controls="filter-subjects">{% trans 'Subjects' %}</button>
                 <div class="category-options-list" id="filterSubjects">
                     {% for subject in subjects %}
-                    <button class="btn category-option {% if subject in subjects_to_filter_by %}active{% endif %} {% if subject|length > 11 %}long-title{% endif %}" data-param="subject" data-value="{{ subject|urlencode }}" {% if subject not in available_subjects %}disabled{% endif %}>{% trans subject %}</button>
+                    <button class="btn category-option {% if subject in subjects_to_filter_by %}active{% endif %} {% if subject|length > 11 %}long-title{% endif %}" data-param="subject" data-value="{{ subject|urlencode }}" {% if 'questions' not in active_categories or subject not in available_subjects %}disabled{% endif %}>{% trans subject %}</button>{# Disabling subject buttons if question field is not selected or no results present under that subject category#}
                     {% endfor %}
                 </div>
             </div>
@@ -49,7 +49,7 @@
                 <button class="btn open-filter" data-target="#filterStates" aria-expanded="true" aria-controls="filter-states">{% trans 'States' %}</button>
                 <div class="category-options-list" id="filterStates">
                     {% for state in states %}
-                    <button class="btn category-option {% if state.state in states_to_filter_by %}active{% endif %}" data-param="state" data-value="{{ state.state|urlencode }}">{{ state.state }}</button>
+                    <button class="btn category-option {% if state.state in states_to_filter_by %}active{% endif %}" data-param="state" data-value="{{ state.state|urlencode }}" {% if 'questions' not in active_categories %}disabled{% endif %}>{{ state.state }}</button>
                     {% endfor %}
                 </div>
             </div>
@@ -65,7 +65,7 @@
                 <button class="btn open-filter" data-target="#filterCurriculum" aria-expanded="true" aria-controls="filter-curriculum">{% trans 'Curriculum Followed' %}</button>
                 <div class="category-options-list" id="filterCurriculum">
                     {% for curriculum in curriculums %}
-                    <button class="btn category-option {% if curriculum.curriculum_followed in curriculums_to_filter_by %}active{% endif %}" data-param="curriculum" data-value="{{ curriculum.curriculum_followed|urlencode }}">{{ curriculum.curriculum_followed|capfirst }}</button>
+                    <button class="btn category-option {% if curriculum.curriculum_followed in curriculums_to_filter_by %}active{% endif %}" data-param="curriculum" data-value="{{ curriculum.curriculum_followed|urlencode }}" {% if 'questions' not in active_categories %}disabled{% endif %}>{{ curriculum.curriculum_followed|capfirst }}</button>
                     {% endfor %}
                 </div>
             </div>
