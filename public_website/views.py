@@ -188,7 +188,7 @@ class SearchView(View):
 
         results = self.get_querysets(request)
 
-        result = results.get('questions')
+        questions = results.get('questions')
         articles = results.get('articles')
 
         # get values for filter
@@ -214,19 +214,19 @@ class SearchView(View):
             questions_queryset = []
 
             if 'answered' in question_categories:
-                answered_questions = result.filter(answers__approved_by__isnull=False)
+                answered_questions = questions.filter(answers__approved_by__isnull=False)
                 questions_queryset = answered_questions
 
             if 'unanswered' in question_categories:
-                unanswered_questions = result.filter(answers__approved_by__isnull=True)
+                unanswered_questions = questions.filter(answers__approved_by__isnull=True)
                 if type(questions_queryset) is QuerySet:
                     questions_queryset = questions_queryset | unanswered_questions
                 else:
                     questions_queryset = unanswered_questions
 
-            result = questions_queryset
+            questions = questions_queryset
 
-        available_subjects = list(result.order_by()
+        available_subjects = list(questions.order_by()
                                         .values_list('field_of_interest', flat=True)
                                         .distinct('field_of_interest')
                                         .values_list('field_of_interest'))
@@ -234,17 +234,17 @@ class SearchView(View):
         # convert list of tuples to list of strings
         available_subjects = [''.join(item) for item in available_subjects]
 
-        states = result.order_by() \
+        states = questions.order_by() \
                        .values_list('state') \
                        .distinct('state') \
                        .values('state')
 
-        curriculums = result.order_by() \
+        curriculums = questions.order_by() \
                             .values_list('curriculum_followed') \
                             .distinct('curriculum_followed') \
                             .values('curriculum_followed')
 
-        languages = result.order_by() \
+        languages = questions.order_by() \
                           .values_list('language') \
                           .distinct('language') \
                           .values('language')
@@ -252,37 +252,37 @@ class SearchView(View):
         # apply filters if any
         subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
         if subjects_to_filter_by:
-            result = result.filter(field_of_interest__in=subjects_to_filter_by)
+            questions = questions.filter(field_of_interest__in=subjects_to_filter_by)
 
         states_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('state')]
         if states_to_filter_by:
-            result = result.filter(state__in=states_to_filter_by)
+            questions = questions.filter(state__in=states_to_filter_by)
 
         curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
         if curriculums_to_filter_by:
-            result = result.filter(curriculum_followed__in=curriculums_to_filter_by)
+            questions = questions.filter(curriculum_followed__in=curriculums_to_filter_by)
 
         languages_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('language')]
         if languages_to_filter_by:
-            result = result.filter(language__in=languages_to_filter_by)
+            questions = questions.filter(language__in=languages_to_filter_by)
 
-        # sort the results if sort-by parameter exists
+        # sort the questions if sort-by parameter exists
         # default: newest
         sort_by = request.GET.get('sort-by', 'newest')
 
         if sort_by == 'newest':
-            result = result.order_by('-created_on')
+            quesions = questions.order_by('-created_on')
 
         # save list of IDs for Submit Answer/Review Answer
         page_title = self.get_page_title(request)
         if page_title == _('Review Answers') or page_title == _('Answer Questions'):
-            result_id_list = [id['id'] for id in result.values('id')]
+            result_id_list = [id['id'] for id in questions.values('id')]
             request.session['result_id_list'] = result_id_list
 
-        paginator = Paginator(result, 15)
+        paginator = Paginator(questions, 15)
 
         page = request.GET.get('page', 1)
-        result_page_one = paginator.get_page(page)
+        questions_page_one = paginator.get_page(page)
 
         # get list of IDs of bookmarked items
         bookmark_id_list = Bookmark.objects.filter(user_id=request.user.id) \
@@ -294,8 +294,8 @@ class SearchView(View):
             'grey_background': 'True',
             'page_title': page_title,
             'enable_breadcrumbs': self.get_enable_breadcrumbs(request),
-            'results': result_page_one,
-            'result_size': result.count(),
+            'questions': questions_page_one,
+            'result_size': questions.count(), #The count for anwsers, etc. will be added to this below
             'subjects': subjects,
             'available_subjects': available_subjects,
             'states': states,

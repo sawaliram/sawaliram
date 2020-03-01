@@ -88,7 +88,7 @@
                 <i class="fas fa-search"></i>
             </button>
         </form>
-        {% if results or articles %}
+        {% if questions or articles %}
         <div class="head-area">
             <span class="results-count">
                 Showing {% if result_size == 1 %}1{% else %}{{ results.start_index}}-{{ results.end_index }}{% endif %} of {{ result_size }} result{{ result_size|pluralize }}
@@ -125,70 +125,70 @@
                 </div>
             </li>
             {% endfor %}
-            {% for result in results %}
+            {% for question in questions %}
             <li class="search-result-item">
                 <div class="search-result-item-header">
-                    <p class="item-number">#{{ result.id }} | {% trans 'Question' %}</p>
-                    <button class="btn bookmark-button {% if result.id in bookmarks %}bookmarked{% endif %}" data-content="question" data-id="{{ result.id }}">{% if result.id in bookmarks %}<i class="fas fa-bookmark"></i> {% trans 'Bookmarked' %}{% else %}<i class="far fa-bookmark"></i> {% comment %}Translators: this is a verb ("Bookmark this item"){% endcomment %}{% trans 'Bookmark' %}{% endif %}</button>
+                    <p class="item-number">#{{ question.id }} | {% trans 'Question' %}</p>
+                    <button class="btn bookmark-button {% if question.id in bookmarks %}bookmarked{% endif %}" data-content="question" data-id="{{ question.id }}">{% if question.id in bookmarks %}<i class="fas fa-bookmark"></i> {% trans 'Bookmarked' %}{% else %}<i class="far fa-bookmark"></i> {% comment %}Translators: this is a verb ("Bookmark this item"){% endcomment %}{% trans 'Bookmark' %}{% endif %}</button>
                 </div>
                 <h3 class="item-title">
-                    {{ result.question_text }}
+                    {{ question.question_text }}
                 </h3>
-                {% if result.language.lower != 'english' and result.question_text_english %}
+                {% if question.language.lower != 'english' and question.question_text_english %}
                 <h4 class="item-sub-title">
-                    {{ result.question_text_english }}
+                    {{ question.question_text_english }}
                 </h4>
                 {% endif %}
                 <div class="search-result-item-content">
-                    {% if result.school or result.state or result.area or result.question_asked_on or result.published_source %}
+                    {% if question.school or question.state or question.area or question.question_asked_on or question.published_source %}
                     <div class="item-meta">
-                        {% if result.published == True and result.published_source %}
+                        {% if question.published == True and question.published_source %}
                         <span class="highlighted-meta">
                             <i class="fas fa-book"></i>
                             <span class="meta-value">
-                                {{ result.published_source }}
+                                {{ question.published_source }}
                             </span>
                         </span>
                         {% endif %}
-                        {% if result.school %}
+                        {% if question.school %}
                         <span class="highlighted-meta">
                             <i class="fas fa-university"></i>
                             <span class="meta-value">
-                                {{ result.school }}
-                                {% if result.curriculum_followed %}
-                                    ({{ result.curriculum_followed }})
+                                {{ question.school }}
+                                {% if question.curriculum_followed %}
+                                    ({{ question.curriculum_followed }})
                                 {% endif %}
                             </span>
                         </span>
                         {% endif %}
 
-                        {% if result.area or result.state %}
+                        {% if question.area or question.state %}
                         <span class="highlighted-meta">
                             <i class="fas fa-map-marker-alt"></i>
                             <span class="meta-value">
-                                {% if result.area %}
-                                    {{ result.area.rstrip }} {% if result.state %}, {{ result.state }} {% endif %}
-                                {% elif result.state %}
-                                    {{ result.state }}
+                                {% if question.area %}
+                                    {{ question.area.rstrip }} {% if question.state %}, {{ question.state }} {% endif %}
+                                {% elif question.state %}
+                                    {{ question.state }}
                                 {% endif %}
                             </span>    
                         </span>
                         {% endif %}
 
-                        {% if result.student_class %}
+                        {% if question.student_class %}
                         <span class="highlighted-meta">
                             <i class="fas fa-user-graduate"></i>
                             <span class="meta-value">
-                                Class {{ result.student_class }}
+                                Class {{ question.student_class }}
                             </span>
                         </span>
                         {% endif %}
 
-                        {% if result.question_asked_on %}
+                        {% if question.question_asked_on %}
                         <span class="highlighted-meta">
                             <i class="far fa-calendar-alt"></i>
                             <span class="meta-value">
-                                {{ result.question_asked_on|date:"j F, Y" }}
+                                {{ question.question_asked_on|date:"j F, Y" }}
                             </span>
                         </span>
                         {% endif %}
@@ -197,22 +197,22 @@
                     {% if page_title == _('Answer Questions') %}
                         <div class="item-context-controls">
                             {% if page_title == 'Answer Questions' %}
-                            <a href="{% url 'dashboard:submit-answer' question_id=result.id %}" class="btn btn-small btn-primary">Answer</a>
+                            <a href="{% url 'dashboard:submit-answer' question_id=question.id %}" class="btn btn-small btn-primary">Answer</a>
                             {% endif %}
                         </div>
                     {% endif %}
                     {% if page_title == _('View Questions') or page_title == _('Search') %}
-                        {% for answer in result.answers.all %}
+                        {% for answer in question.answers.all %}
                         {% if answer.approved_by %}
                             <div class="item-context-controls">
-                                <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">View Answer</a>
+                                <a href="{% url 'public_website:view-answer' question_id=question.id answer_id=answer.id %}" class="btn btn-small btn-primary">View Answer</a>
                             </div>
                         {% endif %}
                         {% endfor %}
                     {% endif %}
                 </div>
                 {% if page_title == _('Review Answers') %}
-                    {% for answer in result.answers.all %}
+                    {% for answer in question.answers.all %}
                     <div class="answer-preview">
                         <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
                         {% for credit in answer.credits.all %}
@@ -221,18 +221,18 @@
                             </h4>
                         {% endfor %}
                         <div class="review-answer-controls">
-                            <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
+                            <a href="{% url 'dashboard:review-answer' question_id=question.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
                         </div>
                     </div>
                     {% endfor %}
                 {% endif %}
                 {% if page_title == _('Translate Answers') %}
-                    {% for answer in result.answers.all %}
+                    {% for answer in question.answers.all %}
                     <div class="answer-preview">
                         <h4>Answered by <b>{{ answer.submitted_by.get_full_name }}</b></h4>
                         <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
                         <div class="review-answer-controls">
-                            <a href="{% url 'dashboard:translate-answer' source=result.id answer=answer.id %}" class="btn btn-small btn-primary">{% trans 'Translate' %}</a>
+                            <a href="{% url 'dashboard:translate-answer' source=question.id answer=answer.id %}" class="btn btn-small btn-primary">{% trans 'Translate' %}</a>
                         </div>
                     </div>
                     {% endfor %}
@@ -242,18 +242,18 @@
         </ul>
     
         <div class="search-pagination">
-            {% if results.has_previous %}
+            {% if questions.has_previous %}
             <span class="page-number end-page-number page-button" data-page="1"> << </span>
-            <span class="page-number page-button" data-page="{{ results.previous_page_number }}"> {{ results.previous_page_number }} </span>
+            <span class="page-number page-button" data-page="{{ questions.previous_page_number }}"> {{ questions.previous_page_number }} </span>
             {% endif %}
-            <span class="page-number current-page">{{ results.number }}</span>
-            {% if results.has_next %}
-            <span class="page-number page-button" data-page="{{ results.next_page_number }}"> {{ results.next_page_number }} </span>
-            <span class="page-number end-page-number page-button" data-page="{{ results.paginator.num_pages }}"> >> </a>
+            <span class="page-number current-page">{{ questions.number }}</span>
+            {% if questions.has_next %}
+            <span class="page-number page-button" data-page="{{ questions.next_page_number }}"> {{ questions.next_page_number }} </span>
+            <span class="page-number end-page-number page-button" data-page="{{ questions.paginator.num_pages }}"> >> </a>
             {% endif %}
         </div>
         {% else %}
-        <div class="no-search-results-container">
+        <div class="no-search-questions-container">
             <i class="far fa-frown"></i>
             <p>{% blocktrans %}No results found. Try changing the filters or search for something else{% endblocktrans %}</p>
         </div>
