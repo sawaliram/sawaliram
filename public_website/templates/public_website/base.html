@@ -155,13 +155,12 @@
                             <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
                         {% endif %}
                         <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="navbarUserButton">
-                            <!-- <img src="{% static 'user/default_menu.png' %}" alt="User Profile Picture"> -->
-                            <i class="far fa-user-circle"></i>
+                            <img class="profile-picture" src="{{ request.user.profile.profile_picture }}" alt="User Profile Picture">
+                            <span class="user-name">{{ request.user.first_name }} {{ request.user.last_name }}</span>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="navbarUserButton">
-                            <p class="user-name">{{ request.user.get_full_name }}</p>
                             <span class="dropdown-item">
-                                <a href="{% url 'public_website:user-profile' user_id=request.user.id %}"><i class="fas fa-user-circle"></i> {% trans 'My Profile' %}</a>
+                                <a href="{% url 'public_website:new-user-profile' user_id=request.user.id %}"><i class="fas fa-user-circle"></i> {% trans 'My Profile' %}</a>
                             </span>
                             <span class="dropdown-item">
                                 <a href="{% url 'dashboard:home' %}"><i class="fas fa-pencil-ruler"></i> {% trans 'Dashboard' %}</a>

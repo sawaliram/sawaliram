@@ -1,6 +1,8 @@
 {% extends "public_website/base.html" %}
 
 {% load static %}
+{% load i18n %}
+{% load to_language_name %}
 
 {% block head_includes %}
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -27,15 +29,15 @@
 				<span>Answering in: </span>
 				<select class="submission-language-select">
 					{% if draft_answer %}
-					<option value="{{ draft_answer.get_language_name }}" selected>
-						{{ draft_answer.get_language_name|capfirst }}
+					<option value="{{ draft_answer.language }}" selected>
+						{{ draft_answer.language|to_language_name }}
 					</option>
 					{% else %}
-						<option value="{{ question.language.lower }}" selected>
-							{{ question.language }}
+						<option value="{{ question.language }}" selected>
+							{{ question.language|to_language_name }}
 						</option>
-						{% if question.language.lower != 'english' %}
-						<option value="english">English</option>
+						{% if question.language != 'en' %}
+						<option value="en">English</option>
 						{% endif %}
 					{% endif %}
 				</select>

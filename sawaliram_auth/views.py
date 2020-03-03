@@ -413,7 +413,7 @@ class DeleteBookmark(View):
             question=request.POST.get('question-id'))
         bookmark_to_remove.delete()
         messages.success(request, 'Bookmark has been deleted!')
-        return redirect('public_website:user-profile', user_id=request.user.id)
+        return redirect('public_website:new-user-profile', user_id=request.user.id)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -422,5 +422,5 @@ class RemoveDraft(View):
     def post(self, request):
         draft_to_remove = Answer.objects.get(id=request.POST.get('draft-id'))
         draft_to_remove.delete()
-        messages.success(request, 'Draft has been deleted!')
-        return redirect('public_website:user-profile', user_id=request.user.id)
+        messages.success(request, 'The draft answer has been deleted!')
+        return redirect('public_website:new-user-profile', user_id=request.user.id)

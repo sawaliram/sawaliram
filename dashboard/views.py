@@ -852,6 +852,7 @@ def create_article(request):
     return redirect(reverse('dashboard:edit-article',
       kwargs={'draft_id': draft.id}))
 
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class EditArticleView(View):
@@ -982,7 +983,11 @@ class DeleteArticleView(View):
 
         article.delete()
 
-        return redirect('dashboard:home')
+        messages.success(request, 'The draft article has been deleted')
+        return redirect('public_website:new-user-profile', user_id=request.user.id)
+
+        # return redirect('dashboard:home')
+
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('admins'), name='dispatch')
@@ -1006,6 +1011,7 @@ class ReviewSubmittedArticleView(View):
         }
 
         return render(request, self.template, context)
+
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('admins'), name='dispatch')
@@ -1032,13 +1038,14 @@ class ApproveSubmittedArticleView(View):
         messages.success(request, self.success_message)
         return redirect('dashboard:review-article', article=a.id)
 
-# Comments
 
+# Comments
 class CommentForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea(attrs={
         'placeholder': 'Enter your comment...',
         'rows': '4',
     }))
+
 
 class CommentMixin:
     '''
@@ -1066,6 +1073,7 @@ class CommentMixin:
     def setup(self, request, target_type, target, *args, **kwargs):
         self.target = self.get_target(target_type, target)
         return super().setup(request, *args, **kwargs)
+
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')
@@ -1679,7 +1687,6 @@ class ReviewAnswerTranslation(BaseReview):
             self.request.session.get('lang', settings.DEFAULT_LANGUAGE))
 
         return context
-
 
 
 class ReviewArticleTranslation(BaseReview):
