@@ -518,7 +518,7 @@ class UpdateUserName(View):
         request.user.save()
 
         messages.success(request, 'Your personal info has been updated')
-        return redirect('public_website:new-user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id)
 
 
 class UpdateOrganisationInfo(View):
@@ -534,7 +534,7 @@ class UpdateOrganisationInfo(View):
             request.user.save()
 
         messages.success(request, 'Your organisation info has been updated')
-        return redirect('public_website:new-user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id)
 
 
 class UpdateUserPassword(View):
@@ -557,7 +557,7 @@ class UpdateUserPassword(View):
         else:
             messages.error(request, _('The password you entered is incorrect'))
 
-        return redirect('public_website:new-user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id)
 
 
 class UpdateProfilePicture(View):
@@ -568,7 +568,7 @@ class UpdateProfilePicture(View):
         user_profile.save()
 
         messages.success(request, 'Your profile picture has been updated')
-        return redirect('public_website:new-user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id)
 
 
 class GetProfilePictureOptions(View):
@@ -582,79 +582,6 @@ class GetProfilePictureOptions(View):
             'img_src_list': img_src_list,
         }
         return HttpResponse(render_to_string('public_website/pick-profile-picture.html', context, request))
-
-
-class UserProfileView(View):
-    def get(self, request, user_id):
-
-        if not User.objects.filter(id=user_id).exists():
-            raise Http404
-        else:
-            selected_user = User.objects.get(id=user_id)
-            answer_drafts = Answer.objects.filter(submitted_by=user_id, status='draft')
-            submitted_questions = Dataset.objects.filter(submitted_by=user_id)
-            submitted_answers = Answer.objects.filter(submitted_by=user_id)
-            article_drafts = ArticleDraft.objects.filter(author=user_id)
-            article_translation_drafts = ArticleTranslation.get_drafts.filter(translated_by=user_id)
-            answer_translation_drafts = AnswerTranslation.get_drafts.filter(translated_by=user_id)
-            article_translation_submissions = SubmittedArticleTranslation.objects.filter(translated_by=user_id)
-            answer_translation_submissions = SubmittedAnswerTranslation.objects.filter(translated_by=user_id)
-            submitted_articles = SubmittedArticle.objects.filter(author=user_id)
-            published_articles = PublishedArticle.objects.filter(author=user_id)
-            bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
-            bookmarked_articles = selected_user.bookmarks.filter(content_type='article')
-            notifications = Notification.objects.filter(user=user_id)
-            context = {
-                'dashboard': 'False',
-                # Translators: This is the title for the User Profile page
-                'page_title': _("%(name)s's Profile") % {
-                    'name': selected_user.first_name,
-                },
-                'enable_breadcrumbs': 'Yes',
-                'selected_user': selected_user,
-                'answer_drafts': answer_drafts,
-                'notifications': notifications,
-                'submitted_questions': submitted_questions,
-                'submitted_answers': submitted_answers,
-                'article_drafts': article_drafts,
-                'article_translation_drafts': article_translation_drafts,
-                'answer_translation_drafts': answer_translation_drafts,
-                'article_translation_submissions': article_translation_submissions,
-                'answer_translation_submissions': answer_translation_submissions,
-                'submitted_articles': submitted_articles,
-                'published_articles': published_articles,
-                'bookmarked_questions': bookmarked_questions,
-                'bookmarked_articles': bookmarked_articles,
-            }
-            return render(request, 'public_website/user-profile.html', context)
-
-    def post(self, request, user_id):
-        user = User.objects.get(id=request.user.id)
-        if request.POST.get('organisation-name'):
-            user.organisation = request.POST.get('organisation-name')
-            user.save()
-            if request.POST.get('organisation-role'):
-                user.organisation_role = request.POST.get('organisation-role')
-                user.save()
-            messages.success(request, (_('Your organisation details have been updated!')))
-        elif request.POST.get('current-password'):
-            match_check_old = check_password(request.POST.get('current-password'), request.user.password)
-            if match_check_old:
-                if request.POST.get('new-password') == request.POST.get('confirm-new-password'):
-                    match_check_new = check_password(request.POST.get('new-password'), request.user.password)
-                    if match_check_new:
-                        messages.error(request, (_('New password cannot be same as the current password')))
-                    else:
-                        user.password = make_password(password=request.POST.get('new-password'))
-                        user.save()
-                        login(request, user)
-                        messages.success(request, (_('Your password has been updated!')))
-                else:
-                    messages.error(request, _('Make sure you entered the new password correctly both times'))
-            else:
-                messages.error(request, _('The password you entered is incorrect'))
-
-        return redirect('public_website:user-profile', user_id=request.user.id)
 
 
 class ViewNotification(View):
@@ -682,12 +609,15 @@ class About(View):
             'page_title': _('About'),
         }
         return render(request, 'public_website/about.html', context)
+
+
 class ResearchPage(View):
     def get(self, request):
         context = {
             'page_title': _('Research')
         }
         return render(request, 'public_website/research.html', context)
+
 
 class FAQPage(View):
     def get(self, request):

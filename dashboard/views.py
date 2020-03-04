@@ -984,7 +984,7 @@ class DeleteArticleView(View):
         article.delete()
 
         messages.success(request, 'The draft article has been deleted')
-        return redirect('public_website:new-user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id)
 
         # return redirect('dashboard:home')
 
