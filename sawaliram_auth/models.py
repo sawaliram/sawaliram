@@ -47,6 +47,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     organisation = models.CharField(max_length=200, default='')
     organisation_role = models.CharField(max_length=50, null=True, blank=True)
     intro_text = models.CharField(max_length=300, null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True, null=True)
 
     objects = UserManager()
 
@@ -78,6 +80,7 @@ class Profile(models.Model):
     class Meta:
         db_table = 'user_profile'
 
+    profile_picture = models.CharField(max_length=100, null=True)
     verification_code = models.TextField(null=True)
     verification_code_expiry = models.DateTimeField(null=True)
     password_reset_code = models.TextField(null=True)

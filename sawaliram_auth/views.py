@@ -32,9 +32,11 @@ def send_verification_email(user):
     salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:5]
     verification_code = hashlib.sha1((salt + user.get_full_name()).encode('utf-8')).hexdigest()
 
-    profile, created = Profile.objects.get_or_create(user=user)
+    profile, profile_created = Profile.objects.get_or_create(user=user)
     profile.verification_code = verification_code
     profile.verification_code_expiry = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=3), "%Y-%m-%d %H:%M:%S")
+    if profile_created:
+        profile.profile_picture = '/static/user/default_profile_pictures/dpp_' + str(random.randrange(1, 21)) + '.png'
     profile.save()
 
     message = 'Hello ' + user.first_name + ',<br>'
@@ -428,5 +430,5 @@ class RemoveDraft(View):
     def post(self, request):
         draft_to_remove = Answer.objects.get(id=request.POST.get('draft-id'))
         draft_to_remove.delete()
-        messages.success(request, 'Draft has been deleted!')
+        messages.success(request, 'The draft answer has been deleted!')
         return redirect('public_website:user-profile', user_id=request.user.id)
