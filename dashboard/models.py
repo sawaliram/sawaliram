@@ -77,7 +77,7 @@ class QuestionArchive(models.Model):
     published = models.BooleanField(default=False)
     published_source = models.CharField(max_length=200, default='', blank=True)
     published_date = models.DateField(default=datetime.date.today)
-    question_asked_on = models.DateField(null=True)
+    question_asked_on = models.DateField(null=True, blank=True)
     notes = models.CharField(max_length=1000, default='')
     submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
@@ -171,7 +171,7 @@ class Question(models.Model):
     published = models.BooleanField(default=False)
     published_source = models.CharField(max_length=200, default='', blank=True)
     published_date = models.DateField(default=datetime.date.today)
-    question_asked_on = models.DateField(null=True)
+    question_asked_on = models.DateField(null=True, blank=True)
     notes = models.CharField(max_length=1000, default='', blank=True)
     dataset_id = models.CharField(max_length=100, default='', blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
