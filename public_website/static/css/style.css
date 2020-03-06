@@ -883,6 +883,7 @@ textarea {
     padding: 0.5rem;
     padding-right: 2rem;
     box-shadow: 0 0.7rem 1rem -1rem;
+    z-index: 1;
 }
 
 .navbar-search-form-wrapper {
@@ -3731,4 +3732,14 @@ button.social-login i {
 
 .auth-interstitial-body .auth-interstitial-content input.registered-email {
     margin-bottom: 0.3rem;
+}
+
+
+/* ======= TEMPORARY BOOTSTRAP STUFF ======= */
+
+/* these can be removed once we've upgraded *
+ * to a later version of bootstrap           */
+
+ .mb-n2 {
+  margin-bottom: -2rem !important
 }

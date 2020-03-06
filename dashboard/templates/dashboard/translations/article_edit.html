@@ -2,7 +2,7 @@
 
 {% block tr_original %}
 <header class="flex">
-  <h1>{{ object.source.tr_title }}</h1>
+  <h1 class="p-3">{{ object.source.tr_title }}</h1>
 </header>
 <section class="hr-over">
   {{ object.source.tr_body|safe }}
@@ -14,15 +14,17 @@
 
 {% block tr_translation %}
 <header class="flex">
-  <h1><input type="text" name="{{ form.title.name }}" value="{{ form.title.value }}" placeholder="{{ object.source.tr_title }}" id="{{ form.title.id }}" class="input-plain input-title" /></h1>
+  <h1 class="w-100"><input type="text" name="{{ form.title.name }}" value="{{ form.title.value }}" placeholder="{{ object.source.tr_title }}" id="{{ form.title.id }}" class="input-plain input-title p-3" /></h1>
 </header>
-{% include 'dashboard/snippets/richtext_editor.html' with value=form.body.value %}
-<footer id="submitbar">
-  <input type="hidden" name="{{ form.body.name }}" value="{{ form.body.value }}" />
-  <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
-  <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
-  <a href="{% url 'dashboard:delete-article-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete translation">
-    <i class="fas fa-trash"></i>
-  </a>
-</footer>
+<div class="bg-white">
+  {% include 'dashboard/snippets/richtext_editor.html' with value=form.body.value class='' %}
+  <footer id="submitbar">
+    <input type="hidden" name="{{ form.body.name }}" value="{{ form.body.value }}" />
+    <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
+    <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+    <a href="{% url 'dashboard:delete-article-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete translation">
+      <i class="fas fa-trash"></i>
+    </a>
+  </footer>
+</div>
 {% endblock %}
