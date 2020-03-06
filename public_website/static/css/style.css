@@ -4,8 +4,8 @@ body {
     font-family: 'Noto Sans', sans-serif;
 }
 
-body.grey-background {
-    background-color: #f2f2f2;;
+.grey-background {
+    background-color: #f2f2f2;
 }
 
 .sawaliram-container {
