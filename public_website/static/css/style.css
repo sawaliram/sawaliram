@@ -162,6 +162,10 @@ textarea {
     cursor: not-allowed;
 }
 
+.btn-square {
+    border-radius: 0.2rem;
+}
+
 .btn-primary {
     background-color: #87B24D;
     border-color: #87B24D;
@@ -180,8 +184,9 @@ textarea {
 }
 
 .btn-primary-hollow:hover {
-    color: #ffffff;
-    background-color: #87B24D;
+    color: #759142;
+    border-color: #759a42;
+    background-color: #FFFFFF;
 }
 
 .btn-secondary {
@@ -201,8 +206,9 @@ textarea {
 }
 
 .btn-secondary-hollow:hover {
-    color: #ffffff;
-    background-color: #9B63A8;
+    color: #83538e;
+    border-color: 83538e;
+    background-color: #fff0;
 }
 
 .btn-yellow {
@@ -232,8 +238,8 @@ textarea {
 }
 
 .btn-danger-hollow:hover {
-    color: #ffffff;
-    background-color: #C60000;
+    color: #a40000;
+    border-color: #a40000;
 }
 
 .btn-inline {
