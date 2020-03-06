@@ -10,7 +10,6 @@ body {
 
 .sawaliram-container {
     padding-top: calc(60px + 1rem);
-    padding-bottom: 4rem;
 }
 
 @media (max-width: 576px) {
