@@ -22,28 +22,31 @@
     {% endfor %}
   {% endif %}
   <form class="rich-text-form row" action="{{ request.get_full_path }}" method="POST">
-    <div class="col-md-12 flex ">
-      <div class="mx-auto flex btn btn-secondary mb-3">
-        <span><label for="lang_from" class="fas fa-globe-asia"></label></span>
-        <select id="lang_from" name="lang_from" class="input-plain text-center">
-          {% for value, label in object.source.list_available_languages %}
-          <option value="{{ value }}"{% if value == object.source.tr_language %} selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-        <span><label for="lang_to" class="fas fa-arrow-right"></label></span>
-        <select id="lang_to" name="lang_to" class="input-plain text-center" style="ml-auto">
-          {% for value, label in content_language_choices %}
-          <option value="{{ value }}"{% if value == object.language %} selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
+    <div class="col-md-12 flex navbar-extra">
+      <div class="mx-auto">
+        <p class="text-secondary text-center mb-0">Translate</p>
+        <div class="mx-auto flex btn btn-square btn-secondary-hollow mb-3">
+          <select id="lang_from" name="lang_from" class="input-plain text-center">
+            {% for value, label in object.source.list_available_languages %}
+            <option value="{{ value }}"{% if value == object.source.tr_language %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <span><label for="lang_to" class="fas fa-chevron-right text-center mx-2"></label></span>
+          <select id="lang_to" name="lang_to" class="input-plain text-center" style="ml-auto">
+            {% for value, label in content_language_choices %}
+            <option value="{{ value }}"{% if value == object.language %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
       </div>
     </div>
-    <article class="answer-area col-md-6">
+
+    <article class="answer-area col-md-6 pt-4">
       {% block tr_original %}
       {# Original/source goes here #}
       {% endblock %}
     </article>
-    <div class="col-md-6 answer-area">
+    <div class="col-md-6 answer-area pt-4">
       {% csrf_token %}
       {% block tr_translation %}
       {# Translation form goes here (minus the <form> element, of course) #}
