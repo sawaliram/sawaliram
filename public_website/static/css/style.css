@@ -95,6 +95,11 @@ input.input-plain {
     margin: 0;
 }
 
+h1 .input-plain {
+    width: 100%;
+    border-radius: 0;
+}
+
 select.input-plain {
     border: none;
     background: inherit;
