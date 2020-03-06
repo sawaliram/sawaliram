@@ -3359,6 +3359,7 @@ footer .footer-base p {
 
 footer.wavy-footer {
     background-color: #41414100;
+    z-index: 1;
 }
 
 footer.wavy-footer::before {
