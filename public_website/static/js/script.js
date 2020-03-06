@@ -505,6 +505,25 @@ setupChooseProfilePictureModal();
 setupMobileCloseUserProfileContent();
 setupUserProfileMenuTabs();
 
+function autoResizeSelectFields() {
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Solution thanks to João Pimentel Ferreira           *
+     * in the following  StackOverflow answer:             *
+     *                                                     *
+     *     https://stackoverflow.com/a/55343177/1196444    *
+     *                                                     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    $('select').change(function(){
+        var text = $(this).find('option:selected').text()
+        var $aux = $('<select/>').append($('<option/>').text(text))
+        $(this).after($aux)
+        $(this).width($aux.width())
+        $aux.remove()
+    }).change()
+}
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
@@ -513,6 +532,7 @@ closeMenusOnClickingDarkbackground();
 enableLinkingtoTabs();
 setupNavbarSearchBar();
 setupSearchResultsSearch();
+autoResizeSelectFields();
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
