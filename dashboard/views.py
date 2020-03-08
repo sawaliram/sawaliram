@@ -1216,7 +1216,7 @@ class TranslateAnswersList(SearchView):
                     Q(state__icontains=request.GET.get('q')) |
                     Q(field_of_interest__icontains=request.GET.get('q'))
             )
-            
+
             results['articles'] = (PublishedArticle.objects.filter(
                 translations__isnull=True,
             )
@@ -1619,6 +1619,23 @@ class EditAnswerTranslation(BaseEditTranslation):
             return redirect(submission.get_absolute_url())
 
         return response
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class EditSubmittedArticleTranslation(EditArticleTranslation):
+    model = SubmittedArticleTranslation
+    view_name = 'dashboard:review-article-translation'
+    default_status = SubmittedArticleTranslation.STATUS_SUBMITTED
+
+    def get_object(self):
+        obj = get_object_or_404(self.model, id=self.kwargs.get('pk'))
+        self.source = obj.source
+
+        return obj
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.view_name, kwargs={'pk': self.object.id})
 
 
 class BaseDeleteTranslation(DeleteView):

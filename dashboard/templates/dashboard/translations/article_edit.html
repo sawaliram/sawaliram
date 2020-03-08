@@ -8,7 +8,7 @@
   {{ object.source.tr_body|safe }}
 </section>
 <footer>
-  
+
 </footer>
 {% endblock %}
 
@@ -19,8 +19,12 @@
 {% include 'dashboard/snippets/richtext_editor.html' with value=form.body.value %}
 <footer id="submitbar">
   <input type="hidden" name="{{ form.body.name }}" value="{{ form.body.value }}" />
+  {% if object.is_submitted %}
+  <button type="submit" name="mode" value="draft" class="btn btn-primary">Update submission</button>
+  {% else %}
   <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
   <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+  {% endif %}
   <a href="{% url 'dashboard:delete-article-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete translation">
     <i class="fas fa-trash"></i>
   </a>
