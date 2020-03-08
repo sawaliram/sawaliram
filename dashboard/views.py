@@ -1371,6 +1371,7 @@ class BaseEditTranslation(UpdateView):
     conflict_url = None
     source_model = None
     view_name = None
+    default_status = None
 
     def get_object(self, queryset=None):
         '''
@@ -1406,7 +1407,7 @@ class BaseEditTranslation(UpdateView):
             'source': source,
             'translated_by': user,
             'language': lang_to,
-            'status': self.model.STATUS_DRAFT,
+            'status': self.get_default_status(),
         }
 
         try:
@@ -1440,6 +1441,18 @@ class BaseEditTranslation(UpdateView):
 
         return self.conflict_url
 
+    def get_default_status(self):
+        '''
+        Returns the expected status of the Draftable we're translating.
+        Defaults to using the set variable, if exists, or the selected
+        model's STATUS_DRAFT property if it doesn't.
+        '''
+
+        if self.default_status is not None:
+            return self.default_status
+        else:
+            return self.model.STATUS_DRAFT
+
     def form_valid(self, form):
         '''
         Validates form. This version inherits from UpdateView, but also
@@ -1457,10 +1470,7 @@ class BaseEditTranslation(UpdateView):
             kwargs = self.kwargs
             kwargs['lang_from'] = lang_from
             kwargs['lang_to'] = lang_to
-            self.success_url = reverse(
-                self.get_view_name(),
-                kwargs=kwargs,
-            )
+            self.kwargs = self.get_success_url(**kwargs)
 
         response = super().form_valid(form)
 
@@ -1496,9 +1506,11 @@ class BaseEditTranslation(UpdateView):
 
         return self.view_name
 
-    def get_success_url(self):
+    def get_success_url(self, **kwargs):
+        if not kwargs:
+            kwargs = self.kwargs
         if self.success_url is None:
-            self.success_url = reverse(self.get_view_name(), kwargs=self.kwargs)
+            self.success_url = reverse(self.get_view_name(), kwargs=kwargs)
 
         return self.success_url
 
