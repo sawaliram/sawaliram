@@ -13,16 +13,7 @@
 {% block content %}
 
 <div class="editor-container">
-	{% if messages %}
-        {% for message in messages %}
-			<div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-				{{ message }}
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-        {% endfor %}
-    {% endif %}
+	{% include 'snippets/show_messages.html' %}
 	<div class="editor-header">
 		<div class="header-controls">
 			<div class="submission-language-control">
@@ -84,11 +75,11 @@
 	</div>
 	<form action="{% url 'dashboard:submit-answer' question_id=question.id %}" class="rich-text-form" method="POST">
 		{% csrf_token %}
-		
+
 		<div id="editor" data-placeholder="Type your answer here...">
 			{{ draft_answer.answer_text|safe }}
 		</div>
-	
+
 		<div id="toolbar" class="justify-content-end hr-over">
 			<span class="ql-formats">
 				<button class="ql-bold"></button>
@@ -149,7 +140,7 @@
 			</div>
 			<button class="btn btn-small btn-secondary-hollow add-credit"><i class="fas fa-plus"></i> Add</button>
 		</div>
-	
+
 		<div id="submitbar">
 			<input type="hidden" name="question_id" value="{{ question.id }}">
 			<input type="hidden" name="rich-text-content" value="" />

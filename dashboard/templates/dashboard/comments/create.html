@@ -7,6 +7,7 @@
 {% block content %}
 
 <form class="wide-container" action="{{ request.get_full_path }}" method="POST">
+  {% include 'snippets/show_messages.html' %}
   <h3><i class="fas fa-pencil"></i> Create Comment</h3>
 
   {% for error in form.non_field_errors %}
@@ -15,7 +16,7 @@
   {% for error in form.text.errors %}
     <div class="alert alert-dismissable fade show error" role="alert">Comment text: {{ error }}</div>
   {% endfor %}
-    
+
   <ul class="comment-list">
   {% include 'dashboard/comments/comment_box.htm' with show_target=True editable=True input_name=form.text.html_name %}
   </ul>

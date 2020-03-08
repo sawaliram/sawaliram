@@ -8,15 +8,7 @@
 {% block content %}
 <div class="review-page-container">
     <div class="answer-area">
-        {% if messages %}
-          {% for message in messages %}
-          <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          {% endfor %}
+        {% include 'snippets/show_messages.html' %}
         {% endif %}
         <h1>{{ article.title }}</h1>
         <div class="answer-text">

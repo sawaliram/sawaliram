@@ -11,16 +11,7 @@
 <div class="user-profile-container">
     <div class="user-profile-menu">
         <div class="mobile-messages-container">
-            {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="{% trans 'Close' %}">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% endfor %}
-            {% endif %}
+            {% include 'snippets/show_messages.html' %}
         </div>
         <img class="profile-picture" src="{{ selected_user.profile.profile_picture }}" alt="{% trans 'Profile Picture' %}">
         <h1 class="user-name">{{ selected_user.get_full_name }}</h1>

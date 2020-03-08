@@ -11,16 +11,7 @@
 {% block content %}
 
 <div class="wide-container">
-	{% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endfor %}
-  {% endif %}
+  {% include 'snippets/show_messages.html' %}
 	<form action="{% url 'dashboard:edit-article' draft_id=article.id %}" class="rich-text-form" method="POST">
 		{% csrf_token %}
 
@@ -33,11 +24,11 @@
         {% endfor %}
       </select>
     </div>
-	
+
 		<div id="editor" data-placeholder="Type your article here..." class="hr-over">
 			{{ article.body|safe }}
 		</div>
-	
+
 		<div id="toolbar" class="justify-content-end hr-over">
 			<span class="ql-formats">
 				<button class="ql-bold"></button>
@@ -62,7 +53,7 @@
 				<button class="ql-formula"></button>
 			</span>
 		</div>
-	
+
 		<div id="submitbar">
 			<input type="hidden" name="rich-text-content" value="" />
       {% if article.is_draft %}

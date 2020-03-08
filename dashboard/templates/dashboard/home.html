@@ -8,6 +8,8 @@
 
 {% block content %}
 
+{% include 'snippets/show_messages.html' %}
+
 <h1 class="dashboard-home-greeting">Hi {{ request.user.first_name }}! What do you plan to do today?</h1>
 
 <div class="task-list">

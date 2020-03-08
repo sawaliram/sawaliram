@@ -6,7 +6,7 @@
 {% block title %}{{ article.tr_title }} | {% trans 'Sawaliram' %}{% endblock %}
 
 {% block content %}
-
+{% include 'snippets/show_messages.html' %}
 {% if article.cover_image %}
 <img src="{{ article.cover_image }} class="cover-image" />
 {% endif %}
@@ -45,5 +45,5 @@
   <aside class="article-footer col-sm-3">
   </aside>
 </article>
-    
+
 {% endblock %}

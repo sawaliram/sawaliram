@@ -8,21 +8,12 @@
 {% block content %}
 
 <div class="narrow-container">
-    {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        {% endfor %}
-    {% endif %}
-    
+    {% include 'snippets/show_messages.html' %}
+
     <div class="task-help-button-wrapper">
         <button class="btn btn-secondary-hollow task-help task-page-help">Help?</button>
     </div>
-    
+
     <nav>
         <div class="nav nav-pills" role="tablist">
             <a class="nav-item nav-link active" data-toggle="tab" href="#datasets-tab" role="tab" aria-controls="datasets-tab" aria-selected="true">

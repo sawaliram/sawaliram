@@ -10,9 +10,10 @@
 
 {% block content %}
 <div class="wide-container">
+  {% include 'snippets/show_messages.html' %}
   <h3><i class="fas fa-language"></i> Translate answer</h3>
   <p>You are about to translate the following question and answer:</p>
-  
+
   <ul class="card-list">
     <li class="task-details">
       <h4><a href="{{ answer.get_absolute_url }}">{{ source.question_text }}</a></h4>
