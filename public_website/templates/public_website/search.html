@@ -57,7 +57,7 @@
                 <button class="btn open-filter" data-target="#filterLanguages" aria-expanded="true" aria-controls="filter-languages">{% trans 'Languages' %}</button>
                 <div class="category-options-list" id="filterLanguages">
                     {% for language in languages %}
-                    <button class="btn category-option {% if language.language in languages_to_filter_by %}active{% endif %}" data-param="language" data-value="{{ language.language|urlencode }}">{{ language.language|to_language_name }}</button>
+                    <button class="btn category-option {% if language.language in languages_to_filter_by %}active{% endif %}" data-param="language" data-value="{{ language.language|urlencode }}">{{ language.language|language_name_translated }}</button>
                     {% endfor %}
                 </div>
             </div>
