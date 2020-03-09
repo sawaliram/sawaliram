@@ -1638,6 +1638,32 @@ class EditSubmittedArticleTranslation(EditArticleTranslation):
         return reverse(self.view_name, kwargs={'pk': self.object.id})
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class EditSubmittedAnswerTranslation(EditAnswerTranslation):
+    model = SubmittedTranslatedQuestion
+    view_name = 'dashboard:review-answer-translation'
+    default_status = SubmittedArticleTranslation.STATUS_SUBMITTED
+
+    def get_object(self):
+        question = get_object_or_404(self.model, id=self.kwargs.get('pk'))
+        self.source = question.source
+
+        # Get the related source answer
+        answer = get_object_or_404(AnswerTranslation,
+            id=self.kwargs.get('answer'))
+
+        # Make sure the question and answer match
+        if answer.source.question_id != question.source:
+            raise Http404('No matching translations found')
+
+        self.answer = answer
+
+        return question
+
+    def get_success_url(self, **kwargs):
+        return self.answer.get_absolute_url()
+
 class BaseDeleteTranslation(DeleteView):
     '''
     View that checks if you're the owner of a translation before

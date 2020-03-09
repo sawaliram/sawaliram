@@ -50,8 +50,12 @@
 {% include 'dashboard/snippets/richtext_editor.html' with value=answer.answer_text %}
 <footer id="submitbar">
   <input type="hidden" name="answer-text" value="{{ answer.answer_text }}" />
+  {% if answer.is_submitted %}
+  <button type="submit" name="mode" value="draft" class="btn btn-primary">Update translation</button>
+  {% else %}
   <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
   <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+  {% endif %}
   <a href="{% url 'dashboard:delete-answer-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete translation">
     <i class="fas fa-trash"></i>
   </a>

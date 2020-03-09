@@ -36,6 +36,7 @@ urlpatterns = [
     path('question/<int:source>/answer/<int:answer>/translate/from/<str:lang_from>/to/<str:lang_to>', views.EditAnswerTranslation.as_view(), name='edit-answer-translation'),
 
     path('translate/articles/<int:pk>/edit', views.EditSubmittedArticleTranslation.as_view(), name='edit-submitted-article-translation'),
+    path('translate/answers/<int:pk>/<int:answer>/edit', views.EditSubmittedAnswerTranslation.as_view(), name='edit-submitted-answer-translation'),
 
     path('translate/articles/<int:pk>/review', views.ReviewArticleTranslation.as_view(), name='review-article-translation'),
     path('translate/articles/<int:pk>/publish', views.ApproveArticleTranslation.as_view(), name='publish-article-translation'),
