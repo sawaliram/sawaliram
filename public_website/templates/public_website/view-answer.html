@@ -93,7 +93,7 @@
                 {% for credit in answer.credits.all %}
                     <div class="credit-card">
                         <p>{{ credit.credit_user_name }}</p>
-                        <span>{{ credit.credit_title|capfirst }}</span>
+                        <span>{{edit_title|capfirst }}</span>
                     </div>
                 {% endfor %}
             </div>
@@ -107,7 +107,7 @@
         <h2>{% trans 'Comments' %}</h2>
         <form action="{% url 'public_website:submit-user-comment-answer' question.id answer.id %}" method="POST">
             {% csrf_token %}
-            <textarea name="comment-text" rows="4" placeholder="Join the conversation"></textarea>
+            <textarea name="comment-text" rows="4" placeholder="{% trans 'Join the conversation' %}"></textarea>
             <button type="submit" class="btn btn-secondary">{% trans 'Add Comment' %}</button>
         </form>
         {% if comments %}

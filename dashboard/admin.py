@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import (
     Question,
     Answer,
+    Article
 )
 
 @admin.register(Answer)
@@ -25,3 +26,9 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ['id', 'question_text', 'question_text_english']
     list_filter = ['language', 'state', 'field_of_interest']
     list_display = ['id', 'question_text', 'question_text_english', 'field_of_interest', 'area', 'state']
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    search_fields = ['title', 'body']
+    list_filter = ['language', 'author']
+    list_display = ['id', 'title', 'body', 'created_on', 'updated_on', 'published_on','author']
