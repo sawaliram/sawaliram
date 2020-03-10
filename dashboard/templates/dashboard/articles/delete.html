@@ -1,17 +1,19 @@
 {% extends "public_website/base.html" %}
 
 {% load static %}
+{% load i18n %}
+{% load to_language_name %}
 
 {% block head_includes %}
     <link href="{% static 'css/quill.sawaliram.css' %}" rel="stylesheet">
 {% endblock %}
 
-{% block title %}Delete Article | Sawaliram{% endblock %}
+{% block title %}{% trans 'Delete Article' %} | {% trans 'Sawaliram' %}{% endblock %}
 
 {% block content %}
 <div class="wide-container">
-  <h3><i class="fas fa-exclamation-triangle"></i> Delete article</h3>
-  <p>Are you sure you want to delete the following article? This action cannot be undone.</p>
+  <h3><i class="fas fa-exclamation-triangle"></i> {% trans 'Delete article' %}</h3>
+  <p>{% trans 'Are you sure you want to delete the following article? This action cannot be undone.'%}</p>
   
   <ul class="card-list">
     <li class="task-details">
