@@ -17,8 +17,11 @@ class AnswerAdmin(admin.ModelAdmin):
         'status',
         'submitted_by',
         'created_on',
+        'updated_on',
+    ]
     ]
     search_fields = ['question_id__id', 'question_id__question_text']
+    date_hierarchy = 'created_on'
 
 
 @admin.register(Question)
@@ -32,3 +35,4 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['title', 'body']
     list_filter = ['language', 'author']
     list_display = ['id', 'title', 'body', 'created_on', 'updated_on', 'published_on','author']
+    date_hierarchy = 'published_on'
