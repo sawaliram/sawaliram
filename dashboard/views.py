@@ -1218,7 +1218,7 @@ class TranslateAnswersList(SearchView):
                     Q(state__icontains=request.GET.get('q')) |
                     Q(field_of_interest__icontains=request.GET.get('q'))
             )
-            
+
             results['articles'] = (PublishedArticle.objects.filter(
                 translations__isnull=True,
             )
@@ -1810,6 +1810,48 @@ class ApproveAnswerTranslation(BaseApproveTranslation):
         question.publish(self.request.user)
 
         return response
+
+# Admin functions
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class ChangeQuestionFOI(View):
+    '''
+    Prompt and change the "Field of Interest" for a question
+    '''
+
+    def get_queryset(self, ids):
+        try:
+            id_list = [int(i) for i in ids.split(',')]
+        except ValueError:
+            id_list= []
+
+        return Question.objects.filter(pk__in=id_list)
+
+    def get(self, request):
+        context = {
+            'questions': self.get_queryset(request.GET.get('ids'))
+        }
+
+        return render(
+            request,
+            'admin/dashboard/question/change_field_of_interest.html',
+            context
+        )
+
+    def post(self, request):
+        new_foi = request.POST.get('field_of_interest')
+
+        if not new_foi:
+            return redirect(request.build_absolute_uri())
+
+        queryset = self.get_queryset(request.GET.get('ids'))
+
+        updated = queryset.update(field_of_interest=new_foi)
+        messages.success(request,
+            _('%s items updated successfully') % updated)
+
+        return redirect('admin:dashboard_question_changelist')
 
 
 # Legacy Functions
