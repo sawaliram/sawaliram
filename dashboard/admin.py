@@ -25,6 +25,13 @@ class AnswerAdmin(admin.ModelAdmin):
         'created_on',
         'updated_on',
     ]
+    fields = [
+        'question_id',
+        'language',
+        'answer_text',
+        'status',
+        'submitted_by',
+        'approved_by',
     ]
     search_fields = ['question_id__id', 'question_id__question_text']
     inlines = [
