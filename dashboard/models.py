@@ -376,6 +376,7 @@ class AnswerCredit(models.Model):
         related_name='answer_credits',
         on_delete=models.PROTECT,
         default='',
+        blank=True,
         null=True)
     answer = models.ForeignKey(
         'Answer',

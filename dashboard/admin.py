@@ -2,8 +2,14 @@ from django.contrib import admin
 from .models import (
     Question,
     Answer,
-    Article
+    Article,
+    AnswerCredit,
 )
+
+class AnswerCreditInline(admin.TabularInline):
+    model = AnswerCredit
+    view_on_site = False
+    show_change_link = True
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
@@ -21,6 +27,9 @@ class AnswerAdmin(admin.ModelAdmin):
     ]
     ]
     search_fields = ['question_id__id', 'question_id__question_text']
+    inlines = [
+        AnswerCreditInline,
+    ]
     date_hierarchy = 'created_on'
 
 
