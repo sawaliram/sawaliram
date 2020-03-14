@@ -1,6 +1,9 @@
 from django.contrib import admin
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.http import urlencode
+from django.utils.translation import gettext as _
 
 from .models import (
     Question,
@@ -8,6 +11,23 @@ from .models import (
     Article,
     AnswerCredit,
 )
+
+def make_bulk_updater(field_name):
+    def _bulk_update(modeladmin, request, queryset):
+        ct = ContentType.objects.get_for_model(queryset.model)
+        selected = queryset.values_list('pk', flat=True)
+
+        return redirect('?'.join([
+            reverse('dashboard:admin-bulk-update-field'),
+            urlencode({
+                'field': field_name,
+                'ids': ','.join(str(pk) for pk in selected),
+                'ct': ct.pk,
+            }),
+        ]))
+    _bulk_update.short_description = _('Update %s') % field_name
+
+    return _bulk_update
 
 class AnswerCreditInline(admin.TabularInline):
     model = AnswerCredit
@@ -50,16 +70,7 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ['id', 'question_text', 'question_text_english', 'field_of_interest', 'area', 'state']
 
     actions = ['change_foi']
-
-    def change_foi(self, request, queryset):
-        selected = queryset.values_list('pk', flat=True)
-
-        return redirect(''.join([
-            reverse('dashboard:admin-change-question-foi'),
-            '?ids=',
-            ',' .join(str(pk) for pk in selected)
-        ]))
-    change_foi.short_description = 'Set Field of Interest'
+    change_foi = make_bulk_updater('field_of_interest')
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):

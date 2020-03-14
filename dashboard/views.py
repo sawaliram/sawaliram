@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.models import Subquery, Q
+from django.contrib.contenttypes.models import ContentType
 from django.views import View
 from django.views.generic import (
     DetailView,
@@ -1815,39 +1816,54 @@ class ApproveAnswerTranslation(BaseApproveTranslation):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('admins'), name='dispatch')
-class ChangeQuestionFOI(View):
+class AdminBulkUpdateField(View):
     '''
-    Prompt and change the "Field of Interest" for a question
+    Prompt and bulk update a model field
     '''
 
+    def get_model(self):
+        try:
+            model_type = ContentType.objects.get(
+                pk=self.request.GET.get('ct'))
+        except ContentType.ObjectDoesNotExist:
+            raise Http404('Invalid model')
+
+        self.model = model_type.model_class()
+
+        return self.model
+
     def get_queryset(self, ids):
+        model = self.get_model()
         try:
             id_list = [int(i) for i in ids.split(',')]
         except ValueError:
             id_list= []
 
-        return Question.objects.filter(pk__in=id_list)
+        return model.objects.filter(pk__in=id_list)
 
     def get(self, request):
         context = {
-            'questions': self.get_queryset(request.GET.get('ids'))
+            'objects': self.get_queryset(request.GET.get('ids')),
+            'model_name': self.model._meta.verbose_name_plural,
+            'field_name': request.GET.get('field'),
         }
 
         return render(
             request,
-            'admin/dashboard/question/change_field_of_interest.html',
+            'admin/actions/bulk_update_field.html',
             context
         )
 
     def post(self, request):
-        new_foi = request.POST.get('field_of_interest')
+        new_value = request.POST.get('new_value')
+        field_name = request.GET.get('field')
 
-        if not new_foi:
+        if not new_value:
             return redirect(request.build_absolute_uri())
 
         queryset = self.get_queryset(request.GET.get('ids'))
 
-        updated = queryset.update(field_of_interest=new_foi)
+        updated = queryset.update(**{field_name: new_value})
         messages.success(request,
             _('%s items updated successfully') % updated)
 

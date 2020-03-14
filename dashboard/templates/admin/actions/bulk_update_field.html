@@ -1,12 +1,12 @@
 {% extends "admin/base_site.html" %}
 {% load i18n %}
 
-{% block title %}{% trans 'Update Questions' %}{% endblock %}
+{% block title %}{% blocktrans %}Update {{ model_name }}{% endblocktrans %}{% endblock %}
 {% block content %}
 <h1>{% trans 'Change Field of Interest' %}</h1>
 <form action="" method="post">
   {% csrf_token %}
-  <p>{% trans 'You are about to change the "Field of Interest" for the following questions:' %}</p>
+  <p>{% blocktrans %}You are about to change the <code>{{ field_name }}</code> for the following questions:{% endblocktrans %}</p>
   <ul>
     {% for question in questions %}
     <li>{{ question }}</li>
@@ -15,8 +15,8 @@
   <p>{% trans 'Please enter a new common value for these items.' %}</p>
   <fieldset class="module aligned">
     <div class="form-row">
-      <label for="field_of_interest" class="required">Field of Interest</label>
-      <input type="text" name="field_of_interest" id="field_of_interest" required />
+      <label for="new_value" class="required">{{ field_name }}</label>
+      <input type="text" name="new_value" id="new_value" required />
     </div>
   </fieldset>
   <div class="submit-row">
