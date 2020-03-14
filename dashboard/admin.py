@@ -69,8 +69,16 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ['language', 'state', 'field_of_interest']
     list_display = ['id', 'question_text', 'question_text_english', 'field_of_interest', 'area', 'state']
 
-    actions = ['change_foi']
+    actions = [
+        'change_foi',
+        'change_language',
+        'change_state',
+        'change_area',
+    ]
     change_foi = make_bulk_updater('field_of_interest')
+    change_language = make_bulk_updater('language')
+    change_state = make_bulk_updater('state')
+    change_area = make_bulk_updater('change_area')
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
