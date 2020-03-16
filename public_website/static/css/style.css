@@ -2013,8 +2013,9 @@ h1.dashboard-home-greeting {
 
 .search-container .search-results ul.search-results-list li.search-result-item .search-result-item-content {
     display: flex;
-    align-items: center;
+    align-items: first baseline;
     justify-content: space-between;
+    margin-top: 1rem;
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .item-title {
@@ -2036,6 +2037,7 @@ h1.dashboard-home-greeting {
 .search-container .search-results ul.search-results-list li.search-result-item .answer-preview h4 {
     font-size: 0.9rem;
     color:#acacac;
+    margin-bottom: 1rem;
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .answer-preview .review-answer-controls {
@@ -2061,7 +2063,7 @@ h1.dashboard-home-greeting {
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta {
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
 }
 
 .search-container .search-results ul.search-results-list li.search-result-item .highlighted-meta,

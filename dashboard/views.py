@@ -503,9 +503,7 @@ class AnswerQuestions(SearchView):
     def get_querysets(self, request):
         results = {}
         if 'q' in request.GET:
-            query_set = Question.objects.exclude(id__in=Subquery(
-                                    Answer.objects.all().values('question_id')))
-            results['questions'] = query_set.filter(
+            results['questions'] = Question.objects.filter(
                     Q(question_text__icontains=request.GET.get('q')) |
                     Q(question_text_english__icontains=request.GET.get('q')) |
                     Q(school__icontains=request.GET.get('q')) |
@@ -516,8 +514,7 @@ class AnswerQuestions(SearchView):
             )
             return results
         else:
-            results['questions'] = Question.objects.exclude(id__in=Subquery(
-                                    Answer.objects.all().values('question_id')))
+            results['questions'] = Question.objects.all()
             return results
 
     def get_page_title(self, request):
@@ -615,7 +612,7 @@ class SubmitAnswerView(View):
         except Answer.DoesNotExist:
             pass
 
-        return render(request, 'submit-answer.html', context)
+        return render(request, 'dashboard/submit-answer.html', context)
 
     def post(self, request, question_id):
         """Save the submitted answer for review or as draft"""
