@@ -477,13 +477,13 @@ class ViewQuestionsView(SearchView):
         results = {}
         if 'q' in request.GET:
             results['questions'] = Question.objects.filter(
-                    Q(question_text__icontains=request.GET.get('q')) |
-                    Q(question_text_english__icontains=request.GET.get('q')) |
-                    Q(school__icontains=request.GET.get('q')) |
-                    Q(area__icontains=request.GET.get('q')) |
-                    Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q')) |
-                    Q(published_source__icontains=request.GET.get('q'))
+                    Q(question_text__search=request.GET.get('q')) |
+                    Q(question_text_english__search=request.GET.get('q')) |
+                    Q(school__search=request.GET.get('q')) |
+                    Q(area__search=request.GET.get('q')) |
+                    Q(state__search=request.GET.get('q')) |
+                    Q(field_of_interest__search=request.GET.get('q')) |
+                    Q(published_source__search=request.GET.get('q'))
             )
             return results
         else:
@@ -506,13 +506,13 @@ class AnswerQuestions(SearchView):
             query_set = Question.objects.exclude(id__in=Subquery(
                                     Answer.objects.all().values('question_id')))
             results['questions'] = query_set.filter(
-                    Q(question_text__icontains=request.GET.get('q')) |
-                    Q(question_text_english__icontains=request.GET.get('q')) |
-                    Q(school__icontains=request.GET.get('q')) |
-                    Q(area__icontains=request.GET.get('q')) |
-                    Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q')) |
-                    Q(published_source__icontains=request.GET.get('q'))
+                    Q(question_text__search=request.GET.get('q')) |
+                    Q(question_text_english__search=request.GET.get('q')) |
+                    Q(school__search=request.GET.get('q')) |
+                    Q(area__search=request.GET.get('q')) |
+                    Q(state__search=request.GET.get('q')) |
+                    Q(field_of_interest__search=request.GET.get('q')) |
+                    Q(published_source__search=request.GET.get('q'))
             )
             return results
         else:
@@ -540,12 +540,12 @@ class ReviewAnswersList(SearchView):
                                 answers__submitted_by=request.user,
                             ).distinct()
             results['questions'] = query_set.filter(
-                    Q(question_text__icontains=request.GET.get('q')) |
-                    Q(question_text_english__icontains=request.GET.get('q')) |
-                    Q(school__icontains=request.GET.get('q')) |
-                    Q(area__icontains=request.GET.get('q')) |
-                    Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q'))
+                    Q(question_text__search=request.GET.get('q')) |
+                    Q(question_text_english__search=request.GET.get('q')) |
+                    Q(school__search=request.GET.get('q')) |
+                    Q(area__search=request.GET.get('q')) |
+                    Q(state__search=request.GET.get('q')) |
+                    Q(field_of_interest__search=request.GET.get('q'))
             )
             return results
         else:
@@ -1211,14 +1211,14 @@ class TranslateAnswersList(SearchView):
                             ).distinct()
 
             results['questions'] = query_set.filter(
-                    Q(question_text__icontains=request.GET.get('q')) |
-                    Q(question_text_english__icontains=request.GET.get('q')) |
-                    Q(school__icontains=request.GET.get('q')) |
-                    Q(area__icontains=request.GET.get('q')) |
-                    Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q'))
+                    Q(question_text__search=request.GET.get('q')) |
+                    Q(question_text_english__search=request.GET.get('q')) |
+                    Q(school__search=request.GET.get('q')) |
+                    Q(area__search=request.GET.get('q')) |
+                    Q(state__search=request.GET.get('q')) |
+                    Q(field_of_interest__search=request.GET.get('q'))
             )
-            
+
             results['articles'] = (PublishedArticle.objects.filter(
                 translations__isnull=True,
             )

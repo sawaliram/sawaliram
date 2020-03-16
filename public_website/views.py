@@ -108,13 +108,13 @@ class SearchView(View):
         if 'q' in request.GET and request.GET.get('q') != '':
             if not search_categories:
                 results['questions'] = Question.objects.filter(
-                            Q(question_text__icontains=request.GET.get('q')) |
-                            Q(question_text_english__icontains=request.GET.get('q')) |
-                            Q(school__icontains=request.GET.get('q')) |
-                            Q(area__icontains=request.GET.get('q')) |
-                            Q(state__icontains=request.GET.get('q')) |
-                            Q(field_of_interest__icontains=request.GET.get('q')) |
-                            Q(published_source__icontains=request.GET.get('q'))
+                            Q(question_text__search=request.GET.get('q')) |
+                            Q(question_text_english__search=request.GET.get('q')) |
+                            Q(school__search=request.GET.get('q')) |
+                            Q(area__search=request.GET.get('q')) |
+                            Q(state__search=request.GET.get('q')) |
+                            Q(field_of_interest__search=request.GET.get('q')) |
+                            Q(published_source__search=request.GET.get('q'))
                         )
                 results['articles'] = PublishedArticle.objects.filter(
                             Q(title__search=request.GET.get('q')) |
@@ -123,13 +123,13 @@ class SearchView(View):
             else:
                 if 'questions' in search_categories:
                     results['questions'] = Question.objects.filter(
-                            Q(question_text__icontains=request.GET.get('q')) |
-                            Q(question_text_english__icontains=request.GET.get('q')) |
-                            Q(school__icontains=request.GET.get('q')) |
-                            Q(area__icontains=request.GET.get('q')) |
-                            Q(state__icontains=request.GET.get('q')) |
-                            Q(field_of_interest__icontains=request.GET.get('q')) |
-                            Q(published_source__icontains=request.GET.get('q'))
+                            Q(question_text__search=request.GET.get('q')) |
+                            Q(question_text_english__search=request.GET.get('q')) |
+                            Q(school__search=request.GET.get('q')) |
+                            Q(area__search=request.GET.get('q')) |
+                            Q(state__search=request.GET.get('q')) |
+                            Q(field_of_interest__search=request.GET.get('q')) |
+                            Q(published_source__search=request.GET.get('q'))
                         )
                 else:
                     results['questions'] = Question.objects.none()
