@@ -202,29 +202,27 @@
                             {% endif %}
                         </div>
                     {% endif %}
-                    {% if page_title == 'View Questions' or page_title == 'Search' %}
-                        {% for answer in result.answers.all %}
-                        {% if answer.approved_by %}
-                            <div class="item-context-controls">
-                                <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">View Answer</a>
+                </div>
+                {% if page_title != 'Translate Answers' %}
+                    {% for answer in result.answers.all %}
+                        {% if answer.status == 'published' %}
+                            <div class="answer-preview">
+                                <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
+                                {% for credit in answer.credits.all %}
+                                    <h4>
+                                        {{ credit.credit_user_name }} ({% trans credit.credit_title %})
+                                    </h4>
+                                {% endfor %}
+                                {% if page_title == 'Review Answers' %}
+                                    <div class="review-answer-controls">
+                                        <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
+                                    </div>
+                                {% endif %}
+                                {% if page_title == 'View Questions' or page_title == 'Search' or page_title == 'Answer Questions' %}
+                                    <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary-hollow">View Answer</a>
+                                {% endif %}
                             </div>
                         {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                {% if page_title == 'Review Answers' %}
-                    {% for answer in result.answers.all %}
-                    <div class="answer-preview">
-                        <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
-                        {% for credit in answer.credits.all %}
-                            <h4>
-                                {{ credit.credit_user_name }} ({% trans credit.credit_title %})
-                            </h4>
-                        {% endfor %}
-                        <div class="review-answer-controls">
-                            <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
-                        </div>
-                    </div>
                     {% endfor %}
                 {% endif %}
                 {% if page_title == 'Translate Answers' %}

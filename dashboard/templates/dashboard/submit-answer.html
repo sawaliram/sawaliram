@@ -53,10 +53,10 @@
 			</div>
 			{% endif %}
 		</div>
-		<h1>{{question_text }}</h1>
+		<h1>{{ question.question_text }}</h1>
 		{% if question.language.lower != 'english' %}
 			{% if question.question_text_english %}
-				<h2>{{question_text_english }}</h2>
+				<h2>{{ question.question_text_english }}</h2>
 			{% endif %}
 		{% endif %}
 		{% if question.school or question.area or question.state or question.question_asked_on %}
