@@ -1,23 +1,26 @@
 {% extends "dashboard/translations/base_edit.html" %}
 
+{% load i18n %}
+{% load to_language_name %}
+
 {% block tr_original %}
 <header>
   <h1>{{ object.source.tr_question_text }}</h1>
   <div class="credits-card hr-over flex">
-    <span class="credit-title">School</span>
+    <span class="credit-title">{% trans 'School' %}</span>
     <span>{{ object.source.tr_school }}</span>
   </div>
   <div class="credits-card hr-over flex">
-    <span class="credit-title">Area</span>
+    <span class="credit-title">{% trans 'Area' %}</span>
     <span>{{ object.source.tr_area }}</span>
   </div>
   <div class="credits-card hr-over flex">
-    <span class="credit-title">State</span>
-    <span>{{ object.source.tr_state }}</span>
+    <span class="credit-title">{% trans 'State' %}</span>
+    <span>{{urce.tr_state }}</span>
   </div>
   <div class="credits-card hr-over flex">
-    <span class="credit-title">Curriculum</span>
-    <span>{{ object.source.tr_curriculum_followed }}</span>
+    <span class="credit-title">{% trans 'Curriculum' %}</span>
+    <span>{{urce.tr_curriculum_followed }}</span>
   </div>
 </header>
 <section class="hr-over">
@@ -29,29 +32,29 @@
 
 {% block tr_translation %}
 <header>
-  <h1><input type="text" name="{{ form.question_text.name }}" value="{{ form.question_text.value }}" placeholder="{{ object.source.tr_question_text }}" id="{{ form.question_text.id }}" class="input-plain input-title" /></h1>
+  <h1><input type="text" name="{{ form.question_text.name }}" value="{{ form.question_text.value }}" placeholder="{{urce.tr_question_text }}" id="{{ form.question_text.id }}" class="input-plain input-title" /></h1>
   <div class="hr-over flex">
-    <span>School</span>
-    <span><input type="text" class="input-plain" name="{{ form.school.name }}" value="{{ form.school.value }}" placeholder="{{ object.source.tr_school }}" id="{{ form.school.id }}" /></span>
+    <span>{% trans 'School' %}</span>
+    <span><input type="text" class="input-plain" name="{{ form.school.name }}" value="{{ form.school.value }}" placeholder="{{urce.tr_school }}" id="{{ form.school.id }}" /></span>
   </div>
   <div class="hr-over flex">
-    <span>Area</span>
-    <span><input type="text" class="input-plain" name="{{ form.area.name }}" value="{{ form.area.value }}" placeholder="{{ object.source.tr_area }}" id="{{ form.area.id }}" /></span>
+    <span>{% trans 'Area' %}</span>
+    <span><input type="text" class="input-plain" name="{{ form.area.name }}" value="{{ form.area.value }}" placeholder="{{urce.tr_area }}" id="{{ form.area.id }}" /></span>
   </div>
   <div class="hr-over flex">
-    <span>State</span>
-    <span><input type="text" class="input-plain" name="{{ form.state.name }}" value="{{ form.state.value }}" placeholder="{{ object.source.tr_state }}" id="{{ form.state.id }}" /></span>
+    <span>{% trans 'State' %}</span>
+    <span><input type="text" class="input-plain" name="{{ form.state.name }}" value="{{ form.state.value }}" placeholder="{{urce.tr_state }}" id="{{ form.state.id }}" /></span>
   </div>
   <div class="hr-over flex">
-    <span>Curriculum</span>
-    <span><input type="text" class="input-plain" name="{{ form.curriculum_followed.name }}" value="{{ form.curriculum_followed.value }}" placeholder="{{ object.source.tr_curriculum_followed }}" id="{{ form.curriculum_followed.id }}" /></span>
+    <span>{% trans 'Curriculum' %}</span>
+    <span><input type="text" class="input-plain" name="{{ form.curriculum_followed.name }}" value="{{ form.curriculum_followed.value }}" placeholder="{{urce.tr_curriculum_followed }}" id="{{ form.curriculum_followed.id }}" /></span>
   </div>
 </header>
 {% include 'dashboard/snippets/richtext_editor.html' with value=answer.answer_text %}
 <footer id="submitbar">
   <input type="hidden" name="answer-text" value="{{ answer.answer_text }}" />
-  <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
-  <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+  <button type="submit" name="mode" value="submit" class="btn btn-primary">{% trans 'Submit translation' %}</button>
+  <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">{% trans 'Save Draft' %}</button>
   <a href="{% url 'dashboard:delete-answer-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete translation">
     <i class="fas fa-trash"></i>
   </a>

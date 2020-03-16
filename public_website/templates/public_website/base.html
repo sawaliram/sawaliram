@@ -152,11 +152,10 @@
                             <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
                         {% endif %}
                         <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="navbarUserButton">
-                            <!-- <img src="{% static 'user/default_menu.png' %}" alt="User Profile Picture"> -->
-                            <i class="far fa-user-circle"></i>
+                            <img class="profile-picture" src="{{ request.user.profile.profile_picture }}" alt="User Profile Picture">
+                            <span class="user-name">{{ request.user.first_name }} {{ request.user.last_name }}</span>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="navbarUserButton">
-                            <p class="user-name">{{ request.user.get_full_name }}</p>
                             <span class="dropdown-item">
                                 <a href="{% url 'public_website:user-profile' user_id=request.user.id %}"><i class="fas fa-user-circle"></i> {% trans 'My Profile' %}</a>
                             </span>
@@ -204,7 +203,7 @@
             <div class="row no-gutters footer-main">
                 <div class="col-12 col-sm-7 footer-column">
                     <p class="footer-text">
-                        {% blocktrans %}You too can volunteer to collect or answer questions, translate content or help build this website!{% endblocktrans %}
+                        {% trans 'You too can volunteer to collect or answer questions, translate content or help build this website!' %}
                     </p>
                     <a href="{% url 'public_website:get-involved' %}" class="btn btn-yellow">{% trans 'Get Involved!' %}</a>
                 </div>

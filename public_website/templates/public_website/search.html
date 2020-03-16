@@ -1,3 +1,4 @@
+
 {% extends "public_website/base.html" %}
 
 {% load i18n %}
@@ -28,7 +29,7 @@
                 </div>
             </div>
             {% endif %}
-            {% if page_title == _('Search') or page_title == _('View Questions') %}
+            {% if page_title == 'Search' or page_title == 'View Questions' %}
             <div class="filter-category">
                 <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">{% trans 'Questions' %}</button>
                 <div class="category-options-list" id="filterCategories">
@@ -83,7 +84,7 @@
             {% endfor %}
         {% endif %}
         <form action="" class="search-results-search" method="GET">
-            <input class="search-results-search-field" type="text" name="q" placeholder="Search these results" {% if search_query %} value="{{ search_query }}" {% endif %}>
+            <input class="search-results-search-field" type="text" name="q" placeholder="{% trans 'Search these results' %}" {% if search_query %} value="{{ search_query }}" {% endif %}>
             <button type="submit">
                 <i class="fas fa-search"></i>
             </button>
@@ -171,7 +172,7 @@
                                 {% elif question.state %}
                                     {{ question.state }}
                                 {% endif %}
-                            </span>    
+                            </span>
                         </span>
                         {% endif %}
 
@@ -194,7 +195,7 @@
                         {% endif %}
                     </div>
                     {% endif %}
-                    {% if page_title == _('Answer Questions') %}
+                    {% if page_title == 'Answer Questions' %}
                         <div class="item-context-controls">
                             {% if page_title == 'Answer Questions' %}
                             <a href="{% url 'dashboard:submit-answer' question_id=question.id %}" class="btn btn-small btn-primary">Answer</a>
@@ -240,7 +241,7 @@
             </li>
             {% endfor %}
         </ul>
-    
+
         <div class="search-pagination">
             {% if questions.has_previous %}
             <span class="page-number end-page-number page-button" data-page="1"> << </span>
@@ -255,7 +256,7 @@
         {% else %}
         <div class="no-search-questions-container">
             <i class="far fa-frown"></i>
-            <p>{% blocktrans %}No results found. Try changing the filters or search for something else{% endblocktrans %}</p>
+            <p>{% trans 'No results found. Try changing the filters or search for something else' %}</p>
         </div>
         {% endif %}
     </div>

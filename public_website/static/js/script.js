@@ -205,6 +205,22 @@ function setupSearchResultsFilter() {
     });
 }
 
+function setupSearchResultsMobileFilter() {
+    // display mobile filter
+    $('.mobile-filter-controls .filter-button').click(() => {
+		if ($(this).data('show-filter')) {
+			//$('.search-results').show()
+			$('.filter-sidebar').hide()
+			$(this).data('show-filter', false)
+		} else {
+			$('.filter-sidebar').show()
+			$('.filter-sidebar').css('width', '100%')
+			//$('.search-results').hide()
+			$(this).data('show-filter', true)
+		}
+	})
+}
+
 function setupSearchResultsClearAll() {
     $('.clear-all').click(function() {
         var current_params = new URLSearchParams(location.search);
@@ -452,6 +468,59 @@ function setupRemoveCredit() {
 setupAddCredit();
 setupRemoveCredit();
 
+function setupUserProfileMenuTabs() {
+
+    if ($(window).width() < 768) {
+        $('#userProfileMenuTabs .nav-link').on('show.bs.tab', function(event) {
+            $('.user-profile-content').addClass('show');
+        });
+        $('#settingsTab').removeClass('active');
+    }
+
+    $('#userProfileMenuTabs .nav-link').click(function(event) {
+        event.preventDefault();
+        $(this).tab('show');
+        // if ($(window).width() > 768) {
+        //     $(this).tab('show');
+        // }
+        // else {
+        //     // mobile JS
+        // }
+    });
+}
+
+function setupMobileCloseUserProfileContent() {
+
+    $('.mobile-tab-content-controls button').click(function() {
+        $('.tab-pane.active.show').removeClass('show');
+        $('.user-profile-content').removeClass('show');
+        $('.nav-link.active.show').removeClass('active');
+    });
+}
+
+function setupChooseProfilePictureModal() {
+
+    $('#changeProfilePictureModal').on('shown.bs.modal', function(event) {
+        $.ajax({
+            url: location.origin + '/get-profile-pictures-form',
+            type: 'GET',
+            // data: form_data,
+            // contentType: false,
+            // processData: false,
+            success: function(response) {
+                $('#changeProfilePictureModal .choose-picture-form-container').html(response);
+            },
+            error: function(response) {
+                console.log(response);
+            },
+        });
+    });
+}
+
+setupChooseProfilePictureModal();
+setupMobileCloseUserProfileContent();
+setupUserProfileMenuTabs();
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
@@ -529,6 +598,7 @@ if (
     setupSearchResultsPagination();
     setupSearchResultsSort();
     setupSearchResultsFilter();
+    setupSearchResultsMobileFilter();
     setupSearchResultsClearAll();
     setupBookmarkContentFunctionality();
 }
