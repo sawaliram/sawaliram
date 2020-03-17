@@ -234,6 +234,7 @@ class Answer(models.Model):
         related_name='approved_answers',
         on_delete=models.PROTECT,
         default='',
+        blank=True,
         null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -375,6 +376,7 @@ class AnswerCredit(models.Model):
         related_name='answer_credits',
         on_delete=models.PROTECT,
         default='',
+        blank=True,
         null=True)
     answer = models.ForeignKey(
         'Answer',
@@ -527,6 +529,7 @@ class Article(DraftableModel):
         related_name='approved_articles',
         on_delete=models.PROTECT,
         default='',
+        blank=True,
         null=True)
     published_on = models.DateTimeField(auto_now_add=True)
 
