@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.models import Subquery, Q
+from django.contrib.contenttypes.models import ContentType
 from django.views import View
 from django.views.generic import (
     DetailView,
@@ -503,9 +504,7 @@ class AnswerQuestions(SearchView):
     def get_querysets(self, request):
         results = {}
         if 'q' in request.GET:
-            query_set = Question.objects.exclude(id__in=Subquery(
-                                    Answer.objects.all().values('question_id')))
-            results['questions'] = query_set.filter(
+            results['questions'] = Question.objects.filter(
                     Q(question_text__icontains=request.GET.get('q')) |
                     Q(question_text_english__icontains=request.GET.get('q')) |
                     Q(school__icontains=request.GET.get('q')) |
@@ -516,8 +515,7 @@ class AnswerQuestions(SearchView):
             )
             return results
         else:
-            results['questions'] = Question.objects.exclude(id__in=Subquery(
-                                    Answer.objects.all().values('question_id')))
+            results['questions'] = Question.objects.all()
             return results
 
     def get_page_title(self, request):
@@ -615,7 +613,7 @@ class SubmitAnswerView(View):
         except Answer.DoesNotExist:
             pass
 
-        return render(request, 'submit-answer.html', context)
+        return render(request, 'dashboard/submit-answer.html', context)
 
     def post(self, request, question_id):
         """Save the submitted answer for review or as draft"""
@@ -1218,7 +1216,7 @@ class TranslateAnswersList(SearchView):
                     Q(state__icontains=request.GET.get('q')) |
                     Q(field_of_interest__icontains=request.GET.get('q'))
             )
-            
+
             results['articles'] = (PublishedArticle.objects.filter(
                 translations__isnull=True,
             )
@@ -1810,6 +1808,63 @@ class ApproveAnswerTranslation(BaseApproveTranslation):
         question.publish(self.request.user)
 
         return response
+
+# Admin functions
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class AdminBulkUpdateField(View):
+    '''
+    Prompt and bulk update a model field
+    '''
+
+    def get_model(self):
+        try:
+            model_type = ContentType.objects.get(
+                pk=self.request.GET.get('ct'))
+        except ContentType.ObjectDoesNotExist:
+            raise Http404('Invalid model')
+
+        self.model = model_type.model_class()
+
+        return self.model
+
+    def get_queryset(self, ids):
+        model = self.get_model()
+        try:
+            id_list = [int(i) for i in ids.split(',')]
+        except ValueError:
+            id_list= []
+
+        return model.objects.filter(pk__in=id_list)
+
+    def get(self, request):
+        context = {
+            'objects': self.get_queryset(request.GET.get('ids')),
+            'model_name': self.model._meta.verbose_name_plural,
+            'field_name': request.GET.get('field'),
+        }
+
+        return render(
+            request,
+            'admin/actions/bulk_update_field.html',
+            context
+        )
+
+    def post(self, request):
+        new_value = request.POST.get('new_value')
+        field_name = request.GET.get('field')
+
+        if not new_value:
+            return redirect(request.build_absolute_uri())
+
+        queryset = self.get_queryset(request.GET.get('ids'))
+
+        updated = queryset.update(**{field_name: new_value})
+        messages.success(request,
+            _('%s items updated successfully') % updated)
+
+        return redirect('admin:dashboard_question_changelist')
 
 
 # Legacy Functions

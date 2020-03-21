@@ -45,4 +45,6 @@ urlpatterns = [
     path('translate/articles/<int:pk>/delete', views.DeleteArticleTranslation.as_view(), name='delete-article-translation'),
     path('translate/answers/<int:pk>/delete', views.DeleteAnswerTranslation.as_view(), name='delete-answer-translation'),
     path('translate/questions/<int:pk>/delete', views.DeleteQuestionTranslation.as_view(), name='delete-question-translation'),
+
+    path('admin/bulk-update', views.AdminBulkUpdateField.as_view(), name='admin-bulk-update-field'),
 ]
