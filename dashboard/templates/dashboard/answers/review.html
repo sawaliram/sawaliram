@@ -43,7 +43,7 @@
                 <form action="{% url 'dashboard:approve-answer' question_id=question.id answer_id=answer.id %}" method="POST">
                     {% csrf_token %}
                     <p class="publish-info-text">
-                        {% trans 'If you think this answer is complete and adequately answers the question, click the 'Publish' button to publish the answer. If you believe the answer can be improved, leave a comment on the right side.' %}
+                        {% trans 'If you think this answer is complete and adequately answers the question, click the \'Publish\' button to publish the answer. If you believe the answer can be improved, leave a comment on the right side.' %}
                     </p>
                     <button type="submit" class="btn btn-primary btn-block">{% trans 'Publish' %}</button>
                 </form>
