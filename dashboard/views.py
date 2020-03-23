@@ -532,8 +532,7 @@ class ReviewAnswersList(SearchView):
         results = {}
         if 'q' in request.GET:
             query_set = Question.objects.filter(
-                                answers__approved_by__isnull=True,
-                                answers__submitted_by__isnull=False,
+                                answers__status='submitted',
                             ).exclude(
                                 answers__submitted_by=request.user,
                             ).distinct()
@@ -547,9 +546,8 @@ class ReviewAnswersList(SearchView):
             )
             return results
         else:
-            results['questions'] = Question.objects.filter(
-                            answers__approved_by__isnull=True,
-                            answers__submitted_by__isnull=False,
+            return Question.objects.filter(
+                            answers__status='submitted',
                         ).exclude(
                             answers__submitted_by=request.user,
                         ).distinct()
@@ -797,7 +795,7 @@ class ApproveAnswerView(View):
         try:
             answer = Answer.objects.get(
                 pk=answer_id,
-                approved_by__isnull=True)
+                status='submitted')
         except Answer.DoesNotExist:
             raise Http404(_('Answer does not exist'))
 

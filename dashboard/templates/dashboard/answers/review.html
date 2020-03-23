@@ -36,8 +36,8 @@
                 <span>{{ credit.credit_title|capfirst }}</span>
             </div>
         {% endfor %}
-        {% if answer.approved_by %}
-            <p class="published-text"><i class="far fa-check-circle"></i> {% trans 'Published by' %} { answer.approved_by.get_full_name }}</b></p>
+        {% if answer.status == 'published' %}
+            <p class="published-text"><i class="far fa-check-circle"></i> {% trans 'Published by' %} {{ answer.approved_by.get_full_name }}</b></p>
         {% else %}
             {% if request.user != answer.submitted_by %}
                 <form action="{% url 'dashboard:approve-answer' question_id=question.id answer_id=answer.id %}" method="POST">
