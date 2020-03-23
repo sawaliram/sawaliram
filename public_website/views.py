@@ -216,11 +216,11 @@ class SearchView(View):
             questions_queryset = []
 
             if 'answered' in question_categories:
-                answered_questions = result.filter(answers__approved_by__isnull=False)
+                answered_questions = result.filter(answers__status='published')
                 questions_queryset = answered_questions
 
             if 'unanswered' in question_categories:
-                unanswered_questions = result.filter(answers__approved_by__isnull=True)
+                unanswered_questions = result.exclude(answers__status='published')
                 if type(questions_queryset) is QuerySet:
                     questions_queryset = questions_queryset | unanswered_questions
                 else:
