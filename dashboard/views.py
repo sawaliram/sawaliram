@@ -546,7 +546,7 @@ class ReviewAnswersList(SearchView):
             )
             return results
         else:
-            return Question.objects.filter(
+            results['questions'] = Question.objects.filter(
                             answers__status='submitted',
                         ).exclude(
                             answers__submitted_by=request.user,

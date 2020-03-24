@@ -2040,7 +2040,7 @@ h1.dashboard-home-greeting {
     margin-bottom: 1rem;
 }
 
-.search-container .search-results ul.search-results-list li.search-result-item .answer-preview .review-answer-controls {
+.search-container .search-results ul.search-results-list li.search-result-item .answer-preview .preview-answer-controls {
     display: flex;
     justify-content: end;
 }
