@@ -480,12 +480,6 @@ function setupUserProfileMenuTabs() {
     $('#userProfileMenuTabs .nav-link').click(function(event) {
         event.preventDefault();
         $(this).tab('show');
-        // if ($(window).width() > 768) {
-        //     $(this).tab('show');
-        // }
-        // else {
-        //     // mobile JS
-        // }
     });
 }
 
@@ -504,9 +498,6 @@ function setupChooseProfilePictureModal() {
         $.ajax({
             url: location.origin + '/get-profile-pictures-form',
             type: 'GET',
-            // data: form_data,
-            // contentType: false,
-            // processData: false,
             success: function(response) {
                 $('#changeProfilePictureModal .choose-picture-form-container').html(response);
             },
@@ -517,6 +508,21 @@ function setupChooseProfilePictureModal() {
     });
 }
 
+function setupToggleCardDrawer() {
+
+    $('.open-card-drawer').click(function() {
+        // console.log($(this).parent('.card-controls').next('.card-drawer')).css('display', 'flex');
+        // console.log();
+        $(this).parent('.card-controls').next('.card-drawer').css('display', 'flex');
+        // $(this).next('.card-drawer').css('display', 'flex');
+    });
+
+    $('.close-card-drawer').click(function() {
+        $(this).parent('.card-drawer').css('display', 'none');
+    });
+}
+
+setupToggleCardDrawer();
 setupChooseProfilePictureModal();
 setupMobileCloseUserProfileContent();
 setupUserProfileMenuTabs();

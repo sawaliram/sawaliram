@@ -308,6 +308,22 @@ textarea {
     color: #ca0000;
 }
 
+button.confirm-delete {
+    background-color: #fff;
+    color: #ca0000;
+    border-color: #ca0000;
+    margin-right: 0.5rem;
+}
+
+button.confirm-delete:hover {
+    background-color: #ca0000;
+    color: #fff;
+}
+
+button.cancel-delete {
+    color: #87b24d;
+}
+
 /* ---- Tabs ---- */
 
 .nav.nav-pills .nav-link {
@@ -2965,6 +2981,14 @@ button.deny-access {
     top: 5px;
     right: 0;
     color: #8c8c8c;
+}
+
+.card .card-drawer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #d9d9d9;
+    display: none;
+    justify-content: end;
 }
 
 

@@ -487,7 +487,7 @@ class DeleteUserCommentOnAnswer(View):
         )
 
 
-class NewUserProfileView(View):
+class UserProfileView(View):
 
     def get(self, request, user_id):
 
@@ -521,7 +521,7 @@ class NewUserProfileView(View):
                 'bookmarked_questions': bookmarked_questions,
                 'bookmarked_articles': bookmarked_articles
             }
-            return render(request, 'public_website/new-user-profile.html', context)
+            return render(request, 'public_website/user-profile.html', context)
 
 
 class UpdateUserName(View):
