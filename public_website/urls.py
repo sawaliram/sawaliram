@@ -6,8 +6,7 @@ from . import views
 app_name = 'public_website'
 
 urlpatterns = [
-    # path('user/<int:user_id>', views.UserProfileView.as_view(), name='user-profile'),
-    path('user/<int:user_id>/profile', views.NewUserProfileView.as_view(), name='user-profile'),
+    path('user/<int:user_id>/profile', views.UserProfileView.as_view(), name='user-profile'),
     path('update-organisation-info', views.UpdateOrganisationInfo.as_view(), name='update-organisation-info'),
     path('update-user-password', views.UpdateUserPassword.as_view(), name='update-user-password'),
     path('update-user-name', views.UpdateUserName.as_view(), name='update-user-name'),
