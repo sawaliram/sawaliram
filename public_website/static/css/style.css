@@ -308,6 +308,10 @@ textarea {
     color: #ca0000;
 }
 
+.delete-button.close-card-drawer:hover {
+    color: #87b24d;
+}
+
 button.confirm-delete {
     background-color: #fff;
     color: #ca0000;
@@ -2673,6 +2677,10 @@ button.deny-access {
     .user-profile-container .user-profile-menu .desktop-messages-container {
         display: none;
     }
+
+    .user-profile-container.view-profile {
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 768px) {
@@ -2708,8 +2716,24 @@ button.deny-access {
     }
 }
 
+.user-profile-container .user-profile-menu .organisation-info {
+    text-align: center;
+    color: #808080;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .user-profile-container.view-profile .user-profile-menu .organisation-info {
+        margin-bottom: 1rem;
+    }
+}
+
+.user-profile-container .user-profile-menu .organisation-info .organisation-text {
+    margin-bottom: 0.2rem;
+}
+
 .user-profile-container .user-profile-menu #userProfileMenuTabs {
-    margin-top: 3rem;
+    margin-top: 2rem;
     border: none;
 }
 
@@ -2757,6 +2781,10 @@ button.deny-access {
         display: none;
     }
 
+    .user-profile-container.view-profile .user-profile-content {
+        display: block;
+    }
+
     .user-profile-container .user-profile-content.show {
         display: block;
         position: fixed;
@@ -2785,6 +2813,63 @@ button.deny-access {
     }
 }
 
+.user-profile-container .user-profile-content .tab-pane .card.user-stat-wrapper {
+    flex-direction: row;
+}
+
+@media (max-width: 768px) {
+    .user-profile-container.view-profile .user-profile-content .tab-pane .card.user-stat-wrapper {
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+}
+
+.user-profile-container .user-profile-content .tab-pane .card.user-stat-wrapper .user-stat {
+    flex-basis: 25%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .user-profile-container.view-profile .user-profile-content .tab-pane .card.user-stat-wrapper .user-stat {
+        flex-basis: 50%;
+        border-right: none;
+    }
+
+    .user-profile-container.view-profile .user-profile-content .tab-pane .card.user-stat-wrapper .user-stat.top-line {
+        margin-bottom: 1rem;
+    }
+}
+
+.user-profile-container .user-profile-content .tab-pane .card.user-stat-wrapper .user-stat:not(:last-child) {
+    border-right: 1px solid #c4c4c4;
+}
+
+@media (max-width: 768px) {
+    .user-profile-container.view-profile .user-profile-content .tab-pane .card.user-stat-wrapper .user-stat:not(:last-child) {
+        border-right: none;
+    }
+}
+
+.user-profile-container .user-profile-content .tab-pane .card.user-stat-wrapper .user-stat .stat-number {
+    color: #87b24d;
+    font-size: 3rem;
+    line-height: 1rem;
+    margin-right: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .user-profile-container .user-profile-content .tab-pane .card.user-stat-wrapper .user-stat .stat-number {
+        font-size: 2.5rem;
+    }
+
+    .user-profile-container .user-profile-content .tab-pane .card.user-stat-wrapper .user-stat .stat-title {
+        font-size: 0.9rem;
+    }
+}
+
 .user-profile-container .user-profile-content .tab-pane h2 {
     font-size: 1.5rem;
     margin-bottom: 0.3rem;
@@ -2799,6 +2884,12 @@ button.deny-access {
 
 .user-profile-container .user-profile-content .tab-pane h2:not(:first-child) {
     margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    .user-profile-container.view-profile .user-profile-content .tab-pane h2:not(:first-child) {
+        margin-top: 2rem;
+    }
 }
 
 .user-profile-container .user-profile-content .tab-pane p.small {
@@ -2921,6 +3012,10 @@ button.deny-access {
     .user-profile-container .user-profile-content .tab-content .mobile-tab-content-controls {
         display: block;
     }
+
+    .user-profile-container.view-profile .user-profile-content .tab-content .mobile-tab-content-controls {
+        display: none;
+    }
 }
 
 .user-profile-container .user-profile-content .tab-content .mobile-tab-content-controls button {
@@ -2989,6 +3084,27 @@ button.deny-access {
     border-top: 1px solid #d9d9d9;
     display: none;
     justify-content: end;
+}
+
+.card .card-drawer .drawer-prompt {
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .card .card-drawer {
+        padding-top: 0.5rem;
+        flex-direction: column;
+    }
+
+    .card .card-drawer .delete-card-form {
+        text-align: center;
+    }
+
+    .card .card-drawer .delete-card-form .confirm-delete {
+        margin-top: 0.7rem;
+        margin-bottom: 0.5rem;
+    }
 }
 
 

@@ -511,14 +511,13 @@ function setupChooseProfilePictureModal() {
 function setupToggleCardDrawer() {
 
     $('.open-card-drawer').click(function() {
-        // console.log($(this).parent('.card-controls').next('.card-drawer')).css('display', 'flex');
-        // console.log();
         $(this).parent('.card-controls').next('.card-drawer').css('display', 'flex');
-        // $(this).next('.card-drawer').css('display', 'flex');
+        $(this).hide();
     });
 
     $('.close-card-drawer').click(function() {
         $(this).parent('.card-drawer').css('display', 'none');
+        $(this).parents('.card').find('.open-card-drawer').show();
     });
 }
 

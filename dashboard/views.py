@@ -790,7 +790,9 @@ class ApproveAnswerView(View):
             answer_id=answer_id)
 
     def post(self, request, question_id, answer_id):
-        """Mark the answer as approved"""
+        """
+        Mark the answer as approved
+        """
 
         try:
             answer = Answer.objects.get(
@@ -855,8 +857,32 @@ class ApproveAnswerView(View):
 
         return redirect('dashboard:review-answers')
 
-# Write Articles
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteSubmittedAnswer(View):
+
+    def post(self, request, answer_id):
+        """
+        Delete submitted answers (non-published)
+        """
+        try:
+            answer = Answer.objects.get(
+                pk=answer_id,
+                status='submitted')
+        except Answer.DoesNotExist:
+            raise Http404(_('Answer does not exist'))
+
+        if answer.submitted_by == request.user:
+            answer.delete()
+        else:
+            raise PermissionDenied(_('You can only delete your own answers.'))
+
+        messages.success(request, 'The submitted answer has been deleted')
+        return redirect('public_website:user-profile', user_id=request.user.id)
+
+
+# Write Articles
 def create_article(request):
     '''
     Create a blank draft and redirect to WriteArticleView
@@ -988,20 +1014,37 @@ class DeleteArticleView(View):
 
     def post(self, request, article):
         """
-        Delete a previously published comment on an answer
+        Deletes selected draft article
         """
 
         article = self.fetch_article(article)
 
         if request.user != article.author:
-            raise PermissionDenied(_('You are not authorised to delete that comment.'))
+            raise PermissionDenied(_('You are not authorised to delete this article.'))
 
         article.delete()
 
         messages.success(request, 'The draft article has been deleted')
         return redirect('public_website:user-profile', user_id=request.user.id)
 
-        # return redirect('dashboard:home')
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteSubmittedArticle(View):
+
+    def post(self, request, article_id):
+        """
+        Deletes submitted article
+        """
+        article = get_object_or_404(SubmittedArticle, id=article_id)
+
+        if request.user != article.author:
+            raise PermissionDenied(_('You can only delete your own articles.'))
+
+        article.delete()
+
+        messages.success(request, 'The submitted article has been deleted')
+        return redirect('public_website:user-profile', user_id=request.user.id)
 
 
 @method_decorator(login_required, name='dispatch')
