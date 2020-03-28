@@ -3863,3 +3863,20 @@ button.social-login i {
 .auth-interstitial-body .auth-interstitial-content input.registered-email {
     margin-bottom: 0.3rem;
 }
+
+@media (max-width: 768px) {
+    .map-col{
+        width: 100%;
+        padding: 0.8rem 0.5rem;
+    }
+}
+
+.contact-container {
+    padding-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    .contact-container .contact-form-container {
+        margin-top: 2rem;
+    }
+}

@@ -1,7 +1,7 @@
 """Define the urls that are part of the public website"""
 
 from django.urls import path
-from . import views
+from .import views
 
 app_name = 'public_website'
 
@@ -15,6 +15,8 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     path('get-involved', views.GetInvolvedView.as_view(), name='get-involved'),
     path('research', views.ResearchPage.as_view(), name='research'),
+    path('about', views.About.as_view(), name='about'),
+    path('contact', views.ContactPage.as_view(), name='contact'),
     path('faq', views.FAQPage.as_view(), name='faq'),
     path('search', views.SearchView.as_view(), name='search'),
     path('view-notification', views.ViewNotification.as_view(), name='view-notification'),
