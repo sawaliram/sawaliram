@@ -24,8 +24,12 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.template.loader import render_to_string
 from django.http import HttpResponse
+from django.core.mail import send_mail
 
 from django.conf import settings
+from public_website.forms import ContactPageForm
+from django.views.generic import FormView
+from django.urls import reverse
 
 from dashboard.models import (
     Dataset,
@@ -40,8 +44,8 @@ from dashboard.models import (
     SubmittedAnswerTranslation,
     AnswerTranslation,
 )
-from sawaliram_auth.models import User, Bookmark, Notification, Profile
-from public_website.models import AnswerUserComment
+from sawaliram_auth.models import User, Bookmark, Notification
+from public_website.models import AnswerUserComment, ContactUsSubmission
 
 import random
 import urllib
@@ -639,3 +643,39 @@ class FAQPage(View):
             'page_title': _('Frequently Asked Questions')
         }
         return render(request, 'public_website/faq.html', context)
+
+
+class ContactPage(FormView):
+    def get(self, request):
+        context = {
+            'page_title': 'Contact Us'
+        }
+        return render(request, 'public_website/contact.html', context)
+
+    template_name = 'public_website/contact.html'
+    form_class = ContactPageForm
+
+    def post(self, request):
+        form = ContactPageForm(request.POST, auto_id=False)
+        if form.is_valid():
+            c = ContactUsSubmission()
+            c.name = form.cleaned_data.get('fullname')
+            c.emailid = form.cleaned_data.get('emailid')
+            c.subject = form.cleaned_data.get('subject')
+            c.message = form.cleaned_data.get('message')
+            c.save()
+
+            send_mail(
+                subject='[Contact] ' + form.cleaned_data.get('subject'),
+                message='',
+                html_message=form.cleaned_data.get('message') + '<br><br> Senders email: ' + form.cleaned_data.get('emailid'),
+                from_email='"Sawaliram" <mail@sawaliram.org>',
+                recipient_list=['mail.sawaliram@gmail.com'],
+                fail_silently=False,
+            )
+
+            messages.success(request, 'Your message has been sent! We will get back to you shortly')
+            return redirect('public_website:contact')
+        else:
+            messages.error(request, 'Error! Message has not been submitted.')
+            return redirect('public_website:contact')
