@@ -1048,7 +1048,7 @@ class DeleteSubmittedArticle(View):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('admins'), name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
 class ReviewSubmittedArticleView(View):
     '''
     Add updates to a submitted article
