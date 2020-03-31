@@ -354,7 +354,6 @@ class ViewAnswer(View):
             'question': question,
             'answer': answer,
             'comments': answer.user_comments.all(),
-            'grey_background': grey_background
         }
 
         return render(request, 'public_website/view-answer.html', context)

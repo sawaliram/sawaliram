@@ -93,7 +93,7 @@
                 {% for credit in answer.credits.all %}
                     <div class="credit-card">
                         <p>{{ credit.credit_user_name }}</p>
-                        <span>{{edit_title|capfirst }}</span>
+                        <span>{{ credit.credit_title|capfirst }}</span>
                     </div>
                 {% endfor %}
             </div>

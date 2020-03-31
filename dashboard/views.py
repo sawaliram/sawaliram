@@ -82,7 +82,6 @@ class DashboardHome(View):
     def get(self, request):
         """Return the dashboard home view."""
         context = {
-            'grey_background': 'True',
             'page_title': _('Dashboard Home'),
             'enable_breadcrumbs': 'Yes'
         }
@@ -768,7 +767,6 @@ class ReviewAnswerView(View):
             'answer': answer,
             'comments': answer.comments.all(),
             'comment_form': CommentForm(),
-            'grey_background': 'True',
             'page_title': _('Submit Review'),
             'enable_breadcrumbs': 'Yes'
         }

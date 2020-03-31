@@ -28,7 +28,7 @@
       </button>
       <div class="dropdown-menu" aria-labelledby="translationSelectorButton">
         {% for lang, language in article.list_available_languages %}
-        <a class="dropdown-item" href="{{ request.get_base_path }}?lang={{ lang }}">{{}}</a>
+        <a class="dropdown-item" href="{{ request.get_base_path }}?lang={{ lang }}">{{ language }}</a>
         {% endfor %}
       </div>
     </div>
@@ -38,7 +38,7 @@
     {{ article.tr_body|safe }}
     <br>
     <div class="credit-card">
-        <p>{{uthor.get_full_name }}</p>
+        <p>{{ article.author.get_full_name }}</p>
         <span>{% trans 'Author' %}</span>
     </div>
   </section>
