@@ -248,7 +248,9 @@ class SearchView(View):
         curriculums = result.order_by() \
                             .values_list('curriculum_followed') \
                             .distinct('curriculum_followed') \
-                            .values('curriculum_followed')
+                            .values('curriculum_followed') \
+                            .exclude(curriculum_followed__exact='') \
+                            .exclude(curriculum_followed__isnull=True)
 
         languages = result.order_by() \
                           .values_list('language') \
