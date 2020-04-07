@@ -2115,6 +2115,7 @@ h1.dashboard-home-greeting {
     cursor: default;
 }
 
+.search-container .mobile-sort-by-popup,
 .search-container .mobile-filter-controls {
     display: none;
 }

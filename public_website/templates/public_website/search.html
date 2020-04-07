@@ -12,6 +12,11 @@
         <button class="filter-button">{% trans 'Filters' %}</button>
         <button class="sort-by-button">{% trans 'Sort By' %}</button>
     </div>
+    <div class="mobile-sort-by-popup text-right m-3">
+        <b class="text-muted"><small>Sorted by: </small></b>
+        <span class="sort-by-option{% if sort_by == 'newest' %} font-weight-bold text-secondary{% endif %}" data-sort="newest">{% trans 'Newest' %}</span>
+        <span class="sort-by-option{% if sort_by == 'oldest' %} font-weight-bold text-secondary{% endif %}" data-sort="oldest">{% trans 'Oldest' %}</span>
+    </div>
     <div class="filter-sidebar">
         <div class="filter-head">
             <span><b>{% trans 'Filters' %}</b></span>

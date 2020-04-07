@@ -221,6 +221,19 @@ function setupSearchResultsMobileFilter() {
 	})
 }
 
+function setupSearchResultsMobileSort() {
+    // display mobile sort
+    $('.mobile-filter-controls .sort-by-button').click(() => {
+        if ($(this).data('show-menu')) {
+            $('.mobile-sort-by-popup').hide()
+            $(this).data('show-menu', false)
+        } else {
+            $('.mobile-sort-by-popup').show()
+            $(this).data('show-menu', true)
+        }
+    })
+}
+
 function setupSearchResultsClearAll() {
     $('.clear-all').click(function() {
         var current_params = new URLSearchParams(location.search);
@@ -599,6 +612,7 @@ if (
     setupSearchResultsSort();
     setupSearchResultsFilter();
     setupSearchResultsMobileFilter();
+    setupSearchResultsMobileSort();
     setupSearchResultsClearAll();
     setupBookmarkContentFunctionality();
 }
