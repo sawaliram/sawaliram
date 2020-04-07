@@ -2137,6 +2137,11 @@ h1.dashboard-home-greeting {
     .search-container .mobile-filter-controls button:not(:last-child) {
         border-right: 1px solid;
     }
+
+    .search-results-list {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
 }
 
 .search-results-search {
