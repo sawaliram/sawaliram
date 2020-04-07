@@ -649,7 +649,7 @@ class FAQPage(View):
 class ContactPage(FormView):
     def get(self, request):
         context = {
-            'page_title': 'Contact Us'
+            'page_title': _('Contact Us')
         }
         return render(request, 'public_website/contact.html', context)
 
@@ -680,3 +680,12 @@ class ContactPage(FormView):
         else:
             messages.error(request, 'Error! Message has not been submitted.')
             return redirect('public_website:contact')
+
+
+class ResourcesPage(View):
+
+    def get(self, request):
+        context = {
+            'page_title': _('Resources')
+        }
+        return render(request, 'public_website/resources.html', context)

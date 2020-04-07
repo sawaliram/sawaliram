@@ -1,0 +1,273 @@
+{% extends "public_website/base.html" %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {{ page_title }} | {% trans 'Sawaliram' %} {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<ul class="nav nav-tabs primary-tabs" id="resourcesPageTabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" href="#books" id="booksTab" data-toggle="tab" role="tab" aria-controls="books">Books</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#magazines" id="magazinesTab" data-toggle="tab" role="tab" aria-controls="magazines">Magazines</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#weblinks" id="weblinksTab" data-toggle="tab" role="tab" aria-controls="weblinks">Weblinks</a>
+    </li>
+</ul>
+<div class="tab-content primary-tab-content resources-page-content">
+    <div class="tab-pane fade active show" id="books" role="tabpanel" aria-labelledby="booksTab">
+        <div class="resource-section">
+            <div class="resource-section-header">
+                <h2 class="resources-section-title">Books for children</h2>
+                <div class="resources-carousel-controls">
+                    <a href="#childrensBooksCarousel" role="button" data-slide="prev">
+                        <span class="prev-icon" aria-hidden="true">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    </a>
+                    <a href="#childrensBooksCarousel" role="button" data-slide="next">
+                        <span class="next-icon" aria-hidden="true">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div id="childrensBooksCarousel" class="carousel slide" data-interval="false">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="resource-item-wrapper">
+                            <div class="resource-item">
+                                <img src="{% static 'resources/the-why-why-girl-english.jpg' %}" alt="The Why-Why Girl cover">
+                                <p class="resource-title">The Why-Why Girl</p>
+                                <p class="resource-sub-title">by Mahashweta Devi</p>
+                                <p class="resource-language">English, Hindi, Gujarati <br>+ 5 more</p>
+                            </div>
+                            <div class="resource-item">
+                                <img src="{% static 'resources/totto-chan.jpg' %}" alt="Totto Chan cover">
+                                <p class="resource-title">Totto Chan</p>
+                                <p class="resource-sub-title">by Tetsuko Kuroyanagi</p>
+                                <p class="resource-language">Japanese, English, Hindi <br>+ 9 more</p>
+                            </div>
+                            <div class="resource-item">
+                                <img src="{% static 'resources/a-summer-story.jpg' %}" alt="A Summer Story cover">
+                                <p class="resource-title">A Summer Story</p>
+                                <p class="resource-sub-title">by K. G. Subramanyan</p>
+                                <p class="resource-language">English</p>
+                            </div>
+                            <div class="resource-item">
+                                <img src="{% static 'resources/chinnara-lokadalli.jpg' %}" alt="Sawaliram Book vover">
+                                <p class="resource-title">Chinnara Lokadalli Karantu</p>
+                                <p class="resource-sub-title">by Shivaram Karanth</p>
+                                <p class="resource-language">Kannada</p>
+                            </div>
+                            <div class="resource-item d-none d-sm-block">
+                                <img src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                <p class="resource-title">Discovered questions</p>
+                                <p class="resource-sub-title">by Yash Pal</p>
+                                <p class="resource-language">English, Hindi, Malayalam</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="resource-item-wrapper">
+                            <div class="resource-item d-md-none">
+                                <img src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                <p class="resource-title">Discovered questions</p>
+                                <p class="resource-sub-title">by Yash Pal</p>
+                                <p class="resource-language">English, Hindi, Malayalam</p>
+                            </div>
+                            <div class="resource-item">
+                                <img src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                <p class="resource-title">Science through postcards</p>
+                                <p class="resource-sub-title">by Jayant Narlikar</p>
+                                <p class="resource-language">English, Hindi, Marathi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="resource-section">
+            <h2 class="resources-section-title">Books for adults</h2>
+            <div class="resource-item-wrapper">
+                <div class="resource-item">
+                    <img src="{% static 'resources/hungry-mind.jpg' %}" alt="The Hungry Mind cover">
+                    <p class="resource-title">The Hungry Mind</p>
+                    <p class="resource-sub-title">by Susan Engel</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/what-makes-us-curious.jpg' %}" alt="What Makes Us Curious cover">
+                    <p class="resource-title">Why? What Makes Us Curious</p>
+                    <p class="resource-sub-title">by Simon & Schuster</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/philosophy-of-childhood.jpg' %}" alt="The Philosophy of Childhood cover">
+                    <p class="resource-title">The Philosophy of Childhood</p>
+                    <p class="resource-sub-title">by Gareth B. Matthews</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/having-of-wonderful-ideas.jpg' %}" alt="The Having of Wonderful Ideas cover">
+                    <p class="resource-title">The Having of Wonderful Ideas: And Other Essays on Teaching and Learning</p>
+                    <p class="resource-sub-title">by Eleanor Duckworth</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/hundred-languages-of-children.jpg' %}" alt="Hundred Languages of Children cover">
+                    <p class="resource-title">The Hundred Languages of Children: The Reggio Emilia Experience in Transformation</p>
+                    <p class="resource-sub-title">(Eds.) Carolyn P. Edwards, Lella Gandini, George Forman</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="magazines" role="tabpanel" aria-labelledby="magazinesTab">
+        <div class="resource-section">
+            <div class="resource-item-wrapper no-carousel">
+                <div class="resource-item">
+                    <img src="{% static 'resources/sandarbh.jpg' %}" alt="Sandarbh cover">
+                    <p class="resource-title">Sandarbh</p>
+                    <p class="resource-language">Hindi, Marathi, Gujarati</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/chakmak.jpg' %}" alt="Chakmak cover">
+                    <p class="resource-title">Chakmak</p>
+                    <p class="resource-language">Hindi</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/kishor.jpg' %}" alt="Kishor cover">
+                    <p class="resource-title">Kishor</p>
+                    <p class="resource-language">Marathi</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/eureka.png' %}" alt="Eureka cover">
+                    <p class="resource-title">Eureka</p>
+                    <p class="resource-language">Malayalam</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/sastra-keralam.jpg' %}" alt="Sastra Keralam cover">
+                    <p class="resource-title">Sastra Keralam</p>
+                    <p class="resource-language">Malayalam</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                    <p class="resource-title">Thulir</p>
+                    <p class="resource-language">Tamil</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                    <p class="resource-title">Chekumuki</p>
+                    <p class="resource-language">Telugu</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                    <p class="resource-title">Biggan o Biggankarmi</p>
+                </div>
+                <div class="resource-item">
+                    <img src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                    <p class="resource-title">Journal of Scientific Temper</p>
+                </div>
+                <div class="resource-item empty-item"></div>
+            </div>
+        </div>
+        <!-- <div class="resource-section">
+            <div class="resource-item-wrapper">
+                
+                <div class="resource-item empty-item"></div>
+            </div>
+        </div> -->
+    </div>
+    <div class="tab-pane fade" id="weblinks" role="tabpanel" aria-labelledby="weblinksTab">
+        <div class="resource-weblinks-section">
+            <div class="resource-weblink">
+                <img src="{% static 'resources/ask-a-scientist.png' %}" alt="Ask a scientist logo">
+                <div class="weblink-text">
+                    <a href="http://askascientist.co.uk/" target="_blank">Ask a Scientist</a>
+                    <p class="small">http://askascientist.co.uk/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/ask-an-astronomer.png' %}" alt="Ask a scientist logo">
+                <div class="weblink-text">
+                    <a href="http://curious.astro.cornell.edu/" target="_blank">Ask an Astronomer</a>
+                    <p class="small">http://curious.astro.cornell.edu/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/reddit.jpg' %}" alt="Reddit logo">
+                <div class="weblink-text">
+                    <a href="http://askascientist.co.uk/" target="_blank">Ask Science</a>
+                    <p class="small">http://askascientist.co.uk/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/mad-sci-network.png' %}" alt="Mad Sci network logo">
+                <div class="weblink-text">
+                    <a href="http://www.madsci.org/" target="_blank">Mad Sci network</a>
+                    <p class="small">http://www.madsci.org/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/science-line.png' %}" alt="ScienceLine logo">
+                <div class="weblink-text">
+                    <a href="http://scienceline.ucsb.edu/" target="_blank">ScienceLine (UCSB)</a>
+                    <p class="small">http://scienceline.ucsb.edu/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/ask-the-van.png' %}" alt="Ask the Van logo">
+                <div class="weblink-text">
+                    <a href="https://van.physics.illinois.edu/qa/" target="_blank">Ask the Van</a>
+                    <p class="small">https://van.physics.illinois.edu/qa/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/quora.jpg' %}" alt="Quora logo">
+                <div class="weblink-text">
+                    <a href="https://www.quora.com/" target="_blank">Quora</a>
+                    <p class="small">https://www.quora.com/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/stack-exchange.png' %}" alt="Stack Exchange logo">
+                <div class="weblink-text">
+                    <a href="https://stackexchange.com/" target="_blank">Stack Exchange</a>
+                    <p class="small">https://stackexchange.com/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/apj.png' %}" alt="Abdul Kalam logo">
+                <div class="weblink-text">
+                    <a href="http://www.abdulkalam.nic.in/childrenques.html" target="_blank">Abdul Kalam</a>
+                    <p class="small">http://www.abdulkalam.nic.in/childrenques.html</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/center-for-curiosity.jpg' %}" alt="Centre for Curiosity logo">
+                <div class="weblink-text">
+                    <a href="http://centerforcuriosity.com/" target="_blank">Centre for Curiosity</a>
+                    <p class="small">http://centerforcuriosity.com/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/im-a-scientist.png' %}" alt="I’m a Scientist logo">
+                <div class="weblink-text">
+                    <a href="https://imascientist.org.uk/" target="_blank">I’m a Scientist</a>
+                    <p class="small">https://imascientist.org.uk/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/ask-a-scientist.png' %}" alt="Journal of Scientific Temper logo">
+                <div class="weblink-text">
+                    <a href="https://www.niscair.res.in/ScienceCommunication/ResearchJournals/rejour/jst/jst0.asp" target="_blank">Journal of Scientific Temper</a>
+                    <p class="small">https://www.niscair.res.in/somelink</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
