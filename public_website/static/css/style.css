@@ -3476,41 +3476,8 @@ button.deny-access {
     }
 }
 
-.resources-page-content .resource-section-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-}
-
-@media (max-width: 768px) {
-    .resources-page-content .resource-section-header {
-        margin-bottom: 1rem;   
-    }
-}
-
 .resources-page-content .resource-section-header .resources-section-title {
     margin-bottom: 0;
-}
-
-.resources-page-content .resource-section-header .resources-carousel-controls i {
-    font-size: 1.2rem;
-    color: #808080;
-}
-
-@media (max-width: 768px) {
-    .resources-page-content .resource-section-header .resources-carousel-controls i {
-        font-size: 1rem;
-    }
-}
-
-.resources-page-content .resource-section-header .resources-carousel-controls .prev-icon i {
-    margin-right: 0.2rem;
-}
-
-@media (max-width: 768px) {
-    .resources-page-content .resource-section-header .resources-carousel-controls .prev-icon i {
-        margin-right: 0.6rem;
-    }
 }
 
 .resources-page-content .resource-weblinks-section {
@@ -3561,28 +3528,7 @@ button.deny-access {
 .resource-item-wrapper {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-}
-
-@media (max-width: 768px) {
-    .resource-item-wrapper {
-        flex-wrap: wrap;
-        align-items: stretch;
-    }
-}
-
-.resource-item-wrapper.no-carousel {
     flex-wrap: wrap;
-}
-
-.resource-item-wrapper.no-carousel .resource-item {
-    margin-bottom: 2rem;
-}
-
-@media (max-width: 768px) {
-    .resource-item-wrapper.no-carousel .resource-item {
-        margin-bottom: 1rem;
-    }
 }
 
 .resource-item-wrapper .resource-item {
@@ -3590,10 +3536,83 @@ button.deny-access {
     border-radius: 5px;
     padding: 1rem;
     flex-basis: 17%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .resource-item-wrapper .resource-item {
+        margin-bottom: 1rem;
+    }
+}
+
+.resource-item-wrapper.magazine-section .resource-item {
+    justify-content: start;    
+}
+
+.resource-item-wrapper .resource-item  button.book-details {
+    margin: 0 auto;
+    display: block;
+    padding: 0;
+    color: #bdbdbd;
+    text-decoration: underline;
+    font-size: 0.9rem;
+}
+
+.resource-item-wrapper .resource-item .book-details-modal .close-modal {
+    position: absolute;
+    right: 0px;
+    padding: 8px 12px;
+    color: #8c8c8c;
+}
+
+.resource-item-wrapper .resource-item .book-details-modal .modal-dialog {
+    max-width: 700px;
+}
+
+.resource-item-wrapper .resource-item .book-details-modal .book-details-content {
+    display: flex;
+    align-items: flex-start;
+    padding: 2rem;
+}
+
+.resource-item-wrapper .resource-item .book-details-modal .book-details-content img.book-details-cover {
+    width: 200px;
+    height: 250px;
+    margin-right: 2rem;
+}
+
+@media (max-width: 768px) {
+    .resource-item-wrapper .resource-item .book-details-modal .book-details-content {
+        padding: 3rem 1rem 1rem 1rem;
+        flex-direction: column;
+    }
+
+    .resource-item-wrapper .resource-item .book-details-modal .book-details-content img.book-details-cover {
+        margin: 0 auto;
+        margin-bottom: 2rem;
+    }
+}
+
+.resource-item-wrapper .resource-item .book-details-modal .book-details-content .detail-title {
+    color: #9b63a8;
+}
+
+.resource-item-wrapper .resource-item .book-details-modal .book-details-content a.book-link {
+    color: #919191;
+    text-decoration: underline;
+}
+
+.resource-item-wrapper .resource-item .book-details-modal .book-details-content .book-non-link {
+    color: #919191;
 }
 
 .resource-item-wrapper .resource-item.empty-item {
     background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
 }
 
 @media (max-width: 768px) {
@@ -3603,15 +3622,15 @@ button.deny-access {
     }
 }
 
-.resource-item-wrapper .resource-item img {
+.resource-item-wrapper .resource-item img.book-cover {
     width: 150px;
-    margin: auto;
+    margin: 0 auto;
     display: block;
     margin-bottom: 1rem;
 }
 
 @media (max-width: 768px) {
-    .resource-item-wrapper .resource-item img {
+    .resource-item-wrapper .resource-item img.book-cover {
         width: 90px;
     }
 }
@@ -3644,7 +3663,12 @@ button.deny-access {
 .resource-item-wrapper .resource-item .resource-language {
     font-size: 0.9rem;
     color: #9b63a8;
-    margin-bottom: 0;
+    margin-bottom: 0.5rem;
+}
+
+.resource-item-wrapper .resource-item .resource-language a.resource-language-link {
+    color: #9b63a8;
+    text-decoration: underline;
 }
 
 @media (max-width: 768px) {
