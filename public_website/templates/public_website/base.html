@@ -41,7 +41,7 @@
                 <div class="row">
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_resource.png' %}" alt="{% trans 'Resources' %}">
-                        <a href="javascript:void(0)">{% trans 'Resources' %}</a>
+                        <a href="{% url 'public_website:resources' %}">{% trans 'Resources' %}</a>
                     </div>
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_analytics.png' %}" alt="{% trans 'Analytics' %}">
