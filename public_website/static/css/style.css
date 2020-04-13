@@ -742,7 +742,6 @@ button.cancel-delete {
     display: flex;
     flex-direction: column-reverse;
     padding: 0 2rem;
-    /* margin-bottom: 2rem; */
 }
 
 @media (max-width: 576px) {
@@ -3497,7 +3496,7 @@ button.deny-access {
     border-radius: 5px;
     padding: 0.7rem;
     display: flex;
-    flex-basis: 20%;
+    flex-basis: 22%;
     margin-bottom: 1.5rem;
 }
 
