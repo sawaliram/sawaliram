@@ -649,7 +649,8 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
 
     def get_absolute_url(self):
         '''
-        Returns the edit page of the translation
+        Returns the default page of the translation, depending on
+        publish status
         '''
 
         if self.is_published:
@@ -678,6 +679,31 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
                     'lang_to': self.language,
                 }
             )
+
+    def get_edit_url(self):
+        '''
+        Returns the edit URL of a translation, depending on publish
+        status. Published pieces will have no edit URL.
+        '''
+
+        if self.is_draft:
+            return reverse(
+                'dashboard:edit-article-translation',
+                kwargs={
+                    'source': self.source.id,
+                    'lang_from': self.source.language,
+                    'lang_to': self.language,
+                }
+            )
+        elif self.is_submitted:
+            return reverse(
+                'dashboard:edit-submitted-article-translation',
+                kwargs={
+                    'pk': self.id
+                }
+            )
+        else:
+            return # don't return anything :P
 
 class DraftArticleTranslation(
     ArticleTranslation.get_draft_model(),

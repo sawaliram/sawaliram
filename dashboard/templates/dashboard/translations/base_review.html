@@ -38,9 +38,15 @@
       {% endblock %}
       {% if object.translated_by == request.user %}
       <div class="hr-over">
+        {% block edit_button %}
+        {% if object.get_edit_url %}
+        <a class="btn btn-secondary" href="{{ object.get_edit_url }}">Edit Translation</a>
+        {% else %}
         <button class="btn" action="{{ object.get_edit_url }}" disabled title="You cannot edit submitted translations yet. We're working on it!" data-toggle="tooltip">
           Edit Translation
         </button>
+        {% endif %}
+        {% endblock %}
       </div>
       {% else %}
       <form class="hr-over" action="{{ object.get_publish_url }}" method="POST">

@@ -1410,6 +1410,7 @@ class BaseEditTranslation(UpdateView):
     conflict_url = None
     source_model = None
     view_name = None
+    default_status = None
 
     def get_object(self, queryset=None):
         '''
@@ -1445,7 +1446,7 @@ class BaseEditTranslation(UpdateView):
             'source': source,
             'translated_by': user,
             'language': lang_to,
-            'status': self.model.STATUS_DRAFT,
+            'status': self.get_default_status(),
         }
 
         try:
@@ -1479,6 +1480,18 @@ class BaseEditTranslation(UpdateView):
 
         return self.conflict_url
 
+    def get_default_status(self):
+        '''
+        Returns the expected status of the Draftable we're translating.
+        Defaults to using the set variable, if exists, or the selected
+        model's STATUS_DRAFT property if it doesn't.
+        '''
+
+        if self.default_status is not None:
+            return self.default_status
+        else:
+            return self.model.STATUS_DRAFT
+
     def form_valid(self, form):
         '''
         Validates form. This version inherits from UpdateView, but also
@@ -1496,10 +1509,7 @@ class BaseEditTranslation(UpdateView):
             kwargs = self.kwargs
             kwargs['lang_from'] = lang_from
             kwargs['lang_to'] = lang_to
-            self.success_url = reverse(
-                self.get_view_name(),
-                kwargs=kwargs,
-            )
+            self.kwargs = self.get_success_url(**kwargs)
 
         response = super().form_valid(form)
 
@@ -1535,9 +1545,11 @@ class BaseEditTranslation(UpdateView):
 
         return self.view_name
 
-    def get_success_url(self):
+    def get_success_url(self, **kwargs):
+        if not kwargs:
+            kwargs = self.kwargs
         if self.success_url is None:
-            self.success_url = reverse(self.get_view_name(), kwargs=self.kwargs)
+            self.success_url = reverse(self.get_view_name(), kwargs=kwargs)
 
         return self.success_url
 
@@ -1647,6 +1659,49 @@ class EditAnswerTranslation(BaseEditTranslation):
 
         return response
 
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class EditSubmittedArticleTranslation(EditArticleTranslation):
+    model = SubmittedArticleTranslation
+    view_name = 'dashboard:review-article-translation'
+    default_status = SubmittedArticleTranslation.STATUS_SUBMITTED
+
+    def get_object(self):
+        obj = get_object_or_404(self.model, id=self.kwargs.get('pk'))
+        self.source = obj.source
+
+        return obj
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.view_name, kwargs={'pk': self.object.id})
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class EditSubmittedAnswerTranslation(EditAnswerTranslation):
+    model = SubmittedTranslatedQuestion
+    view_name = 'dashboard:review-answer-translation'
+    default_status = SubmittedArticleTranslation.STATUS_SUBMITTED
+
+    def get_object(self):
+        question = get_object_or_404(self.model, id=self.kwargs.get('pk'))
+        self.source = question.source
+
+        # Get the related source answer
+        answer = get_object_or_404(AnswerTranslation,
+            id=self.kwargs.get('answer'))
+
+        # Make sure the question and answer match
+        if answer.source.question_id != question.source:
+            raise Http404('No matching translations found')
+
+        self.answer = answer
+
+        return question
+
+    def get_success_url(self, **kwargs):
+        return self.answer.get_absolute_url()
 
 class BaseDeleteTranslation(DeleteView):
     '''
