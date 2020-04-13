@@ -1,3 +1,4 @@
+
 {% extends "public_website/base.html" %}
 
 {% load i18n %}
@@ -17,7 +18,7 @@
             <button class="btn clear-all">{% trans 'Clear All' %}</button>
         </div>
         <div class="filter-list">
-            {% if page_title == _('Search') %}
+            {% if page_title == 'Search' %}
             <div class="filter-category">
                 <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">Category</button>
                 <div class="category-options-list" id="filterCategories">
@@ -28,7 +29,7 @@
                 </div>
             </div>
             {% endif %}
-            {% if page_title == _('Search') or page_title == _('View Questions') %}
+            {% if page_title == 'Search' or page_title == 'View Questions' %}
             <div class="filter-category">
                 <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">{% trans 'Questions' %}</button>
                 <div class="category-options-list" id="filterCategories">
@@ -57,7 +58,7 @@
                 <button class="btn open-filter" data-target="#filterLanguages" aria-expanded="true" aria-controls="filter-languages">{% trans 'Languages' %}</button>
                 <div class="category-options-list" id="filterLanguages">
                     {% for language in languages %}
-                    <button class="btn category-option {% if language.language in languages_to_filter_by %}active{% endif %}" data-param="language" data-value="{{ language.language|urlencode }}">{{ language.language|to_language_name }}</button>
+                    <button class="btn category-option {% if language.language in languages_to_filter_by %}active{% endif %}" data-param="language" data-value="{{ language.language|urlencode }}">{{ language.language|language_name_translated }}</button>
                     {% endfor %}
                 </div>
             </div>
@@ -83,7 +84,7 @@
             {% endfor %}
         {% endif %}
         <form action="" class="search-results-search" method="GET">
-            <input class="search-results-search-field" type="text" name="q" placeholder="Search these results" {% if search_query %} value="{{ search_query }}" {% endif %}>
+            <input class="search-results-search-field" type="text" name="q" placeholder="{% trans 'Search these results' %}" {% if search_query %} value="{{ search_query }}" {% endif %}>
             <button type="submit">
                 <i class="fas fa-search"></i>
             </button>
@@ -194,39 +195,49 @@
                         {% endif %}
                     </div>
                     {% endif %}
-                    {% if page_title == _('Answer Questions') %}
+                    {% if page_title == 'Answer Questions' %}
                         <div class="item-context-controls">
                             {% if page_title == 'Answer Questions' %}
                             <a href="{% url 'dashboard:submit-answer' question_id=result.id %}" class="btn btn-small btn-primary">Answer</a>
                             {% endif %}
                         </div>
                     {% endif %}
-                    {% if page_title == _('View Questions') or page_title == _('Search') %}
-                        {% for answer in result.answers.all %}
-                        {% if answer.approved_by %}
-                            <div class="item-context-controls">
-                                <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">View Answer</a>
-                            </div>
-                        {% endif %}
-                        {% endfor %}
-                    {% endif %}
                 </div>
-                {% if page_title == _('Review Answers') %}
+                {% if page_title != 'Translate Answers' %}
                     {% for answer in result.answers.all %}
-                    <div class="answer-preview">
-                        <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
-                        {% for credit in answer.credits.all %}
-                            <h4>
-                                {{ credit.credit_user_name }} ({% trans credit.credit_title %})
-                            </h4>
-                        {% endfor %}
-                        <div class="review-answer-controls">
-                            <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
-                        </div>
-                    </div>
+                        {% if page_title == 'Review Answers' %}
+                            {% if answer.status == 'submitted' %}
+                            <div class="answer-preview">
+                                <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
+                                {% for credit in answer.credits.all %}
+                                    <h4>
+                                        {{ credit.credit_user_name }} ({% trans credit.credit_title %})
+                                    </h4>
+                                {% endfor %}
+                                <div class="preview-answer-controls">
+                                    <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
+                                </div>
+                            </div>
+                            {% endif%}
+                        {% endif %}
+                        {% if page_title == 'View Questions' or page_title == 'Search' or page_title == 'Answer Questions' %}
+                            {% if answer.status == 'published' %}
+                            <div class="answer-preview">
+                                <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
+                                {% for credit in answer.credits.all %}
+                                    <h4>
+                                        {{ credit.credit_user_name }} ({% trans credit.credit_title %})
+                                    </h4>
+                                {% endfor %}
+                                <div class="preview-answer-controls">
+                                    <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small {% if page_title == 'Answer Questions' %} btn-primary-hollow{% else %}btn-primary{% endif %}">View Answer</a>
+                                </div>
+                            </div>
+                            {% endif%}
+                        {% endif %}
                     {% endfor %}
                 {% endif %}
-                {% if page_title == _('Translate Answers') %}
+                {% if page_title == 'Translate Answers' %}
                     {% for answer in result.answers.all %}
                     <div class="answer-preview">
                         <h4>Answered by <b>{{ answer.submitted_by.get_full_name }}</b></h4>
@@ -255,7 +266,7 @@
         {% else %}
         <div class="no-search-results-container">
             <i class="far fa-frown"></i>
-            <p>{% blocktrans %}No results found. Try changing the filters or search for something else{% endblocktrans %}</p>
+            <p>{% trans 'No results found. Try changing the filters or search for something else' %}</p>
         </div>
         {% endif %}
     </div>

@@ -41,7 +41,7 @@
                 <div class="row">
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_resource.png' %}" alt="{% trans 'Resources' %}">
-                        <a href="javascript:void(0)">{% trans 'Resources' %}</a>
+                        <a href="{% url 'public_website:resources' %}">{% trans 'Resources' %}</a>
                     </div>
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_analytics.png' %}" alt="{% trans 'Analytics' %}">
@@ -61,7 +61,7 @@
                 <div class="row">
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_contact.png' %}" alt="{% trans 'Contact Us' %}">
-                        <a href="javascript:void(0)">{% trans 'Contact Us' %}</a>
+                        <a href="{% url 'public_website:contact' %}">{% trans 'Contact Us' %}</a>
                     </div>
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_get_involved.png' %}" alt="{% trans 'Get Involved' %}">
@@ -196,37 +196,34 @@
                 </p>
             </div>
             {% endif %}
-            {% block content %} {% endblock %}
+            <div class="content">
+                {% block content %} {% endblock %}
+            </div>
         </div>
 
-        <footer class="wavy-footer">
-            <div class="row no-gutters footer-main">
-                <div class="col-12 col-sm-7 footer-column">
-                    <p class="footer-text">
-                        {% blocktrans %}You too can volunteer to collect or answer questions, translate content or help build this website!{% endblocktrans %}
-                    </p>
-                    <a href="{% url 'public_website:get-involved' %}" class="btn btn-yellow">{% trans 'Get Involved!' %}</a>
-                </div>
-                <div class="col-12 col-sm-5 footer-column">
-                    <div class="footer-links">
-                        <a href="javascript:void(0)">{% trans 'Team' %}</a>
-                        <a href="javascript:void(0)">{% trans 'Contact' %}</a>
-                        <a href="{% url 'public_website:faq' %}">{% trans 'FAQ' %}</a>
-                        <a class="dashboard-link" href="{% url 'dashboard:home' %}">{% trans 'Dashboard' %}</a>
-                    </div>
-                    <a class="social-media facebook" href="javascript:void(0)"><i class="fab fa-facebook-f"></i></a>
-                    <a class="social-media youtube" href="javascript:void(0)"><i class="fab fa-youtube"></i></a>
-                    <a class="social-media twitter" href="javascript:void(0)"><i class="fab fa-twitter"></i></a>
-                </div>
+        <footer>
+            <div class="footer-section get-involved-section">
+                <p class="footer-text">
+                    {% trans 'You too can volunteer to collect or answer questions, translate content or help build this website!' %}
+                </p>
+                <a href="{% url 'public_website:get-involved' %}" class="btn btn-yellow">{% trans 'Get Involved!' %}</a>
             </div>
-            <div class="footer-base">
-                <p>&copy; {% trans 'Copyright Sawaliram 2019' %}</p>
+            <div class="footer-section links-section">
+                <div class="footer-links">
+                    <a href="{% url 'public_website:about' %}">{% trans 'About' %}</a>
+                    <i class="fas fa-circle"></i>
+                    <a href="{% url 'public_website:contact' %}">{% trans 'Contact' %}</a>
+                    <i class="fas fa-circle"></i>
+                    <a href="{% url 'public_website:faq' %}">{% trans 'FAQ' %}</a>
+                    <i class="fas fa-circle"></i>
+                    <a href="https://github.com/sawaliram/sawaliram" target="_blank">{% trans 'Github' %}</a>
+                </div>
+                <p class="copyright">&copy; {% trans 'Copyright Sawaliram 2019' %}</p>
             </div>
         </footer>
 
         <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         {% block script_includes %} {% endblock %}
         <script src="{% static 'js/script.js' %}"></script>
         {% block footer %}{% endblock %}

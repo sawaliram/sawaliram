@@ -15,6 +15,8 @@ urlpatterns = [
     path('manage-content', views.ManageContentView.as_view(), name='manage-content'),
     path('view-questions', views.ViewQuestionsView.as_view(), name='view-questions'),
     path('answer-questions', views.AnswerQuestions.as_view(), name='answer-questions'),
+    path('delete-submitted-answer/<int:answer_id>', views.DeleteSubmittedAnswer.as_view(), name='delete-submitted-answer'),
+    path('delete-submitted-article/<int:article_id>', views.DeleteSubmittedArticle.as_view(), name='delete-submitted-article'),
     path('translate/answers', views.TranslateAnswersList.as_view(), name='translate-answers'),
     path('review-answers', views.ReviewAnswersList.as_view(), name='review-answers'),
     path('question/<int:question_id>/answers/<int:answer_id>/review', views.ReviewAnswerView.as_view(), name='review-answer'),
@@ -48,4 +50,6 @@ urlpatterns = [
     path('translate/articles/<int:pk>/delete', views.DeleteArticleTranslation.as_view(), name='delete-article-translation'),
     path('translate/answers/<int:pk>/delete', views.DeleteAnswerTranslation.as_view(), name='delete-answer-translation'),
     path('translate/questions/<int:pk>/delete', views.DeleteQuestionTranslation.as_view(), name='delete-question-translation'),
+
+    path('admin/bulk-update', views.AdminBulkUpdateField.as_view(), name='admin-bulk-update-field'),
 ]

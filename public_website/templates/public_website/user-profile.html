@@ -1,0 +1,528 @@
+{% extends "public_website/base.html" %}
+
+{% block title %} {{ page_title }} | Sawaliram {% endblock %}
+
+{% load i18n %}
+{% load static %}
+{% load has_group %}
+
+{% block content %}
+
+<div class="user-profile-container {% if selected_user != request.user %}view-profile{% endif %}">
+    <div class="user-profile-menu">
+        <div class="mobile-messages-container">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="{% trans 'Close' %}">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <img class="profile-picture" src="{{ selected_user.profile.profile_picture }}" alt="{% trans 'Profile Picture' %}">
+        <h1 class="user-name">{{ selected_user.get_full_name }}</h1>
+        <div class="organisation-info">
+            {% if selected_user.organisation_role %}
+                <p class="organisation-text">{{ selected_user.organisation_role }}{% if selected_user.organisation %},{% endif %}</p>
+            {% endif %}
+            {% if selected_user.organisation %}
+                <p class="organisation-text">{{ selected_user.organisation }}</p>
+            {% endif %}
+        </div>
+        {% if selected_user == request.user %}
+        <ul class="nav nav-tabs flex-column" id="userProfileMenuTabs" role="tablist">
+            <li class="nav-item">
+                <a href="#settings" class="nav-link active" id="settingsTab" role="tab" aria-controls="settings" aria-selected="true">
+                    <img src="{% static 'icons/menu_settings.png' %}" alt="{% trans 'User Settings'%}">
+                    {% trans 'Settings' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#drafts" class="nav-link" id="draftsTab" role="tab" aria-controls="drafts" aria-selected="false">
+                    <img src="{% static 'icons/menu_drafts.png' %}" alt="{% trans 'User Drafts'%}">
+                    {% trans 'Drafts' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#notifications" class="nav-link" id="notificationsTab" role="tab" aria-controls="notifications" aria-selected="false">
+                    <img src="{% static 'icons/menu_notifications.png' %}" alt="{% trans 'User Notifications'%}">
+                    {% trans 'Notifications' %}
+                    {% if request.user.notifications.all|length > 0 %}
+                        <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
+                    {% endif %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#submissions" class="nav-link" id="submissionsTab" role="tab" aria-controls="submissions" aria-selected="false">
+                    <img src="{% static 'icons/menu_submissions.png' %}" alt="{% trans 'User Submissions'%}">
+                    {% trans 'Submissions' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#bookmarks" class="nav-link" id="bookmarksTab" role="tab" aria-controls="bookmarks" aria-selected="false">
+                    <img src="{% static 'icons/menu_bookmarks.png' %}" alt="{% trans 'User Bookmarks'%}">
+                    {% trans 'Bookmarks' %}
+                </a>
+            </li>
+        </ul>
+        {% endif %}
+    </div>
+    <div class="user-profile-content">
+        <div class="tab-content">
+            <div class="mobile-tab-content-controls">
+                <button class="btn"><i class="fas fa-arrow-left"></i> Back</button>
+            </div>
+            <div class="desktop-messages-container">
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="{% trans 'Close' %}">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="tab-pane fade {% if selected_user == request.user %}active show{% endif %}" id="settings" role="tabpanel" aria-labelledby="settingsTab">
+                <h2>{% trans 'Your Avatar' %}</h2>
+                <p class="small">Manage how you appear on sawaliram.org</p>
+                <hr class="title-divider">
+                <div class="card">
+                    <form action="{% url 'public_website:update-user-name' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="name-form-wrapper">
+                            <div class="name-form-field">
+                                <label for="firstName">{% trans 'Your first name' %}</label>
+                                <input type="text" maxlength="30" id="firstName" name="first-name" placeholder="{% trans 'Avoid titles like Dr, Prof, Miss' %}" value="{{ request.user.first_name }}" required>
+                            </div>
+                            <div class="name-form-field">
+                                <label for="lastName">{% trans 'Your last name' %}</label>
+                                <input type="text" maxlength="30" id="lastName" name="last-name" placeholder="{% trans 'Your last name/surname'%}" value="{{ request.user.last_name }}" required>
+                            </div>
+                        </div>
+                        <button class="btn btn-small btn-secondary">{% trans 'Update name' %}</button>
+                    </form>
+                    <hr>
+                    <div>
+                        <label>We are working on letting the beautiful people on sawaliram upload their own pictures as the profile picture. Meanwhile, feel free to pick one of the lovely icons made by <a href="https://www.flaticon.com/authors/freepik">Freepik</a></label>
+                        <button class="btn btn-small btn-secondary" data-toggle="modal" data-target="#changeProfilePictureModal">Change picture</button>
+                        <div class="modal fade" id="changeProfilePictureModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="choose-picture-form-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>{% trans 'Organisation' %}</h2>
+                <p class="small">{% trans 'Details of your affiliated school, institute or organisation' %}</p>
+                <hr class="title-divider">
+                <div class="card">
+                    <form action="{% url 'public_website:update-organisation-info' %}" method="POST">
+                        {% csrf_token %}
+                        <label for="organisationRole">{% trans 'Your role' %}</label>
+                        <input type="text" maxlength="50" id="organisationRole" name="organisation-role" placeholder="{% trans 'Eg. Teacher, Volunteer, Faculty, Student' %}" {% if request.user.organisation_role %}value="{{ request.user.organisation_role }}"{% endif %}>
+                        <label for="organisationName">{% trans 'Your organisation' %}</label>
+                        <input type="text" maxlength="200" id="organisationName" name="organisation-name" placeholder="{% trans 'Eg. Eklavya, TIFR, HBCSE' %}" {% if request.user.organisation %}value="{{ request.user.organisation }}"{% endif %}>
+                        <button class="btn btn-small btn-secondary">{% trans 'Update organisation' %}</button>
+                    </form>
+                </div>
+                <h2>{% trans 'Security' %}</h2>
+                <p class="small">{% trans 'Manage your password' %}</p>
+                <hr class="title-divider">
+                <div class="card">
+                    <form action="{% url 'public_website:update-user-password' %}" method="POST">
+                        {% csrf_token %}
+                        <label for="currentPassword">{% trans 'Your current password' %}</label>
+                        <input type="password" id="currentPassword" name="current-password" placeholder="{% trans 'Current password' %}" required>
+                        <label for="newPassword">{% trans 'New Password' %}</label>
+                        <input type="password" name="new-password" placeholder="{% trans 'New password' %}" required>
+                        <label for="confirmNewPassword">{% trans 'Confirm new password' %}</label>
+                        <input type="password" name="confirm-new-password" placeholder="{% trans 'Confirm new password' %}" required>
+                        <button class="btn btn-small btn-secondary">{% trans 'Update password' %}</button>
+                    </form>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="drafts" role="tabpanel" aria-labelledby="draftsTab">
+                {% if answer_drafts or article_drafts %}
+                    {% if answer_drafts %}
+                        <h2>Answers</h2>
+                        <p class="small">All your saved draft answers will appear here</p>
+                        <hr class="title-divider">
+                        {% for answer_draft in answer_drafts %}
+                            <div class="card">
+                                <h3>
+                                    {% if answer_draft.question_id.language == 'en' %}
+                                        {{ answer_draft.question_id.question_text }}
+                                    {% else %}
+                                        {{ answer_draft.question_id.question_text_english }}
+                                    {% endif %}
+                                </h3>
+                                <p class="grey-text">
+                                    {{ answer_draft.answer_text|striptags|truncatechars:200  }}
+                                </p>
+                                <div class="card-controls">
+                                    <a href="{% url 'dashboard:submit-answer' question_id=answer_draft.question_id.id %}" class="btn btn-small btn-secondary"><i class="fas fa-pencil-alt"></i> {% trans 'Continue writing' %}</a>
+                                    <button class="btn btn-small delete-button open-card-drawer"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
+                                </div>
+                                <div class="card-drawer">
+                                    <form class="inline-block" action="{% url 'sawaliram_auth:remove-draft' %}" method="POST">
+                                        {% csrf_token %}
+                                        <span class="drawer-prompt">{% trans 'Are you sure you want to delete this answer?' %}</span>
+                                        <input type="hidden" name="draft-id" value="{{ answer_draft.id }}">
+                                        <button class="btn btn-small confirm-delete" type="submit">{% trans 'Yes, Delete' %}</button>
+                                    </form>
+                                    <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if article_drafts %}
+                        <h2>Articles</h2>
+                        <p class="small">All your saved draft articles will appear here</p>
+                        <hr class="title-divider">
+                        {% for article_draft in article_drafts %}
+                            <div class="card">
+                                <h3>{{ article_draft.title }}</h3>
+                                <p class="grey-text">
+                                    {{ article_draft.body|striptags|truncatechars:200  }}
+                                </p>
+                                <div class="card-controls">
+                                    <a href="{% url 'dashboard:edit-article' draft_id=article_draft.id %}" class="btn btn-small btn-secondary"><i class="fas fa-pencil-alt"></i> {% trans 'Continue writing' %}</a>
+                                    <button class="btn btn-small delete-button open-card-drawer"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
+                                </div>
+                                <div class="card-drawer">
+                                    <form class="inline-block" action="{% url 'dashboard:delete-article' article_draft.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <span class="drawer-prompt">{% trans 'Are you sure you want to delete this article?' %}</span>
+                                        <button class="btn btn-small confirm-delete" type="submit">{% trans 'Yes, Delete' %}</button>
+                                    </form>
+                                    <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    <div class="card">
+                        <label>You have no saved drafts</label>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+                {% if notifications %}
+                    {% for notification in notifications %}
+                        <div class="card">
+                            <h3 class="low-margin-title">{{ notification.title_text }}</h3>
+                            <p class="small notification-meta">
+                                {% if notification.notification_type == 'comment' %}
+                                    <i class="fas fa-comments"></i>
+                                {% elif notification.notification_type == 'published' %}
+                                    <i class="fas fa-check-circle"></i>
+                                {% elif notification.notification_type == 'updated' %}
+                                    <i class="fas fa-edit"></i>
+                                {% endif %}
+                                {{ notification.created_on|date:"j F, Y" }}
+                            </p>
+                            <p class="grey-text">{{ notification.description_text }}</p>
+                            <div class="card-controls">
+                                <form action="{% url 'public_website:view-notification' %}" class="view-notification-form" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="notification-id" value="{{ notification.id }}">
+                                    <input type="hidden" name="target-url" value="{{ notification.target_url }}">
+                                    <button class="btn btn-small btn-secondary">View answer</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="card">
+                        <label>You have no active notifications</label>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="tab-pane fade {% if selected_user != request.user %}active show{% endif %}" id="submissions" role="tabpanel" aria-labelledby="submissions-tab">
+                {% if selected_user != request.user %}
+                    <div class="card user-stat-wrapper">
+                        <div class="user-stat top-line">
+                            <span class="stat-number">{{ submitted_questions|length }}</span>
+                            <span class="stat-title">Datasets<br>Submitted</span>
+                        </div>
+                        <div class="user-stat top-line">
+                            <span class="stat-number">{{ submitted_answers|length }}</span>
+                            <span class="stat-title">Answers<br>Submitted</span>
+                        </div>
+                        <div class="user-stat">
+                            <span class="stat-number">{{ published_articles|length }}</span>
+                            <span class="stat-title">Articles<br>Written</span>
+                        </div>
+                        <div class="user-stat">
+                            <span class="stat-number">0</span>
+                            <span class="stat-title">Things<br>Translated</span>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if submitted_questions or submitted_answers or submitted_articles or published_articles %}
+                    {% if submitted_questions %}
+                        <h2>{% trans 'Questions' %}</h2>
+                        {% if selected_user == request.user  %}
+                            <p class="small">{% trans 'All the questions you have submitted will appear here' %}</p>
+                        {% else %}
+                            <p class="small">{% trans 'All questions submitted by' %} {{ selected_user.first_name }}</p>
+                        {% endif %}
+                        <hr class="title-divider">
+                        {% for submitted_question in submitted_questions %}
+                            <div class="card">
+                                <h3 class="low-margin-title">
+                                    {% trans 'Dataset' %} #{{ submitted_question.id }} 
+                                </h3>
+                                <p class="small">{{ submitted_question.question_count }} {% trans 'questions' %}, submitted on {{ submitted_question.created_on|date:"jS F, Y" }}</p>
+                                {% if selected_user == request.user  %}
+                                    {% if submitted_question.status == 'new' %}
+                                    <p class="small pending">
+                                        <i class="fas fa-clock"></i> {% trans 'Questions under review' %}
+                                    </p>
+                                    {% elif submitted_question.status == 'curated' %}
+                                    <p class="small success">
+                                        <i class="fas fa-check-circle"></i> {% trans 'Questions reviewed and ready to answer and translate' %}
+                                    </p>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if submitted_answers %}
+                        <h2>{% trans 'Answers' %}</h2>
+                        {% if selected_user == request.user %}
+                            <p class="small">{% trans 'All your answers to submitted questions will appear here' %}</p>
+                        {% else %}
+                            <p class="small">{% trans 'All published answers written by' %} {{ selected_user.first_name }}</p>
+                        {% endif %}
+                        <hr class="title-divider">
+                        {% for submitted_answer in submitted_answers %}
+                            {% if selected_user == request.user %}
+                                <div class="card">
+                                    <h3 class="low-margin-title">
+                                        <span class="small">#{{ submitted_answer.question_id.id }}</span> 
+                                        {% if submitted_answer.question_id.language == 'en' %}
+                                            {{ submitted_answer.question_id.question_text }}
+                                        {% else %}
+                                            {{ submitted_answer.question_id.question_text_english }}
+                                        {% endif %}
+                                    </h3>
+                                    <p class="small">
+                                        Submitted on {{ submitted_answer.created_on|date:"jS F, Y" }}
+                                    </p>
+                                    {% if submitted_answer.status == 'submitted' %}
+                                    <p class="small pending">
+                                        <i class="fas fa-clock"></i> {% trans 'Answer under review' %}
+                                    </p>
+                                    {% elif submitted_answer.status == 'published' %}
+                                    <p class="small success">
+                                        <i class="fas fa-check-circle"></i> {% trans 'Answer reviewed and published' %}
+                                    </p>
+                                    {% endif %}
+                                    <hr>
+                                    <p class="grey-text">
+                                        {{ submitted_answer.answer_text|striptags|truncatechars:200 }}
+                                    </p>
+                                    <div class="card-controls">
+                                        {% if submitted_answer.status == 'submitted' %}
+                                            <a class="btn btn-small btn-secondary" href="{% url 'dashboard:review-answer' question_id=submitted_answer.question_id.id answer_id=submitted_answer.id %}">
+                                                Edit Answer
+                                            </a>
+                                            <button class="btn btn-small delete-button open-card-drawer"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
+                                        {% elif submitted_answer.status == 'published' %}
+                                            <a class="btn btn-small btn-secondary" href="{% url 'public_website:view-answer' question_id=submitted_answer.question_id.id answer_id=submitted_answer.id %}">
+                                                View Answer
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-drawer">
+                                        <form class="inline-block" action="{% url 'dashboard:delete-submitted-answer' answer_id=submitted_answer.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <span class="drawer-prompt">{% trans 'Are you sure you want to delete this answer?' %}</span>
+                                            <button class="btn btn-small confirm-delete" type="submit">{% trans 'Yes, Delete' %}</button>
+                                        </form>
+                                        <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% if submitted_answer.status == 'published' %}
+                                    <div class="card">
+                                        <h3 class="low-margin-title">
+                                            <span class="small">#{{ submitted_answer.question_id.id }}</span> 
+                                            {% if submitted_answer.question_id.language == 'en' %}
+                                                {{ submitted_answer.question_id.question_text }}
+                                            {% else %}
+                                                {{ submitted_answer.question_id.question_text_english }}
+                                            {% endif %}
+                                        </h3>
+                                        <p class="small">
+                                            Submitted on {{ submitted_answer.created_on|date:"jS F, Y" }}
+                                        </p>
+                                        <hr>
+                                        <p class="grey-text">
+                                            {{ submitted_answer.answer_text|striptags|truncatechars:200 }}
+                                        </p>
+                                        <div class="card-controls">
+                                            <a class="btn btn-small btn-secondary" href="{% url 'public_website:view-answer' question_id=submitted_answer.question_id.id answer_id=submitted_answer.id %}">
+                                                View Answer
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    {% if submitted_articles or published_articles %}
+                        {% if selected_user == request.user %}
+                            <h2>{% trans 'Articles' %}</h2>
+                            <p class="small">{% trans 'All your submitted articles will appear here' %}</p>
+                            <hr class="title-divider">
+                            {% if published_articles %}
+                                {% for published_article in published_articles %}
+                                    <div class="card">
+                                        <h3 class="low-margin-title">{{ published_article.title }}</h3>
+                                        <p class="small">
+                                            Submitted on {{ published_article.created_on|date:"jS F, Y" }}
+                                        </p>
+                                        {% if selected_user == request.user %}
+                                            <p class="small success">
+                                                <i class="fas fa-check-circle"></i> {% trans 'Article reviewed and published' %}
+                                            </p>
+                                        {% endif %}
+                                        <hr>
+                                        <p class="grey-text">
+                                            {{ published_article.body|striptags|truncatechars:200 }}
+                                        </p>
+                                        <div class="card-controls">
+                                            <a class="btn btn-small btn-secondary" href="{% url 'public_website:view-article' article=published_article.id %}">
+                                                View Article
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if submitted_articles %}
+                                {% for submitted_article in submitted_articles %}
+                                    <div class="card">
+                                        <h3 class="low-margin-title">{{ submitted_article.title }}</h3>
+                                        <p class="small">
+                                            Submitted on {{ submitted_article.created_on|date:"jS F, Y" }}
+                                        </p>
+                                        <p class="small pending">
+                                            <i class="fas fa-clock"></i> {% trans 'Article under review' %}
+                                        </p>
+                                        <hr>
+                                        <p class="grey-text">
+                                            {{ submitted_article.body|striptags|truncatechars:200 }}
+                                        </p>
+                                        <div class="card-controls">
+                                            <a class="btn btn-small btn-secondary" href="{% url 'dashboard:review-article' article=submitted_article.id %}">
+                                                Edit Article
+                                            </a>
+                                            <button class="btn btn-small delete-button open-card-drawer"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
+                                        </div>
+                                        <div class="card-drawer">
+                                            <form class="inline-block" action="{% url 'dashboard:delete-submitted-article' article_id=submitted_article.id %}" method="POST">
+                                                {% csrf_token %}
+                                                <span class="drawer-prompt">{% trans 'Are you sure you want to delete this article?' %}</span>
+                                                <button class="btn btn-small confirm-delete" type="submit">{% trans 'Yes, Delete' %}</button>
+                                            </form>
+                                            <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% else %}
+                            {% if published_articles %}
+                                <h2>{% trans 'Articles' %}</h2>
+                                <p class="small">{% trans 'All articles written by' %} {{ selected_user.first_name }}</p>
+                                <hr class="title-divider">
+                                {% for published_article in published_articles %}
+                                    <div class="card">
+                                        <h3 class="low-margin-title">{{ published_article.title }}</h3>
+                                        <p class="small">
+                                            Submitted on {{ published_article.created_on|date:"jS F, Y" }}
+                                        </p>
+                                        {% if selected_user == request.user %}
+                                            <p class="small success">
+                                                <i class="fas fa-check-circle"></i> {% trans 'Article reviewed and published' %}
+                                            </p>
+                                        {% endif %}
+                                        <hr>
+                                        <p class="grey-text">
+                                            {{ published_article.body|striptags|truncatechars:200 }}
+                                        </p>
+                                        <div class="card-controls">
+                                            <a class="btn btn-small btn-secondary" href="{% url 'public_website:view-article' article=published_article.id %}">
+                                                View Article
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <div class="card">
+                        <label>{% trans 'You have no submitted content' %}</label>
+                    </div>
+                {% endif%}
+            </div>
+            <div class="tab-pane fade" id="bookmarks" role="tabpanel" aria-labelledby="bookmarks-tab">
+                {% if bookmarked_questions or bookmarked_articles %}
+                    {% if bookmarked_questions %}
+                        <h2>{% trans 'Questions' %}</h2>
+                        <p class="small">{% trans 'All your saved questions will appear here' %}</p>
+                        <hr class="title-divider">
+                        {% for bookmarked_question in bookmarked_questions %}
+                            <div class="card">
+                                <h3 class="low-margin-title">
+                                    <span class="small">#{{ bookmarked_question.question.id }}</span> 
+                                    {% if bookmarked_question.question.language == 'en' %}
+                                        {{ bookmarked_question.question.question_text }}
+                                    {% else %}
+                                        {{ bookmarked_question.question.question_text_english }}
+                                    {% endif %}
+                                </h3>
+                                <p class="small">
+                                    {{ bookmarked_question.question.answer.all|length }} answers
+                                </p>
+                                <div class="card-controls bookmark-controls">
+                                    {% if request.user|has_group:"experts" %}
+                                        <a href="{% url 'dashboard:submit-answer' question_id=bookmarked_question.question.id %}" class="btn btn-small btn-secondary"><i class="fas fa-pencil-alt"></i> {% trans 'Answer question' %}</a>
+                                    {% else %}
+                                        <div></div>
+                                    {% endif %}
+                                    <button class="btn btn-small delete-button open-card-drawer"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
+                                </div>
+                                <div class="card-drawer">
+                                    <form class="inline-block delete-card-form" action="{% url 'sawaliram_auth:delete-bookmark' %}" method="POST">
+                                        {% csrf_token %}
+                                        <span class="drawer-prompt">{% trans 'Are you sure you want to delete this bookmark?' %}</span>
+                                        <input type="hidden" name="content-type" value="question">
+                                        <input type="hidden" name="question-id" value="{{ bookmarked_question.question.id }}">
+                                        <button class="btn btn-small confirm-delete" type="submit">{% trans 'Yes, Delete' %}</button>
+                                    </form>
+                                    <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    <div class="card">
+                        <label>{% trans 'You have not bookmarked any content' %}</label>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

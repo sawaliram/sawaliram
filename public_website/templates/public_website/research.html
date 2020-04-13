@@ -1,40 +1,43 @@
 {% extends "public_website/base.html" %}
 
-{% block title %} Research | Sawaliram {% endblock %}
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {% trans 'Research' %} | {% trans 'Sawaliram' %} {% endblock %}
 
 {% load static %}
 
 {% block content %}
 <div class="research-intro-section">
-    <h1>Why research?</h1>
-    <h2>Research reveals a striking gap between curiosity and questioning.</h2>
+    <h1>{% trans 'Why research?' %}</h1>
+    <h2>{% trans 'Research reveals a striking gap between curiosity and questioning.' %}</h2>
     <div class="research-intro-p-wrapper">
         <div>
-            <p>In everyday situations it is natural for us to talk about ‘curiosity’ and ‘questioning’ interchangeably: when we are curious, we ask questions, and a questioning child demonstrates curiosity. Yet, research shows up a striking gap between curiosity and questioning.</p>
-            <p>‘Curiosity’ is a basic drive that goes way back in our evolutionary history, to perhaps hundreds of millions of years ago. Human babies from two months of age show curiosity while they perceive and explore their environment. As they learn to talk, the pre-schoolers' curiosity bursts forth into tens of thousands of questions they ask, every year.</p>
+            <p>{% trans 'In everyday situations it is natural for us to talk about ‘curiosity’ and ‘questioning’ interchangeably: when we are curious, we ask questions, and a questioning child demonstrates curiosity. Yet, research shows up a striking gap between curiosity and questioning.' %}</p>
+            <p>{% trans '‘Curiosity’ is a basic drive that goes way back in our evolutionary history, to perhaps hundreds of millions of years ago. Human babies from two months of age show curiosity while they perceive and explore their environment. As they learn to talk, the pre-schoolers curiosity bursts forth into tens of thousands of questions they ask, every year.' %}</p>
         </div>
         <div>
-            <p>As children grow up and go to school, the picture changes dramatically. Researchers search in vain for questions asked by students in classrooms. At the same time psychologists and neuroscientists are convinced that, despite appearances, curiosity persists through adolescence, adulthood and even old age, though perhaps taking on newer forms. Such disconnects between curiosity and questioning, placed together with Sawaliram's rich repositories of children's questions, give reasons for us to raise our own questions, and provide the motivation that drives our group’s research.</p>
+            <p>{% trans "As children grow up and go to school, the picture changes dramatically. Researchers search in vain for questions asked by students in classrooms. At the same time psychologists and neuroscientists are convinced that, despite appearances, curiosity persists through adolescence, adulthood and even old age, though perhaps taking on newer forms. Such disconnects between curiosity and questioning, placed together with Sawaliram's rich repositories of children's questions, give reasons for us to raise our own questions, and provide the motivation that drives our group’s research." %}</p>
         </div>
     </div>
 </div>
 <div class="research-second-section">
     <div class="content-wrapper">
         <div>
-            <h2>Our focus is on understanding the nature of children’s questions.</h2>
-            <p>Children’s questions are a resource for teachers and researchers to learn about their motives and interests, their doubts and misunderstandings. Our focus is on understanding the nature of children’s questions when they are provided facilitative conditions and contexts that encourage questioning. We support participating teachers to create such conditions in their own classrooms. The open access database of Sawaliram may be queried online or made available to researchers for specific projects. Our larger goal is to find ways to encourage curiosity and questioning in children, and to translate our findings into an effective curricular and pedagogic program for the Indian school system.</p>
+            <h2>{% trans 'Our focus is on understanding the nature of children’s questions.' %}</h2>
+            <p>{% trans 'Children’s questions are a resource for teachers and researchers to learn about their motives and interests, their doubts and misunderstandings. Our focus is on understanding the nature of children’s questions when they are provided facilitative conditions and contexts that encourage questioning. We support participating teachers to create such conditions in their own classrooms. The open access database of Sawaliram may be queried online or made available to researchers for specific projects. Our larger goal is to find ways to encourage curiosity and questioning in children, and to translate our findings into an effective curricular and pedagogic program for the Indian school system.' %}</p>
         </div>
         <img src="{% static 'illustrations/home_research.png' %}">
     </div>
 </div>
 <!-- <div class="research-links-section">
     <div class="research-link-row">
-        <a href="javascript:void(0)"><span>Global studies on curiosity and questioning</span><i class="fas fa-chevron-right"></i></a>
-        <a href="javascript:void(0)"><span>Curiosity and questioning - an Indian view</span><i class="fas fa-chevron-right"></i></a>
+        <a href="javascript:void(0)"><span>{% trans 'Global studies on curiosity and questioning' %}</span><i class="fas fa-chevron-right"></i></a>
+        <a href="javascript:void(0)"><span>{% trans 'Curiosity and questioning - an Indian view' %}</span><i class="fas fa-chevron-right"></i></a>
     </div>
     <div class="research-link-row">
-        <a href="javascript:void(0)"><span>Research methods and working with data</span><i class="fas fa-chevron-right"></i></a>
-        <a href="javascript:void(0)"><span>Schools and organisations participating</span><i class="fas fa-chevron-right"></i></a>
+        <a href="javascript:void(0)"><span>{% trans 'Research methods and working with data' %}</span><i class="fas fa-chevron-right"></i></a>
+        <a href="javascript:void(0)"><span>{% trans 'Schools and organisations participating' %}</span><i class="fas fa-chevron-right"></i></a>
     </div>
 </div> -->
 <div class="bibliography-section">
@@ -43,134 +46,134 @@
         <div class="card">
             <div class="card-header" id="bibliographyListHeadingOne" data-toggle="collapse" data-target="#bibliographyListOne" aria-expanded="true" aria-controls="bibliographyListOne">
                 <h3>
-                Development of curiosity
+                {% trans 'Development of curiosity' %}
                 </h3>
                 <i class="fas fa-plus"></i>
             </div>
             <div id="bibliographyListOne" class="collapse" aria-labelledby="bibliographyListHeadingOne" data-parent="#bibliographyList">
                 <div class="card-body">
-                    <p>Chouinard, M., Harris, P., & Maratsos, M. (2007). Children's Questions: A Mechanism for Cognitive Development. <i>Monographs of the Society for Research in Child Development, 72</i>(1), I-129. [<a href="https://www.jstor.org/stable/30163594?seq=1#page_scan_tab_contents" target="_blank">Read abstract</a>]</p>
-                    <p>Engel, S. (2015). <i>The Hungry Mind: The Origins of Curiosity in Childhood.</i> Cambridge, MA: Harvard University Press. [<a href="https://www.hup.harvard.edu/catalog.php?isbn=9780674736757" target="_blank">About the book</a>]</p>
-                    <p>Harris, P. L. (2015). <i>Trusting What You’re Told: How Children Learn from Others.</i> Cambridge, MA: Belknap Press. [<a href="https://www.hup.harvard.edu/catalog.php?isbn=9780674503830" target="_blank">About the book</a>]</p>
-                    <p>Jirout, J. & Klahr, D. (2012). Children’s scientific curiosity: In search of an operational definition of an elusive concept. <i>Developmental Review, 32</i>, 125–160. doi: 10.1016/j.dr.2012.04.002 [<a href="https://www.sciencedirect.com/science/article/pii/S0273229712000123" target="_blank">Read abstract</a>]</p>
-                    <p>Tizard, B. & Hughes, M. (2002). <i>Young Children Learning</i> (2nd Edition) Blackwell Publishing. [<a href="https://onlinelibrary.wiley.com/doi/book/10.1002/9780470774328" target="_blank">About the book</a>]</p>
+                    <p>{% blocktrans %} 'Chouinard, M., Harris, P., & Maratsos, M. (2007). Children's Questions: A Mechanism for Cognitive Development. <i>Monographs of the Society for Research in Child Development, 72</i>(1), I-129. [<a href="https://www.jstor.org/stable/30163594?seq=1#page_scan_tab_contents" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %} 'Engel, S. (2015). <i>The Hungry Mind: The Origins of Curiosity in Childhood.</i> Cambridge, MA: Harvard University Press. [<a href="https://www.hup.harvard.edu/catalog.php?isbn=9780674736757" target="_blank">About the book</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %} 'Harris, P. L. (2015). <i>Trusting What You’re Told: How Children Learn from Others.</i> Cambridge, MA: Belknap Press. [<a href="https://www.hup.harvard.edu/catalog.php?isbn=9780674503830" target="_blank">About the book</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %} 'Jirout, J. & Klahr, D. (2012). Children’s scientific curiosity: In search of an operational definition of an elusive concept. <i>Developmental Review, 32</i>, 125–160. doi: 10.1016/j.dr.2012.04.002 [<a href="https://www.sciencedirect.com/science/article/pii/S0273229712000123" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %} 'Tizard, B. & Hughes, M. (2002). <i>Young Children Learning</i> (2nd Edition) Blackwell Publishing. [<a href="https://onlinelibrary.wiley.com/doi/book/10.1002/9780470774328" target="_blank">About the book</a>]{% endblocktrans %}</p>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-header" id="bibliographyListHeadingTwo" data-toggle="collapse" data-target="#bibliographyListTwo" aria-expanded="true" aria-controls="bibliographyListTwo">
                 <h3>
-                Psychology and neuroscience of curiosity
+                {% trans 'Psychology and neuroscience of curiosity' %}
                 </h3>
                 <i class="fas fa-plus"></i>
             </div>
             <div id="bibliographyListTwo" class="collapse" aria-labelledby="bibliographyListHeadingTwo" data-parent="#bibliographyList">
                 <div class="card-body">
-                    <p>Baranes, A., Oudeyer, P.-Y., & Gottlieb, J. (2015). Eye movements reveal epistemic curiosity in human observers. <i>Vision Research, 117</i>, 81-90. doi: 10.1016/j.visres.2015.10.009 [<a href="https://www.sciencedirect.com/science/article/pii/S0042698915003430" target="_blank">Read article</a>]</p>
-                    <p>Collins, N. (updated, June 14, 2017). For memory, curiosity is its own reward: A new study suggests a neural link between curiosity, motivation, and memory.<i>Pacific Standard.</i> [<a href="https://psmag.com/social-justice/memories-curiosity-reward-91486" target="_blank">Read article</a>]</p>
-                    <p>Gottlieb, J., Oudeyer, P.-Y., Lopes, M., & Baranes, A. (2013). Information-seeking, curiosity, and attention: computational and neural mechanisms. <i>Trends in Cognitive Science, 17</i>, 585-593. doi:10.1016/j.tics.2013.09.001 [<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4193662/" target="_blank">Read manuscript</a>]</p>
-                    <p>Gottlieb, J., & Oudeyer, P. (2018). Towards a neuroscience of active sampling and curiosity. <i>Nature Reviews Neuroscience, 19</i>, 758-770. doi:10.1038/s41583-018-0078-0 [<a href="https://www.nature.com/articles/s41583-018-0078-0 " target="_blank">Read abstract</a>]</p>
-                    <p>Gruber, M. J., Gelman. B. D., & Ranganath, C. (2014). States of curiosity modulate hippocampus-dependent learning via the dopaminergic circuit. <i>Neuron, 84</i>, 486-496. doi: 10.1016/j.neuron.2014.08.060  [<a href="https://www.sciencedirect.com/science/article/pii/S0896627314008046" target="_blank">Read article</a>]</p>
-                    <p>Hemmelder. V., & Blanchard, T. (Updated 2017, September 15). Why humans are hard-wired for curiosity. <i>Huffpost</i>  [<a href="https://www.huffpost.com/entry/why-humans-are-hardwired-_b_11984748" target="_blank">Read article</a>]</p>
-                    <p>James, W. (1899). <i>Talks to teachers on psychology: and to students on some of life's ideals </i>. New York: H. Holt [<a href="https://archive.org/details/in.ernet.dli.2015.216830/page/n11" target="_blank">Read book</a>]</p>
-                    <p>Kidd, C., & Hayden, B. Y. (2015). The Psychology and Neuroscience of Curiosity. <i>Neuron, 88</i>, 449-460. doi:10.1016/j.neuron.2015.09.010.[<a href="https://www.sciencedirect.com/science/article/pii/S0896627315007679" target="_blank">Read article</a>]</p>
-                    <p>Loewenstein, G. (1994). The Psychology of Curiosity: A Review and Reinterpretation. <i>Psychological Bulletin, 116</i>, 75-98. doi:10.1037/0033-2909.116.1.75. [<a href="https://pdfs.semanticscholar.org/f946/7adac17f3ef6d65cdcf38b46afb974abfa55.pdf" target="_blank">Read article</a>]</p>
-                    <p>Malone, T. W. (1981), Toward a Theory of Intrinsically Motivating Instruction. <i>Cognitive Science, 5</i>, 333-369. doi:10.1207/s15516709cog0504_2 [<a href="https://onlinelibrary.wiley.com/doi/epdf/10.1207/s15516709cog0504_2" target="_blank">Read artcile</a>]</p>
-                    <p>Mcgillivray, S., Murayama, K., & Castel, A. D. (2015). Thirst for knowledge: The effects of curiosity and interest on memory in younger and older adults. <i>Psychology and Aging, 30</i>(4), 835-841. doi: 10.1037/a0039801 [<a href="https://www.ncbi.nlm.nih.gov/pubmed/26479013" target="_blank">Read article</a>]</p>
-                    <p>Sakaki, M., Yagi, A., & Murayama, K. (2018). Curiosity in old age: A possible key to achieving adaptive aging. <i>Neuroscience & Biobehavioral Reviews, 88</i>, 106-116. doi: 10.1016/j.neubiorev.2018.03.007 [<a href="https://www.sciencedirect.com/science/article/pii/S014976341730653X" target="_blank">Read abstract</a>]</p>
-                    <p>von Stumm, S., Hell, B., & Chamorro-Premuzic, T. (2011). The hungry mind: Intellectual curiosity is the third pillar of academic performance. <i>Perspectives on Psychological Science, 6</i>(6), 574–588. doi: 10.1177/1745691611421204 [<a href="https://www.hungrymindlab.com/wp-content/uploads/2015/10/von-Stumm-et-al-2011.pdf" target="_blank">Read article</a>]</p>
-                    <p>Sun, F. W., Stepanovic, M. R., Andreano, J., Barrett, L. F., Touroutoglou, A., & Dickerson, B. C. (2016). Youthful brains in older adults: Preserved neuroanatomy in the default mode and salience networks contributes to youthful memory in superaging. <i>Journal of Neuroscience, 36</i>(37), 9659-9668. doi: 10.1523/jneurosci.1492-16.2016 [<a href="https://www.jneurosci.org/content/jneuro/36/37/9659.full.pdf" target="_blank">Read article</a>]</p>
+                    <p>{% blocktrans %}Baranes, A., Oudeyer, P.-Y., & Gottlieb, J. (2015). Eye movements reveal epistemic curiosity in human observers. <i>Vision Research, 117</i>, 81-90. doi: 10.1016/j.visres.2015.10.009 [<a href="https://www.sciencedirect.com/science/article/pii/S0042698915003430" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Collins, N. (updated, June 14, 2017). For memory, curiosity is its own reward: A new study suggests a neural link between curiosity, motivation, and memory.<i>Pacific Standard.</i> [<a href="https://psmag.com/social-justice/memories-curiosity-reward-91486" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Gottlieb, J., Oudeyer, P.-Y., Lopes, M., & Baranes, A. (2013). Information-seeking, curiosity, and attention: computational and neural mechanisms. <i>Trends in Cognitive Science, 17</i>, 585-593. doi:10.1016/j.tics.2013.09.001 [<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4193662/" target="_blank">Read manuscript</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Gottlieb, J., & Oudeyer, P. (2018). Towards a neuroscience of active sampling and curiosity. <i>Nature Reviews Neuroscience, 19</i>, 758-770. doi:10.1038/s41583-018-0078-0 [<a href="https://www.nature.com/articles/s41583-018-0078-0 " target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Gruber, M. J., Gelman. B. D., & Ranganath, C. (2014). States of curiosity modulate hippocampus-dependent learning via the dopaminergic circuit. <i>Neuron, 84</i>, 486-496. doi: 10.1016/j.neuron.2014.08.060  [<a href="https://www.sciencedirect.com/science/article/pii/S0896627314008046" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Hemmelder. V., & Blanchard, T. (Updated 2017, September 15). Why humans are hard-wired for curiosity. <i>Huffpost</i>  [<a href="https://www.huffpost.com/entry/why-humans-are-hardwired-_b_11984748" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}James, W. (1899). <i>Talks to teachers on psychology: and to students on some of life's ideals </i>. New York: H. Holt [<a href="https://archive.org/details/in.ernet.dli.2015.216830/page/n11" target="_blank">Read book</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Kidd, C., & Hayden, B. Y. (2015). The Psychology and Neuroscience of Curiosity. <i>Neuron, 88</i>, 449-460. doi:10.1016/j.neuron.2015.09.010.[<a href="https://www.sciencedirect.com/science/article/pii/S0896627315007679" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Loewenstein, G. (1994). The Psychology of Curiosity: A Review and Reinterpretation. <i>Psychological Bulletin, 116</i>, 75-98. doi:10.1037/0033-2909.116.1.75. [<a href="https://pdfs.semanticscholar.org/f946/7adac17f3ef6d65cdcf38b46afb974abfa55.pdf" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Malone, T. W. (1981), Toward a Theory of Intrinsically Motivating Instruction. <i>Cognitive Science, 5</i>, 333-369. doi:10.1207/s15516709cog0504_2 [<a href="https://onlinelibrary.wiley.com/doi/epdf/10.1207/s15516709cog0504_2" target="_blank">Read artcile</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Mcgillivray, S., Murayama, K., & Castel, A. D. (2015). Thirst for knowledge: The effects of curiosity and interest on memory in younger and older adults. <i>Psychology and Aging, 30</i>(4), 835-841. doi: 10.1037/a0039801 [<a href="https://www.ncbi.nlm.nih.gov/pubmed/26479013" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Sakaki, M., Yagi, A., & Murayama, K. (2018). Curiosity in old age: A possible key to achieving adaptive aging. <i>Neuroscience & Biobehavioral Reviews, 88</i>, 106-116. doi: 10.1016/j.neubiorev.2018.03.007 [<a href="https://www.sciencedirect.com/science/article/pii/S014976341730653X" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}von Stumm, S., Hell, B., & Chamorro-Premuzic, T. (2011). The hungry mind: Intellectual curiosity is the third pillar of academic performance. <i>Perspectives on Psychological Science, 6</i>(6), 574–588. doi: 10.1177/1745691611421204 [<a href="https://www.hungrymindlab.com/wp-content/uploads/2015/10/von-Stumm-et-al-2011.pdf" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Sun, F. W., Stepanovic, M. R., Andreano, J., Barrett, L. F., Touroutoglou, A., & Dickerson, B. C. (2016). Youthful brains in older adults: Preserved neuroanatomy in the default mode and salience networks contributes to youthful memory in superaging. <i>Journal of Neuroscience, 36</i>(37), 9659-9668. doi: 10.1523/jneurosci.1492-16.2016 [<a href="https://www.jneurosci.org/content/jneuro/36/37/9659.full.pdf" target="_blank">Read article</a>]{% endblocktrans %}</p>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-header" id="bibliographyListHeadingThree" data-toggle="collapse" data-target="#bibliographyListThree" aria-expanded="true" aria-controls="bibliographyListThree">
                 <h3>
-                Inquiry-based teaching and learning
+                {% trans 'Inquiry-based teaching and learning' %}
                 </h3>
                 <i class="fas fa-plus"></i>
             </div>
             <div id="bibliographyListThree" class="collapse" aria-labelledby="bibliographyListHeadingThree" data-parent="#bibliographyList">
                 <div class="card-body">
-                    <p>Baumfield, V., & Mroz, M. (2002). Investigating pupil’s questions in the primary classroom. <i>Educational Research, 44</i>(2), 129-140. [<a href="https://www.tandfonline.com/doi/abs/10.1080/00131880110107388" target="_blank">Read abstract</a>]</p>
-                    <p>Brill, G., & Yarden, A. (2003). Learning biology through research papers: A stimulus for question-asking by high-school students. <i>Cell Biology Education, 2</i>, 266-274. [<a href="https://www.lifescied.org/doi/pdf/10.1187/cbe.02-12-0062" target="_blank">Read article</a>]</p>
-                    <p>Chin, C. (2002). Student-generated questions: Encouraging inquisitive minds in learning science. <i>Teaching and Learning (Institute of Education, Singapore), 23</i>(1), 59-67. [<a href="https://repository.nie.edu.sg/bitstream/10497/292/1/TL-23-1-59.pdf" target="_blank">Read article</a>]</p>
-                    <p>Chin, C., Brown, D. E., & Bruce, B. C. (2002). Student-generated questions: A meaningful aspect of learning in science. <i>International Journal of Science Education, 24</i>(5), 521-549. [<a href="https://www.tandfonline.com/doi/abs/10.1080/09500690110095249" target="_blank">Read abstract</a>]</p>
-                    <p>Chin, C., & Kayalvizhi, G. (2002). Posing problems for open investigations: What questions do pupils ask? <i>Research in Science & Technological Education, 20</i>(2), 269-287. [<a href="https://www.tandfonline.com/doi/abs/10.1080/0263514022000030499" target="_blank">Read abstract</a>]</p>
-                    <p>Chin, C., & Osborne, J. (2008). Students’ questions: a potential resource for teaching and learning of science. <i>Studies in Science Education, 44</i>, 1-39. doi: 10.1080/03057260701828101 [<a href="https://www.tandfonline.com/doi/full/10.1080/03057260701828101?scroll=top&needAccess=true" target="_blank">Read article</a>]</p>
-                    <p>Coutinho, M. J., & Almeida, P. A. (2014). Promoting student questioning in the learning of Natural Sciences. <i>Procedia - Social and Behavioural Sciences, 116</i>,3781-3785. [<a href="https://ddd.uab.cat/pub/edlc/edlc_a2013nExtra/edlc_a2013nExtrap54.pdf" target="_blank">Read article</a>]</p>
-                    <p>Dillon, J. T. (1988). The remedial status of student questioning. </i>Journal of Curriculum Studies, 20</i>(3), 197-210. doi:10.1080/0022027880200301 [<a href="https://www.tandfonline.com/doi/abs/10.1080/0022027880200301" target="_blank">Read abstract</a>]</p>
-                    <p>Engel, S. (2011). Children's need to know: Curiosity in schools. <i>Harvard Educational Review, 81</i>(4), 625-645. doi: 10.17763/haer.81.4.h054131316473115 [<a href="https://hepgjournals.org/doi/10.17763/haer.81.4.h054131316473115" target="_blank">Read abstract</a>]</p>
-                    <p>Friesen, S., & Scott, D. (2013) Inquiry-based learning: A review of the research literature. Paper prepared for the Alberta Ministry of Education, University of Calgary, Alberta. [<a href="https://galileo.org/focus-on-inquiry-lit-review.pdf" target="_blank">Read article</a>]</p>
-                    <p>Gallas, K. (1995). <i>Talking their way into science: Hearing children’s questions and theories, responding with curricula</i>. New York: Teachers College Press. [<a href="https://www.goodreads.com/book/show/1101168.Talking_Their_Way_Into_Science" target="_blank">Read book</a>]</p>
-                    <p>Hofstein, A., Shore, R., & Kipnis, M (2004). Providing high school chemistry students with opportunities to develop learning skills in an inquiry-type laboratory: A case study. <i>Journal of Science Education, 26</i>(1), 47-62. doi: 10.1080/0950069032000070342 [<a href="https://www.researchgate.net/publication/238384787_Investigation_the_effectiveness_of_laboratory_works_related_to_acids_and_bases_on_learning_achievements_and_attitudes_toward_laboratory" target="_blank">Read article</a>]</p>
-                    <p>Pedrosa de Jesus, H., Teixeira-Dias, J. J. C., & Watts, M. (2003). Questions of chemistry. <i>International Journal of Science Education, 25</i>(8), 1015–1034. doi:  10.1080/09500690305022 [<a href="https://www.researchgate.net/publication/317225593_Questions_of_Chemistry" target="_blank">Read article</a>]</p>
-                    <p>Scardamalia, M., & Bereiter, C. (1992). Text-based and knowledge-based questioning by children. <i>Cognition and Instruction, 9</i>(3), 177-199. [<a href="http://www.ikit.org/fulltext/1992_Text-based.pdf" target="_blank">Read article</a>]</p>
-                    <p>Sezen-Barrie, A., Miller-Rushing, A., & Hufnagel, E. (2019). ‘It’s a gassy world’: starting with students’ wondering questions to inform climate change education. <i>Environmental Education Research</i>, doi: 10.1080/13504622.2019.1610158 [<a href="https://www.tandfonline.com/doi/full/10.1080/13504622.2019.1607258?scroll=top&needAccess=true" target="_blank">Read abstract</a>]</p>
-                    <p>Wu, P.-H., Kuo, C.-Y., Wu, H.-K., Jen, T.-H., Hsu, Y.-S. (2018). Learning benefits of secondary school students' inquiry-related curiosity: A cross-grade comparison of the relationships among learning experiences, curiosity, engagement, and inquiry abilities. <i>Science Education, 102</i>, 917-950. [<a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/sce.21456" target="_blank">Read abstract</a>]</p>
+                    <p>{% blocktrans %}Baumfield, V., & Mroz, M. (2002). Investigating pupil’s questions in the primary classroom. <i>Educational Research, 44</i>(2), 129-140. [<a href="https://www.tandfonline.com/doi/abs/10.1080/00131880110107388" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Brill, G., & Yarden, A. (2003). Learning biology through research papers: A stimulus for question-asking by high-school students. <i>Cell Biology Education, 2</i>, 266-274. [<a href="https://www.lifescied.org/doi/pdf/10.1187/cbe.02-12-0062" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Chin, C. (2002). Student-generated questions: Encouraging inquisitive minds in learning science. <i>Teaching and Learning (Institute of Education, Singapore), 23</i>(1), 59-67. [<a href="https://repository.nie.edu.sg/bitstream/10497/292/1/TL-23-1-59.pdf" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Chin, C., Brown, D. E., & Bruce, B. C. (2002). Student-generated questions: A meaningful aspect of learning in science. <i>International Journal of Science Education, 24</i>(5), 521-549. [<a href="https://www.tandfonline.com/doi/abs/10.1080/09500690110095249" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Chin, C., & Kayalvizhi, G. (2002). Posing problems for open investigations: What questions do pupils ask? <i>Research in Science & Technological Education, 20</i>(2), 269-287. [<a href="https://www.tandfonline.com/doi/abs/10.1080/0263514022000030499" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Chin, C., & Osborne, J. (2008). Students’ questions: a potential resource for teaching and learning of science. <i>Studies in Science Education, 44</i>, 1-39. doi: 10.1080/03057260701828101 [<a href="https://www.tandfonline.com/doi/full/10.1080/03057260701828101?scroll=top&needAccess=true" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Coutinho, M. J., & Almeida, P. A. (2014). Promoting student questioning in the learning of Natural Sciences. <i>Procedia - Social and Behavioural Sciences, 116</i>,3781-3785. [<a href="https://ddd.uab.cat/pub/edlc/edlc_a2013nExtra/edlc_a2013nExtrap54.pdf" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Dillon, J. T. (1988). The remedial status of student questioning. </i>Journal of Curriculum Studies, 20</i>(3), 197-210. doi:10.1080/0022027880200301 [<a href="https://www.tandfonline.com/doi/abs/10.1080/0022027880200301" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Engel, S. (2011). Children's need to know: Curiosity in schools. <i>Harvard Educational Review, 81</i>(4), 625-645. doi: 10.17763/haer.81.4.h054131316473115 [<a href="https://hepgjournals.org/doi/10.17763/haer.81.4.h054131316473115" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Friesen, S., & Scott, D. (2013) Inquiry-based learning: A review of the research literature. Paper prepared for the Alberta Ministry of Education, University of Calgary, Alberta. [<a href="https://galileo.org/focus-on-inquiry-lit-review.pdf" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Gallas, K. (1995). <i>Talking their way into science: Hearing children’s questions and theories, responding with curricula</i>. New York: Teachers College Press. [<a href="https://www.goodreads.com/book/show/1101168.Talking_Their_Way_Into_Science" target="_blank">Read book</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Hofstein, A., Shore, R., & Kipnis, M (2004). Providing high school chemistry students with opportunities to develop learning skills in an inquiry-type laboratory: A case study. <i>Journal of Science Education, 26</i>(1), 47-62. doi: 10.1080/0950069032000070342 [<a href="https://www.researchgate.net/publication/238384787_Investigation_the_effectiveness_of_laboratory_works_related_to_acids_and_bases_on_learning_achievements_and_attitudes_toward_laboratory" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Pedrosa de Jesus, H., Teixeira-Dias, J. J. C., & Watts, M. (2003). Questions of chemistry. <i>International Journal of Science Education, 25</i>(8), 1015–1034. doi:  10.1080/09500690305022 [<a href="https://www.researchgate.net/publication/317225593_Questions_of_Chemistry" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Scardamalia, M., & Bereiter, C. (1992). Text-based and knowledge-based questioning by children. <i>Cognition and Instruction, 9</i>(3), 177-199. [<a href="http://www.ikit.org/fulltext/1992_Text-based.pdf" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Sezen-Barrie, A., Miller-Rushing, A., & Hufnagel, E. (2019). ‘It’s a gassy world’: starting with students’ wondering questions to inform climate change education. <i>Environmental Education Research</i>, doi: 10.1080/13504622.2019.1610158 [<a href="https://www.tandfonline.com/doi/full/10.1080/13504622.2019.1607258?scroll=top&needAccess=true" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Wu, P.-H., Kuo, C.-Y., Wu, H.-K., Jen, T.-H., Hsu, Y.-S. (2018). Learning benefits of secondary school students' inquiry-related curiosity: A cross-grade comparison of the relationships among learning experiences, curiosity, engagement, and inquiry abilities. <i>Science Education, 102</i>, 917-950. [<a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/sce.21456" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-header" id="bibliographyListHeadingFour" data-toggle="collapse" data-target="#bibliographyListFour" aria-expanded="true" aria-controls="bibliographyListFour">
                 <h3>
-                Analysis of questions
+                {% trans 'Analysis of questions' %}
                 </h3>
                 <i class="fas fa-plus"></i>
             </div>
             <div id="bibliographyListFour" class="collapse" aria-labelledby="bibliographyListHeadingFour" data-parent="#bibliographyList">
                 <div class="card-body">
-                    <p>Baram-Tsabari, A., & Yarden, A. (2005). Characterizing children’s spontaneous interests in science and technology. <i>International Journal of Science Education, 27</i>(7), 803-826. doi:10.1080/09500690500038389 [<a href="https://www.researchgate.net/publication/228667483_Characterizing_childrens'_spontaneous_interest_in_science_and_technology" target="_blank">Read article</a>]</p>
-                    <p>Baram-Tsabari, A., Sethi, R. J., Bry, L., & Yarden, A. (2006). Using questions sent to an ask-a-scientist site to identify children’s interests in science. <i>Science Education, 90</i>, 1050-1072. [<a href="https://onlinelibrary.wiley.com/doi/epdf/10.1002/sce.20163" target="_blank">Read article</a>]</p>
+                    <p>{% blocktrans %}Baram-Tsabari, A., & Yarden, A. (2005). Characterizing children’s spontaneous interests in science and technology. <i>International Journal of Science Education, 27</i>(7), 803-826. doi:10.1080/09500690500038389 [<a href="https://www.researchgate.net/publication/228667483_Characterizing_childrens'_spontaneous_interest_in_science_and_technology" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Baram-Tsabari, A., Sethi, R. J., Bry, L., & Yarden, A. (2006). Using questions sent to an ask-a-scientist site to identify children’s interests in science. <i>Science Education, 90</i>, 1050-1072. [<a href="https://onlinelibrary.wiley.com/doi/epdf/10.1002/sce.20163" target="_blank">Read article</a>]{% endblocktrans %}</p>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-header" id="bibliographyListHeadingFive" data-toggle="collapse" data-target="#bibliographyListFive" aria-expanded="true" aria-controls="bibliographyListFive">
                 <h3>
-                Sociocultural factors in curiosity
+                {% trans 'Sociocultural factors in curiosity' %}
                 </h3>
                 <i class="fas fa-plus"></i>
             </div>
             <div id="bibliographyListFive" class="collapse" aria-labelledby="bibliographyListHeadingFive" data-parent="#bibliographyList">
                 <div class="card-body">
-                    <p>Clarke, P. (2001). <i>Teaching and learning: The culture of pedagogy</i>. New Delhi, India: Sage Publications. [<a href="https://www.abebooks.com/servlet/BookDetailsPL?bi=16785662112&searchurl=an%3DCLARKE%252C%2BPREMA%26sortby%3D17&cm_sp=snippet-_-srp1-_-title1" target="_blank">About the book</a>]</p>
-                    <p>Kumar, K. (1989). <i>Social character of learning</i>. New Delhi, India: Sage Publications. [<a href="http://www.arvindguptatoys.com/arvindgupta/socialcharacter.pdf" target="_blank">Read book</a>]</p>
-                    <p>Narain, D. (1964). Growing up in India. <i>Family Process Journal, 3</i>, 127-154. doi:10.1111/j.1545-5300.1964.00127.x [<a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1545-5300.1964.00127.x" target="_blank">Read abstract</a>]</p>
-                    <p>Sarangapani, P. (2003). <i>Constructing School Knowledge: An Ethnography of Learning in an Indian Village</i>. New Delhi, India: Sage Publications. [<a href="https://us.sagepub.com/en-us/nam/constructing-school-knowledge/book225744" target="_blank">About the book</a>]</p>
-                    <p>Singh, G., Shaikh, R., & Haydock, K. (2019). Understanding student questioning. <i>Cultural Studies of Science Education,14</i>(3), 643-697. doi: 10.1007/s11422-018-9866-0 [<a href="https://rd.springer.com/article/10.1007/s11422-018-9866-0" target="_blank">Read abstract</a>]</p>
+                    <p>{% blocktrans %}Clarke, P. (2001). <i>Teaching and learning: The culture of pedagogy</i>. New Delhi, India: Sage Publications. [<a href="https://www.abebooks.com/servlet/BookDetailsPL?bi=16785662112&searchurl=an%3DCLARKE%252C%2BPREMA%26sortby%3D17&cm_sp=snippet-_-srp1-_-title1" target="_blank">About the book</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Kumar, K. (1989). <i>Social character of learning</i>. New Delhi, India: Sage Publications. [<a href="http://www.arvindguptatoys.com/arvindgupta/socialcharacter.pdf" target="_blank">Read book</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Narain, D. (1964). Growing up in India. <i>Family Process Journal, 3</i>, 127-154. doi:10.1111/j.1545-5300.1964.00127.x [<a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1545-5300.1964.00127.x" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Sarangapani, P. (2003). <i>Constructing School Knowledge: An Ethnography of Learning in an Indian Village</i>. New Delhi, India: Sage Publications. [<a href="https://us.sagepub.com/en-us/nam/constructing-school-knowledge/book225744" target="_blank">About the book</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Singh, G., Shaikh, R., & Haydock, K. (2019). Understanding student questioning. <i>Cultural Studies of Science Education,14</i>(3), 643-697. doi: 10.1007/s11422-018-9866-0 [<a href="https://rd.springer.com/article/10.1007/s11422-018-9866-0" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-header" id="bibliographyListHeadingSix" data-toggle="collapse" data-target="#bibliographyListSix" aria-expanded="true" aria-controls="bibliographyListSix">
                 <h3>
-                Gender and curiosity
+                {% trans 'Gender and curiosity' %}
                 </h3>
                 <i class="fas fa-plus"></i>
             </div>
             <div id="bibliographyListSix" class="collapse" aria-labelledby="bibliographyListHeadingSix" data-parent="#bibliographyList">
                 <div class="card-body">
-                    <p>Baram-Tsabari, A., & Yarden, A. (2011). Quantifying the gender gap in science interests. <i>International Journal of Science and Mathematics Education, 9</i>(3), 523-550. doi: 10.1007/s10763-010-9194-7 [<a href="https://www.researchgate.net/publication/225335558_Quantifying_The_Gender_Gap_in_Science_Interests" target="_blank">Read article</a>]</p>
-                    <p>Engelhard, G., & Monsaas, J. A. (1988). Grade level, gender, and school-related curiosity in urban elementary schools. <i>The Journal of Educational Research, 82</i>(1), 22-26. doi: 10.1080/00220671.1988.10885860 [<a href="https://www.tandfonline.com/doi/abs/10.1080/00220671.1988.10885860" target="_blank">Read abstract</a>]</p>
-                    <p>Jones, M. G., Howe, A., & Rua, M. J. (2000). Gender differences in students' experiences, interests, and attitudes toward science and scientists. <i>Science Education, 84</i>(2), 180-192. doi: 10.1002/(SICI)1098-237X(200003)84:2<180::AID-SCE3>3.0.CO;2-X [<a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291098-237X%28200003%2984%3A2%3C180%3A%3AAID-SCE3%3E3.0.CO%3B2-X" target="_blank">Read abstract</a>]</p>
-                    <p>Stark, R., & Gray, D. (1999). Gender preferences in learning science. <i>International Journal of Science Education, 21</i>(6), 633-643, doi: 10.1080/095006999290480 [<a href="https://www.researchgate.net/publication/236859822_Gender_Preferences_in_Learning_Science" target="_blank">Read article</a>]</p>
-                    <p>Taber, K. S. (1991). Gender differences in science preferences on starting secondary school. <i>Research in Science & Technological Education, 9</i>(2), 245-251. doi: 10.1080/0263514910090210 [<a href="https://www.tandfonline.com/doi/abs/10.1080/0263514910090210" target="_blank">Read abstract</a>]</p>
-                    <p>Weinburgh, M. (1995). Gender differences in student attitudes toward science: a meta-analysis of the literature from 1970 to 1991.<i> Journal of Research in Science Teaching, 32</i>(4), 387-398. doi: 10.1002/tea.3660320407 [<a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/tea.36603204071" target="_blank">Read abstract</a>]</p>
+                    <p>{% blocktrans %}Baram-Tsabari, A., & Yarden, A. (2011). Quantifying the gender gap in science interests. <i>International Journal of Science and Mathematics Education, 9</i>(3), 523-550. doi: 10.1007/s10763-010-9194-7 [<a href="https://www.researchgate.net/publication/225335558_Quantifying_The_Gender_Gap_in_Science_Interests" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Engelhard, G., & Monsaas, J. A. (1988). Grade level, gender, and school-related curiosity in urban elementary schools. <i>The Journal of Educational Research, 82</i>(1), 22-26. doi: 10.1080/00220671.1988.10885860 [<a href="https://www.tandfonline.com/doi/abs/10.1080/00220671.1988.10885860" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Jones, M. G., Howe, A., & Rua, M. J. (2000). Gender differences in students' experiences, interests, and attitudes toward science and scientists. <i>Science Education, 84</i>(2), 180-192. doi: 10.1002/(SICI)1098-237X(200003)84:2<180::AID-SCE3>3.0.CO;2-X [<a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291098-237X%28200003%2984%3A2%3C180%3A%3AAID-SCE3%3E3.0.CO%3B2-X" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Stark, R., & Gray, D. (1999). Gender preferences in learning science. <i>International Journal of Science Education, 21</i>(6), 633-643, doi: 10.1080/095006999290480 [<a href="https://www.researchgate.net/publication/236859822_Gender_Preferences_in_Learning_Science" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Taber, K. S. (1991). Gender differences in science preferences on starting secondary school. <i>Research in Science & Technological Education, 9</i>(2), 245-251. doi: 10.1080/0263514910090210 [<a href="https://www.tandfonline.com/doi/abs/10.1080/0263514910090210" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Weinburgh, M. (1995). Gender differences in student attitudes toward science: a meta-analysis of the literature from 1970 to 1991.<i> Journal of Research in Science Teaching, 32</i>(4), 387-398. doi: 10.1002/tea.3660320407 [<a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/tea.36603204071" target="_blank">Read abstract</a>]{% endblocktrans %}</p>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-header" id="bibliographyListHeadingSeven" data-toggle="collapse" data-target="#bibliographyListSeven" aria-expanded="true" aria-controls="bibliographyListSeven">
                 <h3>
-                History, philosophy and ethics of curiosity
+                {% trans 'History, philosophy and ethics of curiosity' %}
                 </h3>
                 <i class="fas fa-plus"></i>
             </div>
             <div id="bibliographyListSeven" class="collapse" aria-labelledby="bibliographyListHeadingSeven" data-parent="#bibliographyList">
                 <div class="card-body">
-                    <p>Bunk, S. (2000). Curiosity and the scientific method. <i>The Scientist</i>. [<a href="https://www.the-scientist.com/perspective/curiosity-and-the-scientific-method-56061" target="_blank">Read article</a>]</p>
-                    <p>Sarukkai, S. (2009). Science and the ethics of curiosity. <i>Current Science, 97</i>(6), 756-767. [<a href="http://eprints.nias.res.in/148/1/Science_and_the_ethics_of_curiosity.pdf" target="_blank">Read article</a>]</p>
+                    <p>{% blocktrans %}Bunk, S. (2000). Curiosity and the scientific method. <i>The Scientist</i>. [<a href="https://www.the-scientist.com/perspective/curiosity-and-the-scientific-method-56061" target="_blank">Read article</a>]{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Sarukkai, S. (2009). Science and the ethics of curiosity. <i>Current Science, 97</i>(6), 756-767. [<a href="http://eprints.nias.res.in/148/1/Science_and_the_ethics_of_curiosity.pdf" target="_blank">Read article</a>]{% endblocktrans %}</p>
                 </div>
             </div>
         </div>

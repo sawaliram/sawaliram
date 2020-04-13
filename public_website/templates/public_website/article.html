@@ -16,10 +16,10 @@
     <p>
       {{ article.published_on|date:'d M Y' }}
       |
-      <a href="{% url 'public_website:user-profile' article.author.id %}" class="text-secondary">{{ article.author.get_full_name }}</a>
+      <a href="{% url 'public_website:user-profile' article.author.id %}" class="text-secondary">{{uthor.get_full_name }}</a>
     </p>
     {% if article.is_translated %}
-    <p>{% trans 'Translated by' %} <a href="{% url 'public_website:user-profile' article.translation.translator.id %}" class="text-secondary">{{ article.translation.translator.get_full_name }}</a></p>
+    <p>{% trans 'Translated by' %} <a href="{% url 'public_website:user-profile' article.translation.translator.id %}" class="text-secondary">{{ranslation.translator.get_full_name }}</a></p>
     {% endif %}
     {% if article.translations %}
     <div class="dropdown">
@@ -39,7 +39,7 @@
     <br>
     <div class="credit-card">
         <p>{{ article.author.get_full_name }}</p>
-        <span>Author</span>
+        <span>{% trans 'Author' %}</span>
     </div>
   </section>
   <aside class="article-footer col-sm-3">

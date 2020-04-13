@@ -24,8 +24,12 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.template.loader import render_to_string
 from django.http import HttpResponse
+from django.core.mail import send_mail
 
 from django.conf import settings
+from public_website.forms import ContactPageForm
+from django.views.generic import FormView
+from django.urls import reverse
 
 from dashboard.models import (
     Dataset,
@@ -40,8 +44,8 @@ from dashboard.models import (
     SubmittedAnswerTranslation,
     AnswerTranslation,
 )
-from sawaliram_auth.models import User, Bookmark, Notification, Profile
-from public_website.models import AnswerUserComment
+from sawaliram_auth.models import User, Bookmark, Notification
+from public_website.models import AnswerUserComment, ContactUsSubmission
 
 import random
 import urllib
@@ -216,11 +220,11 @@ class SearchView(View):
             questions_queryset = []
 
             if 'answered' in question_categories:
-                answered_questions = result.filter(answers__approved_by__isnull=False)
+                answered_questions = result.filter(answers__status='published')
                 questions_queryset = answered_questions
 
             if 'unanswered' in question_categories:
-                unanswered_questions = result.filter(answers__approved_by__isnull=True)
+                unanswered_questions = result.exclude(answers__status='published')
                 if type(questions_queryset) is QuerySet:
                     questions_queryset = questions_queryset | unanswered_questions
                 else:
@@ -244,7 +248,9 @@ class SearchView(View):
         curriculums = result.order_by() \
                             .values_list('curriculum_followed') \
                             .distinct('curriculum_followed') \
-                            .values('curriculum_followed')
+                            .values('curriculum_followed') \
+                            .exclude(curriculum_followed__exact='') \
+                            .exclude(curriculum_followed__isnull=True)
 
         languages = result.order_by() \
                           .values_list('language') \
@@ -350,7 +356,6 @@ class ViewAnswer(View):
             'question': question,
             'answer': answer,
             'comments': answer.user_comments.all(),
-            'grey_background': grey_background
         }
 
         return render(request, 'public_website/view-answer.html', context)
@@ -487,7 +492,7 @@ class DeleteUserCommentOnAnswer(View):
         )
 
 
-class NewUserProfileView(View):
+class UserProfileView(View):
 
     def get(self, request, user_id):
 
@@ -521,7 +526,7 @@ class NewUserProfileView(View):
                 'bookmarked_questions': bookmarked_questions,
                 'bookmarked_articles': bookmarked_articles
             }
-            return render(request, 'public_website/new-user-profile.html', context)
+            return render(request, 'public_website/user-profile.html', context)
 
 
 class UpdateUserName(View):
@@ -639,3 +644,48 @@ class FAQPage(View):
             'page_title': _('Frequently Asked Questions')
         }
         return render(request, 'public_website/faq.html', context)
+
+
+class ContactPage(FormView):
+    def get(self, request):
+        context = {
+            'page_title': _('Contact Us')
+        }
+        return render(request, 'public_website/contact.html', context)
+
+    template_name = 'public_website/contact.html'
+    form_class = ContactPageForm
+
+    def post(self, request):
+        form = ContactPageForm(request.POST, auto_id=False)
+        if form.is_valid():
+            c = ContactUsSubmission()
+            c.name = form.cleaned_data.get('fullname')
+            c.emailid = form.cleaned_data.get('emailid')
+            c.subject = form.cleaned_data.get('subject')
+            c.message = form.cleaned_data.get('message')
+            c.save()
+
+            send_mail(
+                subject='[Contact] ' + form.cleaned_data.get('subject'),
+                message='',
+                html_message=form.cleaned_data.get('message') + '<br><br> Senders email: ' + form.cleaned_data.get('emailid'),
+                from_email='"Sawaliram" <mail@sawaliram.org>',
+                recipient_list=['mail.sawaliram@gmail.com'],
+                fail_silently=False,
+            )
+
+            messages.success(request, 'Your message has been sent! We will get back to you shortly')
+            return redirect('public_website:contact')
+        else:
+            messages.error(request, 'Error! Message has not been submitted.')
+            return redirect('public_website:contact')
+
+
+class ResourcesPage(View):
+
+    def get(self, request):
+        context = {
+            'page_title': _('Resources')
+        }
+        return render(request, 'public_website/resources.html', context)

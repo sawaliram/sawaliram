@@ -1,0 +1,750 @@
+{% extends "public_website/base.html" %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {{ page_title }} | {% trans 'Sawaliram' %} {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<ul class="nav nav-tabs primary-tabs" id="resourcesPageTabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" href="#books" id="booksTab" data-toggle="tab" role="tab" aria-controls="books">Books</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#magazines" id="magazinesTab" data-toggle="tab" role="tab" aria-controls="magazines">Magazines</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#weblinks" id="weblinksTab" data-toggle="tab" role="tab" aria-controls="weblinks">Weblinks</a>
+    </li>
+</ul>
+<div class="tab-content primary-tab-content resources-page-content">
+    <div class="tab-pane fade active show" id="books" role="tabpanel" aria-labelledby="booksTab">
+        <div class="resource-section">
+            <h2 class="resources-section-title">Books for children</h2>
+                <div class="resource-item-wrapper">
+                    <div class="resource-item">
+                        <div>
+                            <img class="book-cover" src="{% static 'resources/the-why-why-girl-english.jpg' %}" alt="The Why-Why Girl cover">
+                            <p class="resource-title">The Why-Why Girl</p>
+                            <p class="resource-sub-title">by Mahashweta Devi</p>
+                            <p class="resource-language">
+                                <a class="resource-language-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-english.html" target="_blank">English</a>,
+                                <a class="resource-language-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kyun-kyun-ladki-hindi.html" target="_blank">Hindi</a>,
+                                <a class="resource-language-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kame-kame-chhokri-gujarati.html" target="_blank">Gujarati</a>
+                                <br>+ 5 more
+                            </p>
+                        </div>
+                        <div>
+                            <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal1">view details</button>
+                            <div class="modal fade book-details-modal" id="bookdetailsmodal1" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                        <div class="book-details-content">
+                                            <img class="book-details-cover" src="{% static 'resources/the-why-why-girl-english.jpg' %}" alt="The Why-Why Girl cover">
+                                            <div class="details-container">
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Author: </span>Mahashweta Devi</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Title: </span>The Why-Why Girl</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Publisher: </span>Tulika Publishers</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Year: </span>2003</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p>
+                                                        <span class="detail-title">Available in: </span>
+                                                        <a class="book-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-english.html" target="_blank">English</a>, 
+                                                        <a class="book-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kyun-kyun-ladki-hindi.html" target="_blank">Hindi</a>, 
+                                                        <a class="book-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kame-kame-chhokri-gujarati.html" target="_blank">Gujarati</a>, 
+                                                        <a class="book-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-yaake-yaake-hudugi-kannada.html" target="_blank">Kannada</a>, 
+                                                        <a class="book-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-oru-endendinu-pennkutti-malayalam.html" target="_blank">Malayalam</a>, 
+                                                        <a class="book-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-kaan-kaan-kumari-marathi.html" target="_blank">Marathi</a>, 
+                                                        <a class="book-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-yain-yain-sirumi-tamil.html" target="_blank">Tamil</a>, 
+                                                        <a class="book-link" href="https://www.tulikabooks.com/wordbird-books/the-why-why-girl-enduku-enduku-ammaayi-telugu.html" target="_blank">Telugu</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resource-item">
+                        <div>
+                            <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                            <p class="resource-title">Discovered questions</p>
+                            <p class="resource-sub-title">by Yash Pal</p>
+                            <p class="resource-language">
+                                <a class="resource-language-link" href="https://archive.org/details/DiscoveredQuestions" target="_blank">English</a>,
+                                Hindi, Malayalam
+                            </p>
+                        </div>
+                        <div>
+                            <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal2">view details</button>
+                            <div class="modal fade book-details-modal" id="bookdetailsmodal2" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                        <div class="book-details-content">
+                                            <img class="book-details-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                            <div class="details-container">
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Author: </span>Yash Pal</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Title: </span>Discovered questions</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Publisher: </span>National Council of Educational Research and Training (NCERT)</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Year: </span>2007</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p>
+                                                        <span class="detail-title">Available in: </span>
+                                                        <a class="book-link" href="https://archive.org/details/DiscoveredQuestions" target="_blank">English</a>,
+                                                        <span class="book-non-link">Hindi</span>, <span class="book-non-link">Malayalam</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resource-item">
+                        <div>
+                            <img class="book-cover" src="{% static 'resources/science-through-post-card.jpg' %}" alt="Science through postcards cover">
+                            <p class="resource-title">Science through postcards</p>
+                            <p class="resource-sub-title">by Jayant Narlikar</p>
+                            <p class="resource-language">
+                                <a class="resource-language-link" href="https://scipop.iucaa.in/Literature/jvn-postcardbook.htm" target="_blank">English</a>,
+                                <a class="resource-language-link" href="https://hi.wikipedia.org/wiki/%E0%A4%9B%E0%A4%A4%E0%A5%8D%E0%A4%A4%E0%A5%80%E0%A4%B8%E0%A4%97%E0%A4%A2%E0%A4%BC_%E0%A4%B0%E0%A4%BE%E0%A4%9C%E0%A5%8D%E0%A4%AF_%E0%A4%B9%E0%A4%BF%E0%A4%82%E0%A4%A6%E0%A5%80_%E0%A4%97%E0%A5%8D%E0%A4%B0%E0%A4%82%E0%A4%A5_%E0%A4%85%E0%A4%95%E0%A4%BE%E0%A4%A6%E0%A4%AE%E0%A5%80" target="_blank">Hindi</a>,
+                                <a class="resource-language-link" href="https://www.mavipamumbai.org/" target="_blank">Marathi</a>
+                            </p>
+                        </div>
+                        <div>
+                            <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal3">view details</button>
+                            <div class="modal fade book-details-modal" id="bookdetailsmodal3" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                        <div class="book-details-content">
+                                            <img class="book-details-cover" src="{% static 'resources/science-through-post-card.jpg' %}" alt="Science through postcards cover">
+                                            <div class="details-container">
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Author: </span>Jayant Narlikar</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Title: </span>Science through postcards</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Publisher (Marathi): </span>Marathi Vidnyan Parishad</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Year: </span>1997</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p>
+                                                        <span class="detail-title">Available in: </span>
+                                                        <a class="book-link" href="https://scipop.iucaa.in/Literature/jvn-postcardbook.htm" target="_blank">English</a>,
+                                                        <a class="book-link" href="https://hi.wikipedia.org/wiki/%E0%A4%9B%E0%A4%A4%E0%A5%8D%E0%A4%A4%E0%A5%80%E0%A4%B8%E0%A4%97%E0%A4%A2%E0%A4%BC_%E0%A4%B0%E0%A4%BE%E0%A4%9C%E0%A5%8D%E0%A4%AF_%E0%A4%B9%E0%A4%BF%E0%A4%82%E0%A4%A6%E0%A5%80_%E0%A4%97%E0%A5%8D%E0%A4%B0%E0%A4%82%E0%A4%A5_%E0%A4%85%E0%A4%95%E0%A4%BE%E0%A4%A6%E0%A4%AE%E0%A5%80" target="_blank">Hindi</a>,
+                                                        <a class="book-link" href="https://www.mavipamumbai.org/" target="_blank">Marathi</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resource-item">
+                        <div>
+                            <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                            <p class="resource-title">Chinnara Lokadalli Karantu</p>
+                            <p class="resource-sub-title">by Shivaram Karanth</p>
+                            <p class="resource-language">Kannada</p>
+                        </div>
+                        <div>
+                            <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal4">view details</button>
+                            <div class="modal fade book-details-modal" id="bookdetailsmodal4" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                        <div class="book-details-content">
+                                            <img class="book-details-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                            <div class="details-container">
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Author: </span>Shivaram Karanth</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Editor: </span>B. Malini Mallya</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Title: </span>Chinnara Lokadalli Karantu</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Publisher: </span>Sapna Book House</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p>
+                                                        <span class="detail-title">Available in: </span>
+                                                        <a class="book-link" href="https://www.sapnaonline.com/general-search?searchkey=chinnara%20lokadalli%20karantharu%20-%20part%201" target="_blank">Kannada (Part 1)</a>,
+                                                        <a class="book-link" href="https://www.sapnaonline.com/books/chinnara-lokadalli-karantharu-2-malini-mallya-8128011855-9788128011856?position=1&searchString=chinnara%20lokadalli%20karantharu%20%20%20part%202" target="_blank">Kannada (Part 2)</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resource-item">
+                        <div>
+                            <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                            <p class="resource-title">Totto Chan</p>
+                            <p class="resource-sub-title">by Tetsuko Kuroyanagi</p>
+                            <p class="resource-language">
+                                Japanese, English, Hindi 
+                                <br>+ 9 more
+                            </p>
+                        </div>
+                        <div>
+                            <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal5">view details</button>
+                            <div class="modal fade book-details-modal" id="bookdetailsmodal5" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                        <div class="book-details-content">
+                                            <img class="book-details-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                            <div class="details-container">
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Author: </span>Tetsuko Kuroyanagi</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Title: </span>Totto Chan</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Publisher (Japanese): </span>Kodansha International</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Year: </span>1981</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p>
+                                                        <span class="detail-title">Available in: </span>
+                                                        <span class="book-non-link">Japanese</span>,
+                                                        <span class="book-non-link">English</span>,
+                                                        <span class="book-non-link">Hindi</span>,
+                                                        <span class="book-non-link">Marathi</span>,
+                                                        <span class="book-non-link">Gujarati</span>,
+                                                        <span class="book-non-link">Telugu</span>,
+                                                        <span class="book-non-link">Assamese</span>,
+                                                        <span class="book-non-link">Kannada</span>,
+                                                        <span class="book-non-link">Tamil</span>,
+                                                        <span class="book-non-link">Malayalam</span>,
+                                                        <span class="book-non-link">Bengali</span>,
+                                                        <span class="book-non-link">Oriya</span>,
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resource-item">
+                        <div>
+                            <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                            <p class="resource-title">A Summer Story</p>
+                            <p class="resource-sub-title">by K. G. Subramanyan</p>
+                            <p class="resource-language">
+                                <a class="resource-language-link" href="http://0318da2.netsolhost.com/newseagullbooks/index.php?p=book_details&book_id=NTg4&cat_id=MTM=" target="_blank">English</a>
+                            </p>
+                        </div>
+                        <div>
+                            <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal6">view details</button>
+                            <div class="modal fade book-details-modal" id="bookdetailsmodal6" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                        <div class="book-details-content">
+                                            <img class="book-details-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                            <div class="details-container">
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Author: </span>K. G. Subramanyan</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Title: </span>A Summer Story</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Publisher: </span>Seagull books</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p><span class="detail-title">Year: </span>2008</p>
+                                                </div>
+                                                <div class="detail-item">
+                                                    <p>
+                                                        <span class="detail-title">Available in: </span>
+                                                        <a class="book-link" href="http://0318da2.netsolhost.com/newseagullbooks/index.php?p=book_details&book_id=NTg4&cat_id=MTM=" target="_blank">English</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="resource-section">
+            <h2 class="resources-section-title">Books for adults</h2>
+            <div class="resource-item-wrapper">
+                <div class="resource-item">
+                    <div>
+                        <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                        <p class="resource-title">The Hungry Mind</p>
+                        <p class="resource-sub-title">by Susan Engel</p>
+                        <p class="resource-language">
+                            <a class="resource-language-link" href="https://www.hup.harvard.edu/catalog.php?isbn=9780674736757" target="_blank">English</a>
+                        </p>
+                    </div>
+                    <div>
+                        <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal7">view details</button>
+                        <div class="modal fade book-details-modal" id="bookdetailsmodal7" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                    <div class="book-details-content">
+                                        <img class="book-details-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                        <div class="details-container">
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Author: </span>Susan Engel</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Title: </span>The Hungry Mind</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Publisher: </span>Harvard University Press, Boston, MA, USA</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Year: </span>2016</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p>'The Hungry Mind' is an investigation into childhood curiosity: its origins in babies, its development through the early explorations of toddlers, and its flowering in the persistent questioning that comes with the child's mastery over language.  Weaving together her decade-long research with her own memories of childhood and experiences of schooling, Susan Engel draws out themes that illuminate the rocky path taken by curiosity over the years.  She argues for the power of curiosity to drive learning.  Most importantly, she brings out the critical role that adults play, often unconsciously, in either encouraging or suppressing the natural curiosity of children.</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p>
+                                                    <span class="detail-title">Available in: </span>
+                                                    <a class="book-link" href="https://www.hup.harvard.edu/catalog.php?isbn=9780674736757" target="_blank">English</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <div>
+                        <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                        <p class="resource-title">Why? What Makes Us Curious</p>
+                        <p class="resource-sub-title">by Simon & Schuster</p>
+                        <p class="resource-language">
+                            <a class="resource-language-link" href="https://www.simonandschuster.com/books/Why/Mario-Livio/9781508237457" target="_blank">English</a>
+                        </p>
+                    </div>
+                    <div>
+                        <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal8">view details</button>
+                        <div class="modal fade book-details-modal" id="bookdetailsmodal8" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                    <div class="book-details-content">
+                                        <img class="book-details-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                        <div class="details-container">
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Author: </span>Simon & Schuster</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Title: </span>Why? What Makes Us Curious</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Publisher: </span>Simon & Schuster, New York, NY, USA</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Year: </span>2017</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p>Curious about curiosity, an astrophysicist delves into the literature in psychology and neuroscience, to understand theories of curiosity since 1960s, the later experiments using fMRI methods, and then conjectures about the evolutionary origins of curiosity.  Mario Livio prefaces the review with impressions of Leonardo da Vinci and Richard Feynman, two of the most curious geniuses in history.  He draws parallels between research on curiosity, his case studies and learnings from his conversations with some curious people.</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p>
+                                                    <span class="detail-title">Available in: </span>
+                                                    <a class="book-link" href="https://www.simonandschuster.com/books/Why/Mario-Livio/9781508237457" target="_blank">English</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <div>
+                        <img class="book-cover" src="{% static 'resources/philosophy-of-childhood.jpg' %}" alt="The Philosophy of Childhood cover">
+                        <p class="resource-title">The Philosophy of Childhood</p>
+                        <p class="resource-sub-title">by Gareth B. Matthews</p>
+                        <p class="resource-language">
+                            <a class="resource-language-link" href="https://www.hup.harvard.edu/catalog.php?isbn=9780674664814" target="_blank">English</a>
+                        </p>
+                    </div>
+                    <div>
+                        <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal9">view details</button>
+                        <div class="modal fade book-details-modal" id="bookdetailsmodal9" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                    <div class="book-details-content">
+                                        <img class="book-details-cover" src="{% static 'resources/philosophy-of-childhood.jpg' %}" alt="The Philosophy of Childhood cover">
+                                        <div class="details-container">
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Author: </span>Gareth B. Matthews</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Title: </span>The Philosophy of Childhood</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Publisher: </span>Harvard University Press, Cambridge, MA, USA</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Year: </span>1994</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p>The innocent comments and questions of children are often surprisingly perceptive and thought-provoking.  Gareth Matthews shows how children's naive questions can lead to a critical, inquiring dialog and how their insights can recall for us the arguments of ancient philosophers.  He illustrates how successful children's literature, while simple in style, carries philosophical depth.  Matthews critiques contemporary models and theories of childhood, including Piaget's theory of cognitive development and Kohlberg's theory of moral development.  Addressing issues like the rights of children, their conception of death and child art, he shows the problematics of evaluating children by any standard measures of ‘maturity’.</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p>
+                                                    <span class="detail-title">Available in: </span>
+                                                    <a class="book-link" href="https://www.hup.harvard.edu/catalog.php?isbn=9780674664814" target="_blank">English</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <div>
+                        <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                        <p class="resource-title">The Having of Wonderful Ideas: And Other Essays on Teaching and Learning</p>
+                        <p class="resource-sub-title">by Eleanor Duckworth</p>
+                        <p class="resource-language">
+                            <a class="resource-language-link" href="https://www.amazon.com/Having-Wonderful-Essays-Teaching-Learning/dp/0807747300" target="_blank">English</a>
+                        </p>
+                    </div>
+                    <div>
+                        <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal10">view details</button>
+                        <div class="modal fade book-details-modal" id="bookdetailsmodal10" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                    <div class="book-details-content">
+                                        <img class="book-details-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                        <div class="details-container">
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Author: </span>Eleanor Duckworth</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Title: </span>The Having of Wonderful Ideas: And Other Essays on Teaching and Learning</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Publisher: </span>Teachers' College Press; Third edition</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Year: </span>2006</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p>The microcosm of the classroom holds varied possibilities for invention and exploration.  In this collection of essays Eleanor Duckworth recounts from her experience some creative intellectual acts of elementary school children and teachers.  She shows how Jean Piaget's ideas help us to understand and enable a rich repertoire of actions and thoughts: involving making connections, predicting and drawing inferences.  Such deep engagement enables children and teachers in these stories to experience the fulfilment of constructing their own knowledge.</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p>
+                                                    <span class="detail-title">Available in: </span>
+                                                    <a class="book-link" href="https://www.amazon.com/Having-Wonderful-Essays-Teaching-Learning/dp/0807747300" target="_blank">English</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <div>
+                        <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                        <p class="resource-title">The Hundred Languages of Children: The Reggio Emilia Experience in Transformation</p>
+                        <p class="resource-sub-title">(Editors) Carolyn P. Edwards, Lella Gandini, George Forman</p>
+                        <p class="resource-language">
+                            <a class="resource-language-link" href="https://eric.ed.gov/?id=ED531297" target="_blank">English</a>
+                        </p>
+                    </div>
+                    <div>
+                        <button class="btn book-details" data-toggle="modal" data-target="#bookdetailsmodal11">view details</button>
+                        <div class="modal fade book-details-modal" id="bookdetailsmodal11" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i> close</button>
+                                    <div class="book-details-content">
+                                        <img class="book-details-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                                        <div class="details-container">
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Editors: </span>Carolyn P. Edwards, Lella Gandini, George Forman</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Title: </span>The Hundred Languages of Children: The Reggio Emilia Experience in Transformation</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Publisher: </span>Praeger, Connecticut, USA. Third Edition</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p><span class="detail-title">Year: </span>2011</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p>This is a volume of articles, essays and interviews about the origins, philosophical underpinnings, evolution of educational practice and other aspects of the much acclaimed system of early childhood education in the Reggio Emilia region of northern Italy. Reggio Emilia’s preschools have long attracted researchers and education practitioners from the world over, for their innovative methods rooted in relationships between children, teachers and the community. The title of this book derives from a fundamental principle at the heart of the Reggio Emilia educational practice - namely, respect and acknowledgement of the varied multi-dimensional perspectives and sense-making of children, and a dignified documentation of the same.</p>
+                                            </div>
+                                            <div class="detail-item">
+                                                <p>
+                                                    <span class="detail-title">Available in: </span>
+                                                    <a class="book-link" href="https://eric.ed.gov/?id=ED531297" target="_blank">English</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="magazines" role="tabpanel" aria-labelledby="magazinesTab">
+        <div class="resource-section">
+            <div class="resource-item-wrapper magazine-section">
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/sandarbh.jpg' %}" alt="Sandarbh cover">
+                    <p class="resource-title">Sandarbh</p>
+                    <p class="resource-sub-title">Eklavya Foundation</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="https://www.eklavya.in/magazine-activity/sandarbh-magazines" target="_blank">Hindi</a>,
+                        <a class="resource-language-link" href="https://www.sandarbhsociety.org/" target="_blank">Marathi</a>,
+                        Gujarati
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/chakmak.jpg' %}" alt="Chakmak cover">
+                    <p class="resource-title">Chakmak</p>
+                    <p class="resource-sub-title">Eklavya Foundation</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="https://www.eklavya.in/magazine-activity/chakmak-magazine" target="_blank">Hindi</a>
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/srote.jpg' %}" alt="Kishor cover">
+                    <p class="resource-title">Srote</p>
+                    <p class="resource-sub-title">Eklavya Foundation</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="https://www.eklavya.in/magazine-activity/srote-magazine" target="_blank">Hindi</a>
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                    <p class="resource-title">I Wonder</p>
+                    <p class="resource-sub-title">Azim Premji University</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="https://azimpremjiuniversity.edu.in/SitePages/resources-iwonder.aspx" target="_blank">English</a>, 
+                        <a class="resource-language-link" href="https://azimpremjiuniversity.edu.in/SitePages/resources-iwonder.aspx" target="_blank">Hindi</a>, 
+                        <a class="resource-language-link" href="https://azimpremjiuniversity.edu.in/SitePages/resources-iwonder.aspx" target="_blank">Kannada</a>
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/kishor.jpg' %}" alt="Kishor cover">
+                    <p class="resource-title">Kishor</p>
+                    <p class="resource-sub-title">Balbharati</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="http://kishor.ebalbharati.in/Archive/" target="_blank">Marathi</a>
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/eureka.png' %}" alt="Eureka cover">
+                    <p class="resource-title">Eureka</p>
+                    <p class="resource-sub-title">Kerala Sastra Sahitya Parishad</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="http://www.kssp.in/eureka" target="_blank">Malayalam</a>
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/sastra-keralam.jpg' %}" alt="Sastra Keralam cover">
+                    <p class="resource-title">Sastra Keralam</p>
+                    <p class="resource-sub-title">Kerala Sastra Sahitya Parishad</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="https://www.kssp.org/sastra_keralam.html" target="_blank">Malayalam</a>
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                    <p class="resource-title">Thulir</p>
+                    <p class="resource-sub-title">Tamil Nadu Science Forum</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="https://www.facebook.com/pages/category/Magazine/%E0%AE%A4%E0%AF%81%E0%AE%B3%E0%AE%BF%E0%AE%B0%E0%AF%8D-195194973855231/" target="_blank">Tamil</a>
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/jantar-mantar.png' %}" alt="Jantar Mantar cover">
+                    <p class="resource-title">Jantar Mantar</p>
+                    <p class="resource-sub-title">Tamil Nadu Science Forum</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="https://www.imsc.res.in/~jam/jm25/jm25.html" target="_blank">English</a>
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                    <p class="resource-title">Chekumuki</p>
+                    <p class="resource-sub-title">Jana Vignana Vedika</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="http://jvvtelangana.org/chekumuki/" target="_blank">Telugu</a>
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                    <p class="resource-title">Biggan o Biggankarmi</p>
+                    <p class="resource-sub-title">Science Workers’ Forum, West Bengal</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="https://sites.google.com/site/scientificworkers/recentissue" target="_blank">Bengali</a>
+                    </p>
+                </div>
+                <div class="resource-item">
+                    <img class="book-cover" src="{% static 'resources/cover.jpg' %}" alt="Sawaliram Book cover">
+                    <p class="resource-title">Journal of Scientific Temper</p>
+                    <p class="resource-sub-title">CSIR - NISCAIR</p>
+                    <p class="resource-language">
+                        <a class="resource-language-link" href="http://op.niscair.res.in/index.php/JST" target="_blank">English</a>
+                    </p>
+                </div>
+                <div class="resource-item empty-item"></div>
+                <div class="resource-item empty-item"></div>
+                <div class="resource-item empty-item"></div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="weblinks" role="tabpanel" aria-labelledby="weblinksTab">
+        <div class="resource-weblinks-section">
+            <div class="resource-weblink">
+                <img src="{% static 'resources/reddit.jpg' %}" alt="Reddit logo">
+                <div class="weblink-text">
+                    <a href="https://www.reddit.com/r/askscience/" target="_blank">Ask Science</a>
+                    <p class="small">https://www.reddit.com/r/askscience/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/mad-sci-network.png' %}" alt="Mad Sci network logo">
+                <div class="weblink-text">
+                    <a href="http://www.madsci.org/" target="_blank">Mad Sci network</a>
+                    <p class="small">http://www.madsci.org/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/science-line.png' %}" alt="ScienceLine logo">
+                <div class="weblink-text">
+                    <a href="http://scienceline.ucsb.edu/" target="_blank">ScienceLine (UCSB)</a>
+                    <p class="small">http://scienceline.ucsb.edu/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/ask-the-van.png' %}" alt="Ask the Van logo">
+                <div class="weblink-text">
+                    <a href="https://van.physics.illinois.edu/qa/" target="_blank">Ask the Van</a>
+                    <p class="small">https://van.physics.illinois.edu/qa/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/quora.jpg' %}" alt="Quora logo">
+                <div class="weblink-text">
+                    <a href="https://www.quora.com/" target="_blank">Quora</a>
+                    <p class="small">https://www.quora.com/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/stack-exchange.png' %}" alt="Stack Exchange logo">
+                <div class="weblink-text">
+                    <a href="https://stackexchange.com/" target="_blank">Stack Exchange</a>
+                    <p class="small">https://stackexchange.com/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/apj.png' %}" alt="Abdul Kalam logo">
+                <div class="weblink-text">
+                    <a href="http://www.abdulkalam.nic.in/childrenques.html" target="_blank">Abdul Kalam</a>
+                    <p class="small">http://www.abdulkalam.nic.in/childrenques.html</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/center-for-curiosity.jpg' %}" alt="Centre for Curiosity logo">
+                <div class="weblink-text">
+                    <a href="http://centerforcuriosity.com/" target="_blank">Centre for Curiosity</a>
+                    <p class="small">http://centerforcuriosity.com/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/im-a-scientist.png' %}" alt="I’m a Scientist logo">
+                <div class="weblink-text">
+                    <a href="https://imascientist.org.uk/" target="_blank">I’m a Scientist</a>
+                    <p class="small">https://imascientist.org.uk/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/morgridge.png' %}" alt="Journal of Scientific Temper logo">
+                <div class="weblink-text">
+                    <a href="https://morgridge.org/news/blue-sky-science/" target="_blank">Blue Sky Science</a>
+                    <p class="small">https://morgridge.org/news/blue-sky-science/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/ask-a-scientist.png' %}" alt="Ask a scientist logo">
+                <div class="weblink-text">
+                    <a href="http://askascientist.co.uk/" target="_blank">Ask a Scientist</a>
+                    <p class="small">http://askascientist.co.uk/</p>
+                </div>
+            </div>
+            <div class="resource-weblink">
+                <img src="{% static 'resources/ask-an-astronomer.png' %}" alt="Ask a scientist logo">
+                <div class="weblink-text">
+                    <a href="http://curious.astro.cornell.edu/" target="_blank">Ask an Astronomer</a>
+                    <p class="small">http://curious.astro.cornell.edu/</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
