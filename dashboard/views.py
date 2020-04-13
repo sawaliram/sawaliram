@@ -13,6 +13,7 @@ from django.shortcuts import (
 )
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import get_language_info
 from django.utils.decorators import method_decorator
 from django.db.models import Subquery, Q
 from django.contrib.contenttypes.models import ContentType
@@ -1862,6 +1863,55 @@ class BaseApproveTranslation(View):
 
         p = obj.publish(request.user)
 
+
+        # Send out notifications...
+
+        # ...to the translator
+        Notification.objects.create(
+            notification_type='published',
+            title_text=('{} published your {}'
+                .format(
+                    self.request.user.get_full_name(),
+                    p._meta.verbose_name,
+                ))[:50], # truncate it due to character limit
+            description_text=('Published {}'
+                .format(p)),
+            target_url = p.get_absolute_url(),
+            user=p.translated_by,
+        )
+
+        # ...to the original author
+        Notification.objects.create(
+            notification_type='published',
+            title_text=((
+                '{user} translated your {source_type}'
+                ' to {language}')
+                .format(
+                    user=p.translated_by,
+                    source_type=p.source._meta.verbose_name,
+                    language=(get_language_info(p.language)
+                        .get('name_translated')),
+                ))[:50], # truncate it due to character limit
+            description_text='Translated {}'.format(p.source),
+            target_url=p.get_absolute_url(),
+            user=p.source.author,
+        )
+
+        # ...to the peer reviewers
+        for u in set([c.author for c in p.comments.all()]):
+            Notification.objects.create(
+                notification_type='published',
+                title_text=((
+                    'The translation by {} that you commented on '
+                    'has been published.')
+                    .format(p.translated_by)
+                    )[:50], # truncate it due to character limit
+                    description_text='Translated {}'.format(p.source),
+                target_url=p.get_absolute_url(),
+                user=u,
+            )
+
+        # Create success message and return
         messages.success(request, self.success_message)
         return redirect(p.get_absolute_url())
 
