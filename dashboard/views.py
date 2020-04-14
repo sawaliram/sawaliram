@@ -341,6 +341,8 @@ class ValidateCuratedExcelSheet(View):
                 row_errors.append('Question field cannot be empty')
             if row['Question Language'] != row['Question Language']:
                 row_errors.append('Question Language field cannot be empty')
+            if len(row['Question Language']) != 2:
+                row_errors.append('Question Language must be an ISO 639-1 code')
             if row['Context'] != row['Context']:
                 row_errors.append('Context field cannot be empty')
             if row['Published (Yes/No)'] == 'Yes' and row['Publication Name'] != row['Publication Name']:
