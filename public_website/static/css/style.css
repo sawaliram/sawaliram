@@ -3466,10 +3466,10 @@ button.deny-access {
 .resources-page-content .resource-weblinks-section .resource-weblink {
     background-color: #fff;
     border-radius: 5px;
-    padding: 0.7rem;
+    padding: 1rem;
     display: flex;
-    flex-basis: 22%;
-    margin-bottom: 1.5rem;
+    flex-basis: 31%;
+    margin-bottom: 2rem;
 }
 
 @media (max-width: 768px) {
@@ -3480,6 +3480,7 @@ button.deny-access {
 
 .resources-page-content .resource-weblinks-section .resource-weblink img {
     width: 90px;
+    margin-right: 0.5rem;
 }
 
 .resources-page-content .resource-weblinks-section .resource-weblink .weblink-text {
@@ -3490,6 +3491,7 @@ button.deny-access {
     color: #000;
     font-weight: bold;
     font-size: 0.9rem;
+    display: block;
 }
 
 .resources-page-content .resource-weblinks-section .resource-weblink .weblink-text p.small {
@@ -3618,14 +3620,14 @@ button.deny-access {
     }
 }
 
-.resource-item-wrapper .resource-item .resource-sub-title {
+.resource-sub-title {
     font-size: 0.9rem;
     color: #868686;
     margin-bottom: 1rem;
 }
 
 @media (max-width: 768px) {
-    .resource-item-wrapper .resource-item .resource-sub-title {
+    .resource-sub-title {
         font-size: 0.8rem;
         margin-bottom: 0.2rem;
     }
