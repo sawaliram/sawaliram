@@ -3606,6 +3606,11 @@ button.deny-access {
     margin-bottom: 1rem;
 }
 
+.resource-item-wrapper .resource-item img.book-cover.cover-with-margin {
+    margin-top: 70px;
+    margin-bottom: 70px;
+}
+
 .resource-item-wrapper .resource-item img.book-cover.default-cover {
     opacity: 0.5;
 }
@@ -3613,6 +3618,11 @@ button.deny-access {
 @media (max-width: 768px) {
     .resource-item-wrapper .resource-item img.book-cover {
         width: 90px;
+    }
+
+    .resource-item-wrapper .resource-item img.book-cover.cover-with-margin {
+        margin-top: 50px;
+        margin-bottom: 50px;
     }
 }
 
