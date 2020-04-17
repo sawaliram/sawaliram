@@ -360,8 +360,9 @@ class PublishedAnswerTranslation(
     class Meta:
         proxy = True
 
+
 class AnswerCredit(models.Model):
-    """Define the data model for answer and article credits"""
+    """Define the data model for answer credits"""
 
     class Meta:
         db_table = 'answer_credit'
@@ -394,6 +395,42 @@ class AnswerCredit(models.Model):
         }
         self.credit_title_order = credit_sorting_order[self.credit_title]
         super(AnswerCredit, self).save(*args, **kwargs)
+
+
+class ArticleCredit(models.Model):
+    """Define the data model for article credits"""
+
+    class Meta:
+        db_table = 'article_credit'
+        ordering = ['credit_title_order']
+
+    credit_title = models.CharField(max_length=50)
+    credit_title_order = models.IntegerField(default=0)
+    credit_user_name = models.CharField(max_length=50)
+    is_user = models.BooleanField(default=False)
+    user = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='article_credits',
+        on_delete=models.PROTECT,
+        default='',
+        blank=True,
+        null=True)
+    article = models.ForeignKey(
+        'Article',
+        related_name='credits',
+        on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        credit_sorting_order = {
+            'publication': 1,
+            'author': 2,
+            'co-author': 3,
+            'submitter': 4
+        }
+        self.credit_title_order = credit_sorting_order[self.credit_title]
+        super(ArticleCredit, self).save(*args, **kwargs)
 
 
 class UncuratedSubmission(models.Model):
@@ -491,6 +528,7 @@ class PublishedTranslatedQuestion(
     objects = PublishedDraftableManager()
     class Meta:
         proxy = True
+
 
 @translatable
 class Article(DraftableModel):
