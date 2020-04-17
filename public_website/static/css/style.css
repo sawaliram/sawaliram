@@ -3557,6 +3557,10 @@ button.deny-access {
     margin-right: 2rem;
 }
 
+.resource-item-wrapper .resource-item .book-details-modal .book-details-content img.book-details-cover.default-cover {
+    opacity: 0.5;
+}
+
 @media (max-width: 768px) {
     .resource-item-wrapper .resource-item .book-details-modal .book-details-content {
         padding: 3rem 1rem 1rem 1rem;
@@ -3600,6 +3604,10 @@ button.deny-access {
     margin: 0 auto;
     display: block;
     margin-bottom: 1rem;
+}
+
+.resource-item-wrapper .resource-item img.book-cover.default-cover {
+    opacity: 0.5;
 }
 
 @media (max-width: 768px) {

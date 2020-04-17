@@ -83,7 +83,7 @@
         <h2>{% trans 'Resources' %}</h2>
         <img src="{% static 'illustrations/home_resources.png' %}">
         <p>{% trans 'View books, magazines, websites, Q&A collections, everything you want to know about curiosity and questioning.' %}</p>
-        <button class="btn btn-primary">{% trans 'View Resources' %}</button>
+        <a class="btn btn-primary" href="{% url 'public_website:resources' %}">{% trans 'View Resources' %}</a>
     </div>
 </div>
 
