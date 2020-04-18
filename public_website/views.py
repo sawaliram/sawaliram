@@ -144,8 +144,15 @@ class SearchView(View):
                 else:
                     results['articles'] = PublishedArticle.objects.none()
         else:
-            results['questions'] = Question.objects.all()
-            results['articles'] = PublishedArticle.objects.all()
+            if 'questions' in search_categories:
+                results['questions'] = Question.objects.all()
+            else:
+                results['questions'] = Question.objects.none()
+
+            if 'articles' in search_categories:
+                results['articles'] = PublishedArticle.objects.all()
+            else:
+                results['articles'] = PublishedArticle.objects.none()
 
         return results
 
