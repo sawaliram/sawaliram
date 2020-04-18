@@ -108,7 +108,7 @@ class SearchView(View):
         if 'q' in request.GET and request.GET.get('q') != '':
             if not search_categories:
                 results['questions'] = Question.objects.filter(
-                            Q(pk=request.GET.get('q')) |
+                            Q(pk__iexact=request.GET.get('q')) |
                             Q(question_text__search=request.GET.get('q')) |
                             Q(question_text_english__search=request.GET.get('q')) |
                             Q(school__search=request.GET.get('q')) |
@@ -124,7 +124,7 @@ class SearchView(View):
             else:
                 if 'questions' in search_categories:
                     results['questions'] = Question.objects.filter(
-                            Q(pk=request.GET.get('q')) |
+                            Q(pk__iexact=request.GET.get('q')) |
                             Q(question_text__search=request.GET.get('q')) |
                             Q(question_text_english__search=request.GET.get('q')) |
                             Q(school__search=request.GET.get('q')) |
