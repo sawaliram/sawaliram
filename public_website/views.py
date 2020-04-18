@@ -101,9 +101,10 @@ class SearchView(View):
 
         search_categories = request.GET.getlist('category')
 
-        if request.GET.getlist('questions') and not search_categories:
+        # Select only questions by default, if no category selected
+        if not search_categories:
             search_categories.append('questions')
-            search_categories.append('articles')
+
 
         if 'q' in request.GET and request.GET.get('q') != '':
             if not search_categories:
@@ -333,6 +334,9 @@ class SearchView(View):
         # create list of active categories
         if page_title == _('Search') or page_title == _('Translate Content'):
             active_categories = request.GET.getlist('category')
+
+            # Select questions only by default, if no category selected
+            if not active_categories: active_categories.append('questions')
             context['active_categories'] = active_categories
 
             if request.GET.getlist('questions') and not active_categories:
