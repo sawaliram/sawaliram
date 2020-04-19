@@ -36,11 +36,19 @@
   </header>
   <section class="article-body col-sm-6">
     {{ article.tr_body|safe }}
-    <br>
+    <div class="credits-section">
+        {% for credit in article.credits.all %}
+            <div class="credit-card">
+                <p>{{ credit.credit_user_name }}</p>
+                <span>{{ credit.credit_title|capfirst }}</span>
+            </div>
+        {% endfor %}
+    </div>
+    <!-- <br>
     <div class="credit-card">
         <p>{{ article.author.get_full_name }}</p>
         <span>{% trans 'Author' %}</span>
-    </div>
+    </div> -->
   </section>
   <aside class="article-footer col-sm-3">
   </aside>
