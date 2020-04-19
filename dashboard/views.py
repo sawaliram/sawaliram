@@ -53,6 +53,7 @@ from dashboard.models import (
     SubmittedTranslatedQuestion,
     Answer,
     AnswerCredit,
+    ArticleCredit,
     AnswerTranslation,
     DraftAnswerTranslation,
     SubmittedAnswerTranslation,
@@ -967,6 +968,25 @@ class EditArticleView(View):
 
         if request.POST.get('mode') == 'draft':
 
+            # Save credits
+            # delete existing credits for the answer, if any
+            for credit in article.credits.all():
+                credit.delete()
+
+            credit_titles = request.POST.getlist('credit-title')
+            credited_user_names = request.POST.getlist('credit-user-name')
+            credited_user_ids = request.POST.getlist('credit-user-id')
+
+            for i in range(len(credited_user_names)):
+                credit = ArticleCredit()
+                credit.credit_title = credit_titles[i]
+                credit.credit_user_name = credited_user_names[i]
+                if credited_user_ids[i]:
+                    credit.is_user = True
+                    credit.user = User.objects.get(pk=credited_user_ids[i])
+                credit.article = article
+                credit.save()
+
             article.save()
 
             messages.success(request, self.draft_save_message)
@@ -981,6 +1001,25 @@ class EditArticleView(View):
 
             # Get and submit article
             submitted_article = self.submit_article(article)
+
+            # Save credits
+            # delete existing credits for the answer, if any
+            for credit in submitted_article.credits.all():
+                credit.delete()
+
+            credit_titles = request.POST.getlist('credit-title')
+            credited_user_names = request.POST.getlist('credit-user-name')
+            credited_user_ids = request.POST.getlist('credit-user-id')
+
+            for i in range(len(credited_user_names)):
+                credit = ArticleCredit()
+                credit.credit_title = credit_titles[i]
+                credit.credit_user_name = credited_user_names[i]
+                if credited_user_ids[i]:
+                    credit.is_user = True
+                    credit.user = User.objects.get(pk=credited_user_ids[i])
+                credit.article = submitted_article
+                credit.save()
 
             messages.success(request, self.success_message)
             return redirect('dashboard:review-article', article=submitted_article.id)

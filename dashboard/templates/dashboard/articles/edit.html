@@ -64,6 +64,42 @@
 				<button class="ql-formula"></button>
 			</span>
 		</div>
+
+		<div id="credits-bar">
+			<h2>Credits</h2>
+			<div class="credits-list">
+				{% if article.body %}
+					{% for credit in article.credits.all %}
+						<div class="credits-card {% if not forloop.first %}removable{% endif %}">
+							<select class="credit-title" name="credit-title">
+								<option value="author" {% if credit.credit_title == 'author' %}selected{% endif %}>{% trans 'Author' %}</option>
+								<option value="co-author" {% if credit.credit_title == 'co-author' %}selected{% endif %}>{% trans 'Co-author' %}</option>
+								<option value="submitter" {% if credit.credit_title == 'submitter' %}selected{% endif %}>{% trans 'Submitter' %}</option>
+								<option value="publication" {% if credit.credit_title == 'publication' %}selected{% endif %}>{% trans 'Publication' %}</option>
+							</select>
+							<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ credit.credit_user_name }}" placeholder="{% trans 'Full Name' %}" {% if forloop.first %}readonly{% endif %}>
+							<input type="hidden" class="credit-user-id" name="credit-user-id" value="">
+							<button class="btn remove-credit-user"><i class="far fa-times-circle"></i></button>
+						</div>
+					{% endfor %}
+				{% else %}
+					<div class="credits-card">
+						<select class="credit-title" name="credit-title" {% if question.published %}data-publication="{{ question.published_source }}"{% endif %}>
+							<option value="author" selected>{% trans 'Author' %}</option>
+							<option value="co-author">{% trans 'Co-author' %}</option>
+							<option value="submitter">{% trans 'Submitter' %}</option>
+							{% if question.published %}
+							<option value="publication">{% trans 'Publication' %}</option>
+							{% endif %}
+						</select>
+						<input type="text" class="credit-user-name" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="{% trans 'Full Name' %}" readonly>
+						<input type="hidden" class="credit-user-id" name="credit-user-id" value="{{ request.user.id }}">
+						<button class="btn remove-credit-user"><i class="far fa-times-circle"></i></button>
+					</div>
+				{% endif %}
+			</div>
+			<button class="btn btn-small btn-secondary-hollow add-credit"><i class="fas fa-plus"></i>{% trans ' Add' %}</button>
+		</div>
 	
 		<div id="submitbar">
 			<input type="hidden" name="rich-text-content" value="" />

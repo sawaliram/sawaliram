@@ -10,7 +10,9 @@ from .models import (
     Answer,
     Article,
     AnswerCredit,
+    ArticleCredit
 )
+
 
 def make_bulk_updater(field_name):
     def _bulk_update(modeladmin, request, queryset):
@@ -29,10 +31,18 @@ def make_bulk_updater(field_name):
 
     return _bulk_update
 
+
 class AnswerCreditInline(admin.TabularInline):
     model = AnswerCredit
     view_on_site = False
     show_change_link = True
+
+
+class ArticleCreditInline(admin.TabularInline):
+    model = ArticleCredit
+    view_on_site = False
+    show_change_link = True
+
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
@@ -86,3 +96,6 @@ class ArticleAdmin(admin.ModelAdmin):
     list_filter = ['language', 'author']
     list_display = ['id', 'title', 'body', 'created_on', 'updated_on', 'published_on','author']
     date_hierarchy = 'published_on'
+    inlines = [
+        ArticleCreditInline,
+    ]
