@@ -15,9 +15,15 @@
     <h1>{{ article.tr_title }}</h1>
     <p>
       {{ article.published_on|date:'d M Y' }}
-      |
-      <a href="{% url 'public_website:user-profile' article.author.id %}" class="text-secondary">{{uthor.get_full_name }}</a>
     </p>
+    <div class="credits-section">
+        {% for credit in article.credits.all %}
+            <div class="credit-card">
+                <p>{{ credit.credit_user_name }}</p>
+                <span>{{ credit.credit_title|capfirst }}</span>
+            </div>
+        {% endfor %}
+    </div>
     {% if article.is_translated %}
     <p>{% trans 'Translated by' %} <a href="{% url 'public_website:user-profile' article.translation.translator.id %}" class="text-secondary">{{ranslation.translator.get_full_name }}</a></p>
     {% endif %}
@@ -36,19 +42,6 @@
   </header>
   <section class="article-body col-sm-6">
     {{ article.tr_body|safe }}
-    <div class="credits-section">
-        {% for credit in article.credits.all %}
-            <div class="credit-card">
-                <p>{{ credit.credit_user_name }}</p>
-                <span>{{ credit.credit_title|capfirst }}</span>
-            </div>
-        {% endfor %}
-    </div>
-    <!-- <br>
-    <div class="credit-card">
-        <p>{{ article.author.get_full_name }}</p>
-        <span>{% trans 'Author' %}</span>
-    </div> -->
   </section>
   <aside class="article-footer col-sm-3">
   </aside>
