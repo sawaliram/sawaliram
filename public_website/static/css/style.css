@@ -2432,6 +2432,10 @@ button.deny-access {
     text-align: justify;
 }
 
+.answer-area .answer-text img {
+    max-width: 100%;
+}
+
 .credit-card {
     margin-bottom: 1rem;
 }
@@ -2570,8 +2574,22 @@ button.deny-access {
 
 /* === VIEW ANSWER & ARTICLE == */
 .article {
-    padding: 1rem;
-    max-width: 100vw; /* to avoid side-scroll */
+    padding: 0 2rem;
+    max-width: 100vw;
+}
+
+.article-body img {
+    max-width: 100%;
+}
+
+@media(max-width: 576px) {
+    .article {
+        padding: 0 0.8rem;
+    }
+
+    .article-body {
+        margin-top: 2rem;
+    }
 }
 
 .answer-section {
@@ -2669,7 +2687,7 @@ button.deny-access {
 }
 
 .answer-section .answer-text-wrapper .answer-text img {
-    width: 100%;
+    max-width: 100%;
 }
 
 .answer-section .answer-text-wrapper .answer-text .credits-section {
