@@ -2578,6 +2578,10 @@ button.deny-access {
     max-width: 100vw;
 }
 
+.article-body {
+    text-align: justify;
+}
+
 .article-body img {
     max-width: 100%;
 }
