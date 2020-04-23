@@ -244,8 +244,8 @@ class SearchView(View):
             .values_list('state') \
             .distinct('state') \
             .values('state') \
-            .exclude(curriculum_followed__exact='') \
-            .exclude(curriculum_followed__isnull=True)
+            .exclude(state__exact='') \
+            .exclude(state__isnull=True)
 
         curriculums = result.order_by() \
                             .values_list('curriculum_followed') \
@@ -258,8 +258,8 @@ class SearchView(View):
             .values_list('language') \
             .distinct('language') \
             .values('language') \
-            .exclude(curriculum_followed__exact='') \
-            .exclude(curriculum_followed__isnull=True)
+            .exclude(language__exact='') \
+            .exclude(language__isnull=True)
 
         # apply filters if any
         subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
