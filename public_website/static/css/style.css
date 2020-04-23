@@ -12,6 +12,10 @@ body {
     padding-top: calc(60px + 1rem);
 }
 
+.flex {
+  display: flex !important;
+}
+
 @media (max-width: 576px) {
     .sawaliram-container {
         margin-top: calc(35px + 1rem);
@@ -2484,6 +2488,30 @@ button.deny-access {
     margin-bottom: 0.8rem;
     font-size: 0.8rem;
     color: #a6a6a6;
+}
+
+/* ====== TRANSLATIONS ====== */
+
+.meta-input-section {
+    display: flex;
+}
+
+.meta-input-section .highlighted-meta {
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    max-width: calc(25vw - 2em);
+}
+
+@media(max-width: 576px) {
+    .meta-input-section .highlighted-meta {
+        max-width: calc(50vw - 2em);
+    }
+}
+
+.meta-input-section .highlighted-meta input[type=text] {
+    width: 100%;
 }
 
 /* === VIEW ANSWER & ARTICLE == */
