@@ -551,13 +551,20 @@ class Article(DraftableModel):
     language = models.CharField(max_length=100,
         choices=settings.LANGUAGE_CHOICES,
         default='en')
-    author = models.ForeignKey('sawaliram_auth.User',
+    author = models.ForeignKey(
+        'sawaliram_auth.User',
         related_name='articles',
         on_delete=models.PROTECT,
         default='',
         null=True)
 
     body = models.TextField(null=True)
+
+    cover_image = models.CharField(
+        max_length=100,
+        default='',
+        blank=True,
+        null=True)
 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

@@ -163,14 +163,6 @@ function setupSearchResultsPagination() {
     });
 }
 
-function setupSearchResultsSort() {
-    $('.sort-by-option').click(function() {
-        var current_params = new URLSearchParams(location.search);
-        current_params.set('sort-by', $(this).data('sort'));
-        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
-    });
-}
-
 function setupSearchResultsFilter() {
     $('.category-option').click(function() {
         if (!$(this).hasClass('.no-fun')) {
@@ -521,6 +513,14 @@ function setupToggleCardDrawer() {
     });
 }
 
+function setupGeneralContentSort() {
+    $('.sort-by-option').click(function() {
+        var current_params = new URLSearchParams(location.search);
+        current_params.set('sort-by', $(this).data('sort'));
+        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
+    });
+}
+
 setupToggleCardDrawer();
 setupChooseProfilePictureModal();
 setupMobileCloseUserProfileContent();
@@ -534,6 +534,7 @@ closeMenusOnClickingDarkbackground();
 enableLinkingtoTabs();
 setupNavbarSearchBar();
 setupSearchResultsSearch();
+setupGeneralContentSort();
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
@@ -600,7 +601,6 @@ if (
     window.location.pathname.includes('/search')
    ) {
     setupSearchResultsPagination();
-    setupSearchResultsSort();
     setupSearchResultsFilter();
     setupSearchResultsMobileFilter();
     setupSearchResultsClearAll();

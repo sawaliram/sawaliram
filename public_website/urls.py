@@ -28,4 +28,5 @@ urlpatterns = [
     path('lang/<str:language>', views.SetLanguageView.as_view(), name='set-language'),
     path('about', views.About.as_view(), name='about'),
     path('resources', views.ResourcesPage.as_view(), name='resources'),
+    path('articles', views.ArticlesPage.as_view(), name='articles'),
 ]
