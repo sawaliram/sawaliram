@@ -1,4 +1,5 @@
 {% extends "dashboard/translations/base_edit.html" %}
+{% load i18n %}
 
 {% block tr_original %}
 <header class="flex">
@@ -20,9 +21,9 @@
   {% include 'dashboard/snippets/richtext_editor.html' with value=form.body.value class='' %}
   <footer id="submitbar">
     <input type="hidden" name="{{ form.body.name }}" value="{{ form.body.value }}" />
-    <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
-    <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
-    <a href="{% url 'dashboard:delete-article-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete translation">
+    <button type="submit" name="mode" value="submit" class="btn btn-primary">{% trans 'Submit translation' %}</button>
+    <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">{% trans 'Save Draft' %}</button>
+    <a href="{% url 'dashboard:delete-article-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="{% trans 'Delete translation' %}">
       <i class="fas fa-trash"></i>
     </a>
   </footer>

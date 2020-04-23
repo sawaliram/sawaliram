@@ -1,8 +1,9 @@
 {% extends "public_website/base.html" %}
+{% load i18n %}
 {% load to_language_name %}
 
 {% block body_styles %}grey-background{% endblock %}
-{% block title %} Review Translation | Sawaliram {% endblock %}
+{% block title %}{% trans 'Review Translation' %} | {% trans 'Sawaliram' %} {% endblock %}
 
 {% block content %}
 
@@ -11,7 +12,7 @@
     {% for message in messages %}
     <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
       {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <button type="button" class="close" data-dismiss="alert" aria-label="{% trans 'Close' %}">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -38,15 +39,15 @@
       {% endblock %}
       {% if object.translated_by == request.user %}
       <div class="hr-over">
-        <button class="btn" action="{{ object.get_edit_url }}" disabled title="You cannot edit submitted translations yet. We're working on it!" data-toggle="tooltip">
+        <button class="btn" action="{{ object.get_edit_url }}" disabled title="{% trans 'You cannot edit submitted translations yet. We\'re working on it!' %}" data-toggle="tooltip">
           Edit Translation
         </button>
       </div>
       {% else %}
       <form class="hr-over" action="{{ object.get_publish_url }}" method="POST">
         {% csrf_token %}
-        <p class="publish-info-text">If you think this translation is complete and ready for public viewing, click the 'Publish' button to publish the translation. If you believe the translation can be improved, leave a comment below.</p>
-        <button type="submit" name="action" value="submit" class="btn btn-primary btn-block">Publish</button>
+        <p class="publish-info-text">{% trans "If you think this translation is complete and ready for public viewing, click the 'Publish' button to publish the translation. If you believe the translation can be improved, leave a comment below." %}</p>
+        <button type="submit" name="action" value="submit" class="btn btn-primary btn-block">{% trans 'Publish' %}</button>
       </form>
       {% endif %}
     </div>
@@ -54,11 +55,11 @@
 </div>
 <div>
   <div class="comment-area comment-area-large">
-    <h2>Comments</h2>
+    <h2>{% trans 'Comments' %}</h2>
     <form action="{% block comment_form_action %}{% endblock %}" method="POST">
         {% csrf_token %}
         {{ comment_form.text }}
-        <button type="submit" class="btn btn-secondary">Add Comment</button>
+        <button type="submit" class="btn btn-secondary">{% trans 'Add Comment' %}</button>
     </form>
     {% if comments %}
       <ul class="comment-list mt-3">
