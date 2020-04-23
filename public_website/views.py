@@ -402,7 +402,7 @@ class ArticleView(View):
             'page_title': 'View Article',
         }
 
-        return render(request, 'public_website/article.html', context)
+        return render(request, 'public_website/view-article.html', context)
 
 
 class SubmitUserCommentOnAnswer(View):
@@ -693,3 +693,22 @@ class ResourcesPage(View):
             'page_title': _('Resources')
         }
         return render(request, 'public_website/resources.html', context)
+
+
+class ArticlesPage(View):
+
+    def get(self, request):
+        articles = PublishedArticle.objects.all()
+        sort_by = request.GET.get('sort-by', 'newest')
+
+        if sort_by == 'newest':
+            articles = articles.order_by('-published_on')
+        else:
+            articles = articles.order_by('published_on')
+
+        context = {
+            'page_title': _('Articles'),
+            'articles': articles,
+            'sort_by': sort_by
+        }
+        return render(request, 'public_website/articles.html', context)
