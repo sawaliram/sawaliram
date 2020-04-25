@@ -1,7 +1,4 @@
-{% load i18n %}
-{% load to_language_name %}
-
-<div id="editor" data-placeholder="{% trans 'Type your article here...' %}" class="hr-over">
+<div id="editor" data-placeholder="Type your article here..." class="{% if class is not None %}{{ class }}{% else %}hr-over{% endif %}">
   {{ value|safe }}
 </div>
 
