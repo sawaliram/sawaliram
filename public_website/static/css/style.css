@@ -4,8 +4,8 @@ body {
     font-family: 'Noto Sans', sans-serif;
 }
 
-body.grey-background {
-    background-color: #f2f2f2;;
+.grey-background {
+    background-color: #f2f2f2;
 }
 
 .sawaliram-container {
@@ -20,6 +20,9 @@ body.grey-background {
     .sawaliram-container .content {
         padding-top: 1rem;
     }
+
+.flex {
+  display: flex !important;
 }
 
 @media (max-width: 576px) {
@@ -104,6 +107,11 @@ input.input-plain {
     margin: 0;
 }
 
+h1 .input-plain {
+    width: 100%;
+    border-radius: 0;
+}
+
 select.input-plain {
     border: none;
     background: inherit;
@@ -170,6 +178,10 @@ textarea {
     cursor: not-allowed;
 }
 
+.btn-square {
+    border-radius: 0.2rem;
+}
+
 .btn-primary {
     background-color: #87B24D;
     border-color: #87B24D;
@@ -188,8 +200,9 @@ textarea {
 }
 
 .btn-primary-hollow:hover {
-    color: #ffffff;
-    background-color: #87B24D;
+    color: #759142;
+    border-color: #759a42;
+    background-color: #FFFFFF;
 }
 
 .btn-secondary {
@@ -209,8 +222,9 @@ textarea {
 }
 
 .btn-secondary-hollow:hover {
-    color: #ffffff;
-    background-color: #9B63A8;
+    color: #83538e;
+    border-color: 83538e;
+    background-color: #fff0;
 }
 
 .btn-yellow {
@@ -240,8 +254,8 @@ textarea {
 }
 
 .btn-danger-hollow:hover {
-    color: #ffffff;
-    background-color: #C60000;
+    color: #a40000;
+    border-color: #a40000;
 }
 
 .btn-inline {
@@ -967,6 +981,7 @@ button.cancel-delete {
     padding: 0.5rem;
     padding-right: 2rem;
     box-shadow: 0 0.7rem 1rem -1rem;
+    z-index: 1;
 }
 
 .navbar-search-form-wrapper {
@@ -2584,6 +2599,30 @@ button.deny-access {
     color: #a6a6a6;
 }
 
+/* ====== TRANSLATIONS ====== */
+
+.meta-input-section {
+    display: flex;
+}
+
+.meta-input-section .highlighted-meta {
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    max-width: calc(25vw - 2em);
+}
+
+@media(max-width: 576px) {
+    .meta-input-section .highlighted-meta {
+        max-width: calc(50vw - 2em);
+    }
+}
+
+.meta-input-section .highlighted-meta input[type=text] {
+    width: 100%;
+}
+
 /* === VIEW ANSWER & ARTICLE == */
 .article {
     padding: 0 2rem;
@@ -4168,4 +4207,14 @@ button.social-login i {
     .contact-container .contact-form-container {
         margin-top: 2rem;
     }
+}
+
+/* ======= TEMPORARY BOOTSTRAP STUFF ======= */
+
+/* these can be removed once we've upgraded *
+ * to a later version of bootstrap           */
+
+.mb-n2 {
+    margin-bottom: -2rem !important;
+}
 }
