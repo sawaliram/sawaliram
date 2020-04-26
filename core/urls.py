@@ -21,6 +21,7 @@ urlpatterns = [
     path('users/', include('sawaliram_auth.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('admin/', admin.site.urls),
+    path('analytics/', include('analytics.urls')),
 ]
 
 handler404 = 'dashboard.views.get_error_404_view'
