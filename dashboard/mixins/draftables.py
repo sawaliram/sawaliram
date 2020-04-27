@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 # Generic draftable mixin
 # "Draftables" are things that go through the three stages of
@@ -41,6 +42,7 @@ class DraftableModel(models.Model):
 
     status = models.IntegerField(default=-1) # draft
     created_on = models.DateTimeField(auto_now_add=True)
+    published_on = models.DateTimeField(blank=True, null=True)
     updated_on = models.DateTimeField(auto_now=True)
 
     # Managers
@@ -108,6 +110,7 @@ class DraftableModel(models.Model):
                     published = cls.objects.get(id=self.id)
                     published.approved_by = approved_by
                     published.status = self.STATUS_PUBLISHED
+                    published.published_on = datetime.now()
                     published.save()
                 except Exception as e:
                     error = 'Error publishing: {}'.format(e)
