@@ -4,6 +4,8 @@ import random
 import os
 import urllib
 
+from datetime import datetime
+
 from django.utils.translation import gettext as _
 
 from django import forms
@@ -934,6 +936,7 @@ class ApproveAnswerView(View):
 
         answer.approved_by = request.user
         answer.status = 'published'
+        answer.published_on = datetime.now()
         answer.save()
 
         messages.success(request, (_('Thanks ' + request.user.first_name + ' for publishing the answer, it will now be visible to all users')))
