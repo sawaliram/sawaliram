@@ -576,7 +576,6 @@ class Article(DraftableModel):
         default='',
         blank=True,
         null=True)
-    published_on = models.DateTimeField(auto_now_add=True)
 
     comments = GenericRelation('dashboard.Comment')
 
