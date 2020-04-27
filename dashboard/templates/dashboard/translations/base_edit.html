@@ -1,7 +1,6 @@
 
 {% extends "public_website/base.html" %}
 
-{% load i18n %}
 {% load static %}
 
 {% load i18n %}
@@ -11,11 +10,7 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 {% endblock %}
 
-<<<<<<< HEAD
 {% block title %} {% trans 'Edit Translation' %} | {% trans 'Sawaliram' %} {% endblock %}
-=======
-{% block title %} {% trans 'Edit Translation' %} | {% trans 'Sawaliram' %}{% endblock %}
->>>>>>> a84d45c0be65db1476281b31623dd1efe7ee71dc
 
 {% block content %}
 
@@ -31,31 +26,28 @@
     {% endfor %}
   {% endif %}
   <form class="rich-text-form row" action="{{ request.get_full_path }}" method="POST">
-    <div class="col-md-12 flex navbar-extra">
-      <div class="mx-auto">
-        <p class="text-secondary text-center mb-0">Translate</p>
-        <div class="mx-auto flex btn btn-square btn-secondary-hollow mb-3">
-          <select id="lang_from" name="lang_from" class="input-plain text-center">
-            {% for value, label in object.source.list_available_languages %}
-            <option value="{{ value }}"{% if value == object.source.tr_language %} selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-          </select>
-          <span><label for="lang_to" class="fas fa-chevron-right text-center mx-2"></label></span>
-          <select id="lang_to" name="lang_to" class="input-plain text-center" style="ml-auto">
-            {% for value, label in content_language_choices %}
-            <option value="{{ value }}"{% if value == object.language %} selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-          </select>
-        </div>
+    <div class="col-md-12 flex ">
+      <div class="mx-auto flex btn btn-secondary mb-3">
+        <span><label for="lang_from" class="fas fa-globe-asia"></label></span>
+        <select id="lang_from" name="lang_from" class="input-plain text-center">
+          {% for value, label in object.source.list_available_languages %}
+          <option value="{{ value }}"{% if value == object.source.tr_language %} selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <span><label for="lang_to" class="fas fa-arrow-right"></label></span>
+        <select id="lang_to" name="lang_to" class="input-plain text-center" style="ml-auto">
+          {% for value, label in content_language_choices %}
+          <option value="{{ value }}"{% if value == object.language %} selected{% endif %}>{{/option>
+          {% endfor %}
+        </select>
       </div>
     </div>
-
-    <article class="answer-area col-md-6 pt-4">
+    <article class="answer-area col-md-6">
       {% block tr_original %}
       {# Original/source goes here #}
       {% endblock %}
     </article>
-    <div class="col-md-6 answer-area pt-4 pb-5 mb-n2 grey-background">
+    <div class="col-md-6 answer-area">
       {% csrf_token %}
       {% block tr_translation %}
       {# Translation form goes here (minus the <form> element, of course) #}
@@ -73,13 +65,8 @@
 {% block footer %}
 <script>
     setupQuillEditor({
-<<<<<<< HEAD
         placeholder: 'Translation goes here...',
         inputName: {{ form.body.name }}
-=======
-        placeholder: '{% trans "Translation goes here..." %}',
-        inputName: '{{ form.body.name }}'
->>>>>>> a84d45c0be65db1476281b31623dd1efe7ee71dc
     })
 </script>
 {% endblock %}

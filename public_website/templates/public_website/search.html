@@ -18,7 +18,7 @@
             <button class="btn clear-all">{% trans 'Clear All' %}</button>
         </div>
         <div class="filter-list">
-            {% if page_title == _('Search') or page_title == _('Translate Answers') %}
+            {% if page_title == 'Search' %}
             <div class="filter-category">
                 <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">Category</button>
                 <div class="category-options-list" id="filterCategories">
