@@ -521,6 +521,69 @@ function setupGeneralContentSort() {
     });
 }
 
+function initializeCKEditor() {
+    ClassicEditor
+        .create(document.querySelector( '#editor' ), {
+            toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedlist', 'numberedlist', 'indent', 'outdent', 'blockquote', 'horizontalline', '|', 'specialcharacters', 'mathtype', 'chemtype', 'subscript', 'superscript', '|', 'link', 'imageupload', 'inserttable', '|', 'undo', 'redo'],
+            placeholder: 'Type your article here...',
+            image: {
+                toolbar: ['imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
+                styles: ['full', 'alignLeft', 'alignRight']
+            }
+        })
+        .then(editor => {
+            const wordCountPlugin = editor.plugins.get( 'WordCount' );
+            const wordCountWrapper = $('#wordCountWrapper');
+            wordCountWrapper.append(wordCountPlugin.wordCountContainer);
+        })
+        .catch(error => {
+            console.error( error );
+        });
+}
+
+function setupEditorLanguageSelector() {
+    $('.language-option').click(function() {
+        $('[name="language"]').val($(this).data('code'));
+        $('.selected-language').text($(this).text());
+    });
+}
+
+function setupCreditTitleSelector() {
+    $('.credit-title-option').click(function() {
+        $(this).parents('.dropdown').find('.selected-title').text($(this).text());
+        $(this).parents('.credit-entry').find('[name="credit-title"]').val($(this).data('title'));
+    });
+}
+
+function setupAddCreditEntry() {
+    $('.add-credit-entry').click(function() {
+        var credit_entry = $('.credit-entry:first').clone().addClass('removable').appendTo('.credit-entry-list');
+        credit_entry.find('.credit-user-name').val('').removeAttr('readonly').attr('value' ,'');
+        credit_entry.find('.credit-user-id').prop('value', '');
+        credit_entry.find('.credit-title').prop('value', 'author');
+        setupCreditTitleSelector();
+        setupRemoveCreditEntry();
+    });
+}
+
+function setupRemoveCreditEntry() {
+    $('.remove-credit-entry').click(function() {
+        $(this).parent('.credit-entry').remove();
+    });
+}
+
+function setupEditorDeleteFunctionality() {
+    $('button.editor-delete').click(function() {
+        $('.submit-container').hide();
+        $('.delete-container').show();
+    });
+
+    $('.editor-cancel-delete').click(function() {
+        $('.delete-container').hide();
+        $('.submit-container').show();
+    });
+}
+
 setupToggleCardDrawer();
 setupChooseProfilePictureModal();
 setupMobileCloseUserProfileContent();
@@ -558,8 +621,14 @@ if (
 }
 
 if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) {
-    setupQuillEditor({});
-    activateTooltips();
+    // setupQuillEditor({});
+    // activateTooltips();
+    initializeCKEditor();
+    setupEditorLanguageSelector();
+    setupCreditTitleSelector();
+    setupAddCreditEntry();
+    setupRemoveCreditEntry();
+    setupEditorDeleteFunctionality();
 }
 
 /* Breaking from tradition, this function is going intot the template so
@@ -580,8 +649,6 @@ if (
     new RegExp("^/dashboard/translate/articles/\\d+/review").test(window.location.pathname) ||
     new RegExp("^/dashboard/translate/answers/\\d+/review").test(window.location.pathname)
 ) {
-    // setupCommentFormDisplayToggle();
-    // setupCommentDeleteButtons();
     setupDeleteReviewComment();
 }
 
