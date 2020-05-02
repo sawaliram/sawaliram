@@ -13,6 +13,17 @@
 
 <div class="dashboard-home-container">
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <h1 class="dashboard-home-greeting">{% trans 'Hi' %} {{ request.user.first_name }}! {% trans 'What do you plan to do today?' %}</h1>
 
     <div class="task-list">
