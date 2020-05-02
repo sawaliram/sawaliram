@@ -904,7 +904,7 @@ class EditArticleView(View):
     '''
 
     model = ArticleDraft
-    template = 'dashboard/articles/edit.html'
+    template = 'dashboard/articles/write-article.html'
     success_message = 'Thanks! Your article has been submitted.'
     draft_save_message = 'Your changes have been saved.'
 
@@ -938,12 +938,14 @@ class EditArticleView(View):
         '''
 
         article = self.get_article(draft_id)
+        article_drafts = ArticleDraft.objects.filter(author=request.user)
         context = {
             'article': article,
+            'article_drafts': article_drafts,
             'grey_background': 'True',
             'page_title': _('Write Article'),
             'enable_breadcrumbs': 'Yes',
-            'language_choices': settings.LANGUAGE_CHOICES,
+            'language_choices': settings.CONTENT_LANGUAGES,
         }
 
         return render(request, self.template, context)
@@ -954,10 +956,12 @@ class EditArticleView(View):
         '''
 
         article = self.get_article(draft_id)
+        article_drafts = ArticleDraft.objects.filter(author=request.user)
         context = {
             'article': article,
+            'article_drafts': article_drafts,
             'grey_background': 'True',
-            'language_choices': settings.LANGUAGE_CHOICES,
+            'language_choices': settings.CONTENT_LANGUAGES,
             'page_title': _('Write Article'),
             'enable_breadcrumbs': 'Yes'
         }
@@ -1065,6 +1069,10 @@ class DeleteArticleView(View):
         article.delete()
 
         messages.success(request, 'The draft article has been deleted')
+
+        if request.POST.get('origin') == 'write-article':
+            return redirect('dashboard:home')
+
         return redirect('public_website:user-profile', user_id=request.user.id)
 
 
