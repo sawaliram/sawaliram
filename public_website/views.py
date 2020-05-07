@@ -120,6 +120,7 @@ class SearchView(View):
                         )
                 results['articles'] = PublishedArticle.objects.filter(
                             Q(title__search=request.GET.get('q')) |
+                            Q(pk__iexact=request.GET.get('q')) |
                             Q(body__search=request.GET.get('q'))
                         ).order_by('-updated_on')
             else:
@@ -140,6 +141,7 @@ class SearchView(View):
                 if 'articles' in search_categories:
                     results['articles'] = PublishedArticle.objects.filter(
                             Q(title__search=request.GET.get('q')) |
+                            Q(pk__iexact=request.GET.get('q')) |
                             Q(body__search=request.GET.get('q'))
                         ).order_by('-updated_on')
                 else:
