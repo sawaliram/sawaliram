@@ -23,8 +23,6 @@
 
     <form action="{% url 'dashboard:edit-article' draft_id=article.id %}" method="POST">
         {% csrf_token %}
-
-        <input type="text" class="square-ish" name="title" placeholder="Enter article title here..." value="{{ article.title }}">
         
         <div class="editor-header-controls">
             <div>
@@ -64,6 +62,8 @@
                 </div>
             </div>
         </div>
+
+        <input type="text" class="square-ish" name="title" placeholder="Enter article title here..." value="{{ article.title }}">
 
         <input type="hidden" name="language" value="{% if article.body %}{{ article.language }}{% endif %}">
 
