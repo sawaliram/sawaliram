@@ -521,20 +521,53 @@ function setupGeneralContentSort() {
     });
 }
 
+function setupEditorToolbarSticky() {
+    const navbarHeight = $('.navbar').outerHeight();
+    const ckEditorElement = $('.editor-container .ck.ck-reset.ck-editor.ck-rounded-corners');
+    const stickyPanelElement = $('.editor-container .ck.ck-reset.ck-editor.ck-rounded-corners .ck.ck-sticky-panel');
+    const toolbarElement = stickyPanelElement.find('.ck.ck-toolbar.ck-toolbar_grouping');
+
+    window.onscroll = function() {
+        if (window.pageYOffset > ckEditorElement.offset().top - navbarHeight) {
+            stickyPanelElement.css('position', 'fixed');
+            stickyPanelElement.css('top', navbarHeight + 'px');
+            stickyPanelElement.css('width', ckEditorElement.width() + 'px');
+            stickyPanelElement.css('z-index', '1000');
+            toolbarElement.css('border-radius', '0');
+            toolbarElement.css('border-bottom', '1px solid #c4c4c4');
+        }
+        else {
+            stickyPanelElement.css('position', '');
+            stickyPanelElement.css('top', '');
+            stickyPanelElement.css('width', '');
+            stickyPanelElement.css('z-index', '');
+            toolbarElement.css('border-radius', '');
+            toolbarElement.css('border-bottom', '');
+        }
+    };
+}
+
 function initializeCKEditor() {
     ClassicEditor
         .create(document.querySelector( '#editor' ), {
-            toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedlist', 'numberedlist', 'indent', 'outdent', 'blockquote', 'horizontalline', '|', 'specialcharacters', 'mathtype', 'chemtype', 'subscript', 'superscript', '|', 'link', 'imageupload', 'inserttable', '|', 'undo', 'redo'],
+            toolbar: {
+                items: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedlist', 'numberedlist', 'indent', 'outdent', 'blockquote', 'horizontalline', '|', 'specialcharacters', 'mathtype', 'chemtype', 'subscript', 'superscript', '|', 'link', 'imageupload', 'inserttable', '|', 'undo', 'redo'],
+                viewportTopOffset: $('.navbar').outerHeight(),
+            },    
             placeholder: 'Type your article here...',
             image: {
                 toolbar: ['imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
                 styles: ['full', 'alignLeft', 'alignRight']
+            },
+            table: {
+                contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
             }
         })
         .then(editor => {
             const wordCountPlugin = editor.plugins.get( 'WordCount' );
             const wordCountWrapper = $('#wordCountWrapper');
             wordCountWrapper.append(wordCountPlugin.wordCountContainer);
+            setupEditorToolbarSticky();
         })
         .catch(error => {
             console.error( error );
