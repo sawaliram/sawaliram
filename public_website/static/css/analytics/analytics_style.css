@@ -30,9 +30,12 @@
 	text-align: center;
 }
 
+#bar-graph-container{
+
+}
 
 .num-question-graph-container {
-	background-color: rgb(255, 248, 204);
+	background-color: white;
 	border-radius: 30px;
 	padding-top:40px;
 }
@@ -42,7 +45,7 @@
 }
 
 .question_counter {
-	font-family: Courier New;
+	font-family: Courier;
 	height: 300px;
 	width:300px;
 	text-align: center;
@@ -58,7 +61,7 @@
 
 .filled-div {
 	font-size: 1.5em;
-	background-color: rgb(255, 248, 204);
+	background-color: #FEB740;
 	border-radius: 30px;
 	padding-top: 50px;
 	height:100%;
@@ -92,7 +95,6 @@
 
 	.filled-div {
 		font-size: 1em;
-		background-color: rgb(255, 248, 204);
 		border-radius: 20px;
 		padding-top: 10px;
 	}
@@ -149,7 +151,7 @@ input[type="radio"]{
 
 .india-map-legend {
 	font-family: Courier New;
-	background-color: rgb(255, 248, 204);
+	background-color: #FEB740;
 	text-align: center;
 	padding:5px;
 
