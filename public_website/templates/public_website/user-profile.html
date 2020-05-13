@@ -190,7 +190,7 @@
                             <div class="card">
                                 <h3>{{ article_draft.title }}</h3>
                                 <p class="grey-text">
-                                    {{ article_draft.body|striptags|truncatechars:200  }}
+                                    {{ article_draft.body|striptags|truncatechars:200 }}
                                 </p>
                                 <div class="card-controls">
                                     <a href="{% url 'dashboard:edit-article' draft_id=article_draft.id %}" class="btn btn-small btn-secondary"><i class="fas fa-pencil-alt"></i> {% trans 'Continue writing' %}</a>
@@ -200,6 +200,7 @@
                                     <form class="inline-block" action="{% url 'dashboard:delete-article' article_draft.id %}" method="POST">
                                         {% csrf_token %}
                                         <span class="drawer-prompt">{% trans 'Are you sure you want to delete this article?' %}</span>
+                                        <input type="hidden" name="origin" value="user-profile">
                                         <button class="btn btn-small confirm-delete" type="submit">{% trans 'Yes, Delete' %}</button>
                                     </form>
                                     <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>

@@ -521,29 +521,106 @@ function setupGeneralContentSort() {
     });
 }
 
+function setupEditorToolbarSticky() {
+    const navbarHeight = $('.navbar').outerHeight();
+    const ckEditorElement = $('.editor-container .ck.ck-reset.ck-editor.ck-rounded-corners');
+    const stickyPanelElement = $('.editor-container .ck.ck-reset.ck-editor.ck-rounded-corners .ck.ck-sticky-panel');
+    const toolbarElement = stickyPanelElement.find('.ck.ck-toolbar.ck-toolbar_grouping');
+
+    window.onscroll = function() {
+        if (window.pageYOffset > ckEditorElement.offset().top - navbarHeight) {
+            stickyPanelElement.css('position', 'fixed');
+            stickyPanelElement.css('top', navbarHeight + 'px');
+            stickyPanelElement.css('width', ckEditorElement.width() + 'px');
+            stickyPanelElement.css('z-index', '1000');
+            toolbarElement.css('border-radius', '0');
+            toolbarElement.css('border-bottom', '1px solid #c4c4c4');
+        }
+        else {
+            stickyPanelElement.css('position', '');
+            stickyPanelElement.css('top', '');
+            stickyPanelElement.css('width', '');
+            stickyPanelElement.css('z-index', '');
+            toolbarElement.css('border-radius', '');
+            toolbarElement.css('border-bottom', '');
+        }
+    };
+}
+
+function initializeCKEditor() {
+    ClassicEditor
+        .create(document.querySelector( '#editor' ), {
+            toolbar: {
+                items: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedlist', 'numberedlist', 'indent', 'outdent', 'blockquote', 'horizontalline', '|', 'specialcharacters', 'mathtype', 'chemtype', 'subscript', 'superscript', '|', 'link', 'imageupload', 'inserttable', '|', 'undo', 'redo'],
+                viewportTopOffset: $('.navbar').outerHeight(),
+            },    
+            placeholder: 'Type your article here...',
+            image: {
+                toolbar: ['imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
+                styles: ['full', 'alignLeft', 'alignRight']
+            },
+            table: {
+                contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+            }
+        })
+        .then(editor => {
+            const wordCountPlugin = editor.plugins.get( 'WordCount' );
+            const wordCountWrapper = $('#wordCountWrapper');
+            wordCountWrapper.append(wordCountPlugin.wordCountContainer);
+            setupEditorToolbarSticky();
+        })
+        .catch(error => {
+            console.error( error );
+        });
+}
+
+function setupEditorLanguageSelector() {
+    $('.language-option').click(function() {
+        $('[name="language"]').val($(this).data('code'));
+        $('.selected-language').text($(this).text());
+    });
+}
+
+function setupCreditTitleSelector() {
+    $('.credit-title-option').click(function() {
+        $(this).parents('.dropdown').find('.selected-title').text($(this).text());
+        $(this).parents('.credit-entry').find('[name="credit-title"]').val($(this).data('title'));
+    });
+}
+
+function setupAddCreditEntry() {
+    $('.add-credit-entry').click(function() {
+        var credit_entry = $('.credit-entry:first').clone().addClass('removable').appendTo('.credit-entry-list');
+        credit_entry.find('.credit-user-name').val('').removeAttr('readonly').attr('value' ,'');
+        credit_entry.find('.credit-user-id').prop('value', '');
+        credit_entry.find('.credit-title').prop('value', 'author');
+        setupCreditTitleSelector();
+        setupRemoveCreditEntry();
+    });
+}
+
+function setupRemoveCreditEntry() {
+    $('.remove-credit-entry').click(function() {
+        $(this).parent('.credit-entry').remove();
+    });
+}
+
+function setupEditorDeleteFunctionality() {
+    $('button.editor-delete').click(function() {
+        $('.submit-container').hide();
+        $('.delete-container').show();
+    });
+
+    $('.editor-cancel-delete').click(function() {
+        $('.delete-container').hide();
+        $('.submit-container').show();
+    });
+}
+
 setupToggleCardDrawer();
 setupChooseProfilePictureModal();
 setupMobileCloseUserProfileContent();
 setupUserProfileMenuTabs();
-
-function autoResizeSelectFields() {
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     * Solution thanks to João Pimentel Ferreira           *
-     * in the following  StackOverflow answer:             *
-     *                                                     *
-     *     https://stackoverflow.com/a/55343177/1196444    *
-     *                                                     *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    $('select').change(function(){
-        var text = $(this).find('option:selected').text()
-        var $aux = $('<select/>').append($('<option/>').text(text))
-        $(this).after($aux)
-        $(this).width($aux.width())
-        $aux.remove()
-    }).change()
-}
 
 // ======== CALL GENERAL FUNCTIONS ========
 
@@ -554,7 +631,6 @@ enableLinkingtoTabs();
 setupNavbarSearchBar();
 setupSearchResultsSearch();
 setupGeneralContentSort();
-autoResizeSelectFields();
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
@@ -578,8 +654,14 @@ if (
 }
 
 if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) {
-    setupQuillEditor({});
-    activateTooltips();
+    // setupQuillEditor({});
+    // activateTooltips();
+    initializeCKEditor();
+    setupEditorLanguageSelector();
+    setupCreditTitleSelector();
+    setupAddCreditEntry();
+    setupRemoveCreditEntry();
+    setupEditorDeleteFunctionality();
 }
 
 /* Breaking from tradition, this function is going intot the template so
@@ -600,8 +682,6 @@ if (
     new RegExp("^/dashboard/translate/articles/\\d+/review").test(window.location.pathname) ||
     new RegExp("^/dashboard/translate/answers/\\d+/review").test(window.location.pathname)
 ) {
-    // setupCommentFormDisplayToggle();
-    // setupCommentDeleteButtons();
     setupDeleteReviewComment();
 }
 

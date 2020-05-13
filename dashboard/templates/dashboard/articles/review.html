@@ -24,12 +24,14 @@
         <div class="answer-text">
             {{ article.body|safe }}
         </div>
-        {% for credit in article.credits.all %}
-            <div class="credit-card">
-                <p>{{ credit.credit_user_name }}</p>
-                <span>{{ credit.credit_title|capfirst }}</span>
-            </div>
-        {% endfor %}
+        <div class="credits-container">
+            {% for credit in article.credits.all %}
+                <div class="credit-card">
+                    <p>{{ credit.credit_user_name }}</p>
+                    <span>{{ credit.credit_title|capfirst }}</span>
+                </div>
+            {% endfor %}
+        </div>
         {% if article.status == article.STATUS_PUBLISHED %}
             <p class="published-text"><i class="far fa-check-circle"></i> {% trans 'Published by' %} <b>{{ article.approved_by.get_full_name }}</b></p>
         {% else %}
