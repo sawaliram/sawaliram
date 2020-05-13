@@ -1,6 +1,7 @@
-bar_color = "#ffb800";
+bar_color = "#FEB740";
 
 var ctx = document.getElementById('nos_qestions_graph');
+
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -31,53 +32,52 @@ var current_clicked = "#g_lang";
 $('#param-choice input:radio').click(function() {
    current_click = $(this).val();
 
-if (current_click == "g_lang"){
-    $(current_clicked).css("background-color", "white");
-    current_clicked = "#g_lang";
-    $(current_clicked).css("background-color", "lightblue");
-    myChart.data.datasets[0].data = data_lang;
-    myChart.data.labels = labels_lang;
+    if (current_click == "g_lang"){
+        //$(current_clicked).css("background-color", "white");
+        current_clicked = "#g_lang";
+        //$(current_clicked).css("background-color", "lightblue");
+        myChart.data.datasets[0].data = data_lang;
+        myChart.data.labels = labels_lang;
+        myChart.update();
+    }
 
-    myChart.update();
-}
+    else if (current_click == "g_gender"){
+        //$(current_clicked).css("background-color", "white");
+        current_clicked = "#g_gender";
+        //$(current_clicked).css("background-color", "lightblue");
+        myChart.data.datasets[0].data = data_gender;
+        myChart.data.labels = labels_gender;
 
-else if (current_click == "g_gender"){
-    $(current_clicked).css("background-color", "white");
-    current_clicked = "#g_gender";
-    $(current_clicked).css("background-color", "lightblue");
-    myChart.data.datasets[0].data = data_gender;
-    myChart.data.labels = labels_gender;
+        myChart.update();
+    }
+    else if (current_click == "g_class"){
+        //$(current_clicked).css("background-color", "white");
+        current_clicked = "#g_class";
+        //$(current_clicked).css("background-color", "lightblue");
+        myChart.data.datasets[0].data = data_class;
+        myChart.data.labels = labels_class;
 
-    myChart.update();
-}
-else if (current_click == "g_class"){
-    $(current_clicked).css("background-color", "white");
-    current_clicked = "#g_class";
-    $(current_clicked).css("background-color", "lightblue");
-    myChart.data.datasets[0].data = data_class;
-    myChart.data.labels = labels_class;
+        myChart.update();
+    }
 
-    myChart.update();
-}
+    else if (current_click == "g_medium"){
+        //$(current_clicked).css("background-color", "white");
+        current_clicked = "#g_medium";
+        //$(current_clicked).css("background-color", "lightblue");
+        myChart.data.datasets[0].data = data_medium;
+        myChart.data.labels = labels_medium;
 
-else if (current_click == "g_medium"){
-    $(current_clicked).css("background-color", "white");
-    current_clicked = "#g_medium";
-    $(current_clicked).css("background-color", "lightblue");
-    myChart.data.datasets[0].data = data_medium;
-    myChart.data.labels = labels_medium;
+        myChart.update();
+    }
 
-    myChart.update();
-}
-
-else if (current_click == "g_year"){
-    $(current_clicked).css("background-color", "white");
-    current_clicked = "#g_year";
-    $(current_clicked).css("background-color", "lightblue");
-    myChart.data.datasets[0].data = data_year;
-    myChart.data.labels = labels_year;
-    myChart.update();
-}
+    else if (current_click == "g_year"){
+        //$(current_clicked).css("background-color", "white");
+        current_clicked = "#g_year";
+        //$(current_clicked).css("background-color", "lightblue");
+        myChart.data.datasets[0].data = data_year;
+        myChart.data.labels = labels_year;
+        myChart.update();
+    }
 });
 
 var ctx_fomat  = document.getElementById("doughnut-fomat");
