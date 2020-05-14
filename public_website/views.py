@@ -50,6 +50,10 @@ from public_website.models import AnswerUserComment, ContactUsSubmission
 import random
 import urllib
 from pprint import pprint
+import json
+import collections
+from .lang import *
+from django.db.models import Count
 
 
 class HomeView(View):
@@ -712,3 +716,191 @@ class ArticlesPage(View):
             'sort_by': sort_by
         }
         return render(request, 'public_website/articles.html', context)
+
+class AnalyticsPage(View):
+    state_code = {'lakshadweep': 'LD', 'andaman and nicobar islands': 'AN', 'maharashtra': 'MH', 
+                'andhra pradesh': 'AP', 'meghalaya': 'ML', 'arunachal pradesh': 'AR', 'manipur': 'MN', 'assam': 'AS', 
+                'madhya pradesh': 'MP', 'bihar': 'BR', 'mizoram': 'MZ', 'chandigarh': 'CH', 'nagaland': 'NL', 
+                'chhattisgarh': 'CT', 'odisha': 'OR', 'daman and diu': 'DD', 'punjab': 'PB', 'delhi': 'DL', 
+                'puducherry': 'PY', 'dadra and nagar haveli': 'DN', 'rajasthan': 'RJ', 'goa': 'GA', 'sikkim': 'SK', 
+                'gujarat': 'GJ', 'telangana': 'TG', 'himachal pradesh': 'HP', 'tamil nadu': 'TN', 'haryana': 'HR', 
+                'tripura': 'TR', 'jharkhand': 'JH', 'uttar pradesh': 'UP', 'jammu and kashmir': 'JK', 'uttarakhand': 'UT', 
+                'karnataka': 'KA', 'west bengal': 'WB', 'kerala': 'KL'} # dictionary to hold the name of the state and its ISO code.
+
+    def get(self, request):
+        """
+        Returns the home page of analytics app.
+        """
+        # Translators: For all the language names in the database we need tranlation 
+        # Each function getABC() returns the data for the ABC which is then added to context.
+        year_labels, year_counts = self.getYearAsked()
+        lang_names, lang_counts = self.getQuestionLanguages()
+        gender_labels, gender_counts = self.getGenderStat()
+        mlang_names, mlang_counts = self.getMediumLanguage()
+        class_labels, class_counts = self.getStudentClassStat()
+        # Stats for doughnut charts
+        format_labels, format_counts = self.getQuestionFormatStats()
+        curriculum_labels, curriculum_counts = self.getCurriculumStats()
+        context_labels, context_counts = self.getContextStats()
+        states, codes, counts = self.getMapStats()
+
+        return render(request, 'public_website/analytics-home.html', 
+            {"page_title": _('Analytics'), 
+            "question_counter": self.getQuestionCount(),
+            "lang_names" : self.fix(lang_names, apply_ = True),
+            "lang_counts" : self.fix(lang_counts),
+            "year_labels" : self.fix(year_labels, apply_ = True),
+            "year_counts" : self.fix(year_counts),
+            "gender_counts" : self.fix(gender_counts),
+            "gender_labels" : self.fix(gender_labels, apply_ = True),
+            "mlang_names" : self.fix(mlang_names, apply_ = True),
+            "mlang_counts" : self.fix(mlang_counts),
+            "class_labels" : self.fix(map(str, class_labels), apply_ = True),
+            "class_counts" : self.fix(class_counts),
+            "format_labels" : self.fix(format_labels, apply_ = True),
+            "format_counts" : self.fix(format_counts),
+            "curriculum_labels" : self.fix(curriculum_labels, apply_ = True),
+            "curriculum_counts" : self.fix(curriculum_counts),
+            "context_labels" : self.fix(context_labels, apply_ = True),
+            "context_counts" : self.fix(context_counts),
+            "state_names" : self.fix(states, apply_ = True),
+            "state_codes" : self.fix(codes),
+            "state_counts" : self.fix(counts),
+            })
+
+
+    def getQuestionCount(self, params = None):
+        return Question.objects.count()
+
+
+    def getQuestionLanguages(self, params=None):
+        distinct = Question.objects.values('language').annotate(count=Count('language'))
+        lang_names = []         # list to hold the name of the language
+        lang_counts = []        # list to hold the count of question for the language corresponding to name in lang_names 
+        for lang in distinct:
+            lang_code = lang['language']
+            if lang_code in language_name:
+                lang_name = language_name[lang_code]
+            else:
+                lang_name = lang_code
+
+            if lang_name in lang_names:
+                # if the language name is twice in the list for any reason then reject it. (Workaround)
+                # This is caused due to nonuniform labelling of languages in Database. 
+                continue
+
+            lang_names.append(lang_name)
+            lang_counts.append(lang['count'])
+
+        return lang_names, lang_counts
+
+
+    def getYearAsked(self, params = None):
+        distinct = Question.objects.values('question_asked_on').annotate(count=Count('question_asked_on'))
+        year_tuples = [(tple['question_asked_on'].year if tple['question_asked_on'] else None, tple['count']) for tple in distinct ]
+        year_dict = {}
+        for year, count in year_tuples:
+            if year is None:  #Some tuples might be None due to null value in database
+                continue
+            if year not in year_dict:
+                year_dict[year] = count
+            else:
+                year_dict[year] += count
+        # Now we shall generate the lists of year labels and counts
+        year_label, year_count = [], []
+        ordered_tuples = collections.OrderedDict(sorted(year_dict.items()))
+        year_labels = list(map(str, ordered_tuples.keys()))
+        year_counts = list(ordered_tuples.values())
+        return year_labels, year_counts
+
+
+    def getGenderStat(self, params = None):
+        distinct = Question.objects.values('student_gender').annotate(count=Count('student_gender'))
+        gender_tuples = sorted([(tple['student_gender'] if tple['student_gender'] else "NA", tple['count']) for tple in distinct], key = lambda item : item[0])
+        return map(list, zip(*gender_tuples))
+
+
+    def getMediumLanguage(self, params = None):
+        distinct = Question.objects.values('medium_language').annotate(count=Count('medium_language'))
+        mlang_names = []         # list to hold the name of the language
+        mlang_counts = []        # list to hold the count of question for the language corresponding to name in lang_names 
+        for lang in distinct:
+            lang_code = lang['medium_language']
+            if lang_code in language_name:              # This won't work here because medium is not stored using language code
+                lang_name = language_name[lang_code]    # Might be useful if the database if updated and medium language is stored using code
+            else:
+                lang_name = lang_code
+            if lang_name in mlang_names:
+                # if the language name is twice in the list for any reason then reject it. (Workaround)
+                continue
+            if lang_name == "":         # null values for languages are captured as "Other" 
+                lang_name = "Other"  
+            mlang_names.append(lang_name)
+            mlang_counts.append(lang['count'])
+        return mlang_names, mlang_counts
+
+    def getStudentClassStat(self, params = None):
+        distinct = Question.objects.values('student_class').annotate(count=Count('student_class'))
+        class_tuples = sorted([(tple['student_class'] if tple['student_class'] else "NA", tple['count']) for tple in distinct], key = lambda item : item[0])
+        # Cleaning tuples as classes are stored as 10, 10.0 ... etc
+        ## Can use: clases_names = {"4,5,6": "Primary", "10,11": "Secondary", "6,7,8": "Middle School" }.update({i:i for i in range(1,13)})
+        dct = {i:0 for i in range(1,13)}
+        for tple in class_tuples:
+            student_class = tple[0]
+            student_count = tple[1]
+            if student_count < 20 : # 10 is arbitrary here. Change it as per the requirements. 
+                # ignore if count of student from this class is less than 10 
+                continue
+            try:
+                st_class = int(float(student_class))
+            except:
+                st_class = student_class
+            dct[st_class] = (dct[st_class] + student_count) if st_class in dct else student_count
+        return map(list, zip(*(dct.items())))
+
+
+    def getQuestionFormatStats(self):
+        distinct = Question.objects.values('question_format').annotate(count=Count('question_format'))
+        format_tuples = sorted([(tple['question_format'] if tple['question_format'] else "Other", tple['count']) for tple in distinct], key = lambda item : item[0])
+        return map(list, zip(*format_tuples))
+
+    def getCurriculumStats(self):
+        distinct = Question.objects.values('curriculum_followed').annotate(count=Count('curriculum_followed'))
+        curriculum_tuples = sorted([(tple['curriculum_followed'] if tple['curriculum_followed'] else "Other", tple['count']) for tple in distinct], key = lambda item : item[0])
+        return map(list, zip(*curriculum_tuples))
+
+    def getContextStats(self):
+        distinct = Question.objects.values('context').annotate(count=Count('context'))
+        context_tuples = sorted([
+                (tple['context'] 
+                if (tple['context'] and tple['context'] != "Other (elaborate in the Notes column)") 
+                else "Other", tple['count']) for tple in distinct],
+            key = lambda item : item[0])
+        return map(list, zip(*context_tuples))
+
+    def getMapStats(self):
+        distinct = Question.objects.values('state').annotate(count=Count('state'))    # place from where question is asked is in column state
+        states, codes, counts = list(), list(), list()
+        for stateCountPairDict in distinct:
+            state = stateCountPairDict['state']
+            if state.lower() not in self.state_code:
+                continue
+            states.append(state)
+            codes.append(self.state_code[state.lower()])
+            counts.append(stateCountPairDict['count'])
+        return states, codes, counts
+
+    def getCountryStats(self):
+        ###TODO: For World Map
+        pass
+
+    @staticmethod
+    def fix(lst, apply_ = False):
+        """
+        Method to convert the list into JSON list.
+        If apply_translation is True, then map _ function to all the string values
+        """
+        if apply_:
+            lst = list(map(_, lst))
+        return json.dumps(lst)
+        

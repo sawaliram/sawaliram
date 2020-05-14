@@ -3,6 +3,7 @@
 from django.urls import path
 from .import views
 
+
 app_name = 'public_website'
 
 urlpatterns = [
@@ -29,4 +30,5 @@ urlpatterns = [
     path('about', views.About.as_view(), name='about'),
     path('resources', views.ResourcesPage.as_view(), name='resources'),
     path('articles', views.ArticlesPage.as_view(), name='articles'),
+    path('analytics/', views.AnalyticsPage.as_view(), name='analytics'),
 ]
