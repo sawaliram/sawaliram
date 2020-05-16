@@ -512,7 +512,7 @@ class UserProfileView(View):
             article_drafts = ArticleDraft.objects.filter(author=user_id)
             notifications = Notification.objects.filter(user=user_id)
             submitted_questions = Dataset.objects.filter(submitted_by=user_id)
-            submitted_answers = Answer.objects.filter(submitted_by=user_id)
+            submitted_answers = Answer.objects.filter(submitted_by=user_id, status='submitted')
             submitted_articles = SubmittedArticle.objects.filter(author=user_id)
             published_articles = PublishedArticle.objects.filter(author=user_id)
             bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
