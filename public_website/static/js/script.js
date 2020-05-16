@@ -667,10 +667,17 @@ if (
     new RegExp("^/dashboard/translate/(articles|answers|questions)/\\d+/review").test(window.location.pathname) ||
     new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)
 ) {
-    setupQuillEditor({ placeholder: 'Type your answer here...' });
-    setupSubmissionLanguageSelector();
-    setupPublicationAutoFill();
-    activateTooltips();
+    // setupQuillEditor({ placeholder: 'Type your answer here...' });
+    // setupSubmissionLanguageSelector();
+    // setupPublicationAutoFill();
+    // activateTooltips();
+
+    initializeCKEditor();
+    setupEditorLanguageSelector();
+    setupCreditTitleSelector();
+    setupAddCreditEntry();
+    setupRemoveCreditEntry();
+    setupEditorDeleteFunctionality();
 }
 
 if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) {

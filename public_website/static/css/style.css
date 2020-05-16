@@ -280,11 +280,7 @@ textarea {
     font-size: 0.8rem;
 }
 
-input.square-ish {
-    border-radius: 5px;
-}
-
-button.square-ish {
+input.square-ish, .square-ish {
     border-radius: 5px;
 }
 
@@ -389,6 +385,29 @@ button.cancel-delete {
 
 .dropdown .sort-by-selector i {
     margin-left: 0.5rem;
+}
+
+/* ---- Modal ---- */
+
+.modal .modal-content .modal-header {
+    background-color: #f2f2f2;
+    justify-content: center;
+    padding: 0.5rem;
+    position: relative;
+}
+
+.modal .modal-content .modal-header h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+    color: #555555;
+}
+
+.modal .modal-content .modal-header .close-modal {
+    background-color: #f2f2f2;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0.5rem 0.8rem;
 }
 
 /* ---- Tabs ---- */
@@ -1694,8 +1713,12 @@ h1.dashboard-home-greeting {
 }
 
 @media (max-width: 768px) {
-    .editor-container .editor-header-controls .drafts-button {
+    .editor-container .editor-header-controls .open-modal-button {
         padding: 0.3rem 0.5rem;
+    }
+
+    .editor-container .editor-header-controls .open-modal-button i {
+        display: none;
     }
 }
 
@@ -1757,6 +1780,12 @@ h1.dashboard-home-greeting {
 .editor-container .editor-header-controls #editorLanguageSelector .selected-language {
     color: #9b63a8;
     margin-right: 0.3rem;
+}
+
+@media (max-width: 768px) {
+    .editor-container .editor-header-controls #editorLanguageSelector {
+        padding: 0.3rem;
+    }
 }
 
 .editor-container .editor-header-controls #editorLanguageSelector i {
@@ -2589,86 +2618,75 @@ button.deny-access {
 
 /* ======== SUBMIT ANSWER ======== */
 
-.editor-header .header-controls {
+.question-header-content {
+    margin-bottom: 1.2rem;
+}
+
+.question-header-content .next-prev-container {
     display: flex;
     justify-content: space-between;
-    flex-direction: row-reverse;
+    margin-bottom: 1rem;
 }
 
-.editor-header .header-controls .item-cycle-controls .prev-link,
-.editor-header .header-controls .item-cycle-controls .next-link {
-    margin: 0.4rem 0;
-    padding: 0;
-    background-color:#f2f2f2;
-    color:#9b63a8;
-    text-decoration: underline;
-    border: none;
-    border-radius: 0;
+.question-header-content .next-prev-container a {
+    color: #6d6d6d;
 }
 
-.editor-header .header-controls .item-cycle-controls .prev-link {
-    padding-right: 0.3rem;
+.question-header-content .next-prev-container i {
+    color: #9b63a8;
 }
 
-.editor-header .header-controls .item-cycle-controls .next-link {
-    padding-left: 0.3rem;
+.question-header-content .next-prev-container .prev-link i {
+    margin-right: 0.4rem;
 }
 
-.editor-header .header-controls .item-cycle-controls a i {
+.question-header-content .next-prev-container .next-link i {
+    margin-left: 0.4rem;
+}
+
+.question-header-content h1 {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .question-header-content h1 {
+        font-size: 1rem;
+    }
+}
+
+.question-header-content .question-meta {
+    margin: 0.8rem 0;
+    color: #6d6d6d;
+}
+
+.question-header-content .question-meta span:not(:last-child) {
+    margin-right: 1rem;
+}
+
+@media (max-width: 768px) {
+    .question-header-content .question-meta span {
+        font-size: 0.9rem;
+    }
+}
+
+#translationsModal .question-translation {
+    padding: 0 1rem;
+}
+
+#translationsModal .question-translation:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+#translationsModal .question-translation .translation-language {
     font-size: 0.9rem;
+    margin-bottom: 0;
+    color: #9b63a8;
 }
 
-.editor-header .header-controls .item-cycle-controls .prev-link i {
-    margin-right: 0.3rem;
-}
-
-.editor-header .header-controls .item-cycle-controls .next-link i {
-    margin-left: 0.3rem;
-}
-
-.editor-header .header-controls .submission-language-control {
-    display: flex;
-    align-items: center;
-}
-
-.editor-header .header-controls .submission-language-control .submission-language-select {
-    margin-left: 0.5rem;
-}
-
-/* .editor-header .header-controls .submission-language-control .dropdown {
-    margin-left: 0.8rem;
-}
-
-.editor-header .header-controls .submission-language-control .dropdown button {
-    border-radius: 3px;
-} */
-
-.answer-details h1,
-.editor-header h1 {
-    font-size: 1.7rem;
-    margin-top: 2rem;
-}
-
-.editor-header h1 {
-    margin-top: 1rem;
-}
-
-.editor-header h2 {
-    font-size: 1.1rem;
-    color: #8e8e8e;
-    margin-bottom: 1.5rem;
-}
-
-.editor-header .question-meta {
-    margin: 1rem 0;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.editor-header .question-meta span:not(:last-child) {
-    border-right: 2px solid #acacac;
-    padding-right: 0.5rem;
-    margin-right: 0.6rem;
+#translationsModal .question-translation .translation-text {
+    color: #6d6d6d;
+    font-size: 1.2rem;
 }
 
 /* ====== REVIEW ANSWER ===== */
@@ -2706,6 +2724,7 @@ button.deny-access {
 .review-page-container {
     display: flex;
     margin-top: -2rem;
+    min-height: 25rem;
 }
 
 @media (max-width: 768px) {
