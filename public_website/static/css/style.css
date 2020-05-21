@@ -16,13 +16,14 @@ body {
     padding: 2rem 0 4rem 0;
 }
 
+.flex {
+    display: flex !important;
+}
+
 @media (max-width: 576px) {
     .sawaliram-container .content {
         padding-top: 1rem;
     }
-
-.flex {
-  display: flex !important;
 }
 
 @media (max-width: 576px) {
@@ -4142,58 +4143,58 @@ button.deny-access {
 
 /* ======== FOOTER ======== */
 
-footer {
+.footer {
     background-color: #2d2d2d;
     display: flex;
     padding: 5rem 9rem;
 }
 
 @media (max-width: 768px) {
-    footer {
+    .footer {
         flex-direction: column;
         padding: 2rem 1rem;
         font-size: 0.9rem;
     }
 }
 
-footer .footer-text {
+.footer .footer-text {
     color: #c6c6c6;
 }
 
-footer .get-involved-section {
+.footer .get-involved-section {
     flex-basis: 40%;
 }
 
 @media (max-width: 768px) {
-    footer .get-involved-section {
+    .footer .get-involved-section {
         text-align: center;
     }
 }
 
-footer .links-section {
+.footer .links-section {
     flex-basis: 60%;
     text-align: right;
 }
 
 @media (max-width: 768px) {
-    footer .links-section {
+    .footer .links-section {
         text-align: center;
         margin-top: 2rem;
     }
 }
 
-footer .links-section a {
+.footer .links-section a {
     color: #c6c6c6;
     text-decoration: underline;
 }
 
-footer .links-section .fa-circle {
+.footer .links-section .fa-circle {
     color: #c6c6c6;
     font-size: 0.3rem;
     padding: 0 1rem;
 }
 
-footer .copyright {
+.footer .copyright {
     color: #6f6f6f;
     margin-top: 2rem;
     font-size: 0.9rem;
@@ -4531,6 +4532,7 @@ button.social-login i {
     }
 }
 
+
 /* ======= TEMPORARY BOOTSTRAP STUFF ======= */
 
 /* these can be removed once we've upgraded *
@@ -4538,5 +4540,4 @@ button.social-login i {
 
 .mb-n2 {
     margin-bottom: -2rem !important;
-}
 }
