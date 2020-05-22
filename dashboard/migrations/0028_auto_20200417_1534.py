@@ -30,14 +30,6 @@ class Migration(migrations.Migration):
                 'ordering': ['credit_title_order'],
             },
         ),
-        migrations.RemoveField(
-            model_name='articlecomment',
-            name='article',
-        ),
-        migrations.RemoveField(
-            model_name='articlecomment',
-            name='author',
-        ),
         migrations.AlterModelOptions(
             name='answercredit',
             options={'ordering': ['credit_title_order']},
@@ -69,9 +61,6 @@ class Migration(migrations.Migration):
         ),
         migrations.DeleteModel(
             name='AnswerComment',
-        ),
-        migrations.DeleteModel(
-            name='ArticleComment',
         ),
         migrations.AddField(
             model_name='articlecredit',

@@ -10,7 +10,11 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 {% endblock %}
 
+<<<<<<< HEAD
 {% block title %} {% trans 'Edit Translation' %} | {% trans 'Sawaliram' %} {% endblock %}
+=======
+{% block title %} {% trans 'Edit Translation' %} | {% trans 'Sawaliram' %}{% endblock %}
+>>>>>>> 7f209fdc1bb88672d9623d29e963ac6fc3087d49
 
 {% block content %}
 
@@ -65,8 +69,8 @@
 {% block footer %}
 <script>
     setupQuillEditor({
-        placeholder: 'Translation goes here...',
-        inputName: {{ form.body.name }}
+        placeholder: '{% trans "Translation goes here..." %}',
+        inputName: '{{ form.body.name }}'
     })
 </script>
 {% endblock %}

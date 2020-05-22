@@ -622,6 +622,29 @@ setupChooseProfilePictureModal();
 setupMobileCloseUserProfileContent();
 setupUserProfileMenuTabs();
 
+function setupRemoveCreditEntry() {
+    $('.remove-credit-entry').click(function() {
+        $(this).parent('.credit-entry').remove();
+    });
+}
+
+function setupEditorDeleteFunctionality() {
+    $('button.editor-delete').click(function() {
+        $('.submit-container').hide();
+        $('.delete-container').show();
+    });
+
+    $('.editor-cancel-delete').click(function() {
+        $('.delete-container').hide();
+        $('.submit-container').show();
+    });
+}
+
+setupToggleCardDrawer();
+setupChooseProfilePictureModal();
+setupMobileCloseUserProfileContent();
+setupUserProfileMenuTabs();
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
