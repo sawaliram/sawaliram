@@ -561,6 +561,9 @@ function initializeCKEditor() {
             },
             table: {
                 contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+            },
+            link: {
+                addTargetToExternalLinks: true
             }
         })
         .then(editor => {
