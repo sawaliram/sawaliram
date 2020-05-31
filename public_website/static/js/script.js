@@ -561,6 +561,9 @@ function initializeCKEditor() {
             },
             table: {
                 contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+            },
+            link: {
+                addTargetToExternalLinks: true
             }
         })
         .then(editor => {
@@ -622,6 +625,29 @@ setupChooseProfilePictureModal();
 setupMobileCloseUserProfileContent();
 setupUserProfileMenuTabs();
 
+function setupRemoveCreditEntry() {
+    $('.remove-credit-entry').click(function() {
+        $(this).parent('.credit-entry').remove();
+    });
+}
+
+function setupEditorDeleteFunctionality() {
+    $('button.editor-delete').click(function() {
+        $('.submit-container').hide();
+        $('.delete-container').show();
+    });
+
+    $('.editor-cancel-delete').click(function() {
+        $('.delete-container').hide();
+        $('.submit-container').show();
+    });
+}
+
+setupToggleCardDrawer();
+setupChooseProfilePictureModal();
+setupMobileCloseUserProfileContent();
+setupUserProfileMenuTabs();
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
@@ -647,10 +673,17 @@ if (
     new RegExp("^/dashboard/translate/(articles|answers|questions)/\\d+/review").test(window.location.pathname) ||
     new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)
 ) {
-    setupQuillEditor({ placeholder: 'Type your answer here...' });
-    setupSubmissionLanguageSelector();
-    setupPublicationAutoFill();
-    activateTooltips();
+    // setupQuillEditor({ placeholder: 'Type your answer here...' });
+    // setupSubmissionLanguageSelector();
+    // setupPublicationAutoFill();
+    // activateTooltips();
+
+    initializeCKEditor();
+    setupEditorLanguageSelector();
+    setupCreditTitleSelector();
+    setupAddCreditEntry();
+    setupRemoveCreditEntry();
+    setupEditorDeleteFunctionality();
 }
 
 if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) {

@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-sm">
                         <img src="{% static 'icons/menu_analytics.png' %}" alt="{% trans 'Analytics' %}">
-                        <a href="analytics/">{% trans 'Analytics' %}</a>
+                        <a href="{% url 'public_website:analytics' %}">{% trans 'Analytics' %}</a>
                     </div>
                 </div>
                 <div class="row">
@@ -201,7 +201,7 @@
             </div>
         </div>
 
-        <footer>
+        <footer class="footer">
             <div class="footer-section get-involved-section">
                 <p class="footer-text">
                     {% trans 'You too can volunteer to collect or answer questions, translate content or help build this website!' %}

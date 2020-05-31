@@ -27,12 +27,15 @@
         <div class="editor-header-controls">
             <div>
                 {% if article_drafts %}
-                    <button type="button" class="btn btn-grey-white square-ish drafts-button" data-toggle="modal" data-target="#draftsModal"><i class="far fa-file-alt"></i> Drafts</button>
+                    <button type="button" class="btn btn-grey-white square-ish open-modal-button" data-toggle="modal" data-target="#draftsModal"><i class="far fa-file-alt"></i> {% trans 'Drafts' %}</button>
                     <div class="modal fade" id="draftsModal" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2><i class="far fa-file-alt"></i> {% trans 'Your Drafts' %}</h2>
+                                    <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                                </div>
                                 <div class="drafts-modal-content">
-                                    <h2><i class="far fa-file-alt"></i> Your drafts</h2>
                                     {% for article_draft in article_drafts %}
                                         <div class="article-draft-container">
                                             <h3>{{ article_draft.title }}</h3>
@@ -40,7 +43,6 @@
                                             <a href="{{ article_draft.get_absolute_url }}" class="btn btn-small btn-primary">Continue writing</a>
                                         </div>
                                     {% endfor %}
-                                    <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -152,6 +154,5 @@
 {% endblock %}
 
 {% block script_includes %}
-    <!-- <script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/classic/ckeditor.js"></script> -->
     <script src="{% static 'js/ckeditor.js' %}"></script>
 {% endblock %}

@@ -636,6 +636,8 @@ class SubmitAnswerView(View):
             'question': question_to_answer,
             'grey_background': 'True',
             'enable_breadcrumbs': 'Yes',
+            'prev_item_id': prev_item_id,
+            'next_item_id': next_item_id,
             'page_title': _('Submit Answer'),
         }
 
@@ -643,12 +645,12 @@ class SubmitAnswerView(View):
             # Save draft
 
             # Fetch or create draft
-            draft, createdp = request.user.answers.get_or_create(
+            draft, created = request.user.answers.get_or_create(
                 question_id=question_to_answer, status='draft')
 
             # Update values and save
             draft.answer_text = request.POST.get('rich-text-content')
-            draft.language = request.POST.get('submission-language')
+            draft.language = request.POST.get('language')
             draft.submitted_by = request.user
             draft.save()
 
@@ -678,8 +680,6 @@ class SubmitAnswerView(View):
 
             # Set draft in context to re-display
             context['draft_answer'] = draft
-            context['prev_item_id'] = prev_item_id
-            context['next_item_id'] = next_item_id
 
             return render(request, 'dashboard/submit-answer.html', context)
 
@@ -693,7 +693,7 @@ class SubmitAnswerView(View):
                 answer.status = 'submitted'
 
             answer.answer_text = request.POST.get('rich-text-content')
-            answer.language = request.POST.get('submission-language')
+            answer.language = request.POST.get('language')
             answer.save()
 
             # Save credits
@@ -738,11 +738,15 @@ class SubmitAnswerView(View):
                     )
                     edit_notification.save()
 
-                return redirect('dashboard:review-answer', question_id=question_to_answer.id, answer_id=answer.id)
             else:
                 messages.success(request, (_('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!')))
 
-            if next_item_id:
+            if request.POST.get('mode') == 'edit' and answer.status == 'draft':
+                context['draft_answer'] = answer
+                return render(request, 'dashboard/submit-answer.html', context)
+            elif request.POST.get('mode') == 'edit' and answer.status == 'submitted':
+                return redirect('dashboard:review-answer', question_id=question_to_answer.id, answer_id=answer.id)
+            elif request.POST.get('mode') == 'submit' and next_item_id:
                 question_to_answer = Question.objects.get(pk=next_item_id)
                 context['prev_item_id'] = prev_item_id
                 context['next_item_id'] = next_item_id
