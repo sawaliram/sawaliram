@@ -155,7 +155,7 @@ function processSelectedExcelSheet() {
     });
 }
 
-function setupSearchResultsPagination() {
+function setupResultsPagination() {
     $('.page-button').click(function() {
         var current_params = new URLSearchParams(location.search);
         current_params.set('page', $(this).data('page'));
@@ -194,6 +194,20 @@ function setupSearchResultsFilter() {
                 location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
             }
         }
+    });
+}
+
+function setupUserListFilter() {
+    $('.apply-user-filter').click(function() {
+        var current_params = new URLSearchParams(location.search);
+        current_params.delete('permission');
+        current_params.delete('email');
+        current_params.delete('page');
+        $('input[name="user-permission"]:checked').each(function() {
+            current_params.append('permission', $(this).val());
+        });
+        current_params.append('email', $('input[name="verified-email"]:checked').val());
+        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
     });
 }
 
@@ -669,15 +683,15 @@ if (window.location.pathname.includes('/dashboard/question/submit') || window.lo
     processSelectedExcelSheet();
 }
 
+if (window.location.pathname.includes('/dashboard/manage-users')) {
+    setupUserListFilter();
+    setupResultsPagination();
+}
+
 if (
     new RegExp("^/dashboard/translate/(articles|answers|questions)/\\d+/review").test(window.location.pathname) ||
     new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)
 ) {
-    // setupQuillEditor({ placeholder: 'Type your answer here...' });
-    // setupSubmissionLanguageSelector();
-    // setupPublicationAutoFill();
-    // activateTooltips();
-
     initializeCKEditor();
     setupEditorLanguageSelector();
     setupCreditTitleSelector();
@@ -687,8 +701,6 @@ if (
 }
 
 if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) {
-    // setupQuillEditor({});
-    // activateTooltips();
     initializeCKEditor();
     setupEditorLanguageSelector();
     setupCreditTitleSelector();
@@ -733,7 +745,7 @@ if (
     window.location.pathname.includes('/dashboard/review-answers') ||
     window.location.pathname.includes('/search')
    ) {
-    setupSearchResultsPagination();
+    setupResultsPagination();
     setupSearchResultsFilter();
     setupSearchResultsMobileFilter();
     setupSearchResultsClearAll();

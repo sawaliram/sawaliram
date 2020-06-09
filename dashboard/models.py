@@ -44,7 +44,7 @@ class Dataset(models.Model):
     submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='submitted_datasets',
-        on_delete=models.PROTECT)
+        on_delete=models.CASCADE)
     status = models.CharField(max_length=100)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -82,7 +82,7 @@ class QuestionArchive(models.Model):
     submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='archived_questions',
-        on_delete=models.PROTECT)
+        on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
@@ -179,12 +179,12 @@ class Question(models.Model):
     curated_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='curated_questions',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='')
     encoded_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='encoded_questions',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
         blank=True,
         null=True)
@@ -227,12 +227,12 @@ class Answer(models.Model):
     submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='answers',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='')
     approved_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='approved_answers',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
         blank=True,
         null=True)
@@ -375,7 +375,7 @@ class AnswerCredit(models.Model):
     user = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='answer_credits',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
         blank=True,
         null=True)
@@ -411,7 +411,7 @@ class ArticleCredit(models.Model):
     user = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='article_credits',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
         blank=True,
         null=True)
@@ -446,7 +446,7 @@ class UncuratedSubmission(models.Model):
     submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='submissions',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='')
     curated = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -554,7 +554,7 @@ class Article(DraftableModel):
     author = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='articles',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
         null=True)
 
@@ -572,7 +572,7 @@ class Article(DraftableModel):
     approved_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='approved_articles',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
         blank=True,
         null=True)
@@ -640,7 +640,7 @@ class Comment(models.Model):
     author = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='comments',
-        on_delete=models.PROTECT)
+        on_delete=models.CASCADE)
 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

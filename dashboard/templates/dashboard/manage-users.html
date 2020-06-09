@@ -1,0 +1,292 @@
+{% extends "public_website/base.html" %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {{ page_title }} | {% trans 'Sawaliram' %} {% endblock %}
+
+{% load static %}
+{% load has_group %}
+
+{% block content %}
+
+<ul class="nav nav-tabs primary-tabs" id="manageUsersTabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" href="#allUsers" id="allUsersTab" data-toggle="tab" role="tab" aria-controls="allusers">All users ({{ all_user_count }})</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#accessRequests" id="accessRequestsTab" data-toggle="tab" role="tab" aria-controls="accessrequests">Access requests</a>
+    </li>
+</ul>
+<div class="tab-content primary-tab-content manage-users-content">
+    <div class="tab-pane fade active show" id="allUsers" role="tabpanel" aria-labelledby="allUsersTab">
+        <div class="manage-users-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="user-list-header">
+                <div class="user-list-count-info">
+                    <p>Showing {% if result_size == 1 %}1{% else %}{{ users.start_index}}-{{ users.end_index }}{% endif %} of {{ result_size }} result{{ result_size|pluralize }}</p>
+                </div>
+                <div class="user-list-controls">
+                    <div class="dropdown">
+                        <button class="btn btn-grey-white square-ish filter-by-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="filterOptionSelector">
+                            <i class="fas fa-filter"></i> {% trans 'Filter' %}
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right filter-dropdown-menu" aria-labelledby="filterOptionSelector">
+                            <h5 class="filter-header">Permissions</h5>
+                            <div class="filter-options-wrapper">
+                                <div class="filter-option">
+                                    <input type="checkbox" id="adminPermission" name="user-permission" value="admins" {% if 'admins' in permissions_to_filter_by %}checked{% endif %}>
+                                    <label for="adminPermission"> Admin</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="reviewerPermission" name="user-permission" value="reviewers" {% if 'reviewers' in permissions_to_filter_by %}checked{% endif %}>
+                                    <label for="reviewerPermission"> Reviewer</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="expertPermission" name="user-permission" value="experts" {% if 'experts' in permissions_to_filter_by %}checked{% endif %}>
+                                    <label for="expertPermission"> Expert</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="writerPermission" name="user-permission" value="writers" {% if 'writers' in permissions_to_filter_by %}checked{% endif %}>
+                                    <label for="writerPermission"> Writer</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="translatorPermission" name="user-permission" value="translators" {% if 'translators' in permissions_to_filter_by %}checked{% endif %}>
+                                    <label for="translatorPermission"> Translator</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="volunteerPermission" name="user-permission" value="volunteers" {% if 'volunteers' in permissions_to_filter_by %}checked{% endif %}>
+                                    <label for="volunteerPermission"> Volunteer</label>
+                                </div>
+                            </div>
+                            <h5 class="filter-header">Email</h5>
+                            <div class="filter-options-wrapper">
+                                <div class="filter-option">
+                                    <input type="radio" id="verifiedEmail" name="verified-email" value="verified" {% if filter_by_email == 'verified' %}checked{% endif %}>
+                                    <label for="verifiedEmail"> Verified</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="radio" id="unverifiedEmail" name="verified-email" value="unverified" {% if filter_by_email == 'unverified' %}checked{% endif %}>
+                                    <label for="unverifiedEmail"> Unverified</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="radio" id="allEmail" name="verified-email" value="all" {% if filter_by_email == 'all' %}checked{% endif %}>
+                                    <label for="allEmail"> Show all</label>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-small btn-secondary square-ish apply-user-filter">Apply filters</button>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn sort-by-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="sortOptionSelector">
+                            sorted by <span class="sort-by-text">{{ sort_by|capfirst }}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="sortOptionSelector">
+                            <span class="dropdown-item sort-by-option" data-sort="newest">{% trans 'Newest' %}</span>
+                            <span class="dropdown-item sort-by-option" data-sort="oldest">{% trans 'Oldest' %}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if users %}
+                {% for user in users %}
+                    <div class="card user-card">
+                        <div class="user-info-wrapper">
+                            <div class="user-info">
+                                <div class="user-header">
+                                    <div class="user-header-info">
+                                        {% if user.profile %}
+                                        <img class="user-profile-picture" src="{{ user.profile.profile_picture }}" alt="User Profile Picture">
+                                        {% else %}
+                                            <img class="user-profile-picture" src="{% static 'user/default.png' %}" alt="User Profile Picture">
+                                        {% endif %}
+                                        <div class="user-main-info">
+                                            <p class="user-name"><span class="user-id">#{{ user.id }}</span>{{ user.get_full_name }}</p>
+                                            <p class="user-email {% if user.profile.email_verified %}verified{% endif %}">{{ user.email }} {% if user.profile.email_verified %}<i class="fas fa-check-circle"></i>{% endif %}</p>
+                                        </div>
+                                    </div>
+                                    <div class="user-permissions">
+                                        {% if user|has_group:"admins" %}
+                                            <span class="user-permission-icon admin">A</span>
+                                        {% endif %}
+                                        {% if user|has_group:"reviewers" %}
+                                            <span class="user-permission-icon reviewer">R</span>
+                                        {% endif %}
+                                        {% if user|has_group:"experts" %}
+                                            <span class="user-permission-icon expert">E</span>
+                                        {% endif %}
+                                        {% if user|has_group:"writers" %}
+                                        <span class="user-permission-icon writer">W</span>
+                                        {% endif %}
+                                        {% if user|has_group:"translators" %}
+                                        <span class="user-permission-icon translator">T</span>
+                                        {% endif %}
+                                        {% if user|has_group:"volunteers" %}
+                                        <span class="user-permission-icon volunteer">V</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="user-additional-info">
+                                    <div class="user-info-item">
+                                        <span>{% trans 'Organisation' %}</span>
+                                        <p>{% if user.organisation %}{{ user.organisation }}{% else %}-{% endif %}</p>
+                                    </div>
+                                    <div class="user-info-item">
+                                        <span>{% trans 'Organisation role' %}</span>
+                                        <p>{% if user.organisation_role %}{{ user.organisation_role }}{% else %}-{% endif %}</p>
+                                    </div>
+                                    <div class="user-info-item">
+                                        <span>{% trans 'Profile created' %}</span>
+                                        {% if user.profile %}
+                                            <p>{{ user.profile.created_on|date:"j F, Y" }}</p>
+                                        {% else %}
+                                            <p>-</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="user-info-item">
+                                        <span>{% trans 'Last Login' %}</span>
+                                        <p>{{ user.last_login|date:"j F, Y" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-controls">
+                            <button type="button" class="btn btn-grey-white square-ish" data-toggle="modal" data-target="#deleteUserModal{{ forloop.counter }}"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
+                            <button type="button" class="btn btn-grey-white square-ish" data-toggle="modal" data-target="#userPermissionsModal{{ forloop.counter }}"><i class="far fa-address-card"></i> {% trans 'Permissions' %}</button>
+                        </div>
+                        <div class="modal fade user-permissions-modal" id="userPermissionsModal{{ forloop.counter }}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2><i class="far fa-address-card"></i> {{ user.first_name }}'s {% trans 'Permissions' %}</h2>
+                                        <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{% url 'dashboard:change-user-permissions' %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="user-id" value="{{ user.id }}">
+                                            <div class="form-check">
+                                                <input type="checkbox" value="admins" class="form-check-input" name="granted-permissions" {% if user|has_group:"admins" %}checked{% endif %}>
+                                                <label class="form-check-label" for="adminPermission">
+                                                    <div class="user-permission-header">
+                                                        <span>Admin</span><span class="user-permission-icon admin">A</span>
+                                                    </div>
+                                                    <p class="user-permission-overview">Admins are able to manage all users and content and can assign other users as Admins</p>
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" value="reviewers" class="form-check-input" name="granted-permissions" {% if user|has_group:"reviewers" %}checked{% endif %}>
+                                                <label class="form-check-label" for="reviewerPermission">
+                                                    <div class="user-permission-header">
+                                                        <span>Reviewer</span><span class="user-permission-icon reviewer">R</span>
+                                                    </div>
+                                                    <p class="user-permission-overview">Reviewers can review and publish answers and translations, given that they have Expert and Translator permissions respectively</p>
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" value="experts" class="form-check-input" name="granted-permissions" {% if user|has_group:"experts" %}checked{% endif %}>
+                                                <label class="form-check-label" for="expertPermission">
+                                                    <div class="user-permission-header">
+                                                        <span>Expert</span><span class="user-permission-icon expert">E</span>
+                                                    </div>
+                                                    <p class="user-permission-overview">Experts can answer submitted questions in mulitple languages</p>
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" value="writers" class="form-check-input" name="granted-permissions" {% if user|has_group:"writers" %}checked{% endif %}>
+                                                <label class="form-check-label" for="writerPermission">
+                                                    <div class="user-permission-header">
+                                                        <span>Writer</span><span class="user-permission-icon writer">W</span>
+                                                    </div>
+                                                    <p class="user-permission-overview">Writers can write and submit articles in any supported language</p>
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" value="translators" class="form-check-input" name="granted-permissions" {% if user|has_group:"translators" %}checked{% endif %}>
+                                                <label class="form-check-label" for="translatorPermission">
+                                                    <div class="user-permission-header">
+                                                        <span>Translator</span><span class="user-permission-icon translator">T</span>
+                                                    </div>
+                                                    <p class="user-permission-overview">Translators can translate any content from and to any supported language</p>
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" value="volunteers" class="form-check-input" name="granted-permissions" {% if user|has_group:"volunteers" %}checked{% endif %}>
+                                                <label class="form-check-label" for="volunteerPermission">
+                                                    <div class="user-permission-header">
+                                                        <span>Volunteer</span><span class="user-permission-icon volunteer">V</span>
+                                                    </div>
+                                                    <p class="user-permission-overview">Volunteers have access to the Dashboard and can submit and view questions</p>
+                                                </label>
+                                            </div>
+                                            <button type="submit" class="btn btn-small btn-secondary square-ish">Change permissions</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade delete-user-modal" id="deleteUserModal{{ forloop.counter }}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2><i class="far fa-trash-alt"></i> {% trans 'Delete user' %}</h2>
+                                        <button class="btn btn-small close-modal" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="delete-message">Are you sure you want to delete {{ user.get_full_name }}?</p>
+                                        <p class="contribution-information">
+                                            <span>This will also delete any draft/submitted/published content:</span>
+                                            <br>- {{ user.submitted_datasets.all|length }} Dataset{{ user.submitted_datasets.all|length|pluralize }}
+                                            <br>- {{ user.answers.all|length }} Answer{{ user.answers.all|length|pluralize }}
+                                            <br>- {{ user.articles.all|length }} Article{{ user.articles.all|length|pluralize }}
+                                            <br>- {{ user.comments.all|length }} Comment{{ user.comments.all|length|pluralize }}
+                                        </p>
+                                        <div class="delete-user-controls">
+                                            <form action="{% url 'dashboard:delete-user' %}" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="user-id" value="{{ user.id }}">
+                                                <button type="submit" class="btn btn-small square-ish delete-button">Yes, Delete</button>
+                                            </form>
+                                            <button type="button" class="btn btn-small btn-secondary square-ish" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="pagination-controls">
+                    {% if users.has_previous %}
+                        <button type="button" class="btn page-button" data-page="1">First</button>
+                        <button type="button" class="btn page-button" data-page="{{ users.previous_page_number }}">{{ users.previous_page_number }}</button>
+                    {% endif %}
+                    <span class="current-page">{{ users.number }}</span>
+                    {% if users.has_next %}
+                        <button type="button" class="btn page-button" data-page="{{ users.next_page_number }}">{{ users.next_page_number }}</button>
+                        <button type="button" class="btn page-button" data-page="{{ users.paginator.num_pages }}">Last</button>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="empty-user-list">
+                    No users were found that matched the criteria.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="tab-pane fade" id="accessRequests" role="tabpanel" aria-labelledby="accessRequestsTab">
+        
+    </div>
+</div>
+
+{% endblock %}
