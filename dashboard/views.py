@@ -267,7 +267,6 @@ class ValidateNewExcelSheet(View):
 
 
 @method_decorator(login_required, name='dispatch')
-# @method_decorator(volunteer_permission_required, name='dispatch')
 @method_decorator(permission_required('admins'), name='dispatch')
 class ManageUsersView(View):
     def get(self, request):
@@ -276,7 +275,6 @@ class ManageUsersView(View):
 
         # pending_requests = VolunteerRequest.objects.filter(status='pending')
 
-        # permissions = request.GET.getlist('permission')
         permissions_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('permission')]
         if permissions_to_filter_by:
             users = users.filter(groups__name__in=permissions_to_filter_by)
@@ -286,7 +284,7 @@ class ManageUsersView(View):
             if request.GET.get('email') == 'verified':
                 users = users.filter(profile__email_verified=True)
             elif request.GET.get('email') == 'unverified':
-                users = users.filter(profile__email_verified=False)
+                users = users.filter(Q(profile__email_verified=False) | Q(profile__isnull=True))
 
         sort_by = request.GET.get('sort-by', 'newest')
         if sort_by == 'newest':
