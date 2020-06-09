@@ -2,6 +2,7 @@
 
 import random
 import os
+import urllib
 
 from django.utils.translation import gettext as _
 
@@ -12,10 +13,12 @@ from django.shortcuts import (
     get_object_or_404,
 )
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import get_language_info
 from django.utils.decorators import method_decorator
-from django.db.models import Subquery, Q
+from django.db.models import Q
+from django.core.paginator import Paginator
 from django.contrib.contenttypes.models import ContentType
 from django.views import View
 from django.views.generic import (
@@ -24,10 +27,9 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from django import forms
 from django.http import (
     HttpResponse,
-    Http404, # Page Not found
+    Http404,
 )
 from django.contrib import messages
 from django.core.exceptions import (
@@ -68,7 +70,7 @@ from dashboard.models import (
     DraftArticleTranslation,
     Comment,
     Dataset)
-from sawaliram_auth.models import Notification, User
+from sawaliram_auth.models import Notification, User, VolunteerRequest
 from public_website.views import SearchView
 
 import pandas as pd
@@ -263,7 +265,98 @@ class ValidateNewExcelSheet(View):
 
         return HttpResponse(response)
 
-# Manage Content
+
+@method_decorator(login_required, name='dispatch')
+# @method_decorator(volunteer_permission_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class ManageUsersView(View):
+    def get(self, request):
+        users = User.objects.all().order_by('profile__created_on')
+        all_user_count = len(users)
+
+        # pending_requests = VolunteerRequest.objects.filter(status='pending')
+
+        # permissions = request.GET.getlist('permission')
+        permissions_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('permission')]
+        if permissions_to_filter_by:
+            users = users.filter(groups__name__in=permissions_to_filter_by)
+
+        filter_by_email = request.GET.get('email')
+        if filter_by_email:
+            if request.GET.get('email') == 'verified':
+                users = users.filter(profile__email_verified=True)
+            elif request.GET.get('email') == 'unverified':
+                users = users.filter(profile__email_verified=False)
+
+        sort_by = request.GET.get('sort-by', 'newest')
+        if sort_by == 'newest':
+            users = users.order_by('-profile__created_on')
+
+        # remove duplicate results
+        users = users.distinct()
+
+        # get total result size
+        result_size = len(users)
+
+        # paginate users list
+        paginated_user_list = Paginator(users, 30)
+        page = request.GET.get('page', 1)
+        user_list_page = paginated_user_list.get_page(page)
+
+        context = {
+            'users': user_list_page,
+            'all_user_count': all_user_count,
+            'result_size': result_size,
+            'sort_by': sort_by,
+            'permissions_to_filter_by': permissions_to_filter_by,
+            'filter_by_email': filter_by_email,
+            # 'pending_requests': pending_requests,
+            'page_title': _('Manage Users'),
+            'enable_breadcrumbs': 'Yes',
+            'grey_background': 'True'
+        }
+
+        return render(request, 'dashboard/manage-users.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class ChangeUserPermissions(View):
+    def post(self, request):
+        granted_permissions = request.POST.getlist('granted-permissions')
+        permissions = ['admins', 'reviewers', 'experts', 'writers', 'translators', 'volunteers']
+        user = User.objects.get(id=request.POST.get('user-id'))
+
+        for permission in permissions:
+            if permission in granted_permissions:
+                Group.objects.get(name=permission).user_set.add(user)
+                # remove pending volunteer request, if any
+                pending_requests = VolunteerRequest.objects \
+                                                   .filter(requested_by_id=user.id) \
+                                                   .filter(permission_requested=permission) \
+                                                   .filter(status='pending')
+                if pending_requests:
+                    for pending_request in pending_requests:
+                        pending_request.status = 'processed'
+                        pending_request.save()
+            else:
+                pass
+                Group.objects.get(name=permission).user_set.remove(user)
+
+        messages.success(request, (_('User permissions updated for ' + user.first_name + ' ' + user.last_name)))
+        return redirect(request.META['HTTP_REFERER'])
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class DeleteUser(View):
+    def post(self, request):
+        user = User.objects.get(id=request.POST.get('user-id'))
+        user.delete()
+
+        messages.success(request, (_('User ' + user.first_name + ' ' + user.last_name + ' has been deleted')))
+        return redirect(request.META['HTTP_REFERER'])
+
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')

@@ -35,7 +35,7 @@
                 </div>
                 <div class="task-details">
                     <div class="task-title">
-                        <a href="{% url 'sawaliram_auth:manage-users' %}">{% trans 'Manage Users' %}</a>
+                        <a href="{% url 'dashboard:manage-users' %}">{% trans 'Manage Users' %}</a>
                         <button class="btn btn-secondary-hollow task-help">{% trans 'Help?' %}</button>
                     </div>
                     <p class="task-description">{% trans 'Manage user permissions and approve volunteer requests' %}</p>
@@ -76,7 +76,7 @@
             </div>
         {% endif %}
 
-        {% if request.user|has_group:"experts" %}
+        {% if request.user|has_group:"reviewers" %}
             <div class="task-card">
                 <div class="task-image-wrapper">
                     <img src="{% static 'icons/review_answers.png' %}" alt="{% trans 'Review Answers' %}">

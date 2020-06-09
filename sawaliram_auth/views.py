@@ -318,60 +318,6 @@ class ChangePasswordView(View):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
-class ManageUsersView(View):
-
-    def get(self, request):
-
-        users = User.objects.values()
-
-        # add groups to users
-        for user in users:
-            user['groups'] = User.objects.get(id=user['id']).groups.values_list('name', flat=True)
-
-        pending_requests = VolunteerRequest.objects.filter(status='pending')
-
-        context = {
-            'users': users,
-            'pending_requests': pending_requests,
-            'page_title': _('Manage Users'),
-            'enable_breadcrumbs': 'Yes',
-            'grey_background': 'True'
-        }
-
-        return render(request, 'sawaliram_auth/manage-users.html', context)
-
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(volunteer_permission_required, name='dispatch')
-class UpdateUserPermissions(View):
-
-    def post(self, request):
-        granted_permissions = request.POST.getlist('granted-permissions')
-        permissions = ['admins', 'experts', 'writers', 'translators']
-        user = User.objects.get(id=request.POST.get('user-id'))
-
-        for permission in permissions:
-            if permission in granted_permissions:
-                Group.objects.get(name=permission).user_set.add(user)
-                # remove pending volunteer request, if any
-                pending_requests = VolunteerRequest.objects \
-                                                   .filter(requested_by_id=user.id) \
-                                                   .filter(permission_requested=permission) \
-                                                   .filter(status='pending')
-                if pending_requests:
-                    for pending_request in pending_requests:
-                        pending_request.status = 'processed'
-                        pending_request.save()
-            else:
-                pass
-                Group.objects.get(name=permission).user_set.remove(user)
-
-        messages.success(request, (_('User permissions updated for ' + user.first_name + ' ' + user.last_name)))
-        return redirect('sawaliram_auth:manage-users')
-
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(volunteer_permission_required, name='dispatch')
 class GrantOrDenyUserPermission(View):
 
     def post(self, request):
