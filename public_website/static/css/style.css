@@ -20,6 +20,10 @@ body.grey-background {
     display: flex !important;
 }
 
+.border-grey {
+  border-color: #c4c4c4 !important;
+}
+
 @media (max-width: 576px) {
     .sawaliram-container .content {
         padding-top: 1rem;
@@ -1815,11 +1819,11 @@ h1.dashboard-home-greeting {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 3px 1px inset;
 }
 
-.editor-container #wordCountWrapper {
+#editor ~ #wordCountWrapper {
     margin-bottom: 1rem;
 }
 
-.editor-container #wordCountWrapper .ck.ck-word-count {
+#editor ~ #wordCountWrapper .ck.ck-word-count {
     display: flex;
     justify-content: flex-end;
     padding: 0.5rem 0.8rem;
@@ -1832,7 +1836,7 @@ h1.dashboard-home-greeting {
     border-bottom-right-radius: 5px;
 }
 
-.editor-container #wordCountWrapper .ck.ck-word-count .ck-word-count__words {
+#editor ~ #wordCountWrapper .ck.ck-word-count .ck-word-count__words {
     margin-right: 0.7rem;
 }
 
