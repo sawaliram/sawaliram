@@ -273,7 +273,7 @@ class ManageUsersView(View):
         users = User.objects.all().order_by('profile__created_on')
         all_user_count = len(users)
 
-        # pending_requests = VolunteerRequest.objects.filter(status='pending')
+        access_requests = VolunteerRequest.objects.filter(status='pending')
 
         permissions_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('permission')]
         if permissions_to_filter_by:
@@ -308,7 +308,7 @@ class ManageUsersView(View):
             'sort_by': sort_by,
             'permissions_to_filter_by': permissions_to_filter_by,
             'filter_by_email': filter_by_email,
-            # 'pending_requests': pending_requests,
+            'access_requests': access_requests,
             'page_title': _('Manage Users'),
             'enable_breadcrumbs': 'Yes',
             'grey_background': 'True'

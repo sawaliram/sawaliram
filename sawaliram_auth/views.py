@@ -327,13 +327,15 @@ class GrantOrDenyUserPermission(View):
 
         if permission_action == 'grant':
             group.user_set.add(user)
+            messages.success(request, (_(user.first_name + ' ' + user.last_name + ' was granted ' + request.POST.get('permission') + ' access')))
+        elif permission_action == 'deny':
+            messages.success(request, (_(user.first_name + ' ' + user.last_name + ' was denied ' + request.POST.get('permission') + ' access')))
 
         request_entry = VolunteerRequest.objects.get(id=request.POST.get('request-id'))
         request_entry.status = 'processed'
         request_entry.save()
 
-        messages.success(request, (_(user.first_name + ' ' + user.last_name + ' was granted ' + request.POST.get('permission') + ' access')))
-        return redirect('sawaliram_auth:manage-users')
+        return redirect(request.META['HTTP_REFERER'])
 
 
 @method_decorator(csrf_exempt, name='dispatch')

@@ -15,7 +15,7 @@
         <a class="nav-link active" href="#allUsers" id="allUsersTab" data-toggle="tab" role="tab" aria-controls="allusers">All users ({{ all_user_count }})</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#accessRequests" id="accessRequestsTab" data-toggle="tab" role="tab" aria-controls="accessrequests">Access requests</a>
+        <a class="nav-link" href="#accessRequests" id="accessRequestsTab" data-toggle="tab" role="tab" aria-controls="accessrequests">Access requests ({{ access_requests|length }})</a>
     </li>
 </ul>
 <div class="tab-content primary-tab-content manage-users-content">
@@ -139,15 +139,15 @@
                                 </div>
                                 <div class="user-additional-info">
                                     <div class="user-info-item">
-                                        <span>{% trans 'Organisation' %}</span>
+                                        <span class="info-title">{% trans 'Organisation' %}</span>
                                         <p>{% if user.organisation %}{{ user.organisation }}{% else %}-{% endif %}</p>
                                     </div>
                                     <div class="user-info-item">
-                                        <span>{% trans 'Organisation role' %}</span>
+                                        <span class="info-title">{% trans 'Organisation role' %}</span>
                                         <p>{% if user.organisation_role %}{{ user.organisation_role }}{% else %}-{% endif %}</p>
                                     </div>
                                     <div class="user-info-item">
-                                        <span>{% trans 'Profile created' %}</span>
+                                        <span class="info-title">{% trans 'Profile created' %}</span>
                                         {% if user.profile %}
                                             <p>{{ user.profile.created_on|date:"j F, Y" }}</p>
                                         {% else %}
@@ -155,7 +155,7 @@
                                         {% endif %}
                                     </div>
                                     <div class="user-info-item">
-                                        <span>{% trans 'Last Login' %}</span>
+                                        <span class="info-title">{% trans 'Last Login' %}</span>
                                         <p>{{ user.last_login|date:"j F, Y" }}</p>
                                     </div>
                                 </div>
@@ -285,7 +285,103 @@
         </div>
     </div>
     <div class="tab-pane fade" id="accessRequests" role="tabpanel" aria-labelledby="accessRequestsTab">
-        
+        <div class="manage-users-container">
+            {% if access_requests %}
+                {% for access_request in access_requests %}
+                    <div class="card user-card">
+                        <div class="user-info-wrapper">
+                            <div class="user-info">
+                                <div class="user-header">
+                                    <div class="user-header-info">
+                                        {% if access_request.requested_by.profile %}
+                                            <img class="user-profile-picture" src="{{ access_request.requested_by.profile.profile_picture }}" alt="User Profile Picture">
+                                        {% else %}
+                                            <img class="user-profile-picture" src="{% static 'user/default.png' %}" alt="User Profile Picture">
+                                        {% endif %}
+                                        <div class="user-main-info">
+                                            <p class="user-name"><span class="user-id">#{{ access_request.requested_by.id }}</span>{{ access_request.requested_by.get_full_name }}</p>
+                                            <p class="user-email {% if access_request.requested_by.profile.email_verified %}verified{% endif %}">{{ access_request.requested_by.email }} {% if access_request.requested_by.profile.email_verified %}<i class="fas fa-check-circle"></i>{% endif %}</p>
+                                        </div>
+                                    </div>
+                                    <div class="user-permissions">
+                                        {% if access_request.requested_by|has_group:"admins" %}
+                                            <span class="user-permission-icon admin">A</span>
+                                        {% endif %}
+                                        {% if access_request.requested_by|has_group:"reviewers" %}
+                                            <span class="user-permission-icon reviewer">R</span>
+                                        {% endif %}
+                                        {% if access_request.requested_by|has_group:"experts" %}
+                                            <span class="user-permission-icon expert">E</span>
+                                        {% endif %}
+                                        {% if access_request.requested_by|has_group:"writers" %}
+                                        <span class="user-permission-icon writer">W</span>
+                                        {% endif %}
+                                        {% if access_request.requested_by|has_group:"translators" %}
+                                        <span class="user-permission-icon translator">T</span>
+                                        {% endif %}
+                                        {% if access_request.requested_by|has_group:"volunteers" %}
+                                        <span class="user-permission-icon volunteer">V</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="user-additional-info">
+                                    <div class="user-info-item requested-permissions">
+                                        <span class="info-title">{% trans 'Permissions requested' %}</span>
+                                        {% if access_request.permission_requested == 'experts' %}
+                                            <p><span class="user-permission-icon expert">E</span> Experts</p>
+                                        {% endif %}
+                                        {% if access_request.permission_requested == 'writers' %}
+                                            <p><span class="user-permission-icon writer">W</span> Writers</p>
+                                        {% endif %}
+                                        {% if access_request.permission_requested == 'translators' %}
+                                            <p><span class="user-permission-icon translator">T</span> Translators</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="user-info-item">
+                                        <span class="info-title">{% trans 'Profile created' %}</span>
+                                        {% if access_request.requested_by.profile %}
+                                            <p>{{ access_request.requested_by.profile.created_on|date:"j F, Y" }}</p>
+                                        {% else %}
+                                            <p>-</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="user-info-item">
+                                        <span class="info-title">{% trans 'Requested on' %}</span>
+                                        <p>{{ access_request.created_on|date:"j F, Y" }}</p>
+                                    </div>
+                                    <div class="user-info-item">
+                                        <span class="info-title">{% trans 'Organisation' %}</span>
+                                        <p>{% if access_request.requested_by.organisation %}{{ access_request.requested_by.organisation }}{% else %}-{% endif %}</p>
+                                    </div>
+                                    <div class="user-info-item">
+                                        <span class="info-title">{% trans 'Organisation role' %}</span>
+                                        <p>{% if access_request.requested_by.organisation_role %}{{ access_request.requested_by.organisation_role }}{% else %}-{% endif %}</p>
+                                    </div>
+                                    <div class="user-info-item full-width">
+                                        <span class="info-title">{% trans 'Request text' %}</span>
+                                        <p>{{ access_request.request_text }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-controls">
+                            <form class="access-request-form" action="{% url 'sawaliram_auth:grant-permission' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="permission" value="{{ access_request.permission_requested }}">
+                                <input type="hidden" name="request-id" value="{{ access_request.id }}">
+                                <input type="hidden" name="user-id" value="{{ access_request.requested_by.id }}">
+                                <button class="btn btn-small grant-access" name="permission-action" type="submit" value="grant"><i class="fas fa-check"></i> Grant</button>
+                                <button class="btn btn-small deny-access" name="permission-action" type="submit" value="deny"><i class="fas fa-times"></i> Deny</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-user-list">
+                    No pending access requests were found.
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 
