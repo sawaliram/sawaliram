@@ -4,7 +4,7 @@ body {
     font-family: 'Noto Sans', sans-serif;
 }
 
-body.grey-background {
+.grey-background {
     background-color: #f2f2f2;;
 }
 
@@ -112,6 +112,11 @@ input.input-plain {
     margin: 0;
 }
 
+h1 .input-plain {
+    width: 100%;
+    border-radius: 0;
+}
+
 select.input-plain {
     border: none;
     background: inherit;
@@ -176,6 +181,10 @@ textarea {
     color: #777;
     border-color: #b9b9b9;
     cursor: not-allowed;
+}
+
+.btn-square {
+    border-radius: 0.2rem;
 }
 
 .btn-primary {
@@ -3288,6 +3297,30 @@ figure.image figcaption {
     margin-bottom: 0.8rem;
     font-size: 0.8rem;
     color: #a6a6a6;
+}
+
+/* ====== TRANSLATIONS ====== */
+
+.meta-input-section {
+    display: flex;
+}
+
+.meta-input-section .highlighted-meta {
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    max-width: calc(25vw - 2em);
+}
+
+@media(max-width: 576px) {
+    .meta-input-section .highlighted-meta {
+        max-width: calc(50vw - 2em);
+    }
+}
+
+.meta-input-section .highlighted-meta input[type=text] {
+    width: 100%;
 }
 
 /* === VIEW ANSWER & ARTICLE == */

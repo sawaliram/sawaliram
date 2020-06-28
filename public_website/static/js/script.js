@@ -639,6 +639,25 @@ setupChooseProfilePictureModal();
 setupMobileCloseUserProfileContent();
 setupUserProfileMenuTabs();
 
+function autoResizeSelectFields() {
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Solution thanks to João Pimentel Ferreira           *
+     * in the following  StackOverflow answer:             *
+     *                                                     *
+     *     https://stackoverflow.com/a/55343177/1196444    *
+     *                                                     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    $('select').change(function(){
+        var text = $(this).find('option:selected').text()
+        var $aux = $('<select/>').append($('<option/>').text(text))
+        $(this).after($aux)
+        $(this).width($aux.width())
+        $aux.remove()
+    }).change()
+}
+
 function setupRemoveCreditEntry() {
     $('.remove-credit-entry').click(function() {
         $(this).parent('.credit-entry').remove();
@@ -671,6 +690,7 @@ enableLinkingtoTabs();
 setupNavbarSearchBar();
 setupSearchResultsSearch();
 setupGeneralContentSort();
+autoResizeSelectFields();
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
@@ -689,7 +709,7 @@ if (window.location.pathname.includes('/dashboard/manage-users')) {
 }
 
 if (
-    new RegExp("^/dashboard/translate/(articles|answers|questions)/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/translate/(articles|answers|questions)/(\\d+/)?\\d+/(review|edit)").test(window.location.pathname) ||
     new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)
 ) {
     initializeCKEditor();
