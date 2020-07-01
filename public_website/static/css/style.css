@@ -3530,10 +3530,8 @@ figure.image figcaption {
     border-top: 4px solid #87B24D;
 }
 
-@media (max-width: 768px) {
-    .articles-container .article-item:not(:last-child) {
-        margin-bottom: 1.5rem;
-    }
+.articles-container .article-item:not(:last-child) {
+    margin-bottom: 1.5rem;
 }
 
 .articles-container .article-item img.article-cover {
