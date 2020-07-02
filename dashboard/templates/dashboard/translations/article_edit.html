@@ -1,5 +1,7 @@
 {% extends "dashboard/translations/base_edit.html" %}
 
+{% load i18n %}
+
 {% block tr_original %}
 <header class="flex">
   <h1>{{ object.source.tr_title }}</h1>
@@ -14,18 +16,21 @@
 
 {% block tr_translation %}
 <header class="flex">
-  <h1><input type="text" name="{{ form.title.name }}" value="{{ form.title.value }}" placeholder="{% trans '{{ object.source.tr_title }}' %}" id="{{ form.title.id }}" class="input-plain input-title" /></h1>
+  <h1 class="w-100"><input type="text" name="{{ form.title.name }}" value="{{ form.title.value }}" placeholder="{% trans '{{ object.source.tr_title }}' %}" id="{{ form.title.id }}" class="input-plain input-title p-3" /></h1>
 </header>
-{% include 'dashboard/snippets/richtext_editor.html' with value=form.body.value %}
+<div class="bg-white">
+  {% include 'dashboard/snippets/richtext_editor.html' with value=form.body.value class='' name=form.body.name %}
+</div>
+
 <footer id="submitbar">
-  <input type="hidden" name="{{ form.body.name }}" value="{{ form.body.value }}" />
   {% if object.is_submitted %}
-  <button type="submit" name="mode" value="draft" class="btn btn-primary">Update submission</button>
+  <a href="{{ object.get_absolute_url }}" class="btn btn-primary-hollow">{% trans 'Cancel' %}</a>
+  <button type="submit" name="mode" value="draft" class="btn btn-primary">{% trans 'Update translation' %}</button>
   {% else %}
-  <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
-  <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
+  <button type="submit" name="mode" value="submit" class="btn btn-primary">{% trans 'Submit translation' %}</button>
+  <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">{% trans 'Save Draft' %}</button>
   {% endif %}
-  <a href="{% url 'dashboard:delete-article-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete translation">
+  <a href="{% url 'dashboard:delete-article-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="{% trans 'Delete translation' %}">
     <i class="fas fa-trash"></i>
   </a>
 </footer>

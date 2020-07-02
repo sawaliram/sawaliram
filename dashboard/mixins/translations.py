@@ -21,7 +21,7 @@ class TranslationMixin(models.Model):
     translated_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='%(class)s',
-        on_delete=models.PROTECT)
+        on_delete=models.CASCADE)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

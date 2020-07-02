@@ -122,7 +122,7 @@ class Bookmark(models.Model):
     question = models.ForeignKey(
         'dashboard.Question',
         related_name='bookmarks',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
         blank=True,
         null=True)

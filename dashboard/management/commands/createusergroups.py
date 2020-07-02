@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         users = Group.objects.get_or_create(name='users')
         volunteers = Group.objects.get_or_create(name='volunteers')
-        editors = Group.objects.get_or_create(name='editors')
+        reviewers = Group.objects.get_or_create(name='reviewers')
         experts = Group.objects.get_or_create(name='experts')
         admins = Group.objects.get_or_create(name='admins')
         writers = Group.objects.get_or_create(name='writers')

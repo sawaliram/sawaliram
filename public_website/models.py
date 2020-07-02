@@ -16,7 +16,7 @@ class AnswerUserComment(models.Model):
     author = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='answer_user_comments',
-        on_delete=models.PROTECT)
+        on_delete=models.CASCADE)
 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
