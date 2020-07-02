@@ -743,7 +743,7 @@ class AnalyticsPage(View):
         curriculum_labels, curriculum_counts = self.getCurriculumStats()
         context_labels, context_counts = self.getContextStats()
         states, codes, counts = self.getMapStats()
-
+        
         return render(request, 'public_website/analytics-home.html', 
             {"page_title": _('Analytics'), 
             "question_counter": self.getQuestionCount(),
@@ -766,6 +766,8 @@ class AnalyticsPage(View):
             "state_names" : self.fix(states, apply_ = True),
             "state_codes" : self.fix(codes),
             "state_counts" : self.fix(counts),
+            "languageGenderDictionary": self.getLanguageGenderDictionary(),
+            "genderSubjectDictionary": self.getGenderSubjectDictionary(),
             })
 
 
@@ -819,6 +821,27 @@ class AnalyticsPage(View):
         gender_tuples = sorted([(tple['student_gender'] if tple['student_gender'] else "NA", tple['count']) for tple in distinct], key = lambda item : item[0])
         return map(list, zip(*gender_tuples))
 
+    def getGenderSubjectDictionary(self, params= None):
+        gender_list = ["Male", "Female", ""]
+        #subject_list = list(map(lambda x: x[0], Question.objects.order_by().values_list('field_of_interest').distinct()))
+        core_subjects = ['Mathematics', 'Biology', 'Chemistry', 'Physics']
+        genderSubjectDictionary = {'Male': {}, 'Female': {}, 'NA': {}}
+        for gender in gender_list:
+            for subject in core_subjects:
+                genderSubjectDictionary[_(gender) if gender!='' else _("NA")][_(subject)] = Question.objects.filter(student_gender = gender, field_of_interest = subject).count()
+        return genderSubjectDictionary
+
+    def getLanguageGenderDictionary(self, params = None):
+        gender_list = list(map(lambda x: x[0], Question.objects.order_by().values_list('student_gender').distinct()))
+        language_list = list(map(lambda x: x[0], Question.objects.order_by().values_list('language').distinct()))
+        lang_names = [language_name[lang] if lang in language_name else lang for lang in language_list]  # get the proper names of languages
+        languageGenderDictionary = {lang_name: {} for lang_name in lang_names}
+        for lang_index in range(len(language_list)):
+            for gender in gender_list:
+                lang = language_list[lang_index]
+                lang_name = lang_names[lang_index]
+                languageGenderDictionary[_(lang_name)][_(gender) if gender!='' else _("NA")] = Question.objects.filter(student_gender = gender, language = lang).count()
+        return languageGenderDictionary
 
     def getMediumLanguage(self, params = None):
         distinct = Question.objects.values('medium_language').annotate(count=Count('medium_language'))
@@ -848,8 +871,8 @@ class AnalyticsPage(View):
         for tple in class_tuples:
             student_class = tple[0]
             student_count = tple[1]
-            if student_count < 20 : # 10 is arbitrary here. Change it as per the requirements. 
-                # ignore if count of student from this class is less than 10 
+            if student_count < 20 : # 20 is arbitrary here. Change it as per the requirements. 
+                # ignore if count of student from this class is less than 20 
                 continue
             try:
                 st_class = int(float(student_class))
@@ -903,4 +926,3 @@ class AnalyticsPage(View):
         if apply_:
             lst = list(map(_, lst))
         return json.dumps(lst)
-        

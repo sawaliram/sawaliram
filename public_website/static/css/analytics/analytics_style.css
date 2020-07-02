@@ -6,12 +6,13 @@
 	margin-bottom: 0.8rem;
 }
 
+
+
 .analytics_title > h3 {
 	margin-bottom: 0.8rem;
 	vertical-align: center;
 	align-items: center;
 	font-size: 1.5em;
-	font-family: fantasy;
 	font-weight: 700;
 	margin-left:1em;
 }
@@ -28,10 +29,39 @@
 
 .graph-heading {
 	text-align: center;
+	font-weight: bolder;
 }
 
 #bar-graph-container{
+	overflow: scroll;
 
+}
+
+.graph-swipe{
+	display: none;
+}
+
+
+#bar-graph-container-1{
+	min-width: 450px;
+
+}
+	
+#nos_questions_graph{
+
+}
+
+
+.doughnut-legends li{ 
+	margin:10px;
+    display:inline-block 
+}
+
+.legend-color{
+	width:40px;
+	height:10px;
+	display: inline-block;
+	margin-right: 10px;
 }
 
 .num-question-graph-container {
@@ -39,13 +69,14 @@
 	border-radius: 30px;
 	padding-top:40px;
 }
+
 .graph-row {
 	padding-left:100px;
 	padding-top:40px;
 }
 
 .question_counter {
-	font-family: Courier;
+	/*font-family: Courier;*/
 	height: 300px;
 	width:300px;
 	text-align: center;
@@ -56,7 +87,7 @@
 	vertical-align: center;
 	margin-left: 20px;
 	font-size: 1.5em;
-	font-family: fantasy;
+	/*font-family: fantasy;*/
 }
 
 .filled-div {
@@ -82,16 +113,38 @@
   	margin: 0 auto !important;
 }
 @media screen and (max-width: 768px) {
-	
+	.graph-swipe{
+		display: block;
+		width:100%;
+		background-color:#FEB740; 
+		text-align: center;
+		font-color:gray;
+		padding:10px;
+		margin:0px;
+		touch-action: none;
+	}
+
+	#graph-title {
+		touch-action: none;
+	}
+
 	.param-flex {
-		flex-direction: row;
-		font-size:0.6em;
+		/*flex-direction: row;
+		font-size:0.6em;*/
+		display: none;
 	}
 
 	.graph-row {
 	padding-left:5px;
 	padding-top:5px;
-}
+	}
+	.doughnut-legends{
+		overflow-x: scroll;
+	}
+
+	.doughnut-legends ul{
+	    white-space: nowrap
+	} 
 
 	.filled-div {
 		font-size: 1em;
@@ -104,7 +157,6 @@
 		vertical-align: center;
 		align-items: center;
 		font-size: 1.0em;
-		font-family: fantasy;
 		font-weight: 700;
 		margin-left:1em;
 	}
@@ -112,7 +164,6 @@
 	.counter-value {
 		margin-left: 5px;
 		font-size: 1em;
-		font-family: fantasy;
 	}
 }
 
@@ -150,7 +201,6 @@ input[type="radio"]{
 }
 
 .india-map-legend {
-	font-family: Courier New;
 	background-color: #FEB740;
 	text-align: center;
 	padding:5px;
@@ -163,8 +213,8 @@ input[type="radio"]{
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 45px;
+  height: 20px;
 }
 
 /* Hide default HTML checkbox */
@@ -190,8 +240,8 @@ input[type="radio"]{
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 12px;
+  width: 12px;
   left: 4px;
   bottom: 4px;
   background-color: white;
@@ -237,4 +287,32 @@ input:checked + .slider:before {
 
 .datamap{
 	overflow:scroll;
+}
+
+
+/* For arrows: Source: w3 */
+.arrow {
+	border: solid black;
+	border-width: 0 3px 3px 0;
+	display: inline-block;
+	padding: 3px;
+	-webkit-transition: border-color 200ms linear;
+	-moz-transition: border-color 200ms linear;
+	-o-transition: border-color 200ms linear;
+	-ms-transition: border-color 200ms linear;
+	transition: border-color 200ms linear;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  float: right; 
+  margin-top:10px
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  float: left; 
+  margin-top:10px
 }
