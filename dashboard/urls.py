@@ -56,3 +56,5 @@ urlpatterns = [
 
     path('admin/bulk-update', views.AdminBulkUpdateField.as_view(), name='admin-bulk-update-field'),
 ]
+
+handler404 = 'dashboard.views.get_error_404_view'

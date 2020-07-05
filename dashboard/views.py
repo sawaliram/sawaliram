@@ -2199,10 +2199,15 @@ def submit_encoded_dataset(request):
     return render(request, 'dashboard/excel-submitted-successfully.html')
 
 
-def get_error_404_view(request, exception):
+def get_error_404_view(request, exception, template_name='dashboard/404.html'):
     """Return the custom 404 page."""
 
-    response = render(request, 'dashboard/404.html')
+    referer = request.headers.get('Referer')
+
+    response = render(request, template_name,
+        {
+            'referer': referer
+        })
     response.status_code = 404  # Not Found
     return response
 
