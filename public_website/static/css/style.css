@@ -34,7 +34,6 @@ body {
     .sawaliram-container {
         margin-top: calc(35px + 1rem);
         padding: 0;
-        /* padding-bottom: 4rem; */
     }
 }
 
@@ -392,6 +391,11 @@ button.cancel-delete {
 
 .dropdown .sort-by-selector i {
     margin-left: 0.5rem;
+}
+
+a.grey-link {
+    color: gray;
+    text-decoration: underline;
 }
 
 /* ---- Modal ---- */
@@ -3453,6 +3457,11 @@ figure.image figcaption {
     .answer-section .answer-text-wrapper .answer-text {
         width: 100%;
     }
+}
+
+.answer-section .answer-text-wrapper .answer-prompt {
+    color: #aaa;
+    margin-top: 2rem;
 }
 
 .answer-comment-related-section {
