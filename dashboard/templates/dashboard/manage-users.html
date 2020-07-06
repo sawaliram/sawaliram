@@ -31,6 +31,9 @@
                     </div>
                 {% endfor %}
             {% endif %}
+            <div class="user-list-search-container">
+                
+            </div>
             <div class="user-list-header">
                 <div class="user-list-count-info">
                     <p>Showing {% if result_size == 1 %}1{% else %}{{ users.start_index}}-{{ users.end_index }}{% endif %} of {{ result_size }} result{{ result_size|pluralize }}</p>

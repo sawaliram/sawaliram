@@ -67,7 +67,7 @@
                 </div>
                 <div class="task-details">
                     <div class="task-title">
-                        <a href="{% url 'dashboard:answer-questions' %}">{% trans 'Answer Questions' %}</a>
+                        <a href="{% url 'dashboard:answer-questions' %}?questions=unanswered">{% trans 'Answer Questions' %}</a>
                         <button class="btn btn-secondary-hollow task-help">{% trans 'Help?' %}</button>
                     </div>
                     <p class="task-description">{% trans 'Answer questions across subjects and in multiple languages' %}</p>
