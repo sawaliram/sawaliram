@@ -36,17 +36,6 @@ function closeMenusOnClickingDarkbackground() {
     });
 }
 
-function resizeMainLogoOnScrollDown() {
-    $(window).scroll(function() {
-        if ($(window).scrollTop() > 100) {
-            $('#mainLogo').css('width', '190px');
-        }
-        else {
-            $('#mainLogo').css('width', '250px');
-        }
-    });
-}
-
 function highlightSelectedVolunteerOption() {
     $('.volunteer-option input:checkbox').change(function() {
         if(this.checked) {
@@ -73,15 +62,14 @@ function openVolunteerOptionDialog() {
 
 function setupNavbarSearchBar() {
     $('.navbar-search-icon').click(function() {
-        if(($('.search-field').val() != '') && ($('.navbar-search-container').hasClass('active'))) {
-            $('.navbar-search-form').submit();
-        }
-        else {
-            $(this).toggleClass('active');
-            $('.navbar-search-container').toggleClass('active');
-            $('.navbar-search-form').toggleClass('active');
-            $('.navbar-search-form .search-field').focus();
-        }
+        $(this).toggleClass('active');
+        $('.navbar-search-box').toggleClass('open');
+    });
+
+    $('.close-navbar-search-box').click(function(event) {
+        event.preventDefault();
+        $('.navbar-search-box').removeClass('open');
+        $('.navbar-search-icon').toggleClass('active');
     });
 }
 
@@ -167,18 +155,10 @@ function processSelectedExcelSheet() {
     });
 }
 
-function setupSearchResultsPagination() {
+function setupResultsPagination() {
     $('.page-button').click(function() {
         var current_params = new URLSearchParams(location.search);
         current_params.set('page', $(this).data('page'));
-        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
-    });
-}
-
-function setupSearchResultsSort() {
-    $('.sort-by-option').click(function() {
-        var current_params = new URLSearchParams(location.search);
-        current_params.set('sort-by', $(this).data('sort'));
         location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
     });
 }
@@ -217,6 +197,36 @@ function setupSearchResultsFilter() {
     });
 }
 
+function setupUserListFilter() {
+    $('.apply-user-filter').click(function() {
+        var current_params = new URLSearchParams(location.search);
+        current_params.delete('permission');
+        current_params.delete('email');
+        current_params.delete('page');
+        $('input[name="user-permission"]:checked').each(function() {
+            current_params.append('permission', $(this).val());
+        });
+        current_params.append('email', $('input[name="verified-email"]:checked').val());
+        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
+    });
+}
+
+function setupSearchResultsMobileFilter() {
+    // display mobile filter
+    $('.mobile-filter-controls .filter-button').click(() => {
+		if ($(this).data('show-filter')) {
+			//$('.search-results').show()
+			$('.filter-sidebar').hide()
+			$(this).data('show-filter', false)
+		} else {
+			$('.filter-sidebar').show()
+			$('.filter-sidebar').css('width', '100%')
+			//$('.search-results').hide()
+			$(this).data('show-filter', true)
+		}
+	})
+}
+
 function setupSearchResultsClearAll() {
     $('.clear-all').click(function() {
         var current_params = new URLSearchParams(location.search);
@@ -238,11 +248,27 @@ function setupSearchResultsClearAll() {
     });
 }
 
-function setupQuillEditor({ placeholder = null } = {}) {
+function setupQuillEditor({ 
+    placeholder = null,
+    inputName = 'rich-text-content' } = {}) {
+
+    Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
+
+    class SawaliramImageSpec extends QuillBlotFormatter.ImageSpec {
+        getActions() {
+            return [QuillBlotFormatter.DeleteAction, QuillBlotFormatter.ResizeAction];
+        }
+    }
+
     var quill = new Quill('#editor', {
         theme: 'snow',
         modules: {
             toolbar: '#toolbar',
+            blotFormatter: {
+                specs: [
+                    SawaliramImageSpec,
+                ],
+            },
         },
         placeholder: placeholder,
     });
@@ -250,7 +276,31 @@ function setupQuillEditor({ placeholder = null } = {}) {
     $('.rich-text-form').submit(function(e) {
         var submitted_string = String(quill.root.innerHTML);
         var regex = new RegExp("<p><br></p>", "g");
-        $('[name="rich-text-content"]').val(submitted_string.replace(regex, ''));
+        var cleaned_submitted_string = submitted_string.replace(regex, '');
+        if (cleaned_submitted_string != '') {
+            $('[name="' + inputName + '"]').val(cleaned_submitted_string);
+        } else {
+            return false;
+        }
+    });
+}
+
+function setupSubmissionLanguageSelector() {
+    $('.submission-language-select').change(function() {
+        $('[name="submission-language"]').val($(this).val());
+    });
+}
+
+function setupPublicationAutoFill() {
+    $('.credit-title.added-later').change(function() {
+        if ($(this).val() == 'publication') {
+            $(this).next('.credit-user-name').val($(this).data('publication'));
+        }
+        else {
+            if ($(this).next('.credit-user-name').val() == $(this).data('publication')) {
+                $(this).next('.credit-user-name').val('');
+            }
+        }
     });
 }
 
@@ -300,7 +350,7 @@ function setupDeleteReviewComment() {
     $('.confirm-delete').click(function(event) {
         event.preventDefault();
         if ($(this).hasClass('delete-yes')) {
-            $('.delete-comment-form').submit();
+            $(this).parent('.delete-comment-form').submit();
         }
         else {
             $('.delete-comment-form').hide();
@@ -401,6 +451,236 @@ function setupHomePageCarouselRandomRhymes() {
     });
 }
 
+function setupAddCredit() {
+    $('.add-credit').click(function(event) {
+        event.preventDefault();
+        var credit_form = $('.credits-card:first').clone().addClass('removable').appendTo('.credits-list'); 
+        credit_form.find('.credit-user-name').val('').removeAttr('readonly').attr('value' ,'');
+        credit_form.find('.credit-user-id').prop('value', '');
+        credit_form.find('.credit-title').addClass('added-later');
+        credit_form.find('.credit-title option[value="publication"]').css('display', 'block');
+        setupRemoveCredit();
+        setupPublicationAutoFill();
+    });
+}
+
+function setupRemoveCredit() {
+    $('.remove-credit-user').click(function(event) {
+        event.preventDefault();
+        $(this).parent('.credits-card').remove();
+    });
+}
+
+setupAddCredit();
+setupRemoveCredit();
+
+function setupUserProfileMenuTabs() {
+
+    if ($(window).width() < 768) {
+        $('#userProfileMenuTabs .nav-link').on('show.bs.tab', function(event) {
+            $('.user-profile-content').addClass('show');
+        });
+        $('#settingsTab').removeClass('active');
+    }
+
+    $('#userProfileMenuTabs .nav-link').click(function(event) {
+        event.preventDefault();
+        $(this).tab('show');
+    });
+}
+
+function setupMobileCloseUserProfileContent() {
+
+    $('.mobile-tab-content-controls button').click(function() {
+        $('.tab-pane.active.show').removeClass('show');
+        $('.user-profile-content').removeClass('show');
+        $('.nav-link.active.show').removeClass('active');
+    });
+}
+
+function setupChooseProfilePictureModal() {
+
+    $('#changeProfilePictureModal').on('shown.bs.modal', function(event) {
+        $.ajax({
+            url: location.origin + '/get-profile-pictures-form',
+            type: 'GET',
+            success: function(response) {
+                $('#changeProfilePictureModal .choose-picture-form-container').html(response);
+            },
+            error: function(response) {
+                console.log(response);
+            },
+        });
+    });
+}
+
+function setupToggleCardDrawer() {
+
+    $('.open-card-drawer').click(function() {
+        $(this).parent('.card-controls').next('.card-drawer').css('display', 'flex');
+        $(this).hide();
+    });
+
+    $('.close-card-drawer').click(function() {
+        $(this).parent('.card-drawer').css('display', 'none');
+        $(this).parents('.card').find('.open-card-drawer').show();
+    });
+}
+
+function setupGeneralContentSort() {
+    $('.sort-by-option').click(function() {
+        var current_params = new URLSearchParams(location.search);
+        current_params.set('sort-by', $(this).data('sort'));
+        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
+    });
+}
+
+function setupEditorToolbarSticky() {
+    const navbarHeight = $('.navbar').outerHeight();
+    const ckEditorElement = $('.editor-container .ck.ck-reset.ck-editor.ck-rounded-corners');
+    const stickyPanelElement = $('.editor-container .ck.ck-reset.ck-editor.ck-rounded-corners .ck.ck-sticky-panel');
+    const toolbarElement = stickyPanelElement.find('.ck.ck-toolbar.ck-toolbar_grouping');
+
+    window.onscroll = function() {
+        if (window.pageYOffset > ckEditorElement.offset().top - navbarHeight) {
+            stickyPanelElement.css('position', 'fixed');
+            stickyPanelElement.css('top', navbarHeight + 'px');
+            stickyPanelElement.css('width', ckEditorElement.width() + 'px');
+            stickyPanelElement.css('z-index', '1000');
+            toolbarElement.css('border-radius', '0');
+            toolbarElement.css('border-bottom', '1px solid #c4c4c4');
+        }
+        else {
+            stickyPanelElement.css('position', '');
+            stickyPanelElement.css('top', '');
+            stickyPanelElement.css('width', '');
+            stickyPanelElement.css('z-index', '');
+            toolbarElement.css('border-radius', '');
+            toolbarElement.css('border-bottom', '');
+        }
+    };
+}
+
+function initializeCKEditor() {
+    ClassicEditor
+        .create(document.querySelector( '#editor' ), {
+            toolbar: {
+                items: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedlist', 'numberedlist', 'indent', 'outdent', 'blockquote', 'horizontalline', '|', 'specialcharacters', 'mathtype', 'chemtype', 'subscript', 'superscript', '|', 'link', 'imageupload', 'inserttable', '|', 'undo', 'redo'],
+                viewportTopOffset: $('.navbar').outerHeight(),
+            },    
+            placeholder: 'Type your article here...',
+            image: {
+                toolbar: ['imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
+                styles: ['full', 'alignLeft', 'alignRight']
+            },
+            table: {
+                contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+            },
+            link: {
+                addTargetToExternalLinks: true
+            }
+        })
+        .then(editor => {
+            const wordCountPlugin = editor.plugins.get( 'WordCount' );
+            const wordCountWrapper = $('#wordCountWrapper');
+            wordCountWrapper.append(wordCountPlugin.wordCountContainer);
+            setupEditorToolbarSticky();
+        })
+        .catch(error => {
+            console.error( error );
+        });
+}
+
+function setupEditorLanguageSelector() {
+    $('.language-option').click(function() {
+        $('[name="language"]').val($(this).data('code'));
+        $('.selected-language').text($(this).text());
+    });
+}
+
+function setupCreditTitleSelector() {
+    $('.credit-title-option').click(function() {
+        $(this).parents('.dropdown').find('.selected-title').text($(this).text());
+        $(this).parents('.credit-entry').find('[name="credit-title"]').val($(this).data('title'));
+    });
+}
+
+function setupAddCreditEntry() {
+    $('.add-credit-entry').click(function() {
+        var credit_entry = $('.credit-entry:first').clone().addClass('removable').appendTo('.credit-entry-list');
+        credit_entry.find('.credit-user-name').val('').removeAttr('readonly').attr('value' ,'');
+        credit_entry.find('.credit-user-id').prop('value', '');
+        credit_entry.find('.credit-title').prop('value', 'author');
+        setupCreditTitleSelector();
+        setupRemoveCreditEntry();
+    });
+}
+
+function setupRemoveCreditEntry() {
+    $('.remove-credit-entry').click(function() {
+        $(this).parent('.credit-entry').remove();
+    });
+}
+
+function setupEditorDeleteFunctionality() {
+    $('button.editor-delete').click(function() {
+        $('.submit-container').hide();
+        $('.delete-container').show();
+    });
+
+    $('.editor-cancel-delete').click(function() {
+        $('.delete-container').hide();
+        $('.submit-container').show();
+    });
+}
+
+setupToggleCardDrawer();
+setupChooseProfilePictureModal();
+setupMobileCloseUserProfileContent();
+setupUserProfileMenuTabs();
+
+function autoResizeSelectFields() {
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Solution thanks to João Pimentel Ferreira           *
+     * in the following  StackOverflow answer:             *
+     *                                                     *
+     *     https://stackoverflow.com/a/55343177/1196444    *
+     *                                                     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    $('select').change(function(){
+        var text = $(this).find('option:selected').text()
+        var $aux = $('<select/>').append($('<option/>').text(text))
+        $(this).after($aux)
+        $(this).width($aux.width())
+        $aux.remove()
+    }).change()
+}
+
+function setupRemoveCreditEntry() {
+    $('.remove-credit-entry').click(function() {
+        $(this).parent('.credit-entry').remove();
+    });
+}
+
+function setupEditorDeleteFunctionality() {
+    $('button.editor-delete').click(function() {
+        $('.submit-container').hide();
+        $('.delete-container').show();
+    });
+
+    $('.editor-cancel-delete').click(function() {
+        $('.delete-container').hide();
+        $('.submit-container').show();
+    });
+}
+
+setupToggleCardDrawer();
+setupChooseProfilePictureModal();
+setupMobileCloseUserProfileContent();
+setupUserProfileMenuTabs();
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
@@ -409,10 +689,8 @@ closeMenusOnClickingDarkbackground();
 enableLinkingtoTabs();
 setupNavbarSearchBar();
 setupSearchResultsSearch();
-
-if (window.matchMedia("(min-width: 576px)").matches) {
-    resizeMainLogoOnScrollDown();
-}
+setupGeneralContentSort();
+autoResizeSelectFields();
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
@@ -425,16 +703,50 @@ if (window.location.pathname.includes('/dashboard/question/submit') || window.lo
     processSelectedExcelSheet();
 }
 
-var pattern = new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)")
-if (pattern.test(window.location.pathname)) {
-    setupQuillEditor({ placeholder: 'Type your answer here...' });
-    activateTooltips();
+if (window.location.pathname.includes('/dashboard/manage-users')) {
+    setupUserListFilter();
+    setupResultsPagination();
 }
 
-var pattern = new RegExp("^/dashboard/question/\\d+/answers/\\d+/review")
-if (pattern.test(window.location.pathname)) {
-    // setupCommentFormDisplayToggle();
-    // setupCommentDeleteButtons();
+if (
+    new RegExp("^/dashboard/translate/(articles|answers|questions)/(\\d+/)?\\d+/(review|edit)").test(window.location.pathname) ||
+    new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)
+) {
+    initializeCKEditor();
+    setupEditorLanguageSelector();
+    setupCreditTitleSelector();
+    setupAddCreditEntry();
+    setupRemoveCreditEntry();
+    setupEditorDeleteFunctionality();
+}
+
+if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) {
+    initializeCKEditor();
+    setupEditorLanguageSelector();
+    setupCreditTitleSelector();
+    setupAddCreditEntry();
+    setupRemoveCreditEntry();
+    setupEditorDeleteFunctionality();
+}
+
+/* Breaking from tradition, this function is going intot the template so
+ * that it can be better fine-tuned and generalised.
+
+if (new RegExp('^/dashboard/article/\\d+/translate/from/[A-Za-z-]+/to/[A-Za-z-]+').test(window.location.pathname)) {
+    setupQuillEditor({
+        placeholder: 'Translation goes here...',
+        inputName: 'body'
+    })
+}
+*/
+
+
+if (
+    new RegExp("^/dashboard/article/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/question/\\d+/answers/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/translate/articles/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/translate/answers/\\d+/review").test(window.location.pathname)
+) {
     setupDeleteReviewComment();
 }
 
@@ -453,9 +765,9 @@ if (
     window.location.pathname.includes('/dashboard/review-answers') ||
     window.location.pathname.includes('/search')
    ) {
-    setupSearchResultsPagination();
-    setupSearchResultsSort();
+    setupResultsPagination();
     setupSearchResultsFilter();
+    setupSearchResultsMobileFilter();
     setupSearchResultsClearAll();
     setupBookmarkContentFunctionality();
 }

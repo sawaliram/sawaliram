@@ -1,0 +1,52 @@
+{% extends "public_website/base.html" %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {{ page_title }} | {% trans 'Sawaliram' %} {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="articles-header">
+    <div class="dropdown">
+        <button class="btn sort-by-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="articleSortOptionSelector">
+            sorted by <span class="sort-by-text">{{ sort_by|capfirst }}</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="articleSortOptionSelector">
+            <span class="dropdown-item sort-by-option" data-sort="newest">{% trans 'Newest' %}</span>
+            <span class="dropdown-item sort-by-option" data-sort="oldest">{% trans 'Oldest' %}</span>
+        </div>
+    </div>
+</div>
+
+<div class="articles-container">
+    {% for article in articles %}
+        <div class="article-item">
+            {% if article.cover_image %}
+                <img class="article-cover" src="{{ article.cover_image }}" alt="Article cover image">
+            {% endif %}
+            <h2>{{ article.title }}</h2>
+            {% if not article.cover_image %}
+                <p class="article-preview">
+                    {{ article.body|striptags|truncatechars:200 }}
+                </p>
+            {% endif %}
+            <div class="article-details">
+                <span class="published-date">{{ article.published_on|date:'d M Y' }}</span>
+                <div class="credits">
+                    {% for credit in article.credits.all %}
+                        <span class="credit-name">
+                            {{ credit.credit_user_name }}{% if not forloop.last %}, {% endif %}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+            <a href="{{ article.get_absolute_url }}" class="btn btn-small btn-primary read-article">Read Article</a>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

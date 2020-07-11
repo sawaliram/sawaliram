@@ -1,0 +1,36 @@
+{% extends "public_website/base.html" %}
+
+{% load i18n %}
+{% load static %}
+
+{% block head_includes %}
+    <link href="{% static 'css/quill.sawaliram.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %} {% trans 'Delete Translation' %} | {% trans 'Sawaliram' %}{% endblock %}
+
+{% block content %}
+
+<div class="wide-container">
+  <h3><i class="fas fa-exclamation-triangle"></i> {% trans 'Delete translation' %}</h3>
+  <p>{% trans 'Are you sure you want to delete the following translation? This action cannot be undone.' %}</p>
+
+  <ul class="card-list">
+    <li class="task-details">
+        <h4>
+            <a href="{{ articletranslation.get_absolute_url }}">{{ articletranslation.title|default:articletranslation.source.title }}</a>
+            <small>({{ articletranslation.source.language }} -> {{ articletranslation.language }})</small>
+        </h4>
+        <p>{{ articletranslation.body|default:''|striptags|truncatechars:140 }}</p>
+        <small>Translated from article <a href="{{ articletranslation.source.get_absolute_url }}">{{ articletranslation.source.title }}</a></small>
+    </li>
+  </ul>
+
+  <form action="{{ request.get_current_url }}" method="POST">
+    {% csrf_token %}
+    <a class="btn btn-small btn-secondary" href="{{ articletranslation.get_absolute_url }}"><i class="fas fa-arrow-left"></i> {% trans 'Go back' %}</a>
+    <button type="submit" class="btn btn-small btn-danger-hollow"><i class="fas fa-trash"></i> {% trans 'Delete translation' %}</button>
+  </form>
+</div>
+
+{% endblock %}

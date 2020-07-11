@@ -1,0 +1,172 @@
+{% extends "public_website/base.html" %}
+{% load static %}
+{% load has_group %}
+{% load i18n %}
+{% load to_language_name %}
+
+
+{% block head_includes %} 
+ <link rel="stylesheet" href="{% static 'css/analytics/analytics_style.css' %}">
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+{% endblock %}
+{% block title %} {{page_title}} {% endblock %}
+{% block content %}
+
+<div class="fluid-container" >
+    <div class="row margin_ten" >
+        <div class="col-md-12 analytics_title">
+            <h1>Trend across the data</h1>
+        </div>
+    </div>
+    <div class="intro-and-question-counter row margin_ten">
+        <div class="col-md-8 col-sm-12">
+            <p>{% trans 'This page provides you various visualizations of the data related to the questions that students have asked us over time.' %}</p>
+            <p>{% trans 'Teachers and educators can be benefitted with this data.' %}</p>
+            <p>
+            {% trans 'You can contact us to get more data if you require.' %}</p>
+        </div>
+
+        <div class="filled-div center question_counter col-md-3 col-sm-12" >
+            <h3>{% trans 'Question Asked' %}</h3>
+
+            <div class=" ">{{question_counter}}</div>
+        </div>
+    </div>
+
+
+    <div class="row num-question-graph-container margin_ten">
+        <div class="col-md-12 col-sm-12 ">
+        <h5 class="graph-heading">{% trans 'Number of questions plotted against' %}</h5>
+            <div class="row graph-row">
+                <div class="param-choice col-md-4 col-sm-12">
+             
+                    <div class="param-flex" id="param-choice">
+                        <div id="g_lang">
+                            <label class="radio-inline"><input type="radio" name="graphtype" checked value="g_lang" scope="col">{% trans 'Question Language' %}</label>
+                        </div>
+                        <div id="g_year">
+                            <label class="radio-inline"><input type="radio" name="graphtype" value="g_year" scope="col">{% trans 'Year of Asking Question' %}</label>
+                        </div>
+                        <div id="g_gender">
+                            <label class="radio-inline"><input type="radio" name="graphtype" value="g_gender" scope="col">{% trans 'Gender' %}</label>
+                        </div>
+                        <div id="g_medium">
+                            <label class="radio-inline"><input type="radio" name="graphtype" value="g_medium" scope="col">{% trans 'Medium of Instruction' %}</label>
+                        </div>
+                        <div id="g_class">
+                            <label class="radio-inline"><input type="radio" name="graphtype" value="g_class" scope="col">{% trans 'Student Class' %}</label>
+                        </div>
+                    </div>
+                </div>
+
+             <div class="col-md-8 col-sm-12" id="bar-graph-container">
+                    <canvas style="min-height: 300px" id="nos_qestions_graph"></canvas>
+            </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+    <hr>
+    <br>
+
+    <div class="row margin_ten" >
+        <div class="col-md-12 col-sm-12">
+        <h3 class="">{% trans 'Composition of Datasets' %}</h3>
+        </div>
+        <div class="col-md-6 col-sm-12 " >
+               
+                    <canvas id="doughnut-fomat"></canvas>
+        </div>
+        <div class="col-md-6 col-sm-12 ">
+           
+                <canvas id="doughnut-curriculum"></canvas>
+        </div>
+        <div class="col-md-3 col-sm-12"></div> 
+        <div class="col-md-6 col-sm-12">
+                    <canvas id="doughnut-context"></canvas>
+            </div>
+        </div>
+        
+
+    <div class="row margin_ten">
+        <div class="col-lg-12 h-divider"></div>
+          <div class="col-md-12 col-sm-12">
+            <br>
+            <br>
+        <h3 class="">{% trans 'Questions Map - Statewise Distribution of Questions' %}</h3>
+        </div>
+          <div class="col-lg-12">
+            <div class="switch-name-container">
+              <div class="switch-name">Bubble Map</div>
+            </div>
+              <label class="switch">
+                  <input id="bubble-view" type="checkbox">
+                  <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="col-md-8 col-sm-12">
+            <div id="india-map" class="india-map"></div>
+            <div id="india-bubble-map" class="india-map"  ></div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="card ">
+                <div class="card-body india-map-legend">
+             
+                    {% trans 'Hover/Click over the states/bubbles to view the information.' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row margin_ten" >
+        <div class="col-md-12">
+            <hr>
+            <button type="button" class="btn btn-primary">{% trans 'Contact us to access data' %}</button>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+{% block script_includes %}
+
+<script>
+    labels_lang  = {{ lang_names | safe }};
+    data_lang = {{ lang_counts | safe }};
+
+    labels_year = {{ year_labels | safe }};
+    data_year = {{ year_counts | safe }};
+
+    labels_gender = {{ gender_labels | safe }}
+    data_gender = {{ gender_counts | safe }}
+
+    labels_medium = {{ mlang_names | safe }}
+    data_medium =  {{ mlang_counts | safe }}
+
+    labels_class = {{ class_labels | safe }}
+    data_class = {{ class_counts | safe  }}
+
+    labels_format = {{ format_labels | safe }}
+    data_format = {{ format_counts | safe }}
+
+    labels_curriculum = {{ curriculum_labels | safe }}
+    data_curriculum = {{ curriculum_counts | safe }}
+
+    labels_context = {{ context_labels | safe }}
+    data_context = {{ context_counts | safe }}
+
+    state_names = {{ state_names | safe }}
+    state_codes = {{ state_codes | safe }}
+    state_counts = {{ state_counts | safe }}
+    indianTopoURL = "{% static 'js/analytics/india.topo.json' %}";  // location of topology json of India
+</script>
+<script src="{% static 'js/analytics/analytics.js' %}"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/topojson.v1.min.js"></script>
+<script src="{% static 'js/analytics/datamaps.none.js' %}"></script>
+<script src="{% static 'js/analytics/analytics_map.js' %}"></script>
+ {% endblock %}

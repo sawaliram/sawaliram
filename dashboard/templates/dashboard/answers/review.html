@@ -2,73 +2,71 @@
 
 {% load static %}
 {% load render_linebreaks %}
+{% load i18n %}
+{% load to_language_name %}
 
-{% block title %} Submit Review | Sawaliram {% endblock %}
+{% block title %} {% trans 'Submit Review' %} | {% trans 'Sawaliram' %} {% endblock %}
 
 {% block content %}
 {% with question=answer.question_id %}
 <div class="review-page-container">
     <div class="answer-area">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
         <h1>{{ question.question_text }}</h1>
         {% if question.question_language.lower != 'english' %}
 			{% if question.question_text_english %}
             <h1 class="question-translation">{{ question.question_text_english }}</h1>
             {% endif %}
         {% endif %}
-        <h2 class="answered-by">Answered by <b>{{ answer.answered_by.get_full_name }}</b></h2>
         <div class="answer-text">
             {{ answer.answer_text|safe }}
         </div>
-        {% if answer.approved_by %}
-            <p class="published-text"><i class="far fa-check-circle"></i> Published by <b>{{ answer.approved_by.get_full_name }}</b></p>
+        {% for credit in answer.credits.all %}
+            <div class="credit-card">
+                <p>{{ credit.credit_user_name }}</p>
+                <span>{{ credit.credit_title|capfirst }}</span>
+            </div>
+        {% endfor %}
+        {% if answer.status == 'published' %}
+            <p class="published-text"><i class="far fa-check-circle"></i> {% trans 'Published by' %} {{ answer.approved_by.get_full_name }}</b></p>
         {% else %}
-            {% if request.user != answer.answered_by %}
+            {% if request.user != answer.submitted_by %}
                 <form action="{% url 'dashboard:approve-answer' question_id=question.id answer_id=answer.id %}" method="POST">
                     {% csrf_token %}
                     <p class="publish-info-text">
-                        If you think this answer is complete and adequately answers the question, click the 'Publish' button to publish the answer. If you believe the answer can be improved, leave a comment on the right side.
+                        {% trans 'If you think this answer is complete and adequately answers the question, click the \'Publish\' button to publish the answer. If you believe the answer can be improved, leave a comment on the right side.' %}
                     </p>
-                    <button type="submit" class="btn btn-primary btn-block">Publish</button>
+                    <button type="submit" class="btn btn-primary btn-block">{% trans 'Publish' %}</button>
                 </form>
             {% else %}
                 <form action="{% url 'dashboard:submit-answer' question_id=question.id %}" method="GET">
-                    <input type="hidden" name="answer-text" value="{{ answer.answer_text }}">
+                    <input type="hidden" name="answer" value="{{ answer.id }}">
                     <input type="hidden" name="mode" value="edit">
-                    <button type="submit" class="btn btn-primary btn-block">Edit Answer</button>
+                    <button type="submit" class="btn btn-primary btn-block">{% trans 'Edit Answer' %}</button>
                 </form>
             {% endif %}
         {% endif %}
     </div>
     <div class="comment-area">
-        <h2>Comments</h2>
+        <h2>{% trans 'Comments' %}</h2>
         <form action="{% url 'dashboard:submit-answer-comment' question.id answer.id %}" method="POST">
             {% csrf_token %}
-            <textarea name="comment-text" rows="4" placeholder="Join the conversation"></textarea>
-            <button type="submit" class="btn btn-secondary">Add Comment</button>
+            {{ comment_form.text }}
+            <button type="submit" class="btn btn-secondary">{% trans 'Add Comment' %}</button>
         </form>
         {% if comments %}
             <ul class="comment-list">
                 {% for comment in comments %}
-                <li class="comment-box">
-                    <div class="comment-header">
-                        <h3>{{ comment.author.get_full_name }}</h3>
-                        {% if comment.author == request.user %}
-                        <div class="delete-comment-wrapper">
-                            <button type="submit" class="btn delete-comment slow-transition">Delete <i class="far fa-trash-alt"></i></button>
-                            <form action="{% url 'dashboard:delete-answer-comment' question.id answer.id comment.id %}" class="delete-comment-form slow-transition" method="POST">
-                                {% csrf_token %}
-                                <span>Are you sure?</span>
-                                <button class="btn confirm-delete delete-yes">Yes</button> /
-                                <button class="btn confirm-delete delete-no">No</button>
-                            </form>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <p class="commane-date">{{ comment.created_on|date:"j F, Y" }}</p>
-                    <p class="comment-text">
-                        {{ comment.text|escape|render_linebreaks|safe }}
-                    </p>
-                </li>
+                {% include 'dashboard/comments/comment_box.htm' with show_delete=True %}
                 {% endfor %}
             </ul>
         {% endif %}

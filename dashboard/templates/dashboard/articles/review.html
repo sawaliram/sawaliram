@@ -1,0 +1,69 @@
+{% extends "public_website/base.html" %}
+
+{% load static %}
+{% load render_linebreaks %}
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {% trans 'Review Article' %} | {% trans 'Sawaliram' %} {% endblock %}
+
+{% block content %}
+<div class="review-page-container">
+    <div class="answer-area">
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          {% endfor %}
+        {% endif %}
+        <h1>{{ article.title }}</h1>
+        <div class="answer-text">
+            {{ article.body|safe }}
+        </div>
+        <div class="credits-container">
+            {% for credit in article.credits.all %}
+                <div class="credit-card">
+                    <p>{{ credit.credit_user_name }}</p>
+                    <span>{{ credit.credit_title|capfirst }}</span>
+                </div>
+            {% endfor %}
+        </div>
+        {% if article.status == article.STATUS_PUBLISHED %}
+            <p class="published-text"><i class="far fa-check-circle"></i> {% trans 'Published by' %} <b>{{ article.approved_by.get_full_name }}</b></p>
+        {% else %}
+            {% if request.user != article.author %}
+                <form action="{% url 'dashboard:approve-article' article=article.id %}" method="POST">
+                    {% csrf_token %}
+                    <p class="publish-info-text">
+                        {% trans "If you think this article is complete and ready for public viewing, click the 'Publish' button to publish the answer. If you believe the article can be improved, leave a comment on the right side." %}
+                    </p>
+                    <button type="submit" name="action" value="submit" class="btn btn-primary btn-block">{% trans 'Publish' %}</button>
+                </form>
+            {% else %}
+                <form action="{% url 'dashboard:edit-article' draft_id=article.id %}" method="GET">
+                    <button type="submit" class="btn btn-primary btn-block">{% trans 'Edit Article' %}</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="comment-area">
+        <h2>{% trans 'Comments' %}</h2>
+        <form action="{% url 'dashboard:submit-article-comment' article.id %}" method="POST">
+            {% csrf_token %} 
+            {{ comment_form.text }}
+            <button type="submit" class="btn btn-secondary">{% trans 'Add Comment' %}</button>
+        </form>
+        {% if comments %}
+            <ul class="comment-list">
+                {% for comment in comments %}
+                {% include 'dashboard/comments/comment_box.htm' with show_delete=True %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

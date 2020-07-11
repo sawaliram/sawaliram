@@ -1,7 +1,10 @@
 
 {% extends "dashboard/base.html" %}
 
-{% block title %} Page Not Found | Sawaliram {% endblock %}
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {% trans 'Page Not Found' %} | {% trans 'Sawaliram' %} {% endblock %}
 
 {% load static %}
 
@@ -10,9 +13,9 @@
 {% block content %}
 
 <div class="error-page-wrapper">
-    <img src="{% static 'error_icons/404.png' %}" alt="Page not found">
-    <h3>Looks like you took a wrong turn, this page does not exist!</h3>
-    <button type="button" onclick="window.history.back();" class="btn btn-dark">Back to previous page</button>
+    <img src="{% static 'error_icons/404.png' %}" alt="{% trans 'Page not found' %}">
+    <h3> {% trans 'Looks like you took a wrong turn, this page does not exist!' %}</h3>
+    <button type="button" onclick="window.history.back();" class="btn btn-dark">{% trans 'Back to previous page' %}</button>
 </div>
 
 {% endblock %}

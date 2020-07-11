@@ -1,0 +1,95 @@
+{% extends "public_website/base.html" %}
+
+{% load i18n %}
+{% load to_language_name %}
+{% block title %} {% trans 'About' %} | {% trans 'Sawaliram' %} {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="about-content">
+        <h2>{% trans '...and Sawaliram was born!' %}</h2>
+    <img src="{% static 'illustrations/about.png' %}" alt="{% trans 'about' %}" align="right">
+    
+    <p> 
+        {% blocktrans %}
+            It was 1972 and a group of scientists, university academics, graduate students and school teachers were
+            gathering in the village of Rasulia, in the Hoshangabad District of Madhya Pradesh State. 
+            They wished to develop an active, inquiring and experiment-based science program, a curriculum that 
+            was rooted in rural India.Their efforts led to the landmark 'Hoshangabad Science Teaching 
+            Program <a href="https://www.eklavya.in/past-work-top/programmes-past-top/hstp">(HSTP)</a>', one that was implemented in the next 30 years over large tracts of the State.' 
+         {% endblocktrans %}
+    </p>
+    
+    <P> 
+        {% blocktrans %}
+            HSTP and its <a href="https://www.eklavya.in/past-work-top/programmes-past-top/hstp/224-workbook">'Bal Vaigyanik'</a> ('Child Scientist' in Hindi) textbooks offered children many opportunities t
+            o observe, experiment and investigate their surroundings.  As a result children came up with a host of 
+            intriguing questions which they and their teachers naturally lacked the resources to handle. 
+            Thus it was that 'Sawaliram' was born. The year was 1978. 
+        {% endblocktrans %}
+    </P>
+          
+    <p> 
+        {% blocktrans %}
+            Over the decades that followed tens of thousands of children sent postcards and letters to Sawaliram 
+            and were rewarded with personalised replies by volunteers. A few hundreds of these questions and answers
+            were published in magazines. 
+        {% endblocktrans %}
+    </P>
+
+    <p> 
+        {% blocktrans %}
+            The trend of responding to children's questions caught on in other places. In Mumbai, at the Homi Bhabha 
+            Centre for Science Education, the 'Shanka-samadhan' ('Curiosity satisfied') program addressed questions 
+            mailed in by children. In Kerala a group of scientists, engineers and writers got together in the 1960s 
+            with an aim to develop scientific and technical literature in Indian languages. By the start of the 
+            1970s the 'Kerala Shastra Sahitya Parishad (KSSP)' was publishing magazines for children and responding 
+            to their questions. KSSP's ideal of a 'People’s Science Movement' was adopted by popular groups in other 
+            States of India, leading in 1988 to the <a href="https://aipsn.net/resources-2/">'All India People's Science Network'</a>, in which many groups have 
+            run their own Q&A programs in different Indian languages. 
+        {% endblocktrans %}
+    </p>
+    <P> 
+        {% blocktrans %}
+            The magic of children's questions has touched many, among them a few well-known Indian scientists who 
+            took it upon themselves to call for children's questions and answer them through personal letters. 
+            Today many science institutes, universities and colleges conduct outreach programs with Q&A sessions. 
+            In classrooms as well, students may ask questions. 
+        {% endblocktrans %}
+    </P>
+    <p> 
+        {% blocktrans %}
+            The Sawaliram website is built as a repository for all of these questions which are being continually 
+            asked by children over the years. Sawaliram provides a home where children's questions can be submitted, 
+            viewed, answered, queried and analysed. Significantly these questions give us all: parents, educators, 
+            curriculum makers, writers and researchers, a glimpse into the rich and multifaceted world of the child. 
+        {% endblocktrans %}
+    </p>
+    
+</div>
+
+<div class="about-content-second-section">
+    <div class="content-wrapper">
+
+        <div class="image-wrapper">
+            <img src="{% static 'logos/tifr-logo@2x.png' %}" style="max-width: 200px;">
+            <img src="{% static 'logos/eklavya_logo_title_small@2x.png' %}" style="max-width: 137px;">
+        </div>
+        <div>
+            <h2>{% trans 'Our Team' %}</h2>
+                <p> 
+                    {% blocktrans %} 
+                        The Sawaliram website is collaboratively developed and maintained by the Tata Institute of 
+                        Fundamental Research (TIFR Centre for Interdisciplinary Sciences), Hyderabad, and Eklavya, 
+                        an NGO based in Bhopal, Madhya Pradesh. 
+                    {% endblocktrans %}
+                </p>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

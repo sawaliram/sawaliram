@@ -16,7 +16,14 @@ SECRET_KEY = os.environ.get('sawaliram_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('sawaliram_debug_value') == 'True'
 
-ALLOWED_HOSTS = ['10.10.9.33', '117.198.100.10', '.sawaliram.org', 'localhost']
+ALLOWED_HOSTS = ['10.10.9.33', '117.198.100.10', '.sawaliram.org', 'localhost', '127.0.0.1']
+
+# SSL/HTTPS Configuration
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 # Application definition
 
@@ -24,6 +31,7 @@ INSTALLED_APPS = [
     'public_website.apps.PublicWebsiteConfig',
     'sawaliram_auth.apps.SawaliramAuthConfig',
     'dashboard.apps.DashboardConfig',
+    'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,6 +44,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -56,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.language_list',
             ],
         },
     },
@@ -88,6 +98,11 @@ sentry_sdk.init(
     integrations=[DjangoIntegration()]
 )
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.tifrh.res.in'
+EMAIL_HOST_USER = 'nitinpaul@tifrh.res.in'
+EMAIL_PORT = 25
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -111,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Asia/Kolkata'
 
@@ -121,6 +136,44 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Possible site languages available in this website
+# Buttons, menus, and general interface should be
+# available in the following languages
+LANGUAGES = [
+    ('en', 'English'),
+    ('hi', 'हिंदी'),
+]
+
+
+# Possible languages for content on this website
+# These are the language options for questions, answers,
+# translations, articles, etc.
+#
+# TODO: move this elsewhere to make it database-based
+# and easily updatable
+CONTENT_LANGUAGES = [
+    ('bn', 'বাংলা'),
+    ('en', 'English'),
+    ('hi', 'हिंदी'),
+    ('mr', 'मराठी'),
+    ('ml', 'മലയാളം'),
+    ('ta', 'தமிழ்'),
+    ('te', 'తెలుగు'),
+]
+
+# Cookie settings
+LANGUAGE_COOKIE_NAME = 'lang'
+
+# Translation files
+LOCALE_PATHS = [
+    BASE_DIR + '/locale',
+]
+
+# For backward compatibility since old functions still expect this
+# name for the variable.
+# TODO: weed out and delete
+LANGUAGE_CHOICES = LANGUAGES
+DEFAULT_LANGUAGE = LANGUAGE_CODE
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -135,6 +188,8 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
 
 if os.environ.get('environment') == 'heroku':
     import django_heroku

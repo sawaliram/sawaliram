@@ -2,10 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+db.sqlite3
 # C extensions
 *.so
-
+local_manage.py
+core/settingslocal.py
 # Distribution / packaging
 .Python
 build/
@@ -72,6 +73,9 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+# Geany project file
+sawaliram.geany
+
 # pyenv
 .python-version
 
@@ -89,6 +93,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+Pipfile
+Pipfile.lock
 
 # Spyder project settings
 .spyderproject
@@ -108,7 +114,12 @@ venv.bak/
 
 # local ignores
 .vscode
+sawaliram.code-workspace
+
+# helper script ignores
+set-environment.sh
 
 # dirs to ignore
 staticfiles/
-assets/submissions/*
+assets/submissions
+
