@@ -31,9 +31,12 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            <div class="user-list-search-container">
-                
-            </div>
+            <form action="" class="search user-list-search" method="GET">
+                <input class="search-field" type="text" name="q" placeholder="{% trans 'Search by ID, Name or Organisation' %}" {% if search_query %} value="{{ search_query }}" {% endif %}>
+                <button class="search-field-submit" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
             <div class="user-list-header">
                 <div class="user-list-count-info">
                     <p>Showing {% if result_size == 1 %}1{% else %}{{ users.start_index}}-{{ users.end_index }}{% endif %} of {{ result_size }} result{{ result_size|pluralize }}</p>
