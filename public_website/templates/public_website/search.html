@@ -29,7 +29,7 @@
                 </div>
             </div>
             {% endif %}
-            {% if page_title == 'Search' or page_title == 'View Questions' %}
+            {% if page_title == 'Search' or page_title == 'View Questions' or page_title == 'Answer Questions' %}
             <div class="filter-category">
                 <button class="btn open-filter" data-target="#filterCategories" aria-expanded="true" aria-controls="filter-categories">{% trans 'Questions' %}</button>
                 <div class="category-options-list" id="filterCategories">
@@ -206,7 +206,6 @@
                 {% if page_title != 'Translate Answers' %}
                     {% for answer in result.answers.all %}
                         {% if page_title == 'Review Answers' %}
-                            {% if answer.status == 'submitted' %}
                             <div class="answer-preview">
                                 <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
                                 {% for credit in answer.credits.all %}
@@ -214,11 +213,11 @@
                                         {{ credit.credit_user_name }} ({% trans credit.credit_title %})
                                     </h4>
                                 {% endfor %}
-                                <div class="preview-answer-controls">
+                                <div class="preview-answer-controls dual-item-controls-section">
+                                    <span class="answer-review-count"><i class="far fa-comment-alt"></i> {{ answer.comments.all|length }} Comment{{ answer.comments.all|length|pluralize }}</span>
                                     <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
                                 </div>
                             </div>
-                            {% endif%}
                         {% endif %}
                         {% if page_title == 'View Questions' or page_title == 'Search' or page_title == 'Answer Questions' %}
                             {% if answer.status == 'published' %}

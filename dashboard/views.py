@@ -653,7 +653,8 @@ class ReviewAnswersList(SearchView):
                     Q(school__icontains=request.GET.get('q')) |
                     Q(area__icontains=request.GET.get('q')) |
                     Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q'))
+                    Q(field_of_interest__icontains=request.GET.get('q')) |
+                    Q(published_source__icontains=request.GET.get('q'))
             )
             return results
         else:
@@ -1254,7 +1255,7 @@ class ApproveSubmittedArticleView(View):
         a = article.publish(request.user)
 
         messages.success(request, self.success_message)
-        return redirect('dashboard:review-article', article=a.id)
+        return redirect(a.get_absolute_url())
 
 
 # Comments
@@ -1969,33 +1970,6 @@ class ReviewArticleTranslation(BaseReview):
 
     model = SubmittedArticleTranslation
     template_name = 'dashboard/translations/article_review.html'
-
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('admins'), name='dispatch')
-class ApproveSubmittedArticleView(View):
-
-    model = SubmittedArticle
-    success_message = 'The article has been published successfully'
-
-    def get(self, request, article):
-        '''
-        Not valid; redirect user back to article
-        '''
-        return redirect(reverse('dashboard:review-article', kwargs={'article': article}))
-
-    def post(self, request, article):
-        article = get_object_or_404(self.model, id=article)
-
-        # Check that the publisher is not the author
-        if article.author == request.user:
-            raise PermissionDenied(_('You cannot publish your own article.'))
-
-        a = article.publish(request.user)
-
-        messages.success(request, self.success_message)
-        return redirect('dashboard:review-article', article=a.id)
-
 
 class BaseApproveTranslation(View):
 

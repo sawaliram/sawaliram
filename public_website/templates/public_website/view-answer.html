@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load static %}
+{% load has_group %}
 {% load render_linebreaks %}
 {% load to_language_name %}
 
@@ -98,7 +99,11 @@
                 {% endfor %}
             </div>
         </div>
+        <div class="answer-prompt">
+            <p>Do you think you can improve this answer? {% if request.user|has_group:"experts" %}<a href="{% url 'dashboard:submit-answer' question_id=question.id %}" class="grey-link">Submit a new answer</a>{% else %}<a href="{% url 'public_website:get-involved' %}" class="grey-link">Learn how</a> to submit a new answer{% endif %}</p>
+        </div>
     </div>
+
 </div>
 
 {% if user.is_authenticated %}

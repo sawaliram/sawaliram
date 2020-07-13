@@ -34,7 +34,6 @@ body {
     .sawaliram-container {
         margin-top: calc(35px + 1rem);
         padding: 0;
-        /* padding-bottom: 4rem; */
     }
 }
 
@@ -392,6 +391,11 @@ button.cancel-delete {
 
 .dropdown .sort-by-selector i {
     margin-left: 0.5rem;
+}
+
+a.grey-link {
+    color: gray;
+    text-decoration: underline;
 }
 
 /* ---- Search Field ---- */
@@ -2494,6 +2498,15 @@ figure.image figcaption {
     justify-content: end;
 }
 
+.search-container .search-results ul.search-results-list li.search-result-item .answer-preview .preview-answer-controls .answer-review-count {
+    font-size: 0.9rem;
+}
+
+.search-container .search-results ul.search-results-list li.search-result-item .answer-preview .preview-answer-controls.dual-item-controls-section {
+    justify-content: space-between;
+    align-items: center;
+}
+
 @media (max-width: 576px) {
     .search-container .search-results ul.search-results-list li.search-result-item .item-title {
         font-size: 1.3rem;
@@ -3457,6 +3470,11 @@ figure.image figcaption {
     }
 }
 
+.answer-section .answer-text-wrapper .answer-prompt {
+    color: #aaa;
+    margin-top: 2rem;
+}
+
 .answer-comment-related-section {
     display: flex;
     justify-content: center;
@@ -3532,8 +3550,18 @@ figure.image figcaption {
     border-top: 4px solid #87B24D;
 }
 
+.articles-container .article-item.empty {
+    border: none;
+}
+
 .articles-container .article-item:not(:last-child) {
-    margin-bottom: 1.5rem;
+    margin-bottom: 5rem;
+}
+
+@media (max-width: 768px) {
+    .articles-container .article-item:not(:last-child) {
+        margin-bottom: 2.5rem;
+    }
 }
 
 .articles-container .article-item img.article-cover {

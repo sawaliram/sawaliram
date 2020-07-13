@@ -47,6 +47,9 @@
             <a href="{{ article.get_absolute_url }}" class="btn btn-small btn-primary read-article">Read Article</a>
         </div>
     {% endfor %}
+    {% if odd_article_count == 'True' %}
+        <div class="article-item empty"></div>
+    {% endif %}
 </div>
 
 {% endblock %}
