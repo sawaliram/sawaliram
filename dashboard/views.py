@@ -293,6 +293,22 @@ class ManageUsersView(View):
         # remove duplicate results
         users = users.distinct()
 
+        # search
+        search_query = ''
+        if 'q' in request.GET and request.GET.get('q') != '':
+            search_query = request.GET.get('q')
+
+            # search by ID
+            if search_query.isdigit():
+                users = users.filter(pk=int(search_query))
+            else:
+                # search by Name/Organisation
+                keyword_list = search_query.split(' ')
+                Q_object = Q(first_name__icontains=keyword_list[0]) | Q(last_name__icontains=keyword_list[0]) | Q(organisation__icontains=keyword_list[0])
+                for keyword in keyword_list[1:]:
+                    Q_object.add((Q(first_name__icontains=keyword_list[0]) | Q(last_name__icontains=keyword_list[0]) | Q(organisation__icontains=keyword_list[0])), Q_object.connector)
+                users = users.filter(Q_object)
+
         # get total result size
         result_size = len(users)
 
@@ -308,6 +324,7 @@ class ManageUsersView(View):
             'sort_by': sort_by,
             'permissions_to_filter_by': permissions_to_filter_by,
             'filter_by_email': filter_by_email,
+            'search_query': search_query,
             'access_requests': access_requests,
             'page_title': _('Manage Users'),
             'enable_breadcrumbs': 'Yes',

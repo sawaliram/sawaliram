@@ -83,9 +83,9 @@
                 </div>
             {% endfor %}
         {% endif %}
-        <form action="" class="search-results-search" method="GET">
-            <input class="search-results-search-field" type="text" name="q" placeholder="{% trans 'Search these results' %}" {% if search_query %} value="{{ search_query }}" {% endif %}>
-            <button type="submit">
+        <form action="" class="search" method="GET">
+            <input class="search-field" type="text" name="q" placeholder="{% trans 'Search these results' %}" {% if search_query %} value="{{ search_query }}" {% endif %}>
+            <button class="search-field-submit" type="submit">
                 <i class="fas fa-search"></i>
             </button>
         </form>
