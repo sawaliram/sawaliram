@@ -710,12 +710,19 @@ class ArticlesPage(View):
         else:
             articles = articles.order_by('published_on')
 
+        if len(articles) % 2 == 0:
+            odd_article_count = 'False'
+        else:
+            odd_article_count = 'True'
+
         context = {
             'page_title': _('Articles'),
             'articles': articles,
+            'odd_article_count': odd_article_count,
             'sort_by': sort_by
         }
         return render(request, 'public_website/articles.html', context)
+
 
 class AnalyticsPage(View):
     state_code = {'lakshadweep': 'LD', 'andaman and nicobar islands': 'AN', 'maharashtra': 'MH', 
