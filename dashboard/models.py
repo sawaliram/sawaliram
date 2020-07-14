@@ -370,7 +370,7 @@ class AnswerCredit(models.Model):
 
     credit_title = models.CharField(max_length=50)
     credit_title_order = models.IntegerField(default=0)
-    credit_user_name = models.CharField(max_length=50)
+    credit_user_name = models.CharField(max_length=100)
     is_user = models.BooleanField(default=False)
     user = models.ForeignKey(
         'sawaliram_auth.User',
@@ -406,7 +406,7 @@ class ArticleCredit(models.Model):
 
     credit_title = models.CharField(max_length=50)
     credit_title_order = models.IntegerField(default=0)
-    credit_user_name = models.CharField(max_length=50)
+    credit_user_name = models.CharField(max_length=100)
     is_user = models.BooleanField(default=False)
     user = models.ForeignKey(
         'sawaliram_auth.User',
