@@ -227,6 +227,19 @@ function setupSearchResultsMobileFilter() {
 	})
 }
 
+function setupSearchResultsMobileSort() {
+    // display mobile sort
+    $('.mobile-filter-controls .sort-by-button').click(() => {
+        if ($(this).data('show-menu')) {
+            $('.mobile-sort-by-popup').hide()
+            $(this).data('show-menu', false)
+        } else {
+            $('.mobile-sort-by-popup').show()
+            $(this).data('show-menu', true)
+        }
+    })
+}
+
 function setupSearchResultsClearAll() {
     $('.clear-all').click(function() {
         var current_params = new URLSearchParams(location.search);
@@ -762,12 +775,14 @@ if (window.location.pathname.includes('/users/how-can-i-help')) {
 if (
     window.location.pathname.includes('/dashboard/view-questions') ||
     window.location.pathname.includes('/dashboard/answer-questions') ||
-    window.location.pathname.includes('/dashboard/review-answers') ||
+    window.location.pathname.includes('/dashboard/review-answers') || 
+    window.location.pathname.includes('/dashboard/translate/answers') || 
     window.location.pathname.includes('/search')
    ) {
     setupResultsPagination();
     setupSearchResultsFilter();
     setupSearchResultsMobileFilter();
+    setupSearchResultsMobileSort();
     setupSearchResultsClearAll();
     setupBookmarkContentFunctionality();
 }
