@@ -2579,6 +2579,7 @@ figure.image figcaption {
     cursor: default;
 }
 
+.search-container .mobile-sort-by-popup,
 .search-container .mobile-filter-controls {
     display: none;
 }
@@ -2599,6 +2600,11 @@ figure.image figcaption {
 
     .search-container .mobile-filter-controls button:not(:last-child) {
         border-right: 1px solid;
+    }
+
+    .search-results-list {
+        margin-left: 1rem;
+        margin-right: 1rem;
     }
 }
 

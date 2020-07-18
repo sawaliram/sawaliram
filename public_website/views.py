@@ -109,34 +109,39 @@ class SearchView(View):
 
         search_categories = request.GET.getlist('category')
 
-        if request.GET.getlist('questions') and not search_categories:
+        # Select only questions by default, if no category selected
+        if not search_categories:
             search_categories.append('questions')
+
 
         if 'q' in request.GET and request.GET.get('q') != '':
             if not search_categories:
                 results['questions'] = Question.objects.filter(
-                            Q(question_text__icontains=request.GET.get('q')) |
-                            Q(question_text_english__icontains=request.GET.get('q')) |
-                            Q(school__icontains=request.GET.get('q')) |
-                            Q(area__icontains=request.GET.get('q')) |
-                            Q(state__icontains=request.GET.get('q')) |
-                            Q(field_of_interest__icontains=request.GET.get('q')) |
-                            Q(published_source__icontains=request.GET.get('q'))
+                            Q(pk__iexact=request.GET.get('q')) |
+                            Q(question_text__search=request.GET.get('q')) |
+                            Q(question_text_english__search=request.GET.get('q')) |
+                            Q(school__search=request.GET.get('q')) |
+                            Q(area__search=request.GET.get('q')) |
+                            Q(state__search=request.GET.get('q')) |
+                            Q(field_of_interest__search=request.GET.get('q')) |
+                            Q(published_source__search=request.GET.get('q'))
                         )
                 results['articles'] = PublishedArticle.objects.filter(
                             Q(title__search=request.GET.get('q')) |
+                            Q(pk__iexact=request.GET.get('q')) |
                             Q(body__search=request.GET.get('q'))
                         ).order_by('-updated_on')
             else:
                 if 'questions' in search_categories:
                     results['questions'] = Question.objects.filter(
-                            Q(question_text__icontains=request.GET.get('q')) |
-                            Q(question_text_english__icontains=request.GET.get('q')) |
-                            Q(school__icontains=request.GET.get('q')) |
-                            Q(area__icontains=request.GET.get('q')) |
-                            Q(state__icontains=request.GET.get('q')) |
-                            Q(field_of_interest__icontains=request.GET.get('q')) |
-                            Q(published_source__icontains=request.GET.get('q'))
+                            Q(pk__iexact=request.GET.get('q')) |
+                            Q(question_text__search=request.GET.get('q')) |
+                            Q(question_text_english__search=request.GET.get('q')) |
+                            Q(school__search=request.GET.get('q')) |
+                            Q(area__search=request.GET.get('q')) |
+                            Q(state__search=request.GET.get('q')) |
+                            Q(field_of_interest__search=request.GET.get('q')) |
+                            Q(published_source__search=request.GET.get('q'))
                         )
                 else:
                     results['questions'] = Question.objects.none()
@@ -144,13 +149,21 @@ class SearchView(View):
                 if 'articles' in search_categories:
                     results['articles'] = PublishedArticle.objects.filter(
                             Q(title__search=request.GET.get('q')) |
+                            Q(pk__iexact=request.GET.get('q')) |
                             Q(body__search=request.GET.get('q'))
                         ).order_by('-updated_on')
                 else:
                     results['articles'] = PublishedArticle.objects.none()
         else:
-            results['questions'] = Question.objects.all()
-            results['articles'] = PublishedArticle.objects.all()
+            if 'questions' in search_categories:
+                results['questions'] = Question.objects.all()
+            else:
+                results['questions'] = Question.objects.none()
+
+            if 'articles' in search_categories:
+                results['articles'] = PublishedArticle.objects.all()
+            else:
+                results['articles'] = PublishedArticle.objects.none()
 
         return results
 
@@ -165,7 +178,7 @@ class SearchView(View):
         """
         Returns the page title for  breadcrumbs and <title> tag
         """
-        return 'Search'
+        return _('Search')
 
     def get_enable_breadcrumbs(self, request):
         """
@@ -198,7 +211,7 @@ class SearchView(View):
 
         results = self.get_querysets(request)
 
-        result = results.get('questions')
+        questions = results.get('questions')
         articles = results.get('articles')
 
         # get values for filter
@@ -224,19 +237,23 @@ class SearchView(View):
             questions_queryset = []
 
             if 'answered' in question_categories:
-                answered_questions = result.filter(answers__status='published')
+                answered_questions = questions.filter(answers__status='published')
                 questions_queryset = answered_questions
 
             if 'unanswered' in question_categories:
-                unanswered_questions = result.exclude(answers__status='published')
+                unanswered_questions = questions.exclude(answers__status='published')
+
                 if type(questions_queryset) is QuerySet:
                     questions_queryset = questions_queryset | unanswered_questions
                 else:
                     questions_queryset = unanswered_questions
 
-            result = questions_queryset
+            questions = questions_queryset
 
-        available_subjects = list(result.order_by()
+            # Hide articles, since question filters don't apply
+            articles = articles.none()
+
+        available_subjects = list(questions.order_by()
                                         .values_list('field_of_interest', flat=True)
                                         .distinct('field_of_interest')
                                         .values_list('field_of_interest'))
@@ -244,21 +261,21 @@ class SearchView(View):
         # convert list of tuples to list of strings
         available_subjects = [''.join(item) for item in available_subjects]
 
-        states = result.order_by() \
+        states = questions.order_by() \
             .values_list('state') \
             .distinct('state') \
             .values('state') \
             .exclude(state__exact='') \
             .exclude(state__isnull=True)
 
-        curriculums = result.order_by() \
+        curriculums = questions.order_by() \
                             .values_list('curriculum_followed') \
                             .distinct('curriculum_followed') \
                             .values('curriculum_followed') \
                             .exclude(curriculum_followed__exact='') \
                             .exclude(curriculum_followed__isnull=True)
 
-        languages = result.order_by() \
+        languages = questions.order_by() \
             .values_list('language') \
             .distinct('language') \
             .values('language') \
@@ -268,37 +285,44 @@ class SearchView(View):
         # apply filters if any
         subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
         if subjects_to_filter_by:
-            result = result.filter(field_of_interest__in=subjects_to_filter_by)
+            questions = questions.filter(field_of_interest__in=subjects_to_filter_by)
+            articles = articles.none() # hide articles
 
         states_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('state')]
         if states_to_filter_by:
-            result = result.filter(state__in=states_to_filter_by)
+            questions = questions.filter(state__in=states_to_filter_by)
+            articles = articles.none() # hide articles
 
         curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
         if curriculums_to_filter_by:
-            result = result.filter(curriculum_followed__in=curriculums_to_filter_by)
+            questions = questions.filter(curriculum_followed__in=curriculums_to_filter_by)
+            articles = articles.none() # hide articles
 
         languages_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('language')]
         if languages_to_filter_by:
-            result = result.filter(language__in=languages_to_filter_by)
+            questions = questions.filter(language__in=languages_to_filter_by)
+            articles = articles.filter(language__in=languages_to_filter_by) # TODO support translations
 
-        # sort the results if sort-by parameter exists
+        # sort the questions if sort-by parameter exists
         # default: newest
         sort_by = request.GET.get('sort-by', 'newest')
 
         if sort_by == 'newest':
-            result = result.order_by('-created_on')
+            quesions = questions.order_by('-created_on')
+            articles = articles.order_by('-published_on')
+        else:
+            articles = articles.order_by('published_on')
 
         # save list of IDs for Submit Answer/Review Answer
         page_title = self.get_page_title(request)
         if page_title == _('Review Answers') or page_title == _('Answer Questions'):
-            result_id_list = [id['id'] for id in result.values('id')]
+            result_id_list = [id['id'] for id in questions.values('id')]
             request.session['result_id_list'] = result_id_list
 
-        paginator = Paginator(result, 15)
+        paginator = Paginator(questions, 15)
 
         page = request.GET.get('page', 1)
-        result_page_one = paginator.get_page(page)
+        questions_page_one = paginator.get_page(page)
 
         # get list of IDs of bookmarked items
         bookmark_id_list = Bookmark.objects.filter(user_id=request.user.id) \
@@ -310,8 +334,8 @@ class SearchView(View):
             'grey_background': 'True',
             'page_title': page_title,
             'enable_breadcrumbs': self.get_enable_breadcrumbs(request),
-            'results': result_page_one,
-            'result_size': result.count(),
+            'questions': questions_page_one,
+            'result_size': questions.count(), #The count for anwsers, etc. will be added to this below
             'subjects': subjects,
             'available_subjects': available_subjects,
             'states': states,
@@ -335,8 +359,11 @@ class SearchView(View):
             context['result_size'] = context['result_size'] + articles.count()
 
         # create list of active categories
-        if page_title == _('Search'):
+        if page_title == _('Search') or page_title == _('Translate Content'):
             active_categories = request.GET.getlist('category')
+
+            # Select questions only by default, if no category selected
+            if not active_categories: active_categories.append('questions')
             context['active_categories'] = active_categories
 
             if request.GET.getlist('questions') and not active_categories:
