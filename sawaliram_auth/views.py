@@ -142,29 +142,28 @@ class VerifyEmailView(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class HowCanIHelpView(View):
+class RequestAccess(View):
 
     def get(self, request):
-        if request.user.groups.filter(name='volunteers').exists():
-            return redirect('dashboard:home')
-        return render(request, 'sawaliram_auth/how-can-i-help.html')
+        return render(request, 'sawaliram_auth/request-access.html')
 
     def post(self, request):
 
-        volunteer_requests = request.POST.getlist('volunteer-request')
-        for volunteer_request in volunteer_requests:
-            new_volunteer_request = VolunteerRequest(
-                permission_requested=volunteer_request + 's',
-                request_text=request.POST[volunteer_request+'-entry-submission'],
-                status='pending',
-                requested_by=request.user
-            )
-            new_volunteer_request.save()
+        permissions_requested = []
+        if request.POST.get('expert-permission') == 'true':
+            permissions_requested.append('E')
+        if request.POST.get('writer-permission') == 'true':
+            permissions_requested.append('W')
+        if request.POST.get('translator-permission') == 'true':
+            permissions_requested.append('T')
 
-        volunteers = Group.objects.get(name='volunteers')
-        volunteers.user_set.add(request.user)
-
-        return redirect('dashboard:home')
+        new_volunteer_request = VolunteerRequest(
+            permissions_requested=''.join(permissions_requested),
+            request_text=request.POST['permission-writeup'],
+            status='pending',
+            requested_by=request.user
+        )
+        new_volunteer_request.save()
 
 
 class SigninView(View):
@@ -321,19 +320,27 @@ class ChangePasswordView(View):
 class GrantOrDenyUserPermission(View):
 
     def post(self, request):
-        group = Group.objects.get(name=request.POST.get('permission'))
+        permissions = request.POST.getlist('permissions')
         permission_action = request.POST.get('permission-action')
         user = User.objects.get(id=request.POST.get('user-id'))
 
+        display_permissions = []
+        for permission in permissions:
+            display_permissions.append(permission[:-1].title())
+
         if permission_action == 'grant':
-            group.user_set.add(user)
-            messages.success(request, (_(user.first_name + ' ' + user.last_name + ' was granted ' + request.POST.get('permission') + ' access')))
+            for permission in permissions:
+                group = Group.objects.get(name=permission)
+                group.user_set.add(user)
+            messages.success(request, (_(user.first_name + ' ' + user.last_name + ' was granted following access: ' + ', '.join(display_permissions))))
         elif permission_action == 'deny':
-            messages.success(request, (_(user.first_name + ' ' + user.last_name + ' was denied ' + request.POST.get('permission') + ' access')))
+            messages.success(request, (_(user.first_name + ' ' + user.last_name + ' was denied following access: ' + ', '.join(display_permissions))))
 
         request_entry = VolunteerRequest.objects.get(id=request.POST.get('request-id'))
         request_entry.status = 'processed'
         request_entry.save()
+
+        request.session['active_tab'] = 'access_requests'
 
         return redirect(request.META['HTTP_REFERER'])
 

@@ -331,6 +331,11 @@ class ManageUsersView(View):
             'grey_background': 'True'
         }
 
+        # get active tab
+        if 'active_tab' in request.session:
+            context['active_tab'] = request.session['active_tab']
+            del request.session['active_tab']
+
         return render(request, 'dashboard/manage-users.html', context)
 
 
@@ -348,7 +353,7 @@ class ChangeUserPermissions(View):
                 # remove pending volunteer request, if any
                 pending_requests = VolunteerRequest.objects \
                                                    .filter(requested_by_id=user.id) \
-                                                   .filter(permission_requested=permission) \
+                                                   .filter(permissions_requested=permission) \
                                                    .filter(status='pending')
                 if pending_requests:
                     for pending_request in pending_requests:

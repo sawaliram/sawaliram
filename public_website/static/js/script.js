@@ -36,26 +36,15 @@ function closeMenusOnClickingDarkbackground() {
     });
 }
 
-function highlightSelectedVolunteerOption() {
-    $('.volunteer-option input:checkbox').change(function() {
-        if(this.checked) {
-            $(this).parent('.volunteer-option').addClass('selected');
+function setupAccessSelection() {
+    $('.access-item').click(function() {
+        $(this).find('.selected-check').toggleClass('show');
+        var access_form_field = $('input[name="' + $(this).data('permission') + '"]');
+        if (access_form_field.val() == 'false') {
+            access_form_field.val('true');
         }
         else {
-            $(this).parent('.volunteer-option').removeClass('selected');
-        }
-    });
-}
-
-function openVolunteerOptionDialog() {
-    $('.volunteer-option input:checkbox').change(function() {
-        if(this.checked) {
-            $(this).parent('.volunteer-option').find('.volunteer-dialog textarea').prop('required', true);
-            $(this).parent('.volunteer-option').find('.volunteer-dialog').show(300);
-        }
-        else {
-            $(this).parent('.volunteer-option').find('.volunteer-dialog textarea').prop('required', false);
-            $(this).parent('.volunteer-option').find('.volunteer-dialog').hide(300);
+            access_form_field.val('false');
         }
     });
 }
@@ -754,9 +743,8 @@ if (window.location.pathname.includes('/view-answer')) {
     setupDeleteReviewComment();
 }
 
-if (window.location.pathname.includes('/users/how-can-i-help')) {
-    highlightSelectedVolunteerOption();
-    openVolunteerOptionDialog();
+if (window.location.pathname.includes('/users/request-access')) {
+    setupAccessSelection();
 }
 
 if (

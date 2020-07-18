@@ -101,7 +101,7 @@ class VolunteerRequest(models.Model):
     class Meta:
         db_table = 'volunteer_request'
 
-    permission_requested = models.CharField(max_length=50)
+    permissions_requested = models.CharField(max_length=50)
     request_text = models.TextField(null=True)
     status = models.CharField(max_length=50, default='pending')
     requested_by = models.ForeignKey(

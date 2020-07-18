@@ -1,0 +1,51 @@
+{% extends "sawaliram_auth/base.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %} Request Access | Sawaliram {% endblock %}
+
+{% block content %}
+<div class="request-access-container">
+    <div class="greeting-message">
+        <h1>{% trans 'Thank you for joining us!' %}</h1>
+        <p>
+            {% trans 'All our volunteers are able to submit questions to our repository. Apart from submitting questions, we would also love it if you can help answer the questions, write articles to be featured on our website and help us translate the questions, answers and articles to and from multiple languages so that everyone can make use of this valuable resource. Pick the tasks you would like to contribute to and send us a small message stating why you can do this and we will get in touch with you.' %}<br>
+            <br>
+            {% trans 'Welcome to Team Sawaliram!' %}
+        </p>
+    </div>
+    <div class="select-access">
+        <div class="access-item" data-permission="expert-permission">
+            <i class="fas fa-check-square selected-check"></i>
+            <img src="{% static 'icons/answer_questions.png' %}" alt="{% trans 'Answer Questions' %}">
+            <h2>{% trans 'Answer Questions' %}</h2>
+            <p>{% trans 'Answer questions across subjects and in multiple languages' %}</p>
+        </div>
+        <div class="access-item" data-permission="writer-permission">
+            <i class="fas fa-check-square selected-check"></i>
+            <img src="{% static 'icons/write_articles.png' %}" alt="{% trans 'Write Articles' %}">
+            <h2>{% trans 'Write Articles' %}</h2>
+            <p>{% trans 'Share your stories and reflections on curiosity and questioning' %}</p>
+        </div>
+        <div class="access-item" data-permission="translator-permission">
+            <i class="fas fa-check-square selected-check"></i>
+            <img src="{% static 'icons/translate_content.png' %}" alt="{% trans 'Translate Content' %}">
+            <h2>{% trans 'Translate Content' %}</h2>
+            <p>{% trans 'Translate our content to and from multiple languages' %}</p>
+        </div>
+    </div>
+    <form action="{% url 'sawaliram_auth:request-access' %}" method="POST">
+        {% csrf_token %}
+        <p class="permission-writeup-intro">Briefly write about your personal or professional experience and motivation to join the Sawaliram family. Include the languages that you can read and write.</p>
+        <input type="hidden" name="expert-permission" value="false">
+        <input type="hidden" name="writer-permission" value="false">
+        <input type="hidden" name="translator-permission" value="false">
+        <textarea class="permission-writeup" name="permission-writeup" rows="7" maxlength="1000" required></textarea>
+        <p class="max-word-limit">Maximum 200 words</p>
+        <p class="submit-button-wrapper">
+            <button type="submit" class="btn btn-primary">Get started!</button>
+        </p>
+    </form>
+</div>
+{% endblock %}

@@ -12,24 +12,26 @@
 
 <ul class="nav nav-tabs primary-tabs" id="manageUsersTabs" role="tablist">
     <li class="nav-item">
-        <a class="nav-link active" href="#allUsers" id="allUsersTab" data-toggle="tab" role="tab" aria-controls="allusers">All users ({{ all_user_count }})</a>
+        <a class="nav-link {% if not active_tab %}active{% else %}{% if active_tab == 'all_users' %}active{% endif %}{% endif %}" href="#allUsers" id="allUsersTab" data-toggle="tab" role="tab" aria-controls="allusers">All users ({{ all_user_count }})</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#accessRequests" id="accessRequestsTab" data-toggle="tab" role="tab" aria-controls="accessrequests">Access requests ({{ access_requests|length }})</a>
+        <a class="nav-link {% if active_tab == 'access_requests' %}active{% endif %}" href="#accessRequests" id="accessRequestsTab" data-toggle="tab" role="tab" aria-controls="accessrequests">Access requests ({{ access_requests|length }})</a>
     </li>
 </ul>
 <div class="tab-content primary-tab-content manage-users-content">
-    <div class="tab-pane fade active show" id="allUsers" role="tabpanel" aria-labelledby="allUsersTab">
+    <div class="tab-pane fade {% if not active_tab %}active show{% else %}{% if active_tab == 'all_users' %}active show{% endif %}{% endif %}" id="allUsers" role="tabpanel" aria-labelledby="allUsersTab">
         <div class="manage-users-container">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endfor %}
+            {% if not active_tab == 'access_requests' %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             {% endif %}
             <form action="" class="search user-list-search" method="GET">
                 <input class="search-field" type="text" name="q" placeholder="{% trans 'Search by ID, Name or Organisation' %}" {% if search_query %} value="{{ search_query }}" {% endif %}>
@@ -290,8 +292,20 @@
             {% endif %}
         </div>
     </div>
-    <div class="tab-pane fade" id="accessRequests" role="tabpanel" aria-labelledby="accessRequestsTab">
+    <div class="tab-pane fade {% if active_tab == 'access_requests' %}active show{% endif %}" id="accessRequests" role="tabpanel" aria-labelledby="accessRequestsTab">
         <div class="manage-users-container">
+            {% if active_tab == 'access_requests' %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
             {% if access_requests %}
                 {% for access_request in access_requests %}
                     <div class="card user-card">
@@ -333,15 +347,17 @@
                                 <div class="user-additional-info">
                                     <div class="user-info-item requested-permissions">
                                         <span class="info-title">{% trans 'Permissions requested' %}</span>
-                                        {% if access_request.permission_requested == 'experts' %}
-                                            <p><span class="user-permission-icon expert">E</span> Experts</p>
-                                        {% endif %}
-                                        {% if access_request.permission_requested == 'writers' %}
-                                            <p><span class="user-permission-icon writer">W</span> Writers</p>
-                                        {% endif %}
-                                        {% if access_request.permission_requested == 'translators' %}
-                                            <p><span class="user-permission-icon translator">T</span> Translators</p>
-                                        {% endif %}
+                                        {% for permission in access_request.permissions_requested|make_list %}
+                                            {% if permission == 'E' %}
+                                                <p><span class="user-permission-icon expert">E</span> Experts</p>
+                                            {% endif %}
+                                            {% if permission == 'W' %}
+                                                <p><span class="user-permission-icon writer">W</span> Writers</p>
+                                            {% endif %}
+                                            {% if permission == 'T' %}
+                                                <p><span class="user-permission-icon translator">T</span> Translators</p>
+                                            {% endif %}
+                                        {% endfor %}
                                     </div>
                                     <div class="user-info-item">
                                         <span class="info-title">{% trans 'Profile created' %}</span>
@@ -373,7 +389,17 @@
                         <div class="user-controls">
                             <form class="access-request-form" action="{% url 'sawaliram_auth:grant-permission' %}" method="POST">
                                 {% csrf_token %}
-                                <input type="hidden" name="permission" value="{{ access_request.permission_requested }}">
+                                {% for permission in access_request.permissions_requested|make_list %}
+                                    {% if permission == 'E' %}
+                                        <input type="hidden" name="permissions" value="experts">
+                                    {% endif %}
+                                    {% if permission == 'W' %}
+                                        <input type="hidden" name="permissions" value="writers">
+                                    {% endif %}
+                                    {% if permission == 'T' %}
+                                        <input type="hidden" name="permissions" value="translators">
+                                    {% endif %}
+                                {% endfor %}
                                 <input type="hidden" name="request-id" value="{{ access_request.id }}">
                                 <input type="hidden" name="user-id" value="{{ access_request.requested_by.id }}">
                                 <button class="btn btn-small grant-access" name="permission-action" type="submit" value="grant"><i class="fas fa-check"></i> Grant</button>

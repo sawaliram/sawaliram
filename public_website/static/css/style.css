@@ -2892,6 +2892,8 @@ figure.image figcaption {
 .manage-users-content .user-card .user-info .user-info-item span.info-title {
     font-size: 0.8rem;
     color: #a4a4a4;
+    display: inline-block;
+    margin-bottom: 0.5rem;
 }
 
 .manage-users-content .user-card .user-info .user-info-item p {
@@ -4692,44 +4694,6 @@ button.social-login i {
     margin-top: 1.5rem;
 }
 
-.onboarding-form-section h1 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-@media (min-width: 992px) {
-    .onboarding-form-section button.social-login {
-        padding: 0.5rem 2.5rem;
-    }
-}
-
-@media (min-width: 992px) {
-    .onboarding-form-section {
-        width: 80%;
-    }
-}
-
-@media (min-width: 768px) {
-    .onboarding-text-column {
-        position: relative;
-    }
-    
-    .signin-message {
-        position: absolute;
-        bottom: 0;
-    }
-}
-
-.onboarding-form-column {
-    text-align: center;
-}
-
-@media (max-width: 768px) {
-    .onboarding-form-column {
-        margin-top: 1.5rem;
-    }
-}
-
 .form-error {
     font-size: 0.8rem;
     text-align: right;
@@ -4763,38 +4727,111 @@ button.social-login i {
     color: #ffffff;
 }
 
-.onboarding-form-column .volunteer-option {
-    text-align: left;
-    background-color: #ececec;
-    padding: 10px 20px;
-    margin-bottom: 1rem;
+.auth-container .request-access-container {
+    width: 70%;
+    padding-top: 5rem;
+}
+
+@media(max-width: 768px) {
+    .auth-container .request-access-container {
+        width: 100%;
+        padding-top: 0;
+    }
+}
+
+.auth-container .request-access-container .greeting-message {
+    margin-bottom: 2rem;
+}
+
+.auth-container .request-access-container h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #9b63a8;
+}
+
+@media(max-width: 768px) {
+    .auth-container .request-access-container h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+}
+
+.auth-container .request-access-container .select-access {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.auth-container .request-access-container .select-access .access-item {
+    position: relative;
+    flex-basis: 30%;
+    text-align: center;
+    border: 1px solid #e4e4e4;
+    box-shadow: 1px 3px 6px #d3d3d3;
     border-radius: 5px;
+    padding: 1rem;
+    cursor: pointer;
 }
 
-.onboarding-form-column .volunteer-option:last-of-type {
-    margin-bottom: 1.5rem;
+@media(max-width: 768px) {
+    .auth-container .request-access-container .select-access {
+        flex-direction: column;
+        margin-bottom: 1rem;
+    }
+
+    .auth-container .request-access-container .select-access .access-item {
+        margin-bottom: 2rem;
+    }
 }
 
-.onboarding-form-column .volunteer-option label{
-    margin-left: 0.4rem;
+.auth-container .request-access-container .select-access .access-item:hover {
+    box-shadow: 1px 15px 20px #ccc;
 }
 
-.onboarding-form-column .volunteer-option .small {
-    color: #757575;
-}
-
-.onboarding-form-column .volunteer-option.selected,
-.onboarding-form-column .volunteer-option.selected .small {
+.auth-container .request-access-container .select-access .access-item .selected-check {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
     color: #87B24D;
-    background-color: #f7ffed; 
-}
-
-.onboarding-form-column .volunteer-option .volunteer-dialog {
+    font-size: 1.5rem;
     display: none;
 }
 
-.onboarding-form-column .volunteer-option .volunteer-dialog textarea {
-    border-radius: 5px;
+.auth-container .request-access-container .select-access .access-item .selected-check.show {
+    display: block;
+}
+
+.auth-container .request-access-container .select-access .access-item h2 {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.auth-container .request-access-container .select-access .access-item img {
+    margin-bottom: 1rem;
+}
+
+.auth-container .request-access-container .select-access .access-item p {
+    color: #8a8a8a;
+    font-size: 0.9rem;
+}
+
+.auth-container .request-access-container form p.permission-writeup-intro {
+    color: #8a8a8a;
+}
+
+.auth-container .request-access-container form p.submit-button-wrapper {
+    text-align: center;
+}
+
+.auth-container .request-access-container form .permission-writeup {
+    margin-bottom: 0.5rem;
+}
+
+.auth-container .request-access-container form .max-word-limit {
+    text-align: right;
+    font-size: 0.8rem;
+    color: #acacac;
 }
 
 .auth-interstitial-body {
