@@ -250,8 +250,6 @@ class SearchView(View):
 
             questions = questions_queryset
 
-            # Hide articles, since question filters don't apply
-            articles = articles.none()
 
         available_subjects = list(questions.order_by()
                                         .values_list('field_of_interest', flat=True)
@@ -286,17 +284,14 @@ class SearchView(View):
         subjects_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('subject')]
         if subjects_to_filter_by:
             questions = questions.filter(field_of_interest__in=subjects_to_filter_by)
-            articles = articles.none() # hide articles
 
         states_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('state')]
         if states_to_filter_by:
             questions = questions.filter(state__in=states_to_filter_by)
-            articles = articles.none() # hide articles
 
         curriculums_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('curriculum')]
         if curriculums_to_filter_by:
             questions = questions.filter(curriculum_followed__in=curriculums_to_filter_by)
-            articles = articles.none() # hide articles
 
         languages_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('language')]
         if languages_to_filter_by:
