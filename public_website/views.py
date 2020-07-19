@@ -308,9 +308,10 @@ class SearchView(View):
         sort_by = request.GET.get('sort-by', 'newest')
 
         if sort_by == 'newest':
-            quesions = questions.order_by('-created_on')
+            questions = questions.order_by('-created_on')
             articles = articles.order_by('-published_on')
         else:
+            questions = questions.order_by('created_on')
             articles = articles.order_by('published_on')
 
         # save list of IDs for Submit Answer/Review Answer
