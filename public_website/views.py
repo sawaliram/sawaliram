@@ -211,8 +211,8 @@ class SearchView(View):
 
         results = self.get_querysets(request)
 
-        questions = results.get('questions')
-        articles = results.get('articles')
+        questions = results.get('questions') or Question.objects.none()
+        articles = results.get('articles') or Article.objects.none()
 
         # get values for filter
         subjects = [
