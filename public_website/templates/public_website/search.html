@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load to_language_name %}
 
-{% block title %} {{ page_title }} | {% trans 'Sawaliram' %}{% endblock %}
+{% block title %}{{ page_title }} | {% trans 'Sawaliram' %}{% endblock %}
 
 {% block content %}
 <div class="search-container">
@@ -209,7 +209,7 @@
                     {% endif %}
                 </div>
                 {% if page_title != _('Translate Content') %}
-                    {% for answer in result.answers.all %}
+                    {% for answer in question.answers.all %}
                         {% if page_title == _('Review Answers') %}
                             <div class="answer-preview">
                                 <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
@@ -220,7 +220,7 @@
                                 {% endfor %}
                                 <div class="preview-answer-controls dual-item-controls-section">
                                     <span class="answer-review-count"><i class="far fa-comment-alt"></i> {{ answer.comments.all|length }} Comment{{ answer.comments.all|length|pluralize }}</span>
-                                    <a href="{% url 'dashboard:review-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
+                                    <a href="{% url 'dashboard:review-answer' question_id=question.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
                                 </div>
                             </div>
                         {% endif %}
@@ -234,7 +234,7 @@
                                     </h4>
                                 {% endfor %}
                                 <div class="preview-answer-controls">
-                                    <a href="{% url 'public_website:view-answer' question_id=result.id answer_id=answer.id %}" class="btn btn-small {% if page_title == _('Answer Questions') %} btn-primary-hollow{% else %}btn-primary{% endif %}">View Answer</a>
+                                    <a href="{% url 'public_website:view-answer' question_id=question.id answer_id=answer.id %}" class="btn btn-small {% if page_title == _('Answer Questions') %} btn-primary-hollow{% else %}btn-primary{% endif %}">View Answer</a>
                                 </div>
                             </div>
                             {% endif%}

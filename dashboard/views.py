@@ -608,7 +608,7 @@ class ViewQuestionsView(SearchView):
             return results
 
     def get_page_title(self, request):
-        return 'View Questions'
+        return _('View Questions')
 
     def get_enable_breadcrumbs(self, request):
         return 'Yes'
@@ -672,7 +672,7 @@ class ReviewAnswersList(SearchView):
             return results
 
     def get_page_title(self, request):
-        return 'Review Answers'
+        return _('Review Answers')
 
     def get_enable_breadcrumbs(self, request):
         return 'Yes'
