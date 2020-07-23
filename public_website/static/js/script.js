@@ -172,6 +172,24 @@ function setupResultsPagination() {
     });
 }
 
+function setupSearchResultsFilterPreservation() {
+    $('form.search').submit(function (e) {
+
+        // prevent form from submitting
+        e.preventDefault()
+
+        // get current param list
+        var params = new URLSearchParams(location.search)
+
+        // set current search string
+        var q = this.querySelector('[name=q]').value
+        params.set('q', q)
+
+        // redirect to the new page, after setting GET parameters
+        location.href = window.location.origin + window.location.pathname + '?' + params.toString()
+    })
+}
+
 function setupSearchResultsFilter() {
     $('.category-option').click(function() {
         if (!$(this).hasClass('.no-fun')) {
@@ -786,6 +804,7 @@ if (
    ) {
     setupResultsPagination();
     setupSearchResultsFilter();
+    setupSearchResultsFilterPreservation();
     setupSearchResultsMobileFilter();
     setupSearchResultsMobileSort();
     setupSearchResultsClearAll();
