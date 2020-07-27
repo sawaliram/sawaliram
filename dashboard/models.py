@@ -388,9 +388,9 @@ class AnswerCredit(models.Model):
 
     def save(self, *args, **kwargs):
         credit_sorting_order = {
-            'publication': 1,
-            'author': 2,
-            'co-author': 3,
+            'author': 1,
+            'co-author': 2,
+            'publication': 3,
             'submitter': 4
         }
         self.credit_title_order = credit_sorting_order[self.credit_title]
@@ -424,9 +424,9 @@ class ArticleCredit(models.Model):
 
     def save(self, *args, **kwargs):
         credit_sorting_order = {
-            'publication': 1,
-            'author': 2,
-            'co-author': 3,
+            'author': 1,
+            'co-author': 2,
+            'publication': 3,
             'submitter': 4
         }
         self.credit_title_order = credit_sorting_order[self.credit_title]

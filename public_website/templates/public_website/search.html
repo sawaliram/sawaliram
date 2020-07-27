@@ -215,7 +215,7 @@
                                 <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
                                 {% for credit in answer.credits.all %}
                                     <h4>
-                                        {{ credit.credit_user_name }} ({% trans credit.credit_title %})
+                                        {% trans credit.credit_title %}: {{ credit.credit_user_name }}
                                     </h4>
                                 {% endfor %}
                                 <div class="preview-answer-controls dual-item-controls-section">
@@ -230,7 +230,7 @@
                                 <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
                                 {% for credit in answer.credits.all %}
                                     <h4>
-                                        {{ credit.credit_user_name }} ({% trans credit.credit_title %})
+                                        {% trans credit.credit_title|title %}: {{ credit.credit_user_name }}
                                     </h4>
                                 {% endfor %}
                                 <div class="preview-answer-controls">
