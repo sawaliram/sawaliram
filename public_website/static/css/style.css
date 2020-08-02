@@ -92,6 +92,10 @@ input[type=email] {
     margin-bottom: 1rem;
 }
 
+.card.sw-shadow{
+    box-shadow: 0px 2px 10px 0px #d3d3d3;
+}
+
 /* plain input styles (so they look the same as rendered content) */
 
 .input-plain {
@@ -655,7 +659,8 @@ button.search-field-submit {
 }
 
 .navbar .navbar-user-wrapper #navbarUserButton {
-    padding: 0.3rem 1rem;
+    padding: 0rem 1rem;
+    padding-left: 0;
     border: none;
     background-color: #f2f2f2;
     border-radius: 5px;
@@ -669,9 +674,11 @@ button.search-field-submit {
 }
 
 .navbar .navbar-user-wrapper #navbarUserButton .profile-picture {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     margin-right: 0.3rem;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }@media (max-width: 768px) {
     .navbar .navbar-user-wrapper #navbarUserButton .profile-picture {
         width: 30px;
@@ -2779,6 +2786,8 @@ figure.image figcaption {
     width: 70px;
     height: 70px;
     margin-right: 1rem;
+    border-radius: 5px;
+    background-color: #7dc190;
 }
 
 @media (max-width: 768px) {
@@ -3612,6 +3621,7 @@ figure.image figcaption {
     display: flex;
     min-height: 100vh;
     margin-top: -2rem;
+    margin-bottom: -4rem;
 }
 
 .user-profile-container .user-profile-menu {
@@ -3649,9 +3659,11 @@ figure.image figcaption {
 
 .user-profile-container .user-profile-menu img.profile-picture {
     display: block;
-    width: 128px;
+    height: 100px;
+    width: 100px;
+    border-radius: 5px;
     margin: auto;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
 }
 
 @media (max-width: 768px) {
@@ -3761,6 +3773,44 @@ figure.image figcaption {
     padding: 1rem;
 }
 
+.user-profile-container .user-profile-content .tab-pane .card .user-permission-item {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.user-profile-container .user-profile-content .tab-pane .card .user-permission-item .user-permission-indicator {
+    margin-right: 0.5rem;
+}
+
+.user-profile-container .user-profile-content .tab-pane .card .user-permission-item .user-permission-indicator .permission-yes {
+    color: #87B24D;
+}
+
+.user-profile-container .user-profile-content .tab-pane .card .user-permission-item .user-permission-indicator .permission-no {
+    color: #9b63a8;
+}
+
+.user-profile-container .user-profile-content .tab-pane .card .user-permission-item .user-permission-text .user-permission-title {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+
+.user-profile-container .user-profile-content .tab-pane .card .user-permission-item .user-permission-text .user-permission-description {
+    color: #868686;
+}
+
+.user-profile-container .user-profile-content .tab-pane .card .user-permission-all {
+    margin-top: 0.7rem;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.user-profile-container .user-profile-content .tab-pane .card .user-permission-all i {
+    color: #87B24D;
+    margin-right: 0.2rem;
+    font-size: 1.5rem;
+}
+
 .user-profile-container .user-profile-content .tab-pane .card:not(:last-child) {
     margin-bottom: 2rem;
 }
@@ -3829,7 +3879,8 @@ figure.image figcaption {
 }
 
 .user-profile-container .user-profile-content .tab-pane h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: bold;
     margin-bottom: 0.3rem;
     color: #9b63a8;
 }
@@ -4002,38 +4053,6 @@ figure.image figcaption {
 .confirm-delete-modal .modal-content .close-modal {
     color: #777;
     border: 1px solid #777;
-}
-
-#changeProfilePictureModal h1 {
-    font-size: 1.5rem;
-    margin: 1rem 0 2rem 0;
-}
-
-#changeProfilePictureModal form {
-    padding: 0 1rem 1rem 1rem;
-}
-
-#changeProfilePictureModal form .picture-option-container {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-}
-
-#changeProfilePictureModal form .picture-option-container .picture-option-wrapper {
-    flex-grow: 1;
-    margin-bottom: 1rem;
-}
-
-#changeProfilePictureModal form .picture-option-container .picture-option-wrapper img {
-    width: 90px;
-    height: 90px;
-}
-
-#changeProfilePictureModal .close-modal {
-    position: absolute;
-    top: 5px;
-    right: 0;
-    color: #8c8c8c;
 }
 
 .card .card-drawer {
@@ -4777,7 +4796,14 @@ button.social-login i {
     box-shadow: 1px 3px 6px #d3d3d3;
     border-radius: 5px;
     padding: 1rem;
+}
+
+.auth-container .request-access-container .select-access .access-item.selectable {
     cursor: pointer;
+}
+
+.auth-container .request-access-container .select-access .access-item.selectable:hover {
+    box-shadow: 1px 15px 20px #ccc;
 }
 
 @media(max-width: 768px) {
@@ -4789,10 +4815,6 @@ button.social-login i {
     .auth-container .request-access-container .select-access .access-item {
         margin-bottom: 2rem;
     }
-}
-
-.auth-container .request-access-container .select-access .access-item:hover {
-    box-shadow: 1px 15px 20px #ccc;
 }
 
 .auth-container .request-access-container .select-access .access-item .selected-check {

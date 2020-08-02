@@ -525,7 +525,7 @@ class DeleteUserCommentOnAnswer(View):
 
 class UserProfileView(View):
 
-    def get(self, request, user_id):
+    def get(self, request, user_id, active_tab='settings'):
 
         if not User.objects.filter(id=user_id).exists():
             raise Http404
@@ -555,7 +555,8 @@ class UserProfileView(View):
                 'submitted_articles': submitted_articles,
                 'published_articles': published_articles,
                 'bookmarked_questions': bookmarked_questions,
-                'bookmarked_articles': bookmarked_articles
+                'bookmarked_articles': bookmarked_articles,
+                'active_tab': active_tab,
             }
             return render(request, 'public_website/user-profile.html', context)
 
@@ -568,7 +569,7 @@ class UpdateUserName(View):
         request.user.save()
 
         messages.success(request, 'Your personal info has been updated')
-        return redirect('public_website:user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='settings')
 
 
 class UpdateOrganisationInfo(View):
@@ -584,7 +585,7 @@ class UpdateOrganisationInfo(View):
             request.user.save()
 
         messages.success(request, 'Your organisation info has been updated')
-        return redirect('public_website:user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='settings')
 
 
 class UpdateUserPassword(View):
@@ -607,7 +608,7 @@ class UpdateUserPassword(View):
         else:
             messages.error(request, _('The password you entered is incorrect'))
 
-        return redirect('public_website:user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='settings')
 
 
 class UpdateProfilePicture(View):

@@ -1000,7 +1000,7 @@ class DeleteSubmittedAnswer(View):
             raise PermissionDenied(_('You can only delete your own answers.'))
 
         messages.success(request, 'The submitted answer has been deleted')
-        return redirect('public_website:user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='submissions')
 
 
 # Write Articles
@@ -1192,7 +1192,7 @@ class DeleteArticleView(View):
         if request.POST.get('origin') == 'write-article':
             return redirect('dashboard:home')
 
-        return redirect('public_website:user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='drafts')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -1211,7 +1211,7 @@ class DeleteSubmittedArticle(View):
         article.delete()
 
         messages.success(request, 'The submitted article has been deleted')
-        return redirect('public_website:user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='submissions')
 
 
 @method_decorator(login_required, name='dispatch')
