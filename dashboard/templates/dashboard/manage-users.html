@@ -109,13 +109,13 @@
             </div>
             {% if users %}
                 {% for user in users %}
-                    <div class="card user-card">
+                    <div class="card user-card sw-shadow">
                         <div class="user-info-wrapper">
                             <div class="user-info">
                                 <div class="user-header">
                                     <div class="user-header-info">
                                         {% if user.profile %}
-                                        <img class="user-profile-picture" src="{{ user.profile.profile_picture }}" alt="User Profile Picture">
+                                        <img class="user-profile-picture" src="{{ user.profile.profile_picture }}" style="background-color:{{ user.profile.profile_picture_bg }};" alt="User Profile Picture">
                                         {% else %}
                                             <img class="user-profile-picture" src="{% static 'user/default.png' %}" alt="User Profile Picture">
                                         {% endif %}
@@ -308,13 +308,13 @@
             {% endif %}
             {% if access_requests %}
                 {% for access_request in access_requests %}
-                    <div class="card user-card">
+                    <div class="card user-card sw-shadow">
                         <div class="user-info-wrapper">
                             <div class="user-info">
                                 <div class="user-header">
                                     <div class="user-header-info">
                                         {% if access_request.requested_by.profile %}
-                                            <img class="user-profile-picture" src="{{ access_request.requested_by.profile.profile_picture }}" alt="User Profile Picture">
+                                            <img class="user-profile-picture" src="{{ access_request.requested_by.profile.profile_picture }}" style="background-color:{{ access_request.requested_by.profile.profile_picture_bg }};" alt="User Profile Picture">
                                         {% else %}
                                             <img class="user-profile-picture" src="{% static 'user/default.png' %}" alt="User Profile Picture">
                                         {% endif %}

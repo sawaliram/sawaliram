@@ -81,6 +81,7 @@ class Profile(models.Model):
         db_table = 'user_profile'
 
     profile_picture = models.CharField(max_length=100, null=True)
+    profile_picture_bg = models.CharField(max_length=100, null=True)
     verification_code = models.TextField(null=True)
     verification_code_expiry = models.DateTimeField(null=True)
     password_reset_code = models.TextField(null=True)

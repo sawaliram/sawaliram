@@ -152,7 +152,7 @@
                             <span class="notification-dot">{{ request.user.notifications.all|length }}</span>
                         {% endif %}
                         <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="navbarUserButton">
-                            <img class="profile-picture" src="{{ request.user.profile.profile_picture }}" alt="User Profile Picture">
+                            <img class="profile-picture" src="{{ request.user.profile.profile_picture }}" style="background-color:{{ request.user.profile.profile_picture_bg }};" alt="User Profile Picture">
                             <span class="user-name">{{ request.user.first_name }} {{ request.user.last_name }}</span>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="navbarUserButton">

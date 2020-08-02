@@ -37,7 +37,7 @@ function closeMenusOnClickingDarkbackground() {
 }
 
 function setupAccessSelection() {
-    $('.access-item').click(function() {
+    $('.access-item.selectable').click(function() {
         $(this).find('.selected-check').toggleClass('show');
         var access_form_field = $('input[name="' + $(this).data('permission') + '"]');
         if (access_form_field.val() == 'false') {
@@ -46,7 +46,27 @@ function setupAccessSelection() {
         else {
             access_form_field.val('false');
         }
+        enablePermissionWriteupTextarea();
     });
+}
+
+function enablePermissionWriteupTextarea() {
+    var permissions_toggled = false;
+    $('.access-item.selectable').each(function() {
+        if ($(this).find('.selected-check').hasClass('show')) {
+            permissions_toggled = true;
+        }
+        else {
+        }
+    });
+    if (permissions_toggled == true) {
+        $('textarea.permission-writeup').prop('disabled', false);
+        $('button.submit-access-request').prop('disabled', false);
+    }
+    else {
+        $('textarea.permission-writeup').prop('disabled', true);
+        $('button.submit-access-request').prop('disabled', true);
+    }
 }
 
 function setupNavbarSearchBar() {
@@ -430,6 +450,14 @@ function setupViewNotification() {
     });
 }
 
+function updateURLOnTabSwitch() {
+    $('.nav-link').click(function() {
+        var current_url = window.location.href
+        var new_url = current_url.substring(0, current_url.indexOf('/profile/') + 9) + $(this).data('tab');
+        history.replaceState(null, '', new_url);
+    });
+}
+
 function setupHomePageCarouselRandomRhymes() {
     $('#homePageCarousel').on('slide.bs.carousel', function (event) {
         if (event.relatedTarget.classList.contains('rhyme-header')) {
@@ -731,18 +759,6 @@ if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) 
     setupEditorDeleteFunctionality();
 }
 
-/* Breaking from tradition, this function is going intot the template so
- * that it can be better fine-tuned and generalised.
-
-if (new RegExp('^/dashboard/article/\\d+/translate/from/[A-Za-z-]+/to/[A-Za-z-]+').test(window.location.pathname)) {
-    setupQuillEditor({
-        placeholder: 'Translation goes here...',
-        inputName: 'body'
-    })
-}
-*/
-
-
 if (
     new RegExp("^/dashboard/article/\\d+/review").test(window.location.pathname) ||
     new RegExp("^/dashboard/question/\\d+/answers/\\d+/review").test(window.location.pathname) ||
@@ -777,4 +793,5 @@ if (
 
 if (window.location.pathname.includes('/user/')) {
     setupViewNotification();
+    updateURLOnTabSwitch();
 }

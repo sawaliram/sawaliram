@@ -38,7 +38,11 @@ def send_verification_email(user):
     profile.verification_code = verification_code
     profile.verification_code_expiry = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=3), "%Y-%m-%d %H:%M:%S")
     if profile_created:
-        profile.profile_picture = '/static/user/default_profile_pictures/dpp_' + str(random.randrange(1, 21)) + '.png'
+        profile.profile_picture = '/static/user/default.png'
+        profile_bg_colors = [
+            '#7dc190', '#f4f7db', '#46a1a2', '#618df0', '#7dc190', '#0086ff', '#ffdc00', '#de4d53', '#a2d9e8', '#5cf892', '#a15ddd', '#81d62d', '#ff4c2a', '#3680b7', '#ffa300', '#9bf1f0', '#dfbbd8', '#ffdab6', '#61ff9a', '#74cefd'
+        ]
+        profile.profile_picture_bg = random.choice(profile_bg_colors)
     profile.save()
 
     message = 'Hello ' + user.first_name + ',<br>'
@@ -157,13 +161,22 @@ class RequestAccess(View):
         if request.POST.get('translator-permission') == 'true':
             permissions_requested.append('T')
 
-        new_volunteer_request = VolunteerRequest(
-            permissions_requested=''.join(permissions_requested),
-            request_text=request.POST['permission-writeup'],
-            status='pending',
-            requested_by=request.user
-        )
-        new_volunteer_request.save()
+        if request.POST.get('permission-writeup'):
+            new_volunteer_request = VolunteerRequest(
+                permissions_requested=''.join(permissions_requested),
+                request_text=request.POST.get('permission-writeup'),
+                status='pending',
+                requested_by=request.user
+            )
+            new_volunteer_request.save()
+
+        if request.user.groups.filter(name='volunteers').exists():
+            messages.success(request, 'Your access request has been submitted!')
+            return redirect('public_website:user-profile', user_id=request.user.id, active_tab='settings')
+        else:
+            volunteers = Group.objects.get(name='volunteers')
+            volunteers.user_set.add(request.user)
+            return redirect('dashboard:home')
 
 
 class SigninView(View):
@@ -378,7 +391,7 @@ class DeleteBookmark(View):
             question=request.POST.get('question-id'))
         bookmark_to_remove.delete()
         messages.success(request, (_('Bookmark has been deleted!')))
-        return redirect('public_website:user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='bookmarks')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -388,4 +401,4 @@ class RemoveDraft(View):
         draft_to_remove = Answer.objects.get(id=request.POST.get('draft-id'))
         draft_to_remove.delete()
         messages.success(request, (_('The draft answer has been deleted!')))
-        return redirect('public_website:user-profile', user_id=request.user.id)
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='drafts')
