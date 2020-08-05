@@ -318,7 +318,7 @@
                                 <h3 class="low-margin-title">
                                     {% trans 'Dataset' %} #{{ submitted_question.id }} 
                                 </h3>
-                                <p class="small">{{ submitted_question.question_count }} {% trans 'questions' %}, submitted on {{ submitted_question.created_on|date:"jS F, Y" }}</p>
+                                <p class="small submitted-date">{{ submitted_question.question_count }} {% trans 'questions' %}, submitted on {{ submitted_question.created_on|date:"jS F, Y" }}</p>
                                 {% if selected_user == request.user  %}
                                     {% if submitted_question.status == 'new' %}
                                     <p class="small pending">
@@ -333,7 +333,7 @@
                             </div>
                         {% endfor %}
                     {% endif %}
-                    {% if submitted_answers %}
+                    {% if submitted_answers or published_answers %}
                         <h2>{% trans 'Answers' %}</h2>
                         {% if selected_user == request.user %}
                             <p class="small">{% trans 'All your answers to submitted questions will appear here' %}</p>
@@ -341,44 +341,32 @@
                             <p class="small">{% trans 'All published answers written by' %} {{ selected_user.first_name }}</p>
                         {% endif %}
                         <hr class="title-divider">
-                        {% for submitted_answer in submitted_answers %}
-                            {% if selected_user == request.user %}
+                        {% if selected_user == request.user %}
+                            {% for submitted_answer in submitted_answers %}
                                 <div class="card sw-shadow">
                                     <h3 class="low-margin-title">
-                                        <span class="small">#{{ submitted_answer.question_id.id }}</span> 
+                                        <span class="small submitted-date">#{{ submitted_answer.question_id.id }}</span> 
                                         {% if submitted_answer.question_id.language == 'en' %}
                                             {{ submitted_answer.question_id.question_text }}
                                         {% else %}
                                             {{ submitted_answer.question_id.question_text_english }}
                                         {% endif %}
                                     </h3>
-                                    <p class="small">
+                                    <p class="small submitted-date">
                                         Submitted on {{ submitted_answer.created_on|date:"jS F, Y" }}
                                     </p>
-                                    {% if submitted_answer.status == 'submitted' %}
                                     <p class="small pending">
                                         <i class="fas fa-clock"></i> {% trans 'Answer under review' %}
                                     </p>
-                                    {% elif submitted_answer.status == 'published' %}
-                                    <p class="small success">
-                                        <i class="fas fa-check-circle"></i> {% trans 'Answer reviewed and published' %}
-                                    </p>
-                                    {% endif %}
                                     <hr>
                                     <p class="grey-text">
                                         {{ submitted_answer.answer_text|striptags|truncatechars:200 }}
                                     </p>
                                     <div class="card-controls">
-                                        {% if submitted_answer.status == 'submitted' %}
                                             <a class="btn btn-small btn-primary square-ish" href="{% url 'dashboard:review-answer' question_id=submitted_answer.question_id.id answer_id=submitted_answer.id %}">
                                                 Edit Answer
                                             </a>
                                             <button class="btn btn-small delete-button open-card-drawer"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
-                                        {% elif submitted_answer.status == 'published' %}
-                                            <a class="btn btn-small btn-secondary" href="{% url 'public_website:view-answer' question_id=submitted_answer.question_id.id answer_id=submitted_answer.id %}">
-                                                View Answer
-                                            </a>
-                                        {% endif %}
                                     </div>
                                     <div class="card-drawer">
                                         <form class="inline-block" action="{% url 'dashboard:delete-submitted-answer' answer_id=submitted_answer.id %}" method="POST">
@@ -389,32 +377,34 @@
                                         <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
                                     </div>
                                 </div>
-                            {% else %}
-                                {% if submitted_answer.status == 'published' %}
-                                    <div class="card sw-shadow">
-                                        <h3 class="low-margin-title">
-                                            <span class="small">#{{ submitted_answer.question_id.id }}</span> 
-                                            {% if submitted_answer.question_id.language == 'en' %}
-                                                {{ submitted_answer.question_id.question_text }}
-                                            {% else %}
-                                                {{ submitted_answer.question_id.question_text_english }}
-                                            {% endif %}
-                                        </h3>
-                                        <p class="small">
-                                            Submitted on {{ submitted_answer.created_on|date:"jS F, Y" }}
-                                        </p>
-                                        <hr>
-                                        <p class="grey-text">
-                                            {{ submitted_answer.answer_text|striptags|truncatechars:200 }}
-                                        </p>
-                                        <div class="card-controls">
-                                            <a class="btn btn-small btn-primary square-ish" href="{% url 'public_website:view-answer' question_id=submitted_answer.question_id.id answer_id=submitted_answer.id %}">
-                                                View Answer
-                                            </a>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% for published_answer in published_answers %}
+                            <div class="card sw-shadow">
+                                <h3 class="low-margin-title">
+                                    <span class="small">#{{ published_answer.question_id.id }}</span> 
+                                    {% if published_answer.question_id.language == 'en' %}
+                                        {{ published_answer.question_id.question_text }}
+                                    {% else %}
+                                        {{ published_answer.question_id.question_text_english }}
+                                    {% endif %}
+                                </h3>
+                                <p class="small submitted-date">
+                                    Submitted on {{ published_answer.created_on|date:"jS F, Y" }} | Last edited on {{ published_answer.updated_on|date:"jS F, Y" }}
+                                </p>
+                                <p class="small success">
+                                    <i class="fas fa-check-circle"></i> {% trans 'Answer reviewed and published' %}
+                                </p>
+                                <hr>
+                                <p class="grey-text">
+                                    {{ published_answer.answer_text|striptags|truncatechars:200 }}
+                                </p>
+                                <div class="card-controls">
+                                    <a class="btn btn-small btn-primary square-ish" href="{% url 'public_website:view-answer' question_id=published_answer.question_id.id answer_id=published_answer.id %}">
+                                        View Answer
+                                    </a>
+                                </div>
+                            </div>
                         {% endfor %}
                     {% endif %}
                     {% if submitted_articles or published_articles %}
@@ -426,7 +416,7 @@
                                 {% for published_article in published_articles %}
                                     <div class="card sw-shadow">
                                         <h3 class="low-margin-title">{{ published_article.title }}</h3>
-                                        <p class="small">
+                                        <p class="small submitted-date">
                                             Submitted on {{ published_article.created_on|date:"jS F, Y" }}
                                         </p>
                                         {% if selected_user == request.user %}
@@ -450,7 +440,7 @@
                                 {% for submitted_article in submitted_articles %}
                                     <div class="card sw-shadow">
                                         <h3 class="low-margin-title">{{ submitted_article.title }}</h3>
-                                        <p class="small">
+                                        <p class="small submitted-date">
                                             Submitted on {{ submitted_article.created_on|date:"jS F, Y" }}
                                         </p>
                                         <p class="small pending">
@@ -485,7 +475,7 @@
                                 {% for published_article in published_articles %}
                                     <div class="card sw-shadow">
                                         <h3 class="low-margin-title">{{ published_article.title }}</h3>
-                                        <p class="small">
+                                        <p class="small submitted-date">
                                             Submitted on {{ published_article.created_on|date:"jS F, Y" }}
                                         </p>
                                         {% if selected_user == request.user %}

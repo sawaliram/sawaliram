@@ -684,6 +684,7 @@ button.search-field-submit {
         width: 30px;
         height: 30px;
         margin-right: 0;
+        border-radius: 3px;
     }
 }
 
@@ -3904,6 +3905,10 @@ figure.image figcaption {
 .user-profile-container .user-profile-content .tab-pane p.small {
     color: #8c8c8c;
     margin-bottom: 0;
+}
+
+.user-profile-container .user-profile-content .tab-pane p.submitted-date {
+    margin-bottom: 0.3rem;
 }
 
 .user-profile-container .user-profile-content .tab-pane p.small.notification-meta {

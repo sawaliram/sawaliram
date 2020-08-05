@@ -537,6 +537,7 @@ class UserProfileView(View):
             submitted_questions = Dataset.objects.filter(submitted_by=user_id)
             submitted_answers = Answer.objects.filter(submitted_by=user_id, status='submitted')
             submitted_articles = SubmittedArticle.objects.filter(author=user_id)
+            published_answers = Answer.objects.filter(submitted_by=user_id, status='published')
             published_articles = PublishedArticle.objects.filter(author=user_id)
             bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
             bookmarked_articles = selected_user.bookmarks.filter(content_type='article')
@@ -554,6 +555,7 @@ class UserProfileView(View):
                 'submitted_answers': submitted_answers,
                 'submitted_articles': submitted_articles,
                 'published_articles': published_articles,
+                'published_answers': published_answers,
                 'bookmarked_questions': bookmarked_questions,
                 'bookmarked_articles': bookmarked_articles,
                 'active_tab': active_tab,
