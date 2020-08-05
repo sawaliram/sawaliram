@@ -157,7 +157,7 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="navbarUserButton">
                             <span class="dropdown-item">
-                                <a href="{% url 'public_website:user-profile' user_id=request.user.id %}"><i class="fas fa-user-circle"></i> {% trans 'My Profile' %}</a>
+                                <a href="{% url 'public_website:user-profile' user_id=request.user.id active_tab='settings' %}"><i class="fas fa-user-circle"></i> {% trans 'My Profile' %}</a>
                             </span>
                             <span class="dropdown-item">
                                 <a href="{% url 'dashboard:home' %}"><i class="fas fa-pencil-ruler"></i> {% trans 'Dashboard' %}</a>

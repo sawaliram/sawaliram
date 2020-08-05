@@ -556,6 +556,7 @@ class UserProfileView(View):
                 'submitted_articles': submitted_articles,
                 'published_articles': published_articles,
                 'published_answers': published_answers,
+                'answers_count': len(submitted_answers) + len(published_answers),
                 'bookmarked_questions': bookmarked_questions,
                 'bookmarked_articles': bookmarked_articles,
                 'active_tab': active_tab,
