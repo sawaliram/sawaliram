@@ -740,6 +740,7 @@ if (window.location.pathname.includes('/dashboard/manage-users')) {
 
 if (
     new RegExp("^/dashboard/translate/(articles|answers|questions)/(\\d+/)?\\d+/(review|edit)").test(window.location.pathname) ||
+    new RegExp("^/dashboard/(article|answer)/(\\d+/)?\\d+/translate/from/(\\w+)/to/(\\w+)").test(window.location.pathname) ||
     new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)
 ) {
     initializeCKEditor();
