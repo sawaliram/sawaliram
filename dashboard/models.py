@@ -509,7 +509,7 @@ class TranslatedQuestion(DraftableModel, TranslationMixin):
             self.id,
             self.source.language,
             self.language,
-            self.question_text,
+            self.question_text or self.source.question_text,
         )
 
     def get_absolute_url(self):
@@ -700,7 +700,7 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
             self.id,
             self.source.language,
             self.language,
-            self.title,
+            self.title or self.source.title,
         )
 
     def get_absolute_url(self):
