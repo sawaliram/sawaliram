@@ -619,7 +619,7 @@ class ViewQuestionsView(SearchView):
 class AnswerQuestions(SearchView):
     def get_querysets(self, request):
         results = {}
-        if 'q' in request.GET:
+        if 'q' in request.GET and request.GET.get('q'):
             query_set = Question.objects.exclude(id__in=Subquery(
                                     Answer.objects.all().values('question_id')))
             results['questions'] = query_set.filter(
