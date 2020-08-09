@@ -637,7 +637,7 @@ class AnswerQuestions(SearchView):
             return results
 
     def get_page_title(self, request):
-        return 'Answer Questions'
+        return _('Answer Questions')
 
     def get_enable_breadcrumbs(self, request):
         return 'Yes'
