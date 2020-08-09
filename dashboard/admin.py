@@ -114,7 +114,7 @@ class QuestionAdmin(admin.ModelAdmin):
 class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['title', 'body']
     list_filter = ['language', 'author']
-    list_display = ['id', 'title', 'body', 'created_on', 'updated_on', 'published_on','author', publish_status]
+    list_display = ['id', 'title', 'created_on', 'updated_on', 'published_on','author', publish_status]
     date_hierarchy = 'published_on'
     inlines = [
         ArticleCreditInline,
