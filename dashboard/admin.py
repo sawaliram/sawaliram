@@ -32,6 +32,23 @@ def make_bulk_updater(field_name):
     return _bulk_update
 
 
+def publish_status(obj):
+    '''
+    Displays the published status of a particular object
+    '''
+
+    if obj.is_published:
+        return 'published'
+    elif obj.is_submitted:
+        return 'submitted'
+    elif obj.is_draft:
+        return 'draft'
+    else:
+        return 'UNKNOWN: error?'
+
+publish_status.short_description = 'Publish Status'
+
+
 class AnswerCreditInline(admin.TabularInline):
     model = AnswerCredit
     view_on_site = False
@@ -94,7 +111,7 @@ class QuestionAdmin(admin.ModelAdmin):
 class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['title', 'body']
     list_filter = ['language', 'author']
-    list_display = ['id', 'title', 'body', 'created_on', 'updated_on', 'published_on','author']
+    list_display = ['id', 'title', 'body', 'created_on', 'updated_on', 'published_on','author', publish_status]
     date_hierarchy = 'published_on'
     inlines = [
         ArticleCreditInline,
