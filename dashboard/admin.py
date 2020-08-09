@@ -9,6 +9,9 @@ from .models import (
     Question,
     Answer,
     Article,
+    ArticleTranslation,
+    AnswerTranslation,
+    TranslatedQuestion,
     AnswerCredit,
     ArticleCredit
 )
@@ -116,3 +119,42 @@ class ArticleAdmin(admin.ModelAdmin):
     inlines = [
         ArticleCreditInline,
     ]
+
+
+@admin.register(TranslatedQuestion)
+class QuestionTranslationAdmin(admin.ModelAdmin):
+
+    search_fields = ['source', 'question_text', 'school']
+    list_filter = ['language', 'translated_by']
+    list_display = [
+        '__str__',
+        'language',
+        'translated_by',
+        publish_status,
+    ]
+    date_hierarchy = 'created'
+
+
+@admin.register(AnswerTranslation)
+class AnswerTranslationAdmin(admin.ModelAdmin):
+    search_fields = ['source', 'answer_text']
+    list_filter = ['language', 'translated_by']
+    list_display = [
+        '__str__',
+        'language',
+        'translated_by',
+        publish_status,
+    ]
+    date_hierarchy = 'created'
+
+@admin.register(ArticleTranslation)
+class ArticleTranslationAdmin(admin.ModelAdmin):
+    search_fields = ['source', 'title', 'body']
+    list_filter = ['language', 'translated_by']
+    list_display = [
+        '__str__',
+        'language',
+        'translated_by',
+        publish_status,
+    ]
+    date_hierarchy = 'created'
