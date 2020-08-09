@@ -17,7 +17,7 @@ from django.contrib.auth.models import Group
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import get_language_info
 from django.utils.decorators import method_decorator
-from django.db.models import Q
+from django.db.models import Q, Subquery
 from django.core.paginator import Paginator
 from django.contrib.contenttypes.models import ContentType
 from django.views import View
