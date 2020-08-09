@@ -328,6 +328,17 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
                 }
             )
 
+
+    def __str__(self):
+        return 'Q{}A{}T{} [{}->{}]: {}'.format(
+            self.source.question_id.id,
+            self.source.id,
+            self.id,
+            self.source.language,
+            self.language,
+            self.source.question_id.question_text,
+        )
+
 class DraftAnswerTranslation(
     AnswerTranslation.get_draft_model(),
     AnswerTranslation,
