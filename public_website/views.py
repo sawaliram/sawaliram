@@ -93,6 +93,37 @@ class SetLanguageView(View):
 
 class SearchView(View):
 
+    filters = {
+        'search_categories': [],
+        'question_categories': [],
+    }
+
+    def set_filters(self, params):
+        '''
+        Process filters, setting default values if necessary
+        '''
+
+        search_categories = params.getlist('category')
+
+        # Select only questions by default, if no category selected
+        if not search_categories:
+            search_categories.append('questions')
+
+
+        question_categories = []
+        if 'questions' in params:
+            question_categories = params.getlist('questions')
+
+        # TODO: add other filters here too
+
+        filters = {
+            'search_categories': search_categories,
+            'question_categories': question_categories,
+        }
+
+        self.filters = filters
+        return filters
+
     def get_querysets(self, request):
         '''
         Returns a dict of querysets, one for each data type
@@ -107,7 +138,8 @@ class SearchView(View):
             results['questions'] = self.get_queryset(request)
             return results
 
-        search_categories = request.GET.getlist('category')
+        filters = self.filters
+        search_categories = filters.get('search_categories', [])
 
         # Select only questions by default, if no category selected
         if not search_categories:
@@ -209,6 +241,9 @@ class SearchView(View):
                 del request.session['review_answers_url']
                 return redirect(redirect_url)
 
+        # load filters
+        filters = self.set_filters(request.GET)
+
         results = self.get_querysets(request)
 
         questions = results.get('questions') or Question.objects.none()
@@ -230,10 +265,8 @@ class SearchView(View):
         ]
 
         # TODO: Generalise the category filter
-        question_categories = []
-        if 'questions' in request.GET:
-            question_categories = request.GET.getlist('questions')
-
+        question_categories = self.filters.get('question_categories', [])
+        if len(question_categories) != 0:
             questions_queryset = []
 
             if 'answered' in question_categories:

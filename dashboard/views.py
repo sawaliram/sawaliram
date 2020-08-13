@@ -619,22 +619,21 @@ class ViewQuestionsView(SearchView):
 class AnswerQuestions(SearchView):
     def get_querysets(self, request):
         results = {}
-        if 'q' in request.GET and request.GET.get('q'):
-            query_set = Question.objects.exclude(id__in=Subquery(
-                                    Answer.objects.all().values('question_id')))
-            results['questions'] = query_set.filter(
-                    Q(question_text__search=request.GET.get('q')) |
-                    Q(question_text_english__search=request.GET.get('q')) |
-                    Q(school__search=request.GET.get('q')) |
-                    Q(area__search=request.GET.get('q')) |
-                    Q(state__search=request.GET.get('q')) |
-                    Q(field_of_interest__search=request.GET.get('q')) |
-                    Q(published_source__search=request.GET.get('q'))
-            )
-            return results
-        else:
-            results['questions'] = Question.objects.all()
-            return results
+        results['questions'] = Question.objects.all()
+        return results
+
+    def set_filters(self, params):
+        filters = super().set_filters(params)
+
+        # set question_categories to 'unanswered' by default
+        print(filters['question_categories'])
+        print('hey there')
+        if len(filters['question_categories']) == 0:
+            if 'questions' not in params:
+                filters['question_categories'].append('unanswered')
+
+        self.filters = filters
+        return filters
 
     def get_page_title(self, request):
         return _('Answer Questions')
