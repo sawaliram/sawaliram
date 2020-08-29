@@ -592,20 +592,8 @@ class CurateDataset(View):
 class ViewQuestionsView(SearchView):
     def get_querysets(self, request):
         results = {}
-        if 'q' in request.GET:
-            results['questions'] = Question.objects.filter(
-                    Q(question_text__search=request.GET.get('q')) |
-                    Q(question_text_english__search=request.GET.get('q')) |
-                    Q(school__search=request.GET.get('q')) |
-                    Q(area__search=request.GET.get('q')) |
-                    Q(state__search=request.GET.get('q')) |
-                    Q(field_of_interest__search=request.GET.get('q')) |
-                    Q(published_source__search=request.GET.get('q'))
-            )
-            return results
-        else:
-            results['questions'] = Question.objects.all()
-            return results
+        results['questions'] = Question.objects.all()
+        return results
 
     def get_page_title(self, request):
         return _('View Questions')
