@@ -38,6 +38,7 @@ from django.core.exceptions import (
     SuspiciousOperation,
     ImproperlyConfigured,
 )
+from django.core.cache import cache
 from django.urls import reverse
 
 from django.conf import settings
@@ -85,8 +86,21 @@ class DashboardHome(View):
 
     def get(self, request):
         """Return the dashboard home view."""
+
+        tasks_stats = {
+            'total_users': cache.get('total_users', 0),
+            'pending_access_requests': cache.get('pending_access_requests', 0),
+            'new_datasets': cache.get('new_datasets', 0),
+            'submitted_articles': cache.get('submitted_articles', 0),
+            'unanswered_questions': cache.get('unanswered_questions', 0),
+            'unreviewed_answers': cache.get('unreviewed_answers', 0),
+            'total_questions': cache.get('total_questions', 0),
+            'items_to_translate': cache.get('items_to_translate', 0),
+            'published_articles': cache.get('published_articles', 0),
+        }
         context = {
             'page_title': _('Dashboard Home'),
+            'tasks_stats': tasks_stats,
             'enable_breadcrumbs': 'Yes'
         }
         return render(request, 'dashboard/home.html', context)
@@ -624,8 +638,6 @@ class AnswerQuestions(SearchView):
         filters = super().set_filters(params)
 
         # set question_categories to 'unanswered' by default
-        print(filters['question_categories'])
-        print('hey there')
         if len(filters['question_categories']) == 0:
             if 'questions' not in params:
                 filters['question_categories'].append('unanswered')

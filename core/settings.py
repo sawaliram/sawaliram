@@ -2,6 +2,7 @@
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -92,6 +93,26 @@ DATABASES = {
         'PASSWORD': os.environ.get('sawaliram_db_password'),
         'HOST': 'localhost',
         'PORT': '',
+    }
+}
+
+# Cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'localhost:11211',
+        'TIMEOUT': None,
+    }
+}
+
+# Celery
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+CELERY_BEAT_SCHEDULE = {
+    'update-dashboard-tasks-stats': {
+        'task': 'dashboard.tasks.updateDashboardTasksStats',
+        'schedule': crontab(minute=0, hour='*/1'),
+        'args': (),
     }
 }
 

@@ -29,125 +29,118 @@
     <div class="task-list">
 
         {% if request.user|has_group:"admins" %}
-            <div class="task-card">
+            <div class="task-card sw-shadow">
                 <div class="task-image-wrapper">
                     <img src="{% static 'icons/manage_users.png' %}" alt="{% trans 'Manage Users' %}">
                 </div>
                 <div class="task-details">
                     <div class="task-title">
                         <a href="{% url 'dashboard:manage-users' %}">{% trans 'Manage Users' %}</a>
-                        <button class="btn btn-secondary-hollow task-help">{% trans 'Help?' %}</button>
                     </div>
                     <p class="task-description">{% trans 'Manage user permissions and approve volunteer requests' %}</p>
-                    <p class="task-stat">{% trans '3 Total Users' %} | {% trans '1 Pending Request' %}</p>
+                    <p class="task-stat">{{ tasks_stats.total_users }} {% trans 'Total Users' %} | {{ tasks_stats.pending_access_requests }} {% trans 'Pending Requests' %}</p>
                 </div>
             </div>
         {% endif %}
 
         {% if request.user|has_group:"admins" %}
-            <div class="task-card">
+            <div class="task-card sw-shadow">
                 <div class="task-image-wrapper">
                     <img src="{% static 'icons/manage_content.png' %}" alt="{% trans 'Manage Content' %}">
                 </div>
                 <div class="task-details">
                     <div class="task-title">
                         <a href="{% url 'dashboard:manage-content' %}">{% trans 'Manage Content' %}</a>
-                        <button class="btn btn-secondary-hollow task-help">{% trans 'Help?' %}</button>
                     </div>
                     <p class="task-description">{% trans 'Manage submitted datasets and review article submissions' %}</p>
-                    <p class="task-stat">{% trans '2 New Datasets' %} | {% trans '1 Pending Article Submission' %}</p>
+                    <p class="task-stat">{{ tasks_stats.new_datasets }} {% trans 'New Datasets' %} | {{ tasks_stats.submitted_articles }} {% trans 'Pending Article Submissions' %}</p>
                 </div>
             </div>
         {% endif %}
 
         {% if request.user|has_group:"experts" %}
-            <div class="task-card">
+            <div class="task-card sw-shadow">
                 <div class="task-image-wrapper">
                     <img src="{% static 'icons/answer_questions.png' %}" alt="{% trans 'Answer Questions' %}">
                 </div>
                 <div class="task-details">
                     <div class="task-title">
                         <a href="{% url 'dashboard:answer-questions' %}?questions=unanswered">{% trans 'Answer Questions' %}</a>
-                        <button class="btn btn-secondary-hollow task-help">{% trans 'Help?' %}</button>
                     </div>
                     <p class="task-description">{% trans 'Answer questions across subjects and in multiple languages' %}</p>
-                    <p class="task-stat">{% trans '4,340 Unanswered Questions' %}</p>
+                    <p class="task-stat">{{ tasks_stats.unanswered_questions }} {% trans 'Unanswered Questions' %}</p>
                 </div>
             </div>
         {% endif %}
 
         {% if request.user|has_group:"reviewers" %}
-            <div class="task-card">
+            <div class="task-card sw-shadow">
                 <div class="task-image-wrapper">
                     <img src="{% static 'icons/review_answers.png' %}" alt="{% trans 'Review Answers' %}">
                 </div>
                 <div class="task-details">
                     <div class="task-title">
                         <a href="{% url 'dashboard:review-answers' %}">{% trans 'Review Answers' %}</a>
-                        <button class="btn btn-secondary-hollow task-help">{% trans 'Help?' %}</button>
                     </div>
                     <p class="task-description">{% trans 'Review and suggest edits for answers before publishing to the website' %}</p>
-                    <p class="task-stat">{% trans '15 Unreviewed Answers' %}</p>
+                    <p class="task-stat">{{ tasks_stats.unreviewed_answers }} {% trans 'Unreviewed Answers' %}</p>
                 </div>
             </div>
         {% endif %}
 
         {% if request.user|has_group:"writers" %}
-            <div class="task-card">
+            <div class="task-card sw-shadow">
                 <div class="task-image-wrapper">
                     <img src="{% static 'icons/write_articles.png' %}" alt="{% trans 'Write Articles' %}">
                 </div>
                 <div class="task-details">
                     <div class="task-title">
                         <a href="{% url 'dashboard:create-article' %}">{% trans 'Write Articles' %}</a>
-                        <button class="btn btn-secondary-hollow task-help">{% trans 'Help?' %}</button>
                     </div>
                     <p class="task-description">{% trans 'Share your stories, your experiences and reflections related with curiosity and questioning in or outside the classroom, in your professional life or in everyday events' %}</p>
+                    <p class="task-stat">{{ tasks_stats.published_articles }} {% trans 'Published Articles' %}</p>
                 </div>
             </div>
         {% endif %}
 
         {% if request.user|has_group:"translators" %}
-            <div class="task-card">
+            <div class="task-card sw-shadow">
                 <div class="task-image-wrapper">
                     <img src="{% static 'icons/translate_content.png' %}" alt="{% trans 'Translate Content' %}">
                 </div>
                 <div class="task-details">
                     <div class="task-title">
                         <a href="{% url 'dashboard:translate-answers' %}">{% trans 'Translate Content' %}</a>
-                        <button class="btn btn-secondary-hollow task-help">{% trans 'Help?' %}</button>
                     </div>
                     <p class="task-description">{% trans 'Translate questions, answers, metadata or other content, to and from multiple languages' %}</p>
-                    <p class="task-stat">{% trans '4,855 Items to Translate' %}</p>
+                    <p class="task-stat">{{ tasks_stats.items_to_translate }} {% trans 'Items to Translate' %}</p>
                 </div>
             </div>
         {% endif %}
 
         {% if request.user|has_group:"volunteers" %}
-            <div class="task-card">
+            <div class="task-card sw-shadow">
                 <div class="task-image-wrapper">
                     <img src="{% static 'icons/submit_questions.png' %}" alt="{% trans 'Submit Questions' %}">
                 </div>
                 <div class="task-details">
                     <div class="task-title">
                         <a href="{% url 'dashboard:submit-questions' %}">{% trans 'Submit Questions' %}</a>
-                        <button class="btn btn-secondary-hollow task-help">{% trans 'Help?' %}</button>
                     </div>
                     <p class="task-description">{% trans 'Submit questions by filling out our Excel template' %}</p>
-                    <p class="task-stat">{% trans '4,580 Questions Submitted' %}</p>
+                    <p class="task-stat">{{ tasks_stats.total_questions }} {% trans 'Questions Submitted' %}</p>
                 </div>
             </div>
         {% endif %}
 
         {% if request.user|has_group:"volunteers" %}
-            <div class="task-card">
+            <div class="task-card sw-shadow">
                 <div class="task-image-wrapper">
                     <img src="{% static 'icons/view_questions.png' %}" alt="{% trans 'View Questions' %}">
                 </div>
                 <div class="task-details">
                     <div class="task-title">
                         <a href="{% url 'dashboard:view-questions' %}">{% trans 'View Questions' %}</a>
-                        <button class="btn btn-secondary-hollow task-help">{% trans 'Help?' %}</button>
                     </div>
                     <p class="task-description">{% trans 'View submitted questions by States and other metadata' %}</p>
                 </div>
