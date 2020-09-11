@@ -40,6 +40,8 @@ from dashboard.models import (
     ArticleDraft,
     SubmittedArticle,
     ArticleTranslation,
+    DraftAnswerTranslation,
+    DraftArticleTranslation,
     SubmittedArticleTranslation,
     SubmittedAnswerTranslation,
     AnswerTranslation,
@@ -566,6 +568,8 @@ class UserProfileView(View):
             selected_user = User.objects.get(id=user_id)
             answer_drafts = Answer.objects.filter(submitted_by=user_id, status='draft')
             article_drafts = ArticleDraft.objects.filter(author=user_id)
+            translated_answer_drafts = DraftAnswerTranslation.objects.filter(translated_by=user_id)
+            translated_article_drafts = DraftArticleTranslation.objects.filter(translated_by=user_id)
             notifications = Notification.objects.filter(user=user_id)
             submitted_questions = Dataset.objects.filter(submitted_by=user_id)
             submitted_answers = Answer.objects.filter(submitted_by=user_id, status='submitted')
@@ -583,6 +587,8 @@ class UserProfileView(View):
                 'selected_user': selected_user,
                 'answer_drafts': answer_drafts,
                 'article_drafts': article_drafts,
+                'translated_answer_drafts': translated_answer_drafts,
+                'translated_article_drafts': translated_article_drafts,
                 'notifications': notifications,
                 'submitted_questions': submitted_questions,
                 'submitted_answers': submitted_answers,

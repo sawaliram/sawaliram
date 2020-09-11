@@ -330,6 +330,17 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
             )
 
 
+    def get_delete_url(self):
+        '''
+        Generates the URL at which to delete an answer. Note that this
+        currently points to the linked question; both are deleted at
+        the same time.
+        '''
+
+        return reverse('dashboard:delete-answer-translation', kwargs={
+            'pk': self.id
+        })
+
     def __str__(self):
         return 'Q{}A{}T{} [{}->{}]: {}'.format(
             self.source.question_id.id,
@@ -761,6 +772,11 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
             )
         else:
             return # don't return anything :P
+
+    def get_delete_url(self):
+        return reverse('dashboard:delete-article-translation', kwargs={
+            'pk': self.id
+        })
 
 class DraftArticleTranslation(
     ArticleTranslation.get_draft_model(),

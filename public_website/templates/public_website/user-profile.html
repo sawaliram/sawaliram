@@ -188,7 +188,7 @@
                 </div>
             </div>
             <div class="tab-pane fade {% if active_tab == 'drafts' %}{% if selected_user == request.user %}active show{% endif %}{% endif %}" id="drafts" role="tabpanel" aria-labelledby="draftsTab">
-                {% if answer_drafts or article_drafts %}
+                {% if answer_drafts or article_drafts or translated_article_drafts or translated_answer_drafts %}
                     {% if answer_drafts %}
                         <h2>Answers</h2>
                         <p class="small">All your saved draft answers will appear here</p>
@@ -240,6 +240,72 @@
                                         {% csrf_token %}
                                         <span class="drawer-prompt">{% trans 'Are you sure you want to delete this article?' %}</span>
                                         <input type="hidden" name="origin" value="user-profile">
+                                        <button class="btn btn-small confirm-delete square-ish" type="submit">{% trans 'Yes, Delete' %}</button>
+                                    </form>
+                                    <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if translated_article_drafts %}
+                        <h2>Article Translations</h2>
+                        <p class="small">All your saved draft article translations will appear here</p>
+                        <hr class="title-divider">
+                        {% for article_draft in translated_article_drafts %}
+                            <div class="card sw-shadow">
+                                <h3>
+                                    {{ article_draft.source.title }}
+                                    <span class="badge badge-secondary">{{ article_draft.source.language }} -> {{ article_draft.language }}</span>
+                                </h3>
+                                <p class="grey-text">
+                                {% if article_draft.body %}
+                                    {{ article_draft.body|striptags|truncatechars:200 }}
+                                {% else %}
+                                    {{ article_draft.source.body|striptags|truncatechars:200 }}
+                                {% endif %}
+                                </p>
+                                <div class="card-controls">
+                                    <a href="{{ article_draft.get_absolute_url }}" class="btn btn-small btn-primary square-ish"><i class="fas fa-pencil-alt"></i> {% trans 'Continue editing' %}</a>
+                                    <button class="btn btn-small delete-button open-card-drawer"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
+                                </div>
+                                <div class="card-drawer">
+                                    <form class="inline-block" action="{{ article_draft.get_delete_url }}" method="POST">
+                                        {% csrf_token %}
+                                        <span class="drawer-prompt">{% trans 'Are you sure you want to delete this article translation?' %}</span>
+                                        <input type="hidden" name="origin" value="user-profile">
+                                        <button class="btn btn-small confirm-delete square-ish" type="submit">{% trans 'Yes, Delete' %}</button>
+                                    </form>
+                                    <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if translated_answer_drafts %}
+                        <h2>Answer Translations</h2>
+                        <p class="small">All your saved draft answer translations will appear here</p>
+                        <hr class="title-divider">
+                        {% for answer_draft in translated_answer_drafts %}
+                            <div class="card sw-shadow">
+                                <h3>
+                                    {{ answer_draft.source.question_id.question_text }}
+                                    <span class="badge badge-secondary">{{ answer_draft.source.language }} -> {{ answer_draft.language }}</span>
+                                </h3>
+                                <p class="grey-text">
+                                    {% if answer_draft.answer_text %}
+                                        {{ answer_draft.answer_text|striptags|truncatechars:200  }}
+                                    {% else %}
+                                        {{ answer_draft.source.answer_text|striptags|truncatechars:200  }}
+                                    {% endif %}
+                                </p>
+                                <div class="card-controls">
+                                    <a href="{{ answer_draft.get_absolute_url }}" class="btn btn-small btn-primary square-ish"><i class="fas fa-pencil-alt"></i> {% trans 'Continue editing' %}</a>
+                                    <button class="btn btn-small delete-button open-card-drawer"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
+                                </div>
+                                <div class="card-drawer">
+                                    <form class="inline-block" action="{{ answer_draft.get_delete_url }}" method="POST">
+                                        {% csrf_token %}
+                                        <span class="drawer-prompt">{% trans 'Are you sure you want to delete this answer?' %}</span>
+                                        <input type="hidden" name="draft-id" value="{{ answer_draft.id }}">
                                         <button class="btn btn-small confirm-delete square-ish" type="submit">{% trans 'Yes, Delete' %}</button>
                                     </form>
                                     <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
