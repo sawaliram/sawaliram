@@ -75,5 +75,5 @@
 </section>
 {% endblock %}
 {% block edit_button %}
-<a class="btn btn-secondary" href="{% url 'dashboard:edit-submitted-answer-translation' pk=question.id answer=object.id %}">Edit Translation</a>
+<a class="btn btn-secondary" href="{{ object.get_edit_url }}">Edit Translation</a>
 {% endblock %}
