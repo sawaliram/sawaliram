@@ -1814,6 +1814,7 @@ class EditAnswerTranslation(BaseEditTranslation):
         answer_text = self.request.POST.get('answer-text')
         if answer_text:
             self.answer.answer_text = answer_text
+            self.answer.language = self.request.POST.get('lang_to') or self.answer.language
             self.answer.save()
 
         # If submitting, mark the answer as submitted for
