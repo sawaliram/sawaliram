@@ -366,11 +366,11 @@
                         <span class="stat-title">Articles<br>Written</span>
                     </div>
                     <div class="user-stat">
-                        <span class="stat-number">0</span>
+                        <span class="stat-number">{{ translations_count }}</span>
                         <span class="stat-title">Things<br>Translated</span>
                     </div>
                 </div>
-                {% if submitted_questions or submitted_answers or submitted_articles or published_articles %}
+                {% if submitted_questions or submitted_answers or submitted_articles or published_articles or submitted_answer_translations or submitted_article_translations %}
                     {% if submitted_questions %}
                         <h2>{% trans 'Questions' %}</h2>
                         {% if selected_user == request.user  %}
@@ -561,6 +561,151 @@
                                     </div>
                                 {% endfor %}
                             {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    {% if submitted_article_translations or submitted_answer_translations or published_article_translations or published_answer_translations %}
+                        <h2>{% trans 'Translations' %}</h2>
+                        {% if selected_user != request.user %}
+                            <p class="small">{% trans 'All content translated by' %} {{ selected_user.first_name }}</p>
+                        {% else %}
+                            <p class="small">{% trans 'All your submitted translations will appear here' %}</p>
+                        {% endif %}
+
+                        <hr class="title-divider">
+
+
+                        {# Answer Translations #}
+
+                        {% if selected_user == request.user %}
+                            {% for submitted_answer in submitted_answer_translations %}
+                                <div class="card sw-shadow">
+                                    <h3 class="low-margin-title">
+                                        <span class="small submitted-date">#{{ submitted_answer.source.question_id.id }}</span> 
+                                        {{ submitted_answer.source.question_id.question_text }}
+                                        <span class="badge badge-secondary">{{ submitted_answer.source.language }} -> {{ submitted_answer.language }}</span>
+                                    </h3>
+                                    <p class="small pending">
+                                        <i class="fas fa-clock"></i> {% trans 'Answer translation under review since' %} {{ submitted_answer.created_on|date:"jS F, Y" }}
+                                    </p>
+                                    <hr>
+                                    <p class="grey-text">
+                                        {{ submitted_answer.answer_text|striptags|truncatechars:200 }}
+                                    </p>
+                                    <div class="card-controls">
+                                            <a class="btn btn-small btn-primary square-ish" href="{{ submitted_answer.get_absolute_url }}">
+                                                Edit Translation
+                                            </a>
+                                            <button class="btn btn-small delete-button open-card-drawer"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
+                                    </div>
+                                    <div class="card-drawer">
+                                        <form class="inline-block" action="{{ submitted_answer.get_delete_url }}" method="POST">
+                                            {% csrf_token %}
+                                            <span class="drawer-prompt">{% trans 'Are you sure you want to delete this answer?' %}</span>
+                                            <button class="btn btn-small confirm-delete square-ish" type="submit">{% trans 'Yes, Delete' %}</button>
+                                        </form>
+                                        <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% for published_answer in published_answer_translations %}
+                            <div class="card sw-shadow">
+                                <h3 class="low-margin-title">
+                                    <span class="small">#{{ published_answer.question_id.id }}</span> 
+                                    {{ published_answer.source.question_id.question_text }}
+                                    <span class="badge badge-secondary">{{ published_answer.source.language }} -> {{ published_answer.language }}</span>
+                                </h3>
+                                <p class="small submitted-date">
+                                    Submitted on {{ published_answer.created_on|date:"jS F, Y" }} | Last edited on {{ published_answer.updated_on|date:"jS F, Y" }}
+                                </p>
+                                <p class="small success">
+                                    <i class="fas fa-check-circle"></i> {% trans 'Answer translation reviewed and published' %}
+                                </p>
+                                <hr>
+                                <p class="grey-text">
+                                    {{ published_answer.answer_text|striptags|truncatechars:200 }}
+                                </p>
+                                <div class="card-controls">
+                                    <a class="btn btn-small btn-primary square-ish" href="{{ published_answer.get_absolute_url }}">
+                                        View Answer
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        {# Article Translations #}
+
+                        {% if selected_user == request.user %}
+                            {% if submitted_article_translations %}
+                                {% for submitted_article in submitted_article_translations %}
+                                    <div class="card sw-shadow">
+                                        <h3 class="low-margin-title">
+                                            {{ submitted_article.title }}
+                                            <span class="badge badge-secondary">{{ submitted_article.source.language }} -> {{ submitted_article.language }}</span>
+                                        </h3>
+                                        <p class="small submitted-date">
+                                            <i class="fas fa-comments"></i>
+                                            Translated from
+                                            <a href="{{ submitted_article.source.get_absolute_url }}" class="grey-link">{{ submitted_article.source.title }}</a>
+                                        </p>
+                                        <p class="small pending">
+                                            <i class="fas fa-clock"></i> {% trans 'Article translation under review since' %} {{ submitted_article.created_on|date:"jS F, Y" }}
+                                        </p>
+                                        <hr>
+                                        <p class="grey-text">
+                                            {{ submitted_article.body|striptags|truncatechars:200 }}
+                                        </p>
+                                        <div class="card-controls">
+                                            <a class="btn btn-small btn-primary square-ish" href="{{ submitted_article.get_absolute_url }}">
+                                                Edit Translation
+                                            </a>
+                                            <button class="btn btn-small delete-button open-card-drawer"><i class="far fa-trash-alt"></i> {% trans 'Delete' %}</button>
+                                        </div>
+                                        <div class="card-drawer">
+                                            <form class="inline-block" action="{{ submitted_article.get_delete_url }}" method="POST">
+                                                {% csrf_token %}
+                                                <span class="drawer-prompt">{% trans 'Are you sure you want to delete this translation?' %}</span>
+                                                <button class="btn btn-small confirm-delete square-ish" type="submit">{% trans 'Yes, Delete' %}</button>
+                                            </form>
+                                            <button class="btn btn-small cancel-delete close-card-drawer">{% trans 'Cancel' %}</button>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}                        
+                        {% endif %}
+
+                        {% if published_article_translations %}
+                            {% for published_article in published_article_translations %}
+                                <div class="card sw-shadow">
+                                    <h3 class="low-margin-title">
+                                        {{ published_article.title }}
+                                        <span class="badge badge-secondary">{{ published_article.source.language }} -> {{ published_article.language }}</span>
+                                    </h3>
+                                    <p class="small published-date">
+                                        <i class="fas fa-comments"></i>
+                                        Translated from
+                                        <a href="{{ published_article.source.get_absolute_url }}" class="grey-link">{{ published_article.source.title }}</a>
+                                    </p>
+                                    <p class="small submitted-date">
+                                        <i class="fas fa-clock"></i> Submitted on {{ published_article.created_on|date:"jS F, Y" }}
+                                    </p>
+                                    {% if selected_user == request.user %}
+                                        <p class="small success">
+                                            <i class="fas fa-check-circle"></i> {% trans 'Article translation reviewed and published' %}
+                                        </p>
+                                    {% endif %}
+                                    <hr>
+                                    <p class="grey-text">
+                                        {{ published_article.body|striptags|truncatechars:200 }}
+                                    </p>
+                                    <div class="card-controls">
+                                        <a class="btn btn-small btn-primary square-ish" href="{{ published_article.get_absolute_url }}">
+                                            View Translation
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         {% endif %}
                     {% endif %}
                 {% else %}
