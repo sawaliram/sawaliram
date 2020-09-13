@@ -212,6 +212,12 @@ class Answer(models.Model):
     translation_model = 'dashboard.PublishedAnswerTranslation'
     translatable_fields = ['answer_text']
 
+    # Statuses
+
+    STATUS_DRAFT = 'draft'
+    STATUS_SUBMITTED = 'submitted'
+    STATUS_PUBLISHED = 'published'
+
     class Meta:
         db_table = 'answer'
 
