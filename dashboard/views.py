@@ -400,10 +400,12 @@ class ManageContentView(View):
         articles = (SubmittedArticle
             .objects.all().order_by('-updated_on'))
         article_translations = (SubmittedArticleTranslation
-            .objects.all()
+            .objects
+            .exclude(translated_by=request.user)
             .order_by('-updated_on'))
         answer_translations = (SubmittedAnswerTranslation
-            .objects.all()
+            .objects
+            .exclude(translated_by=request.user)
             .order_by('-updated_on'))
 
         context = {
