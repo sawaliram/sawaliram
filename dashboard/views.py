@@ -1410,6 +1410,7 @@ class TranslateAnswersList(SearchView):
         if 'q' in request.GET and request.GET.get('q') != '':
             query_set = Question.objects.filter(
                                 answers__isnull=False,
+                                answers__status=Answer.STATUS_PUBLISHED,
                                 answers__translations__isnull=True,
                             ).distinct()
 
@@ -1433,6 +1434,7 @@ class TranslateAnswersList(SearchView):
         else:
             results['questions'] = Question.objects.filter(
                             answers__isnull=False,
+                            answers__status=Answer.STATUS_PUBLISHED,
                             answers__translations__isnull=True,
                         ).distinct()
             results['articles'] = PublishedArticle.objects.filter(
