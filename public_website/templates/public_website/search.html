@@ -243,6 +243,7 @@
                 {% endif %}
                 {% if page_title == _('Translate Content') %}
                     {% for answer in question.answers.all %}
+                    {% if answer.status == answer.STATUS_PUBLISHED %}{# We don't want unpublished answers! #}
                     <div class="answer-preview">
                         <h4>Answered by <b>{{ answer.submitted_by.get_full_name }}</b></h4>
                         <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
@@ -250,6 +251,7 @@
                             <a href="{% url 'dashboard:translate-answer' source=question.id answer=answer.id %}" class="btn btn-small btn-primary">{% trans 'Translate' %}</a>
                         </div>
                     </div>
+                    {% endif %}
                     {% endfor %}
                 {% endif %}
             </li>
