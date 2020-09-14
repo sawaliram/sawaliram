@@ -44,6 +44,8 @@ from dashboard.models import (
     DraftArticleTranslation,
     SubmittedArticleTranslation,
     SubmittedAnswerTranslation,
+    PublishedArticleTranslation,
+    PublishedAnswerTranslation,
     AnswerTranslation,
 )
 from sawaliram_auth.models import User, Bookmark, Notification
@@ -574,8 +576,12 @@ class UserProfileView(View):
             submitted_questions = Dataset.objects.filter(submitted_by=user_id)
             submitted_answers = Answer.objects.filter(submitted_by=user_id, status='submitted')
             submitted_articles = SubmittedArticle.objects.filter(author=user_id)
+            submitted_answer_translations = SubmittedAnswerTranslation.objects.filter(translated_by=user_id)
+            submitted_article_translations = SubmittedArticleTranslation.objects.filter(translated_by=user_id)
             published_answers = Answer.objects.filter(submitted_by=user_id, status='published')
             published_articles = PublishedArticle.objects.filter(author=user_id)
+            published_answer_translations = PublishedAnswerTranslation.objects.filter(translated_by=user_id)
+            published_article_translations = PublishedArticleTranslation.objects.filter(translated_by=user_id)
             bookmarked_questions = selected_user.bookmarks.filter(content_type='question')
             bookmarked_articles = selected_user.bookmarks.filter(content_type='article')
             context = {
@@ -593,9 +599,19 @@ class UserProfileView(View):
                 'submitted_questions': submitted_questions,
                 'submitted_answers': submitted_answers,
                 'submitted_articles': submitted_articles,
+                'submitted_answer_translations': submitted_answer_translations,
+                'submitted_article_translations': submitted_article_translations,
                 'published_articles': published_articles,
                 'published_answers': published_answers,
+                'published_answer_translations': published_answer_translations,
+                'published_article_translations': published_article_translations,
                 'answers_count': len(submitted_answers) + len(published_answers),
+                'translations_count': (
+                    submitted_answer_translations.count() +
+                    submitted_article_translations.count() +
+                    published_answer_translations.count() +
+                    published_article_translations.count()
+                ),
                 'bookmarked_questions': bookmarked_questions,
                 'bookmarked_articles': bookmarked_articles,
                 'active_tab': active_tab,
