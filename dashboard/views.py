@@ -397,6 +397,7 @@ class DeleteUser(View):
 class ManageContentView(View):
     def get(self, request):
 
+        datasets = Dataset.objects.all().order_by('-created_on')
         articles = (SubmittedArticle
             .objects.all().order_by('-updated_on'))
         article_translations = (SubmittedArticleTranslation
@@ -412,6 +413,7 @@ class ManageContentView(View):
             'grey_background': 'True',
             'page_title': _('Manage Content'),
             'enable_breadcrumbs': 'Yes',
+            'datasets': datasets,
             'articles': articles,
             'article_translations': article_translations,
             'answer_translations': answer_translations,

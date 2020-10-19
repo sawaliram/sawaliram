@@ -38,6 +38,24 @@
     </nav>
     <div class="tab-content">
         <div class="tab-pane fade show active" id="datasets-tab" role="tabpanel" aria-labelledby="datasets-tab">
+            <ul class="sub-task-list">
+                {% for dataset in datasets %}
+                <li class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"> {% trans 'Dataset' %} #{{ dataset.id }} <span class="badge {% if dataset.status == 'new' %}badge-primary{% elif dataset.status == 'curated' %}badge-warning{% else %}badge-success{% endif %}">{{ dataset.status }}</span> <span class="question-count">({{ dataset.question_count }} Question{{ dataset.question_count|pluralize }})</span></h5>
+                        <p class="sub-task-details">{% trans 'Submitted by' %} <b>{{ dataset.submitted_by.get_full_name }}</b> {% if dataset.submitted_by.organisation %} | {{ dataset.submitted_by.organisation }} {% endif %}<br>
+                        {% trans 'Submitted on' %} <b>{{ dataset.created_on|date:"j F, Y" }}</b></p>
+                        {% if dataset.status == 'new' %}
+                            {% with dataset_id=dataset.id|stringformat:"s" %}
+                            <a href="{% static 'submissions/uncurated/dataset_'|add:dataset_id|add:'_uncurated.xlsx' %}" class="btn btn-primary sub-task-button">{% trans 'Curate' %}</a>
+                            {% endwith %}
+                        {% elif dataset.status == 'curated' %}
+                        <a href="#" class="btn btn-primary sub-task-button">{% trans 'Encode' %}</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
             <h4 class="tab-content-subheading">{% trans 'Upload Curated Dataset:' %}</h4>
             <form action="{% url 'dashboard:curate-dataset' %}" enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
