@@ -49,8 +49,6 @@
                             {% with dataset_id=dataset.id|stringformat:"s" %}
                             <a href="{% static 'submissions/uncurated/dataset_'|add:dataset_id|add:'_uncurated.xlsx' %}" class="btn btn-primary sub-task-button">{% trans 'Curate' %}</a>
                             {% endwith %}
-                        {% elif dataset.status == 'curated' %}
-                        <a href="#" class="btn btn-primary sub-task-button">{% trans 'Encode' %}</a>
                         {% endif %}
                     </div>
                 </li>
