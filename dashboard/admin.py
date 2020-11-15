@@ -114,11 +114,19 @@ class QuestionAdmin(admin.ModelAdmin):
         'change_language',
         'change_state',
         'change_area',
+        'change_moi',
+        'change_class',
+        'change_curriculum_followed',
+        'change_context',
     ]
     change_foi = make_bulk_updater('field_of_interest')
     change_language = make_bulk_updater('language')
     change_state = make_bulk_updater('state')
     change_area = make_bulk_updater('change_area')
+    change_moi = make_bulk_updater('medium_language')
+    change_class = make_bulk_updater('student_class')
+    change_curriculum_followed = make_bulk_updater('curriculum_followed')
+    change_context = make_bulk_updater('context')
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
