@@ -96,7 +96,17 @@ class AnswerAdmin(admin.ModelAdmin):
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     search_fields = ['id', 'question_text', 'question_text_english']
-    list_filter = ['language', 'state', 'field_of_interest']
+    list_filter = [
+        'language',
+        'state',
+        'field_of_interest',
+        'student_gender',
+        'context',
+        'contributor_role',
+        'student_class',
+        'curriculum_followed',
+        'medium_language',
+    ]
     list_display = ['id', 'question_text', 'question_text_english', 'field_of_interest', 'area', 'state']
 
     actions = [
