@@ -2153,7 +2153,7 @@ class AdminBulkUpdateField(View):
         messages.success(request,
             _('%s items updated successfully') % updated)
 
-        return redirect('admin:dashboard_question_changelist')
+        return redirect('admin:dashboard_%s_changelist' % queryset.model.__name__.lower())
 
 
 # Legacy Functions
