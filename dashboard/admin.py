@@ -92,6 +92,11 @@ class AnswerAdmin(admin.ModelAdmin):
     ]
     date_hierarchy = 'created_on'
 
+    actions = [
+        'change_language',
+    ]
+    change_language = make_bulk_updater('language')
+
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
