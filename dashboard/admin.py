@@ -87,6 +87,19 @@ class AnswerAdmin(admin.ModelAdmin):
         'approved_by',
     ]
     search_fields = ['question_id__id', 'question_id__question_text']
+    list_filter = [
+        'language',
+        'created_on',
+        'updated_on',
+        'question_id__language',
+        'question_id__field_of_interest',
+        'question_id__student_gender',
+        'question_id__context',
+        'question_id__contributor_role',
+        'question_id__student_class',
+        'question_id__curriculum_followed',
+        'question_id__medium_language',
+    ]
     inlines = [
         AnswerCreditInline,
     ]
