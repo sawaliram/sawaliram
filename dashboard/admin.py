@@ -13,7 +13,7 @@ from .models import (
     AnswerTranslation,
     TranslatedQuestion,
     AnswerCredit,
-    ArticleCredit
+    ArticleCredit,
 )
 
 
