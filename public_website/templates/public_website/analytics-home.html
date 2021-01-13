@@ -8,95 +8,137 @@
 {% block head_includes %} 
  <link rel="stylesheet" href="{% static 'css/analytics/analytics_style.css' %}">
  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+ <!-- Font Awesome -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+<!-- Bootstrap core CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+<!-- Material Design Bootstrap -->
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.0/css/mdb.min.css" rel="stylesheet"> -->
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" >
+
 {% endblock %}
 {% block title %} {{page_title}} {% endblock %}
 {% block content %}
 
-<div class="fluid-container" >
-    <div class="row margin_ten" >
-        <div class="col-md-12 analytics_title">
-            <h1>Trend across the data</h1>
-        </div>
-    </div>
+
+<div class="fluid-container">
     <div class="intro-and-question-counter row margin_ten">
         <div class="col-md-8 col-sm-12">
-            <p>{% trans 'This page provides you various visualizations of the data related to the questions that students have asked us over time.' %}</p>
-            <p>{% trans 'Teachers and educators can be benefitted with this data.' %}</p>
-            <p>
-            {% trans 'You can contact us to get more data if you require.' %}</p>
+             <h1>Trend across the data</h1><br>
+            <p>{% trans 'As children ask, Sawaliram listens, and remembers. The Sawaliram repository is built out of questions that children have been continuously asking to adults around them.' %}</p>
+            <p>{% trans 'Now let us ask some questions on these questions.' %}</p>
+            <p>{% trans "As the repository grows with your contributions, we will find newer ways to query children's questions, to know, what are they asking about? What makes them curious? And how could we nurture that questioning habit?"  %}
         </div>
 
-        <div class="filled-div center question_counter col-md-3 col-sm-12" >
-            <h3>{% trans 'Question Asked' %}</h3>
-
-            <div class=" ">{{question_counter}}</div>
+        <div class="col-md-3 col-sm-12">
+            <div id="question-counter">
+          <!--   <div id="question-counter-svg">
+                <img src = "{% static 'illustrations/analytics.svg' %}"/>
+            </div> -->
+                <div id="question-counter-text">{{question_counter}}</div>
+            </div>
         </div>
     </div>
 
+    <div class="seperator">
+        <div class="row num-question-graph-container margin_ten">
+            <div class="col-md-12 col-sm-12 ">
+            <h5 class="graph-heading animate__animated" id="graph-title" >{% trans 'In which languages were the questions asked?' %}</h5>
+            <div class="graph-swipe" id="graph-swipe">
+                <span class ="left arrow left-arrow"></span>
+                <span class ="left arrow left-arrow"></span>
+                Swipe
+                <span class ="right arrow right-arrow"></span>
+                <span class ="right arrow right-arrow"></span>
+            </div>
 
-    <div class="row num-question-graph-container margin_ten">
-        <div class="col-md-12 col-sm-12 ">
-        <h5 class="graph-heading">{% trans 'Number of questions plotted against' %}</h5>
-            <div class="row graph-row">
-                <div class="param-choice col-md-4 col-sm-12">
-             
-                    <div class="param-flex" id="param-choice">
-                        <div id="g_lang">
-                            <label class="radio-inline"><input type="radio" name="graphtype" checked value="g_lang" scope="col">{% trans 'Question Language' %}</label>
-                        </div>
-                        <div id="g_year">
-                            <label class="radio-inline"><input type="radio" name="graphtype" value="g_year" scope="col">{% trans 'Year of Asking Question' %}</label>
-                        </div>
-                        <div id="g_gender">
-                            <label class="radio-inline"><input type="radio" name="graphtype" value="g_gender" scope="col">{% trans 'Gender' %}</label>
-                        </div>
-                        <div id="g_medium">
-                            <label class="radio-inline"><input type="radio" name="graphtype" value="g_medium" scope="col">{% trans 'Medium of Instruction' %}</label>
-                        </div>
-                        <div id="g_class">
-                            <label class="radio-inline"><input type="radio" name="graphtype" value="g_class" scope="col">{% trans 'Student Class' %}</label>
+
+                <div class="row graph-row">
+                    <div class="param-choice col-md-4 col-sm-12">
+                 
+                        <div class="param-flex" id="param-choice">
+                            <div id="g_lang" data-title="{% trans 'In which languages were the questions asked?' %}">
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_lang" scope="col" checked="true">{% trans 'Question Language' %}</label>
+                            </div>
+                            <div id="g_year"  data-title="{% trans 'When were these questions collected?' %}">
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_year" scope="col">{% trans 'Year of Asking Question' %}</label>
+                            </div>
+                            <div id="g_gender" data-title="{% trans 'How many questions did girls and boys ask?' %}">
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_gender" scope="col">{% trans 'Gender' %}</label>
+                            </div>
+                            <div id="g_medium" data-title="{% trans 'In which language medium did the questioners study? ' %}">
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_medium" scope="col">{% trans 'Medium of Instruction' %}</label>
+                            </div>
+                            <div id="g_class" data-title="{% trans 'When were these questions collected?' %}">
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_class" scope="col">{% trans 'Student Class' %}</label>
+                            </div>
+                            <div id="g_curriculum" data-title="{% trans 'What curriculum does the school follow? ' %}">
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_curriculum" scope="col">{% trans 'Curriculum Followed' %}</label>
+                            </div>
                         </div>
                     </div>
+
+                     <div class="col-md-8 col-sm-12" id="bar-graph-container">
+                        <div id="bar-graph-container-1">
+                            <canvas  id="nos_questions_graph"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        
+                        <button id="lang_gender_split" type="button"
+                         class="btn btn-yellow filter-button g_lang_filter animate__animated">Gender Split</button>
+                         
+                       
+                        <div id="g_gender_filter_id" class="btn-group g_gender_filter animate__animated hidden" data-toggle="buttons">
+                             <button type="button" id="gender_stem_split" class="btn btn-yellow filter-button" data-parent="g_gender_filter_id">STEM</button>
+                              <button type="button"  id="gender_nonstem_split" class="btn btn-yellow filter-button" data-parent="g_gender_filter_id">STEM vs. other subjects</button>
+                        </div>
+                         <!-- <div id="placeholder_div"
+                         style="height:35px; display:inline-block; visibility: hidden;"> Hidden</button>
+                         -->
+                    </div>                                        
                 </div>
-
-             <div class="col-md-8 col-sm-12" id="bar-graph-container">
-                    <canvas style="min-height: 300px" id="nos_qestions_graph"></canvas>
             </div>
-
-            </div>
-
-
         </div>
-
     </div>
-    <hr>
-    <br>
 
     <div class="row margin_ten" >
+        <div class="col-lg-12 h-divider"></div>
         <div class="col-md-12 col-sm-12">
-        <h3 class="">{% trans 'Composition of Datasets' %}</h3>
+        <!--<h3 class="">{% trans 'Composition of Datasets' %}</h3> -->
         </div>
-        <div class="col-md-6 col-sm-12 " >
-               
-                    <canvas id="doughnut-fomat"></canvas>
+        <div class="col-md-6 col-sm-12 pies" >
+            <h5 class="graph-heading ">{% trans 'How were the questions originally asked?' %}</h5>
+            <div class="pie-container">
+                    <canvas class="pie-canvas" id="doughnut-format"></canvas>
+            </div>
+            <div class="doughnut-legends" id="doughnut-format-legends">
+                
+            </div>
+
         </div>
-        <div class="col-md-6 col-sm-12 ">
-           
-                <canvas id="doughnut-curriculum"></canvas>
-        </div>
-        <div class="col-md-3 col-sm-12"></div> 
-        <div class="col-md-6 col-sm-12">
-                    <canvas id="doughnut-context"></canvas>
+        <div class="col-md-6 col-sm-12 pies">
+            <h5 class="graph-heading " id="graph-title">{% trans 'When were the questions asked?' %}</h5>
+            <div class="pie-container">
+                    <canvas class="pie-canvas" id="doughnut-context"></canvas>
+            </div>
+            <div class="doughnut-legends" id="doughnut-context-legends">
+                
             </div>
         </div>
+    </div>
         
 
-    <div class="row margin_ten">
+    <div class="seperator">
+      <div class="margin_ten">
         <div class="col-lg-12 h-divider"></div>
           <div class="col-md-12 col-sm-12">
             <br>
             <br>
-        <h3 class="">{% trans 'Questions Map - Statewise Distribution of Questions' %}</h3>
+        <h5 class="graph-heading">{% trans 'From which state were these questions asked?' %}</h5>
         </div>
           <div class="col-lg-12">
             <div class="switch-name-container">
@@ -108,65 +150,73 @@
             </label>
         </div>
 
-        <div class="col-md-8 col-sm-12">
+        <div class="col-md-12 col-sm-12">
             <div id="india-map" class="india-map"></div>
             <div id="india-bubble-map" class="india-map"  ></div>
         </div>
-        <div class="col-md-4 col-sm-12">
-            <div class="card ">
+       <!--  <div class="col-md-4 col-sm-12">
+            <div class="card">
                 <div class="card-body india-map-legend">
-             
                     {% trans 'Hover/Click over the states/bubbles to view the information.' %}
                 </div>
             </div>
-        </div>
+        </div> -->
+    </div>
     </div>
 
     <div class="row margin_ten" >
         <div class="col-md-12">
-            <hr>
+  
             <button type="button" class="btn btn-primary">{% trans 'Contact us to access data' %}</button>
         </div>
-    </div>
-
 </div>
-
 {% endblock %}
 {% block script_includes %}
 
 <script>
-    labels_lang  = {{ lang_names | safe }};
-    data_lang = {{ lang_counts | safe }};
+    var labels_lang  = {{ lang_names | safe }};
+    var data_lang = {{ lang_counts | safe }};
 
-    labels_year = {{ year_labels | safe }};
-    data_year = {{ year_counts | safe }};
+    var labels_year = {{ year_labels | safe }};
+    var data_year = {{ year_counts | safe }};
 
-    labels_gender = {{ gender_labels | safe }}
-    data_gender = {{ gender_counts | safe }}
+    var labels_gender = {{ gender_labels | safe }};
+    var data_gender = {{ gender_counts | safe }};
 
-    labels_medium = {{ mlang_names | safe }}
-    data_medium =  {{ mlang_counts | safe }}
+    var labels_medium = {{ mlang_names | safe }};
+    var data_medium =  {{ mlang_counts | safe }};
 
-    labels_class = {{ class_labels | safe }}
-    data_class = {{ class_counts | safe  }}
+    var labels_class = {{ class_labels | safe }};
+    var data_class = {{ class_counts | safe  }};
 
-    labels_format = {{ format_labels | safe }}
-    data_format = {{ format_counts | safe }}
+    var labels_format = {{ format_labels | safe }};
+    var data_format = {{ format_counts | safe }};
 
-    labels_curriculum = {{ curriculum_labels | safe }}
-    data_curriculum = {{ curriculum_counts | safe }}
+    var labels_curriculum = {{ curriculum_labels | safe }};
+    var data_curriculum = {{ curriculum_counts | safe }};
 
-    labels_context = {{ context_labels | safe }}
-    data_context = {{ context_counts | safe }}
+    var labels_context = {{ context_labels | safe }};
+    var data_context = {{ context_counts | safe }};
 
-    state_names = {{ state_names | safe }}
-    state_codes = {{ state_codes | safe }}
-    state_counts = {{ state_counts | safe }}
+    var state_names = {{ state_names | safe }};
+    var state_codes = {{ state_codes | safe }};
+    var state_counts = {{ state_counts | safe }};
+
+    var languageGenderDictionary = {{ languageGenderDictionary | safe }};
+    var genderSubjectDictionary = {{genderSubjectDictionary | safe}};
+
     indianTopoURL = "{% static 'js/analytics/india.topo.json' %}";  // location of topology json of India
 </script>
+<!-- TouchSwipe JS -->
+<script src="{% static 'js/analytics/touchswipe.js' %}"></script>
 <script src="{% static 'js/analytics/analytics.js' %}"></script>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://d3js.org/topojson.v1.min.js"></script>
 <script src="{% static 'js/analytics/datamaps.none.js' %}"></script>
 <script src="{% static 'js/analytics/analytics_map.js' %}"></script>
+
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- MDB core JavaScript -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.0/js/mdb.min.js"></script> -->
  {% endblock %}

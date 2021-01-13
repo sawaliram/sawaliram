@@ -6,12 +6,13 @@
 	margin-bottom: 0.8rem;
 }
 
+
+
 .analytics_title > h3 {
 	margin-bottom: 0.8rem;
 	vertical-align: center;
 	align-items: center;
 	font-size: 1.5em;
-	font-family: fantasy;
 	font-weight: 700;
 	margin-left:1em;
 }
@@ -28,35 +29,98 @@
 
 .graph-heading {
 	text-align: center;
+	font-weight: bolder;
 }
 
 #bar-graph-container{
+	overflow: scroll;
 
 }
 
-.num-question-graph-container {
-	background-color: white;
-	border-radius: 30px;
-	padding-top:40px;
-}
-.graph-row {
-	padding-left:100px;
-	padding-top:40px;
+
+.seperator {
+	background-image: url('/static/illustrations/analytics_seperator.svg');
+	background-repeat:no-repeat;
+    background-size:cover;
+    overflow: hidden;
+    padding-top:5%;
+    padding-bottom: 8%;
 }
 
-.question_counter {
-	font-family: Courier;
+
+.graph-swipe{
+	display: none;
+}
+
+.filter-button {
+	margin:2px;
+}
+
+
+#bar-graph-container-1{
+	min-width: 450px;
+
+}
+	
+#nos_questions_graph{
+
+}
+
+#question-counter{
+	background-image: url('/static/illustrations/analytics.svg');
+	background-repeat:no-repeat;
+    background-size:cover;
+    overflow: hidden;
+	position: relative;
 	height: 300px;
 	width:300px;
 	text-align: center;
 	padding-top:10px;
 }
 
+#question-counter-text {
+	position: absolute;
+	font-size: 3em;
+    left: 35%;
+    top: 37%;
+}
+
+#question-counter-svg {
+	position: absolute;
+	width:100%;
+	height: 100%;
+}
+
+
+.doughnut-legends li{ 
+	margin:10px;
+   /* display:inline-block */
+   list-style-type:none;
+}
+
+.legend-color{
+	width:40px;
+	height:10px;
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.num-question-graph-container {
+	margin-top: 40px;
+	margin-bottom: 40px;
+}
+
+.graph-row {
+	padding-left:100px;
+	padding-top:40px;
+}
+
+
 .counter-value {
 	vertical-align: center;
 	margin-left: 20px;
 	font-size: 1.5em;
-	font-family: fantasy;
+	font-family: helvetica;
 }
 
 .filled-div {
@@ -72,8 +136,10 @@
 	color:white;
 }
 
+
 .margin_ten {
-	margin:1% !important;
+	margin-left: 1% !important;
+    margin-right: 1% !important;
 }
 
 
@@ -81,58 +147,17 @@
 	width: 50%;
   	margin: 0 auto !important;
 }
-@media screen and (max-width: 768px) {
-	
-	.param-flex {
-		flex-direction: row;
-		font-size:0.6em;
-	}
 
-	.graph-row {
-	padding-left:5px;
-	padding-top:5px;
-}
-
-	.filled-div {
-		font-size: 1em;
-		border-radius: 20px;
-		padding-top: 10px;
-	}
-
-		.analytics_title > h3 {
-		margin-bottom: 0.8rem;
-		vertical-align: center;
-		align-items: center;
-		font-size: 1.0em;
-		font-family: fantasy;
-		font-weight: 700;
-		margin-left:1em;
-	}
-
-	.counter-value {
-		margin-left: 5px;
-		font-size: 1em;
-		font-family: fantasy;
-	}
-}
-
-input[type="radio"]{
-	margin:10px;
-}
-
-.h-divider{
-	padding:0px;
-	margin-top:5px;
-	margin-bottom:5px;
-	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(9, 84, 132), rgba(0, 0, 0, 0));
-}
 
 
 /* Map */
 
+
 .india-map {
 	position: relative;
+	left: 20%;
 	overflow: scroll;
+	margin:auto;
 }
 
 
@@ -150,7 +175,6 @@ input[type="radio"]{
 }
 
 .india-map-legend {
-	font-family: Courier New;
 	background-color: #FEB740;
 	text-align: center;
 	padding:5px;
@@ -158,13 +182,105 @@ input[type="radio"]{
 }
 
 
+@media screen and (max-width: 768px) {
+	.graph-swipe{
+		display: block;
+		width:100%;
+		background-color:#FEB740; 
+		text-align: center;
+		font-color:gray;
+		padding:10px;
+		margin:0px;
+		touch-action: none;
+	}
+
+	#graph-title {
+		touch-action: none;
+	}
+
+	.param-flex {
+		/*flex-direction: row;
+		font-size:0.6em;*/
+		display: none;
+	}
+
+	.graph-row {
+	padding-left:5px;
+	padding-top:5px;
+	}
+ .doughnut-legends{
+		overflow-x: scroll;
+	}
+
+	.doughnut-legends ul{
+	    white-space: nowrap
+	} 
+
+	.filled-div {
+		font-size: 1em;
+		border-radius: 20px;
+		padding-top: 10px;
+	}
+
+		.analytics_title > h3 {
+		margin-bottom: 0.8rem;
+		vertical-align: center;
+		align-items: center;
+		font-size: 1.0em;
+		font-weight: 700;
+		margin-left:1em;
+	}
+
+
+	#question-counter{
+		height: 250px;
+		width:250px;
+	}
+
+	#question-counter-text {
+	font-size: 2.5em;
+	}
+	.seperator {
+    padding-top:10%;
+    padding-bottom: 10%;
+	}
+
+	.india-map {
+		left: 0%;
+	}
+}
+
+input[type="radio"]{
+	margin:10px;
+}
+
+.full-row {
+	overflow: hidden;
+}
+
+.h-divider{
+	padding:0px;
+
+	width:100%;
+	height:20px;
+}
+
+/*.h-divider{
+	padding:0px;
+	margin-top:5px;
+	margin-bottom:5px;
+	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(9, 84, 132), rgba(0, 0, 0, 0));
+}
+*/
+
+
 /* From W3School for Toggle Switch*/
  /* The switch - the box around the slider */
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 45px;
+  height: 20px;
 }
 
 /* Hide default HTML checkbox */
@@ -190,8 +306,8 @@ input[type="radio"]{
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 12px;
+  width: 12px;
   left: 4px;
   bottom: 4px;
   background-color: white;
@@ -200,11 +316,11 @@ input[type="radio"]{
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #87B24D;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px #87B24D;
 }
 
 input:checked + .slider:before {
@@ -237,4 +353,32 @@ input:checked + .slider:before {
 
 .datamap{
 	overflow:scroll;
+}
+
+
+/* For arrows: Source: w3 */
+.arrow {
+	border: solid black;
+	border-width: 0 3px 3px 0;
+	display: inline-block;
+	padding: 3px;
+	-webkit-transition: border-color 200ms linear;
+	-moz-transition: border-color 200ms linear;
+	-o-transition: border-color 200ms linear;
+	-ms-transition: border-color 200ms linear;
+	transition: border-color 200ms linear;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  float: right; 
+  margin-top:10px
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  float: left; 
+  margin-top:10px
 }
