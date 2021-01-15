@@ -807,14 +807,7 @@ class ArticlesPage(View):
 
 
 class AnalyticsPage(View):
-    state_code = {'lakshadweep': 'LD', 'andaman and nicobar islands': 'AN', 'maharashtra': 'MH', 
-                'andhra pradesh': 'AP', 'meghalaya': 'ML', 'arunachal pradesh': 'AR', 'manipur': 'MN', 'assam': 'AS', 
-                'madhya pradesh': 'MP', 'bihar': 'BR', 'mizoram': 'MZ', 'chandigarh': 'CH', 'nagaland': 'NL', 
-                'chhattisgarh': 'CT', 'odisha': 'OR', 'daman and diu': 'DD', 'punjab': 'PB', 'delhi': 'DL', 
-                'puducherry': 'PY', 'dadra and nagar haveli': 'DN', 'rajasthan': 'RJ', 'goa': 'GA', 'sikkim': 'SK', 
-                'gujarat': 'GJ', 'telangana': 'TG', 'himachal pradesh': 'HP', 'tamil nadu': 'TN', 'haryana': 'HR', 
-                'tripura': 'TR', 'jharkhand': 'JH', 'uttar pradesh': 'UP', 'jammu and kashmir': 'JK', 'uttarakhand': 'UT', 
-                'karnataka': 'KA', 'west bengal': 'WB', 'kerala': 'KL'} # dictionary to hold the name of the state and its ISO code.
+    state_code = settings.STATE_CODE # dictionary to hold the name of the state and its ISO code.
 
     def get(self, request):
         """
@@ -822,6 +815,7 @@ class AnalyticsPage(View):
         """
         # Translators: For all the language names in the database we need tranlation 
         # Each function getABC() returns the data for the ABC which is then added to context.
+
         year_labels, year_counts = self.getYearAsked()
         lang_names, lang_counts = self.getQuestionLanguages()
         gender_labels, gender_counts = self.getGenderStat()
@@ -832,7 +826,7 @@ class AnalyticsPage(View):
         curriculum_labels, curriculum_counts = self.getCurriculumStats()
         context_labels, context_counts = self.getContextStats()
         states, codes, counts = self.getMapStats()
-
+        
         return render(request, 'public_website/analytics-home.html', 
             {"page_title": _('Analytics'), 
             "question_counter": self.getQuestionCount(),
@@ -855,6 +849,8 @@ class AnalyticsPage(View):
             "state_names" : self.fix(states, apply_ = True),
             "state_codes" : self.fix(codes),
             "state_counts" : self.fix(counts),
+            "languageGenderDictionary": self.getLanguageGenderDictionary(),
+            "genderSubjectDictionary": self.getGenderSubjectDictionary(),
             })
 
 
@@ -875,7 +871,7 @@ class AnalyticsPage(View):
 
             if lang_name in lang_names:
                 # if the language name is twice in the list for any reason then reject it. (Workaround)
-                # This is caused due to nonuniform labelling of languages in Database. 
+                # Note: This is caused due to nonuniform labelling of languages in Database. 
                 continue
 
             lang_names.append(lang_name)
@@ -908,6 +904,56 @@ class AnalyticsPage(View):
         gender_tuples = sorted([(tple['student_gender'] if tple['student_gender'] else "NA", tple['count']) for tple in distinct], key = lambda item : item[0])
         return map(list, zip(*gender_tuples))
 
+    def getGenderSubjectDictionary(self, params= None):
+        gender_list = ["Male", "Female", ""]
+        # following list is used due to inconsistent naming in database for history, philosophy and practice of science
+        history_and_philosophy = [
+                'History-Philosophy and Practice of Science', 
+                'History - Philosophy and Practice of Science', 
+                'History - Philosophy & Practice of Science', 
+                'History, Philosophy & Practice of Science'
+        ]
+
+        #dictionary to hold name of the subject as the key, and all its aliases in the database in a list as the value
+        non_stems_subjects = {
+                'Humans & Society': ['Humans & Society'], 
+                'Earth & Environment': ['Earth & Environment'], 
+                'Geography & History': ['Geography & History'], 
+                'Arts & Recreation':['Arts & Recreation'], 
+                'Language & Literature':['Language & Literature']
+        }
+        stems_subjects = {
+                'Mathematics':['Mathematics'], 
+                'Biology': ['Biology'], 
+                'Chemistry': ['Chemistry'], 
+                'Physics':['Physics'], 
+                'Technology & Applied Science':['Technology & Applied Science'], 
+                'History, Philosophy and Practice of Science': history_and_philosophy
+        }  # history/philosophy is part of STEMS : Update as per JR's comment on Zulip
+        
+        genderSubjectDictionary = {'Male': {}, 'Female': {}, 'NA': {}}
+        for gender in gender_list:
+            for subject_name in stems_subjects:
+                genderSubjectDictionary[_(gender) if gender!='' else _("NA")][_(subject_name)]  \
+                =  sum([Question.objects.filter(student_gender = gender, field_of_interest = subject_alias).count() for subject_alias in stems_subjects[subject_name]])
+            
+            for subject_name in non_stems_subjects:
+                genderSubjectDictionary[_(gender) if gender!='' else _("NA")][_(subject_name)]   \
+                =  sum([Question.objects.filter(student_gender = gender, field_of_interest = subject_alias).count() for subject_alias in non_stems_subjects[subject_name]])
+
+        return genderSubjectDictionary
+
+    def getLanguageGenderDictionary(self, params = None):
+        gender_list = list(map(lambda x: x[0], Question.objects.order_by().values_list('student_gender').distinct()))
+        language_list = list(map(lambda x: x[0], Question.objects.order_by().values_list('language').distinct()))
+        lang_names = [language_name[lang] if lang in language_name else lang for lang in language_list]  # get the proper names of languages
+        languageGenderDictionary = {lang_name: {} for lang_name in lang_names}
+        for lang_index in range(len(language_list)):
+            for gender in gender_list:
+                lang = language_list[lang_index]
+                lang_name = lang_names[lang_index]
+                languageGenderDictionary[_(lang_name)][_(gender) if gender!='' else _("NA")] = Question.objects.filter(student_gender = gender, language = lang).count()
+        return languageGenderDictionary
 
     def getMediumLanguage(self, params = None):
         distinct = Question.objects.values('medium_language').annotate(count=Count('medium_language'))
@@ -937,8 +983,8 @@ class AnalyticsPage(View):
         for tple in class_tuples:
             student_class = tple[0]
             student_count = tple[1]
-            if student_count < 20 : # 10 is arbitrary here. Change it as per the requirements. 
-                # ignore if count of student from this class is less than 10 
+            if student_count < 5 : # 5 is arbitrary here. Change it as per the requirements. 
+                # ignore if count of student from this class is less than 5
                 continue
             try:
                 st_class = int(float(student_class))
