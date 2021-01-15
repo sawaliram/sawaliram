@@ -38,8 +38,8 @@
 }
 
 
-.seperator {
-	background-image: url('/static/illustrations/analytics_seperator.svg');
+.separator {
+	background-image: url('/static/illustrations/analytics_separator.svg');
 	background-repeat:no-repeat;
     background-size:cover;
     overflow: hidden;
@@ -240,7 +240,7 @@
 	#question-counter-text {
 	font-size: 2.5em;
 	}
-	.seperator {
+	.separator {
     padding-top:10%;
     padding-bottom: 10%;
 	}

@@ -807,14 +807,7 @@ class ArticlesPage(View):
 
 
 class AnalyticsPage(View):
-    state_code = {'lakshadweep': 'LD', 'andaman and nicobar islands': 'AN', 'andaman & nicobar': 'AN', 'maharashtra': 'MH', 
-                'andhra pradesh': 'AP', 'meghalaya': 'ML', 'arunachal pradesh': 'AR', 'manipur': 'MN', 'assam': 'AS', 
-                'madhya pradesh': 'MP', 'bihar': 'BR', 'mizoram': 'MZ', 'chandigarh': 'CH', 'nagaland': 'NL', 
-                'chhattisgarh': 'CT', 'odisha': 'OR', 'daman and diu': 'DD', 'punjab': 'PB', 'delhi': 'DL', 
-                'puducherry': 'PY', 'dadra and nagar haveli': 'DN', 'rajasthan': 'RJ', 'goa': 'GA', 'sikkim': 'SK', 
-                'gujarat': 'GJ', 'telangana': 'TG', 'himachal pradesh': 'HP', 'tamil nadu': 'TN', 'haryana': 'HR', 
-                'tripura': 'TR', 'jharkhand': 'JH', 'uttar pradesh': 'UP', 'jammu and kashmir': 'JK', 'jammu & kashmir': 'JK', 'uttarakhand': 'UT', 
-                'karnataka': 'KA', 'west bengal': 'WB', 'kerala': 'KL'} # dictionary to hold the name of the state and its ISO code.
+    state_code = settings.STATE_CODE # dictionary to hold the name of the state and its ISO code.
 
     def get(self, request):
         """
@@ -990,8 +983,8 @@ class AnalyticsPage(View):
         for tple in class_tuples:
             student_class = tple[0]
             student_count = tple[1]
-            if student_count < 1 : # 20 is arbitrary here. Change it as per the requirements. 
-                # ignore if count of student from this class is less than 20 
+            if student_count < 5 : # 5 is arbitrary here. Change it as per the requirements. 
+                # ignore if count of student from this class is less than 5
                 continue
             try:
                 st_class = int(float(student_class))
