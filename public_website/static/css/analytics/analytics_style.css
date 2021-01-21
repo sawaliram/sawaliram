@@ -181,6 +181,11 @@
 
 }
 
+.footnote {
+	background-color: #af0000;
+    color: white;
+}
+
 
 @media screen and (max-width: 768px) {
 	.graph-swipe{
