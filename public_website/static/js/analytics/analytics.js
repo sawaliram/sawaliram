@@ -78,7 +78,8 @@ var graphs = {
 var total_gender = {};
 total_gender.Male = data_gender[0];
 total_gender.Female = data_gender[1];
-total_gender.NA = data_gender[2];
+total_gender.NonBinary = data_gender[2];
+total_gender.NA = data_gender[3];
 
 //Swiping for Mobile and Touch Devices
 $(function() {      
@@ -259,15 +260,18 @@ function sum(arr){
 
 // For Filter Buttons
 function createGenderLanguageDatasets(){
-        gender = ["Male", "Female", "NA"];
+        gender = ["Male", "Female", "NonBinary", "Not known"];
         male = [];
         female = [];
+        non_binary = [];
         na = [];
         for (lang_index in labels_lang){
                 lang = labels_lang[lang_index];
                 male.push(languageGenderDictionary[lang].Male);
                 female.push(languageGenderDictionary[lang].Female);
-                na.push(languageGenderDictionary[lang].NA);
+                non_binary.push(languageGenderDictionary[lang].NonBinary);
+                na.push(languageGenderDictionary[lang]["Not known"]);
+
             
         }
 
@@ -286,9 +290,18 @@ function createGenderLanguageDatasets(){
             borderWidth: 0.5,
             minHeight: 5,
         },
+
         {
-            label: 'No Account',
-            backgroundColor: bg_colors[2],
+            label: 'Non-binary',
+            data: non_binary,
+            backgroundColor : bg_colors[2],
+            borderWidth: 0.5,
+            minHeight: 5,
+        },
+
+        {
+            label: 'Not known',
+            backgroundColor: bg_colors[3],
             data: na,
             borderWidth: 0.5,
             minHeight: 5,
@@ -298,12 +311,13 @@ function createGenderLanguageDatasets(){
 }
 
 function createSTEMSplitDataset() {
-        genders = ["Male", "Female", "NA"];
+        genders = ["Male", "Female","NonBinary", "Not known"];
         maths = [];
         physics = [];
         chemistry = [];
         biology = [];
         history_philosophy = [];
+        earth_environment = [];
 
 
         for (gender_index in genders){
@@ -313,6 +327,7 @@ function createSTEMSplitDataset() {
                 chemistry.push(genderSubjectDictionary[gender].Chemistry);
                 biology.push(genderSubjectDictionary[gender].Biology);  
                 history_philosophy.push(genderSubjectDictionary[gender]['History, Philosophy and Practice of Science']);  
+                earth_environment.push(genderSubjectDictionary[gender]['Earth & Environment']);
         }
 
         var gender_subject_datasets =  [{
@@ -346,7 +361,15 @@ function createSTEMSplitDataset() {
         {
             label: 'History, Philosophy and Practice of Science',
             backgroundColor: bg_colors[4],
-            data: biology,
+            data: history_philosophy,
+            borderWidth: 0.5,
+            minHeight: 5,
+        },
+
+        {
+            label: 'Earth & Environment',
+            backgroundColor: bg_colors[5],
+            data: earth_environment,
             borderWidth: 0.5,
             minHeight: 5,
         },
@@ -356,8 +379,8 @@ function createSTEMSplitDataset() {
 
 
 function createNonSTEMSplitDataset() {
-        genders = ["Male", "Female", "NA"];
-        non_stem = ['Humans & Society', 'Earth & Environment', 'Geography & History',  'Arts & Recreation', 'Language & Literature']
+        genders = ["Male", "Female", "NonBinary", "Not known"];
+        non_stem = ['Humans & Society', 'Geography & History',  'Arts & Recreation', 'Language & Literature']
         total_stem = [];
         
         for (gender_index in genders){
@@ -365,7 +388,9 @@ function createNonSTEMSplitDataset() {
                 total_stem.push(genderSubjectDictionary[gender].Mathematics+
                     genderSubjectDictionary[gender].Physics +
                     genderSubjectDictionary[gender].Chemistry + 
-                    genderSubjectDictionary[gender].Biology + genderSubjectDictionary[gender]['History, Philosophy and Practice of Science']); 
+                    genderSubjectDictionary[gender].Biology + 
+                    genderSubjectDictionary[gender]['History, Philosophy and Practice of Science'] + 
+                    genderSubjectDictionary[gender]['Earth & Environment']); 
         }
 
         var getSubjectData = function(subject) {

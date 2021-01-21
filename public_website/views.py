@@ -807,7 +807,15 @@ class ArticlesPage(View):
 
 
 class AnalyticsPage(View):
-    state_code = settings.STATE_CODE # dictionary to hold the name of the state and its ISO code.
+    #Dictionary to hold {state_name:state_ISO_code}
+    state_code = {'lakshadweep': 'LD', 'andaman and nicobar islands': 'AN', 'andaman & nicobar': 'AN', 'maharashtra': 'MH', 
+                'andhra pradesh': 'AP', 'meghalaya': 'ML', 'arunachal pradesh': 'AR', 'manipur': 'MN', 'assam': 'AS', 
+                'madhya pradesh': 'MP', 'bihar': 'BR', 'mizoram': 'MZ', 'chandigarh': 'CH', 'nagaland': 'NL', 
+                'chhattisgarh': 'CT', 'odisha': 'OR', 'daman and diu': 'DD', 'punjab': 'PB', 'delhi': 'DL', 
+                'puducherry': 'PY', 'dadra and nagar haveli': 'DN', 'rajasthan': 'RJ', 'goa': 'GA', 'sikkim': 'SK', 
+                'gujarat': 'GJ', 'telangana': 'TG', 'himachal pradesh': 'HP', 'tamil nadu': 'TN', 'haryana': 'HR', 
+                'tripura': 'TR', 'jharkhand': 'JH', 'uttar pradesh': 'UP', 'jammu and kashmir': 'JK', 'jammu & kashmir': 'JK', 'uttarakhand': 'UT', 
+                'karnataka': 'KA', 'west bengal': 'WB', 'kerala': 'KL'}
 
     def get(self, request):
         """
@@ -901,11 +909,11 @@ class AnalyticsPage(View):
 
     def getGenderStat(self, params = None):
         distinct = Question.objects.values('student_gender').annotate(count=Count('student_gender'))
-        gender_tuples = sorted([(tple['student_gender'] if tple['student_gender'] else "NA", tple['count']) for tple in distinct], key = lambda item : item[0])
+        gender_tuples = sorted([(tple['student_gender'] if tple['student_gender'] else "Not known", tple['count']) for tple in distinct], key = lambda item : item[0])
         return map(list, zip(*gender_tuples))
 
     def getGenderSubjectDictionary(self, params= None):
-        gender_list = ["Male", "Female", ""]
+        gender_list = ["Male", "Female", "NonBinary", ""]
         # following list is used due to inconsistent naming in database for history, philosophy and practice of science
         history_and_philosophy = [
                 'History-Philosophy and Practice of Science', 
@@ -917,34 +925,35 @@ class AnalyticsPage(View):
         #dictionary to hold name of the subject as the key, and all its aliases in the database in a list as the value
         non_stems_subjects = {
                 'Humans & Society': ['Humans & Society'], 
-                'Earth & Environment': ['Earth & Environment'], 
                 'Geography & History': ['Geography & History'], 
                 'Arts & Recreation':['Arts & Recreation'], 
                 'Language & Literature':['Language & Literature']
         }
         stems_subjects = {
                 'Mathematics':['Mathematics'], 
+                'Earth & Environment': ['Earth & Environment'], 
                 'Biology': ['Biology'], 
                 'Chemistry': ['Chemistry'], 
                 'Physics':['Physics'], 
                 'Technology & Applied Science':['Technology & Applied Science'], 
                 'History, Philosophy and Practice of Science': history_and_philosophy
         }  # history/philosophy is part of STEMS : Update as per JR's comment on Zulip
+           # Earth & Environment is part of STEMS
         
-        genderSubjectDictionary = {'Male': {}, 'Female': {}, 'NA': {}}
+        genderSubjectDictionary = {'Male': {}, 'Female': {}, 'NonBinary': {}, 'Not known': {}}
         for gender in gender_list:
             for subject_name in stems_subjects:
-                genderSubjectDictionary[_(gender) if gender!='' else _("NA")][_(subject_name)]  \
+                genderSubjectDictionary[_(gender) if gender!='' else _("Not known")][_(subject_name)]  \
                 =  sum([Question.objects.filter(student_gender = gender, field_of_interest = subject_alias).count() for subject_alias in stems_subjects[subject_name]])
             
             for subject_name in non_stems_subjects:
-                genderSubjectDictionary[_(gender) if gender!='' else _("NA")][_(subject_name)]   \
+                genderSubjectDictionary[_(gender) if gender!='' else _("Not known")][_(subject_name)]   \
                 =  sum([Question.objects.filter(student_gender = gender, field_of_interest = subject_alias).count() for subject_alias in non_stems_subjects[subject_name]])
 
         return genderSubjectDictionary
 
     def getLanguageGenderDictionary(self, params = None):
-        gender_list = list(map(lambda x: x[0], Question.objects.order_by().values_list('student_gender').distinct()))
+        gender_list = ["Male", "Female", "NonBinary", ""]
         language_list = list(map(lambda x: x[0], Question.objects.order_by().values_list('language').distinct()))
         lang_names = [language_name[lang] if lang in language_name else lang for lang in language_list]  # get the proper names of languages
         languageGenderDictionary = {lang_name: {} for lang_name in lang_names}
@@ -952,7 +961,7 @@ class AnalyticsPage(View):
             for gender in gender_list:
                 lang = language_list[lang_index]
                 lang_name = lang_names[lang_index]
-                languageGenderDictionary[_(lang_name)][_(gender) if gender!='' else _("NA")] = Question.objects.filter(student_gender = gender, language = lang).count()
+                languageGenderDictionary[_(lang_name)][_(gender) if gender!='' else _("Not known")] = Question.objects.filter(student_gender = gender, language = lang).count()
         return languageGenderDictionary
 
     def getMediumLanguage(self, params = None):
@@ -976,7 +985,7 @@ class AnalyticsPage(View):
 
     def getStudentClassStat(self, params = None):
         distinct = Question.objects.values('student_class').annotate(count=Count('student_class'))
-        class_tuples = sorted([(tple['student_class'] if tple['student_class'] else "NA", tple['count']) for tple in distinct], key = lambda item : item[0])
+        class_tuples = sorted([(tple['student_class'] if tple['student_class'] else "Not known", tple['count']) for tple in distinct], key = lambda item : item[0])
         # Cleaning tuples as classes are stored as 10, 10.0 ... etc
         ## Can use: clases_names = {"4,5,6": "Primary", "10,11": "Secondary", "6,7,8": "Middle School" }.update({i:i for i in range(1,13)})
         dct = {i:0 for i in range(1,13)}
