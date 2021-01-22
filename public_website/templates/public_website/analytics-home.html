@@ -27,7 +27,7 @@
 <div class="fluid-container">
     <div class="intro-and-question-counter row margin_ten">
         <div class="col-md-8 col-sm-12">
-             <h1>Trend across the data</h1><br>
+             <h1>Trends across the data</h1><br>
             <p>{% trans 'As children ask, Sawaliram listens, and remembers. The Sawaliram repository is built out of questions that children have been continuously asking to adults around them.' %}</p>
             <p>{% trans 'Now let us ask some questions on these questions.' %}</p>
             <p>{% trans "As the repository grows with your contributions, we will find newer ways to query children's questions, to know, what are they asking about? What makes them curious? And how could we nurture that questioning habit?"  %}
@@ -61,22 +61,22 @@
                  
                         <div class="param-flex" id="param-choice">
                             <div id="g_lang" data-title="{% trans 'In which languages were the questions asked?' %}">
-                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_lang" scope="col" checked="true">{% trans 'Question Language' %}</label>
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_lang" scope="col" checked="true">{% trans 'Question language' %}</label>
                             </div>
                             <div id="g_year"  data-title="{% trans 'When were these questions collected?' %}">
-                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_year" scope="col">{% trans 'Year of Asking Question' %}</label>
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_year" scope="col">{% trans 'Year of asking question' %}</label>
                             </div>
                             <div id="g_gender" data-title="{% trans 'How many questions did girls and boys ask?' %}">
                                 <label class="radio-inline"><input type="radio" name="graphtype" value="g_gender" scope="col">{% trans 'Gender' %}</label>
                             </div>
                             <div id="g_medium" data-title="{% trans 'In which language medium did the questioners study? ' %}">
-                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_medium" scope="col">{% trans 'Medium of Instruction' %}</label>
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_medium" scope="col">{% trans 'Medium of instruction' %}</label>
                             </div>
-                            <div id="g_class" data-title="{% trans 'When were these questions collected?' %}">
-                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_class" scope="col">{% trans 'Student Class' %}</label>
+                            <div id="g_class" data-title="{% trans 'In which class did the questioners study?' %}">
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_class" scope="col">{% trans 'Student class' %}</label>
                             </div>
                             <div id="g_curriculum" data-title="{% trans 'What curriculum does the school follow? ' %}">
-                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_curriculum" scope="col">{% trans 'Curriculum Followed' %}</label>
+                                <label class="radio-inline"><input type="radio" name="graphtype" value="g_curriculum" scope="col">{% trans 'Curriculum followed' %}</label>
                             </div>
                         </div>
                     </div>
@@ -89,12 +89,12 @@
                     <div>
                         
                         <button id="lang_gender_split" type="button"
-                         class="btn btn-yellow filter-button g_lang_filter animate__animated">Gender Split</button>
+                         class="btn btn-yellow filter-button g_lang_filter animate__animated">{% trans 'Gender Split' %}</button>
                          
                        
                         <div id="g_gender_filter_id" class="btn-group g_gender_filter animate__animated hidden" data-toggle="buttons">
-                             <button type="button" id="gender_stem_split" class="btn btn-yellow filter-button" data-parent="g_gender_filter_id">STEM</button>
-                              <button type="button"  id="gender_nonstem_split" class="btn btn-yellow filter-button" data-parent="g_gender_filter_id">STEM vs. other subjects</button>
+                             <button type="button" id="gender_stem_split" class="btn btn-yellow filter-button" data-parent="g_gender_filter_id">{% trans 'STEM' %}</button>
+                              <button type="button"  id="gender_nonstem_split" class="btn btn-yellow filter-button" data-parent="g_gender_filter_id">{% trans 'STEM vs. other subjects' %}</button>
                         </div>
                          <!-- <div id="placeholder_div"
                          style="height:35px; display:inline-block; visibility: hidden;"> Hidden</button>
@@ -162,12 +162,20 @@
             </div>
         </div> -->
     </div>
+    <div class="col-md-12 col-sm-12 footnote">
+        {% trans 'States of India are shown as per the available open source map. The Union Territory of Ladakh will be depicted when a TopoJSON map is available.' %}
+    </div>
     </div>
 
     <div class="row margin_ten" >
         <div class="col-md-12">
-  
-            <button type="button" class="btn btn-primary">{% trans 'Contact us to access data' %}</button>
+            {% trans 'For more analytics and to try your own visualisation ideas see our page on Tableau Public' %}
+            <a href="https://public.tableau.com/profile/sawaliram#!/" target="blank">Sawaliram Tableau Public Profile</a>
+
+            <hr/>
+             <a href="https://sawaliram.org/contact">
+                <button type="button" class="btn btn-primary">{% trans 'Contact us to access data' %}</button>
+            </a>
         </div>
 </div>
 {% endblock %}
