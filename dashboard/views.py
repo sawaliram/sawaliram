@@ -129,33 +129,33 @@ class SubmitQuestionsView(View):
         columns = list(excel_sheet)
 
         column_name_mapping = {
-            'Question': 'question_text',
-            'Question Language': 'language',
-            'English translation of the question': 'question_text_english',
-            'How was the question originally asked?': 'question_format',
-            'Context': 'context',
-            'Date of asking the question': 'question_asked_on',
-            'Student Name': 'student_name',
-            'Gender': 'student_gender',
-            'Student Class': 'student_class',
-            'School Name': 'school',
-            'Curriculum followed': 'curriculum_followed',
-            'Medium of instruction': 'medium_language',
-            'Area': 'area',
-            'State': 'state',
-            'Published (Yes/No)': 'published',
-            'Publication Name': 'published_source',
-            'Publication Date': 'published_date',
-            'Notes': 'notes',
-            'Contributor Name': 'contributor',
-            'Contributor Role': 'contributor_role'
+            'question': 'question_text',
+            'question language': 'language',
+            'english translation of the question': 'question_text_english',
+            'how was the question originally asked?': 'question_format',
+            'context': 'context',
+            'date of asking the question': 'question_asked_on',
+            'student name': 'student_name',
+            'gender': 'student_gender',
+            'student class': 'student_class',
+            'school name': 'school',
+            'curriculum followed': 'curriculum_followed',
+            'medium of instruction': 'medium_language',
+            'area': 'area',
+            'state': 'state',
+            'published (yes/no)': 'published',
+            'publication name': 'published_source',
+            'publication date': 'published_date',
+            'notes': 'notes',
+            'contributor name': 'contributor',
+            'contributor role': 'contributor_role'
         }
 
         for index, row in excel_sheet.iterrows():
             question = QuestionArchive()
 
             # only save the question if the question field is non-empty
-            if not row['Question'] != row['Question']:
+            if not row['question'] != row['question']:
 
                 for column in columns:
                     column = column.strip()
@@ -163,7 +163,7 @@ class SubmitQuestionsView(View):
                     # check if the value is not nan
                     if not row[column] != row[column]:
 
-                        if column == 'Published (Yes/No)':
+                        if column.lower() == 'published (yes/no)':
                             setattr(
                                 question,
                                 column_name_mapping[column],
@@ -193,7 +193,7 @@ class SubmitQuestionsView(View):
         writer.save()
 
         # create file for curation
-        excel_sheet['Field of Interest'] = ''
+        excel_sheet['field of interest'] = ''
         excel_sheet['dataset_id'] = dataset.id
         uncurated_filename = 'dataset_' + str(dataset.id) + '_uncurated.xlsx'
         writer = pd.ExcelWriter(
@@ -220,33 +220,33 @@ class ValidateNewExcelSheet(View):
         file_errors = {}
         general_errors = []
         standard_columns = [
-            'Question',
-            'Question Language',
-            'English translation of the question',
-            'How was the question originally asked?',
-            'Context',
-            'Date of asking the question',
-            'Student Name',
-            'Gender',
-            'Student Class',
-            'School Name',
-            'Curriculum followed',
-            'Medium of instruction',
-            'Area',
-            'State',
-            'Published (Yes/No)',
-            'Publication Name',
-            'Publication Date',
-            'Notes',
-            'Contributor Name',
-            'Contributor Role'
+            'question',
+            'question language',
+            'english translation of the question',
+            'how was the question originally asked?',
+            'context',
+            'date of asking the question',
+            'student name',
+            'gender',
+            'student class',
+            'school name',
+            'curriculum followed',
+            'medium of instruction',
+            'area',
+            'state',
+            'published (yes/no)',
+            'publication name',
+            'publication date',
+            'notes',
+            'contributor name',
+            'contributor role'
         ]
 
         if len(list(excel_file)) != 20:
             general_errors.append('The columns of the Excel template are modified. Please use the standard template!')
 
         for column in list(excel_file):
-            if column not in standard_columns:
+            if column.lower() not in standard_columns:
                 general_errors.append('"' + column + '" is not a standard column. Please use the standard template!')
 
         if general_errors:
@@ -255,17 +255,24 @@ class ValidateNewExcelSheet(View):
             return HttpResponse(response)
 
         for index, row in excel_file.iterrows():
+            # convert all row names to lowercase
+            # (so we can be case-insensitive)
+            for k in row.keys():
+                if (k.lower() != k):
+                    row[k.lower()] = row[k]
+                    row[k] = null
+
             row_errors = []
 
-            if row['Question'] != row['Question']:
+            if row['question'] != row['question']:
                 row_errors.append('Question field cannot be empty')
-            if row['Question Language'] != row['Question Language']:
+            if row['question language'] != row['question language']:
                 row_errors.append('Question Language field cannot be empty')
-            if row['Context'] != row['Context']:
+            if row['context'] != row['context']:
                 row_errors.append('Context field cannot be empty')
-            if row['Published (Yes/No)'] == 'Yes' and row['Publication Name'] != row['Publication Name']:
+            if row['published (yes/no)'] == 'yes' and row['publication name'] != row['publication name']:
                 row_errors.append('If the question was published, you must mention the publication name')
-            if row['Contributor Name'] != row['Contributor Name']:
+            if row['contributor name'] != row['contributor name']:
                 row_errors.append('You must mention the name of the contributor')
 
             if row_errors:
@@ -430,27 +437,27 @@ class ValidateCuratedExcelSheet(View):
         file_errors = {}
         general_errors = []
         standard_columns = [
-            'Question',
-            'Question Language',
-            'English translation of the question',
-            'How was the question originally asked?',
-            'Context',
-            'Date of asking the question',
-            'Student Name',
-            'Gender',
-            'Student Class',
-            'School Name',
-            'Curriculum followed',
-            'Medium of instruction',
-            'Area',
-            'State',
-            'Published (Yes/No)',
-            'Publication Name',
-            'Publication Date',
-            'Notes',
-            'Contributor Name',
-            'Contributor Role',
-            'Field of Interest',
+            'question',
+            'question language',
+            'english translation of the question',
+            'how was the question originally asked?',
+            'context',
+            'date of asking the question',
+            'student name',
+            'gender',
+            'student class',
+            'school name',
+            'curriculum followed',
+            'medium of instruction',
+            'area',
+            'state',
+            'published (yes/no)',
+            'publication name',
+            'publication date',
+            'notes',
+            'contributor name',
+            'contributor role',
+            'field of interest',
             'dataset_id'
         ]
 
@@ -465,21 +472,28 @@ class ValidateCuratedExcelSheet(View):
             file_errors['Problem(s) with the template:'] = general_errors
 
         for index, row in excel_file.iterrows():
+            # convert all row names to lowercase
+            # (so we can be case-insensitive)
+            for k in row.keys():
+                if (k.lower() != k):
+                    row[k.lower()] = row[k]
+                    row[k] = null
+
             row_errors = []
 
-            if row['Question'] != row['Question']:
+            if row['question'] != row['question']:
                 row_errors.append('Question field cannot be empty')
-            if row['Question Language'] != row['Question Language']:
+            if row['question language'] != row['question language']:
                 row_errors.append('Question Language field cannot be empty')
-            if len(row['Question Language']) != 2:
+            if len(row['question language']) != 2:
                 row_errors.append('Question Language must be an ISO 639-1 code')
-            if row['Context'] != row['Context']:
+            if row['context'] != row['context']:
                 row_errors.append('Context field cannot be empty')
-            if row['Published (Yes/No)'] == 'Yes' and row['Publication Name'] != row['Publication Name']:
+            if row['published (yes/no)'] == 'Yes' and row['publication name'] != row['Publication Name']:
                 row_errors.append('If the question was published, you must mention the publication name')
-            if row['Contributor Name'] != row['Contributor Name']:
+            if row['contributor name'] != row['contributor name']:
                 row_errors.append('You must mention the name of the contributor')
-            if row['Field of Interest'] != row['Field of Interest']:
+            if row['field of interest'] != row['field of interest']:
                 row_errors.append('Field of Interest cannot be empty')
 
             if row_errors:
@@ -504,27 +518,27 @@ class CurateDataset(View):
         columns = list(excel_sheet)
 
         column_name_mapping = {
-            'Question': 'question_text',
-            'Question Language': 'language',
-            'English translation of the question': 'question_text_english',
-            'How was the question originally asked?': 'question_format',
-            'Context': 'context',
-            'Date of asking the question': 'question_asked_on',
-            'Student Name': 'student_name',
-            'Gender': 'student_gender',
-            'Student Class': 'student_class',
-            'School Name': 'school',
-            'Curriculum followed': 'curriculum_followed',
-            'Medium of instruction': 'medium_language',
-            'Area': 'area',
-            'State': 'state',
-            'Published (Yes/No)': 'published',
-            'Publication Name': 'published_source',
-            'Publication Date': 'published_date',
-            'Notes': 'notes',
-            'Contributor Name': 'contributor',
-            'Contributor Role': 'contributor_role',
-            'Field of Interest': 'field_of_interest',
+            'question': 'question_text',
+            'question language': 'language',
+            'english translation of the question': 'question_text_english',
+            'how was the question originally asked?': 'question_format',
+            'context': 'context',
+            'date of asking the question': 'question_asked_on',
+            'student name': 'student_name',
+            'gender': 'student_gender',
+            'student class': 'student_class',
+            'school name': 'school',
+            'curriculum followed': 'curriculum_followed',
+            'medium of instruction': 'medium_language',
+            'area': 'area',
+            'state': 'state',
+            'published (yes/no)': 'published',
+            'publication name': 'published_source',
+            'publication date': 'published_date',
+            'notes': 'notes',
+            'contributor name': 'contributor',
+            'contributor role': 'contributor_role',
+            'field of interest': 'field_of_interest',
             'dataset_id': 'dataset_id',
         }
 
@@ -564,12 +578,13 @@ class CurateDataset(View):
                 # check if the value is not nan
                 if not row[column] != row[column]:
 
-                    if column == 'Published (Yes/No)':
+                    if column == 'published (yes/no)':
                         setattr(
                             question,
                             column_name_mapping[column],
                             True if row[column] == 'Yes' else False)
-                    elif column == 'Field of Interest':
+                    elif column == 'field of interest':
+                        # Hack, to fix typo in earlier template
                         if row[column] == 'History-Philosophy & Practice of Science':
                             value = 'History, Philosophy & Practice of Science'
                         else:
@@ -2179,18 +2194,26 @@ def submit_encoded_dataset(request):
     excel_sheet = pd.read_excel(request.FILES[request.POST['excel-file-name']])
 
     for index, row in excel_sheet.iterrows():
+
+        # convert all row names to lowercase
+        # (so we can be case-insensitive)
+        for k in row.keys():
+            if (k.lower() != k):
+                row[k.lower()] = row[k]
+                row[k] = null
+
         question = Question.objects.get(pk=row['id'])
 
         question.submission_id = row['submission_id']
-        question.subject_of_session = row['Subject of class/session']
-        question.question_topic_relation = row['Question topic "R"elated or "U"nrelated to the topic or "S"ponteneous']
-        question.motivation = row['Motivation for asking question']
-        question.type_of_information = row['Type of information requested']
-        question.source = row['Source']
-        question.curiosity_index = row['Curiosity index']
-        question.urban_or_rural = row['Urban/Rural']
-        question.type_of_school = row['Type of school']
-        question.comments_on_coding_rationale = row['Comments for coding rationale']
+        question.subject_of_session = row['subject of class/session']
+        question.question_topic_relation = row['question topic "r"elated or "u"nrelated to the topic or "s"ponteneous']
+        question.motivation = row['motivation for asking question']
+        question.type_of_information = row['type of information requested']
+        question.source = row['source']
+        question.curiosity_index = row['curiosity index']
+        question.urban_or_rural = row['urban/rural']
+        question.type_of_school = row['type of school']
+        question.comments_on_coding_rationale = row['comments for coding rationale']
         question.encoded_by = request.user
 
         question.save()
