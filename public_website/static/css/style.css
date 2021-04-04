@@ -5019,3 +5019,22 @@ button.social-login i {
 .mb-n2 {
     margin-bottom: -2rem !important;
 }
+.category-options-list > button {
+    white-space: pre-line;
+    transition: 1s all;
+    padding: 6px;
+}
+
+.category-options-list > button:hover {
+    background-color: #FFBA4B;
+    color: #fff;
+}
+
+.search-results-list > .search-result-item {
+    cursor: pointer;
+}
+
+.search-pagination > span {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
