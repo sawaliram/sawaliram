@@ -129,8 +129,10 @@ sentry_sdk.init(
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.tifrh.res.in'
+EMAIL_HOST = 'localhost'
 EMAIL_HOST_USER = 'nitinpaul@tifrh.res.in'
 EMAIL_PORT = 25
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
