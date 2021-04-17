@@ -44,7 +44,7 @@
                 <option value="{% trans 'Homi Bhabha Centre for Science Education' %}"></option>
             </datalist>
             <input type="hidden" name="next" value="{{ request.GET.next }}">
-            <div class="g-recaptcha" data-sitekey="6LcXJasaAAAAAPeB2nhZSRuUEo1WJ5ftFGNiLTam"></div>
+            <div class="g-recaptcha" data-sitekey="{{recaptcha_site_key}}"></div>
             <br>
             <input class="btn btn-primary" type="submit" value="Sign-up">
         </form>
