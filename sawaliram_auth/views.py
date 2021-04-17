@@ -27,7 +27,7 @@ from pprint import pprint
 import hashlib
 import random
 import datetime
-
+import requests
 
 def send_verification_email(user):
 
@@ -71,28 +71,46 @@ class SignupView(View):
 
     def post(self, request):
         form = SignUpForm(request.POST, auto_id=False)
+
+
         if form.is_valid():
-            user = User.objects.create_user(
-                first_name=form.cleaned_data['first_name'],
-                last_name=form.cleaned_data['last_name'],
-                organisation=form.cleaned_data['organisation'],
-                email=form.cleaned_data['email'],
-                password=form.cleaned_data['password']
-            )
-            user.save()
 
-            users = Group.objects.get(name='users')
-            users.user_set.add(user)
+            captcha_token = request.POST.get("g-recaptcha-response")
+            cap_url = "https://www.google.com/recaptcha/api/siteverify"
+            cap_secret = "6LcXJasaAAAAAF2inf-2mq8sNh8I1VLHx-OyTsV0"
 
-            send_verification_email(user)
+            cap_data = {"secret":cap_secret,"response":captcha_token}
 
-            context = {
-                'message': 'Thank you for joining Sawaliram! A verification mail will be sent to your registered email address. Make sure to check the spam folder if you do not receive the email shortly.',
-                'show_resend': True,
-                'resend_message': "Did not receive the verification mail?",
-                'user_id': user.id
-            }
-            return render(request, 'sawaliram_auth/verify-email-info.html', context)
+            cap_server_response = requests.post(url=cap_url,data=cap_data)
+            cap_json = cap_server_response.json()
+            print(cap_json)
+
+            if cap_json['success']:
+
+                user = User.objects.create_user(
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name'],
+                    organisation=form.cleaned_data['organisation'],
+                    email=form.cleaned_data['email'],
+                    password=form.cleaned_data['password']
+                )
+                user.save()
+
+                print(user)
+
+                users = Group.objects.get(name='users')
+                users.user_set.add(user)
+
+                send_verification_email(user)
+
+                context = {
+                    'message': 'Thank you for joining Sawaliram! A verification mail will be sent to your registered email address. Make sure to check the spam folder if you do not receive the email shortly.',
+                    'show_resend': True,
+                    'resend_message': "Did not receive the verification mail?",
+                    'user_id': user.id
+                }
+                return render(request, 'sawaliram_auth/verify-email-info.html', context)
+
         context = {
             'form': form
         }
