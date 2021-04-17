@@ -56,6 +56,7 @@ import random
 import urllib
 from pprint import pprint
 import json
+import requests
 import collections
 from .lang import *
 from django.db.models import Count
@@ -740,7 +741,8 @@ class FAQPage(View):
 class ContactPage(FormView):
     def get(self, request):
         context = {
-            'page_title': _('Contact Us')
+            'page_title': _('Contact Us'),
+            'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY
         }
         return render(request, 'public_website/contact.html', context)
 
@@ -750,24 +752,41 @@ class ContactPage(FormView):
     def post(self, request):
         form = ContactPageForm(request.POST, auto_id=False)
         if form.is_valid():
-            c = ContactUsSubmission()
-            c.name = form.cleaned_data.get('fullname')
-            c.emailid = form.cleaned_data.get('emailid')
-            c.subject = form.cleaned_data.get('subject')
-            c.message = form.cleaned_data.get('message')
-            c.save()
 
-            send_mail(
-                subject='[Contact] ' + form.cleaned_data.get('subject'),
-                message='',
-                html_message=form.cleaned_data.get('message') + '<br><br> Senders email: ' + form.cleaned_data.get('emailid'),
-                from_email='"Sawaliram" <mail@sawaliram.org>',
-                recipient_list=['mail.sawaliram@gmail.com'],
-                fail_silently=False,
-            )
+            captcha_token = request.POST.get("g-recaptcha-response")
+            cap_url = "https://www.google.com/recaptcha/api/siteverify"
+            cap_secret = settings.GOOGLE_RECAPTCHA_SECRET_KEY
 
-            messages.success(request, 'Your message has been sent! We will get back to you shortly')
-            return redirect('public_website:contact')
+            cap_data = {"secret":cap_secret,"response":captcha_token}
+
+            cap_server_response = requests.post(url=cap_url,data=cap_data)
+            cap_json = cap_server_response.json()
+            print(cap_json)
+
+            if cap_json['success']:
+
+                c = ContactUsSubmission()
+                c.name = form.cleaned_data.get('fullname')
+                c.emailid = form.cleaned_data.get('emailid')
+                c.subject = form.cleaned_data.get('subject')
+                c.message = form.cleaned_data.get('message')
+                c.save()
+
+                send_mail(
+                    subject='[Contact] ' + form.cleaned_data.get('subject'),
+                    message='',
+                    html_message=form.cleaned_data.get('message') + '<br><br> Senders email: ' + form.cleaned_data.get('emailid'),
+                    from_email='"Sawaliram" <mail@sawaliram.org>',
+                    recipient_list=['mail.sawaliram@gmail.com'],
+                    fail_silently=False,
+                )
+
+                messages.success(request, 'Your message has been sent! We will get back to you shortly')
+                return redirect('public_website:contact')
+            else:
+                messages.error(request, 'Error! Invalid Captcha!.')
+                return redirect('public_website:contact')
+
         else:
             messages.error(request, 'Error! Message has not been submitted.')
             return redirect('public_website:contact')

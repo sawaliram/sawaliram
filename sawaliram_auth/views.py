@@ -112,6 +112,13 @@ class SignupView(View):
                     'user_id': user.id
                 }
                 return render(request, 'sawaliram_auth/verify-email-info.html', context)
+            else:
+                context = {
+                    'form': form,
+                    'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY
+                }
+                messages.error(request, 'Error! Invalid Captcha!.')
+                return render(request, 'sawaliram_auth/signup.html', context)
 
         context = {
             'form': form,
