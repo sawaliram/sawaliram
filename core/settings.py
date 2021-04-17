@@ -3,6 +3,7 @@ import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from celery.schedules import crontab
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -132,6 +133,11 @@ EMAIL_HOST = 'mail.tifrh.res.in'
 EMAIL_HOST = 'localhost'
 EMAIL_HOST_USER = 'nitinpaul@tifrh.res.in'
 EMAIL_PORT = 25
+
+
+#CAPTCHA
+GOOGLE_RECAPTCHA_SITE_KEY = config('GOOGLE_RECAPTCHA_SITE_KEY')
+GOOGLE_RECAPTCHA_SECRET_KEY = config('GOOGLE_RECAPTCHA_SECRET_KEY')
 
 
 # Password validation

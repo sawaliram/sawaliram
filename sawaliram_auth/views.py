@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.http import HttpResponse
 from django.core.mail import send_mail
+from django.conf import settings
 
 from sawaliram_auth.models import User, VolunteerRequest, Bookmark, Profile
 from sawaliram_auth.forms import (
@@ -65,7 +66,8 @@ class SignupView(View):
             return redirect('public_website:home')
         form = SignUpForm(auto_id=False)
         context = {
-            'form': form
+            'form': form,
+            'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY
         }
         return render(request, 'sawaliram_auth/signup.html', context)
 
@@ -77,7 +79,7 @@ class SignupView(View):
 
             captcha_token = request.POST.get("g-recaptcha-response")
             cap_url = "https://www.google.com/recaptcha/api/siteverify"
-            cap_secret = "6LcXJasaAAAAAF2inf-2mq8sNh8I1VLHx-OyTsV0"
+            cap_secret = settings.GOOGLE_RECAPTCHA_SECRET_KEY
 
             cap_data = {"secret":cap_secret,"response":captcha_token}
 
@@ -112,7 +114,8 @@ class SignupView(View):
                 return render(request, 'sawaliram_auth/verify-email-info.html', context)
 
         context = {
-            'form': form
+            'form': form,
+            'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY
         }
         return render(request, 'sawaliram_auth/signup.html', context)
 
@@ -204,7 +207,8 @@ class SigninView(View):
             return redirect('public_website:home')
         form = SignInForm(auto_id=False)
         context = {
-            'form': form
+            'form': form,
+            
         }
         return render(request, 'sawaliram_auth/signin.html', context)
 
