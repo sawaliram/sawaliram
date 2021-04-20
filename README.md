@@ -48,6 +48,9 @@ export sawaliram_secret_key='some_string_without_spaces'
 export sawaliram_debug_value='True'
 export sawaliram_db_password='your-database-password'
 export environment='dev'
+
+export GOOGLE_SECRET_KEY='set-this-from-GoogleRecaptcha-site'
+export GOOGLE_SITE_KEY='set-this-from-GoogleRecaptcha-site'
 ```
 To generate a secret key, you can use the Django's built-in `get_random_secret_key()` function:
 ```python
