@@ -9,6 +9,12 @@
 
 {% block content %}
 
+<style>
+    #ref_data {
+        display: none;
+    }
+</style>
+
 <div class="articles-header">
     <div class="dropdown">
         <button class="btn sort-by-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="articleSortOptionSelector">
@@ -29,11 +35,7 @@
                 <img class="article-cover" src="{{ article.cover_image }}" alt="Article cover image">
             {% endif %}
             <h2>{{ article.title }}</h2>
-            {% if not article.cover_image %}
-                <p class="article-preview">
-                    {{ article.body|striptags|truncatechars:200 }}
-                </p>
-            {% endif %}
+                <p class="article-preview"></p>
             <div class="article-details">
                 <span class="published-date">{{ article.published_on|date:'d M Y' }}</span>
                 <div class="credits">
@@ -42,7 +44,10 @@
                             {{ credit.credit_user_name }}{% if not forloop.last %}, {% endif %}
                         </span>
                     {% endfor %}
+
+                    
                 </div>
+                
             </div>
             <a href="{{ article.get_absolute_url }}" class="btn btn-small btn-primary read-article">Read Article</a>
         </div>
@@ -51,5 +56,28 @@
         <div class="article-item empty"></div>
     {% endif %}
 </div>
+
+<div id="ref_data">
+
+    {% for ar in stripped_articles %}
+        <span>
+            {{ ar|striptags|truncatechars:200 }}
+        </span>
+    {% endfor %}
+    
+</div>
+
+<script>
+    window.onload = () => {
+        refs = document.querySelectorAll(".article-preview");
+        target_refs = document.querySelectorAll("#ref_data > span");
+        var i = 0;
+
+        refs.forEach(el => {
+            el.textContent = target_refs[i].textContent;
+            i++;
+        });
+    }
+</script>
 
 {% endblock %}
