@@ -673,6 +673,7 @@ class ReviewAnswersList(SearchView):
                         ).exclude(
                             answers__submitted_by=request.user,
                         ).distinct()
+
             return results
 
     def get_page_title(self, request):
