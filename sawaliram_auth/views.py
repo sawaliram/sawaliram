@@ -117,7 +117,7 @@ class SignupView(View):
                     'form': form,
                     'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY
                 }
-                messages.error(request, 'Error! Invalid Captcha!.')
+                messages.error(request, _('Error! Invalid Captcha!.'))
                 return render(request, 'sawaliram_auth/signup.html', context)
 
         context = {
