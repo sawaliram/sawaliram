@@ -71,6 +71,8 @@ from dashboard.models import (
     DraftArticleTranslation,
     Comment,
     Dataset)
+from django.db.models import Count
+
 from sawaliram_auth.models import Notification, User, VolunteerRequest
 from public_website.views import SearchView
 
@@ -655,6 +657,7 @@ class ReviewAnswersList(SearchView):
                             ).exclude(
                                 answers__submitted_by=request.user,
                             ).distinct()
+            
             results['questions'] = query_set.filter(
                     Q(question_text__search=request.GET.get('q')) |
                     Q(question_text_english__search=request.GET.get('q')) |
@@ -666,7 +669,7 @@ class ReviewAnswersList(SearchView):
             return results
         else:
             results['questions'] = Question.objects.filter(
-                            answers__status='submitted',
+                            answers__status='published',
                         ).exclude(
                             answers__submitted_by=request.user,
                         ).distinct()
