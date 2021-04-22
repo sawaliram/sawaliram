@@ -51,6 +51,7 @@ from dashboard.models import (
 from sawaliram_auth.models import User, Bookmark, Notification
 from public_website.models import AnswerUserComment, ContactUsSubmission
 
+import re
 import random
 import urllib
 from pprint import pprint
@@ -796,10 +797,21 @@ class ArticlesPage(View):
             odd_article_count = 'False'
         else:
             odd_article_count = 'True'
+        
+
+        article_body= []
+
+
+        for i in articles:
+            ref = i.body
+            fig_stripped = re.sub(r'\<figcaption\>.*?\<\/figcaption\>', '', ref)
+            article_body.append(fig_stripped)
+        
 
         context = {
             'page_title': _('Articles'),
             'articles': articles,
+            'stripped_articles': article_body,
             'odd_article_count': odd_article_count,
             'sort_by': sort_by
         }
