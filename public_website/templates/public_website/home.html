@@ -57,11 +57,11 @@
                 <input type="hidden" name="questions" value="answered">
                 <input type="hidden" name="questions" value="unanswered">
                 {% comment %}Placeholder text for search bar{% endcomment %}
-                <input type="text" class="home-search-field" name="q" placeholder="{% trans 'Drop your queries or keywords here...' %}">
+                <input type="text" id="keyword" class="home-search-field" name="q" placeholder="{% trans 'Drop your queries or keywords here...' %}">
                 <button class="btn home-search-submit" type="submit"><i class="fas fa-search"></i></button>
             </form>
             <div>
-                <div class="btngo" type="submit"><p>Go</p></div>
+                <div class="btngo"><p>Go</p></div>
                 <img class="home-search-img2" src="{% static 'illustrations/Search_twig.svg' %}" alt="Sawaliram Search">
             </div>
         </div>
@@ -88,5 +88,14 @@
         <a class="link_c" href="{% url 'public_website:resources' %}">{% trans 'View Resources' %}</a>
     </div>
 </div>
+
+<script>
+    var target = document.querySelector('.btngo');
+    var keywords = document.querySelector('#keyword');
+    target.onclick = () => {
+        var url = "{% url 'public_website:search' %}";
+        window.location.href = url + '?q=' + encodeURIComponent(keywords.value);
+    }
+</script>
 
 {% endblock %}
