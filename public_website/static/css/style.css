@@ -5045,7 +5045,7 @@ button.social-login i {
 	float: left;
 	font-weight: 800;
 	margin: 20px;
-    margin-top: 180px;
+    /* margin-top: 180px; */
 }
 
 .home-search-wrapper {
@@ -5053,7 +5053,7 @@ button.social-login i {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: inherit;
-	height: 100vh;
+	height: 650px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -5148,6 +5148,7 @@ button.social-login i {
 		margin-left: auto;
 		margin-right: 5px;
 		float: right;
+        margin-top: 180px;
 	}
 	.homePage .homepage_content .homepage_text .homepage_header {
 		font-size: 1.4rem;
