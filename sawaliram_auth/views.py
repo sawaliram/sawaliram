@@ -102,7 +102,7 @@ class SignupView(View):
 
                 users = Group.objects.get(name='users')
                 users.user_set.add(user)
-
+                
                 send_verification_email(user)
 
                 context = {
