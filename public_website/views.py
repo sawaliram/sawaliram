@@ -51,6 +51,7 @@ from dashboard.models import (
 from sawaliram_auth.models import User, Bookmark, Notification
 from public_website.models import AnswerUserComment, ContactUsSubmission
 
+import re
 import random
 import urllib
 from pprint import pprint
@@ -780,14 +781,21 @@ class ContactPage(FormView):
                     fail_silently=False,
                 )
 
+<<<<<<< HEAD
                 messages.success(request, 'Your message has been sent! We will get back to you shortly')
                 return redirect('public_website:contact')
             else:
                 messages.error(request, 'Error! Invalid Captcha!.')
+=======
+                messages.success(request, _('Your message has been sent! We will get back to you shortly.'))
+                return redirect('public_website:contact')
+            else:
+                messages.error(request, _('Error! Invalid Captcha!.'))
+>>>>>>> 0ab21a076cba8c32876c80ce598b1439b6a597e3
                 return redirect('public_website:contact')
 
         else:
-            messages.error(request, 'Error! Message has not been submitted.')
+            messages.error(request, _('Error! Message has not been submitted.'))
             return redirect('public_website:contact')
 
 
@@ -815,10 +823,21 @@ class ArticlesPage(View):
             odd_article_count = 'False'
         else:
             odd_article_count = 'True'
+        
+
+        article_body= []
+
+
+        for i in articles:
+            ref = i.body
+            fig_stripped = re.sub(r'\<figcaption\>.*?\<\/figcaption\>', '', ref)
+            article_body.append(fig_stripped)
+        
 
         context = {
             'page_title': _('Articles'),
             'articles': articles,
+            'stripped_articles': article_body,
             'odd_article_count': odd_article_count,
             'sort_by': sort_by
         }
