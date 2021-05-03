@@ -102,15 +102,26 @@ class SignupView(View):
 
                 users = Group.objects.get(name='users')
                 users.user_set.add(user)
-                send_verification_email(user)
+               
+                if not settings.DEBUG:
 
-                context = {
-                    'message': 'Thank you for joining Sawaliram! A verification mail will be sent to your registered email address. Make sure to check the spam folder if you do not receive the email shortly.',
-                    'show_resend': True,
-                    'resend_message': "Did not receive the verification mail?",
-                    'user_id': user.id
-                }
-                return render(request, 'sawaliram_auth/verify-email-info.html', context)
+                    send_verification_email(user)
+
+                    context = {
+                        'message': 'Thank you for joining Sawaliram! A verification mail will be sent to your registered email address. Make sure to check the spam folder if you do not receive the email shortly.',
+                        'show_resend': True,
+                        'resend_message': "Did not receive the verification mail?",
+                        'user_id': user.id
+                    }
+                    return render(request, 'sawaliram_auth/verify-email-info.html', context)
+                else:
+                    form = SignInForm(auto_id=False)
+                    context = {
+                        'form': form,
+                        
+                    }
+                    return render(request, 'sawaliram_auth/signin.html', context)
+
             else:
                 context = {
                     'form': form,
