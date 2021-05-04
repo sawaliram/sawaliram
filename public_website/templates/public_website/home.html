@@ -6,63 +6,65 @@
 {% block title %} {% trans 'Home' %} | {% trans 'Sawaliram' %} {% endblock %}
 {% block content %}
 
-<div id="homePageCarousel" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active rhyme-header">
-            <div class="carousel-content">
-                <div class="carousel-content-wrapper">
-                    <img src="{% static 'illustrations/home_carousel1.png' %}">
-                    <div class="carousel-text">
-                        <h1 class="carousel-header first-banner-text">{{ first_banner_text }}</h1>
-                        <p class="carousel-paragraph">{% trans 'Meet Sawaliram, a curious crow who likes questions' %}</p>
-                        <a class="btn btn-yellow" href="{% url 'public_website:about' %}">Learn More</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="carousel-content">
-                <div class="carousel-content-wrapper">
-                    <img src="{% static 'illustrations/home_carousel2.png' %}">
-                    <div class="carousel-text">
-                        <h1 class="carousel-header">{% trans "Why don't sky and stars fall on earth?" %}</h1>
-                        <p class="carousel-paragraph">{% trans 'Know the extent of all the questions, resources and blogs that Sawaliram has for you!' %}</p>
-                        <a href="{% url 'public_website:search' %}" class="btn btn-yellow">{% trans 'View Questions' %}</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="carousel-content">
-                <div class="carousel-content-wrapper">
-                    <img src="{% static 'illustrations/home_carousel3.png' %}">
-                    <div class="carousel-text">
-                        <h1 class="carousel-header">{% trans '4000+ questions asked in 6 languages' %}</h1>
-                        <p class="carousel-paragraph">{% trans 'Know the extent of all the questions, resources and blogs that Sawaliram has for you!' %}</p>
-                        <button class="btn btn-yellow">{% trans 'View Analytics' %}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="homePageContainer">
+    <div class="homepage_inner">
+        <div class="homepage_item">
+			<div class="homepage_content">
+				<div class="homepage_content_wrapper"> <img src="{% static 'illustrations/girl.svg' %}">
+					<div class="homepage_text">
+						<h1 class="homepage_header first-banner-text">{% trans "Know more about <br> Sawaliram,<br> the curious crow <br> who collects questions." %}</h1>
+						<!-- <p class="homepage_paragraph">{% trans 'Know more about Sawaliram, the curious crow who collects questions.' %}</p> -->
+                        <a class="bt_a" href="{% url 'public_website:about' %}">About Me</a> </div>
+				</div>
+			</div>
+		</div>
+
+
+        <div class="homepage_item bg_cover">
+			<div class="homepage_content">
+				<div class="homepage_content_wrapperdg2">
+                    <div class="homepage_text">
+						<h1 class="homepage_header">{% trans "View Sawaliram's vast repository of questions." %}</h1>
+						<!-- <p class="homepage_paragraph">{% trans 'View Sawalirams vast repository of questions.' %}</p> -->
+                        <a href="{% url 'public_website:search' %}" class="bt_b">{% trans 'View' %}</a> </div>
+                        <img class="img2" src="{% static 'illustrations/postcard-48.svg' %}">	
+				</div>    
+			</div>
+		</div>
+     
+
+
+        <div class="homepage_item">
+			<div class="homepage_content">
+				<div class="homepage_content_wrapper"> <img src="{% static 'illustrations/Computer.svg' %}">
+					<div class="homepage_text">
+						<h1 class="homepage_header">{% trans 'Access the database of <br> questions filtered by <br>  region, language, <br>  gender, etc.' %}</h1>
+						<!-- <p class="homepage_paragraph">{% trans 'Access the database of questions filtered by region, language, gender, etc.' %}</p> -->
+                        <a href="{% url 'public_website:analytics' %}" class="bt_c">{% trans 'View Analytics' %}</a> </div>
+				</div>
+			</div>
+		</div>
     </div>
-    <ol class="carousel-indicators">
-        <li data-target="#homePageCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#homePageCarousel" data-slide-to="1"></li>
-        <li data-target="#homePageCarousel" data-slide-to="2"></li>
-    </ol>
 </div>
 
 <div class="home-search-wrapper">
     <div class="home-search">
         <img class="home-search-img1" src="{% static 'illustrations/home_search1.png' %}" alt="Sawaliram Search">
-        <form action="{% url 'public_website:search' %}" class="home-search-form" method="GET">
-            <input type="hidden" name="category" value="questions">
-            <input type="hidden" name="questions" value="answered">
-            <input type="hidden" name="questions" value="unanswered">
-            {% comment %}Placeholder text for search bar{% endcomment %}
-            <input type="text" class="home-search-field" name="q" placeholder="{% trans 'Drop your question here' %}">
-            <button class="btn home-search-submit" type="submit"><i class="fas fa-search"></i></button>
-        </form>
+        <div class="home-search-panel">
+            <p class="home-search-h">Ask a question to Sawaliram!</p>
+            <form action="{% url 'public_website:search' %}" class="home-search-form" method="GET">
+                <input type="hidden" name="category" value="questions">
+                <input type="hidden" name="questions" value="answered">
+                <input type="hidden" name="questions" value="unanswered">
+                {% comment %}Placeholder text for search bar{% endcomment %}
+                <input type="text" id="keyword" class="home-search-field" name="q" placeholder="{% trans 'Drop your queries or keywords here...' %}">
+                <button class="btn home-search-submit" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+            <div>
+                <div class="btngo"><p>Go</p></div>
+                <img class="home-search-img2" src="{% static 'illustrations/Search_twig.svg' %}" alt="Sawaliram Search">
+            </div>
+        </div>
     </div>
 </div>
 
@@ -70,21 +72,30 @@
     <div class="col-xs-12 col-lg-4 home-page-link-item">
         <h2>{% trans 'Research' %}</h2>
         <img src="{% static 'illustrations/home_research.png' %}">
-        <p>{% trans 'What is curiosity really? At home and school, in the mind and in society. See what researchers find.' %}</p>
-        <a class="btn btn-primary" href="{% url 'public_website:research' %}">{% trans 'Learn More' %}</a>
+        <p>{% trans 'What is curiosity really? At home and  <br> school, in the mind and in society. <br> See what researchers find.' %}</p>
+        <a class="link_a" href="{% url 'public_website:research' %}">{% trans 'Learn More' %}</a>
     </div>
     <div class="col-xs-12 col-lg-4 home-page-link-item">
         <h2>{% trans 'Articles' %}</h2>
         <img src="{% static 'illustrations/home_articles.png' %}">
-        <p>{% trans 'Stories about curiosity from near and far, now and long ago. Your stories could be here too!' %}</p>
-        <a class="btn btn-primary" href="{% url 'public_website:articles' %}">{% trans 'View Articles' %}</a>
+        <p>{% trans 'Stories about curiosity from near and far, now and long ago. <br> Your stories could be here too!' %}</p>
+        <a class="link_b" href="{% url 'public_website:articles' %}">{% trans 'View Articles' %}</a>
     </div>
     <div class="col-xs-12 col-lg-4 home-page-link-item">
         <h2>{% trans 'Resources' %}</h2>
         <img src="{% static 'illustrations/home_resources.png' %}">
-        <p>{% trans 'View books, magazines, websites, Q&A collections, everything you want to know about curiosity and questioning.' %}</p>
-        <a class="btn btn-primary" href="{% url 'public_website:resources' %}">{% trans 'View Resources' %}</a>
+        <p>{% trans 'View books, magazines, websites,  Q&A collections, everything you want to know about curiosity and questioning.' %}</p>
+        <a class="link_c" href="{% url 'public_website:resources' %}">{% trans 'View Resources' %}</a>
     </div>
 </div>
+
+<script>
+    var target = document.querySelector('.btngo');
+    var keywords = document.querySelector('#keyword');
+    target.onclick = () => {
+        var url = "{% url 'public_website:search' %}";
+        window.location.href = url + '?q=' + encodeURIComponent(keywords.value);
+    }
+</script>
 
 {% endblock %}
