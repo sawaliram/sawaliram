@@ -1103,7 +1103,6 @@ class Suggestions(View):
 
         if not os.path.isfile(f_path):
             ques = Question.objects.all()
-            articles = PublishedArticle.objects.all()
             with open(f_path, 'w', newline='' , encoding='utf-8') as f:
                 writer = csv.writer(f, delimiter=',')
                 for i in ques:
@@ -1111,10 +1110,6 @@ class Suggestions(View):
                         sugg_lst.append(i.question_text_english)
                         writer.writerow([i.question_text_english])
 
-                for i in articles:
-                    if not i.title == "":
-                        sugg_lst.append(i.title)
-                        writer.writerow([i.title])
             return JsonResponse({"suggestion": sugg_lst})
         else:
             modTimestamp = os.path.getmtime(os.path.abspath(os.path.join(lst_dir, 'suggestions.csv')))
@@ -1123,7 +1118,6 @@ class Suggestions(View):
 
             if (current_time - modificationTime) > timedelta(1): 
                 ques = Question.objects.all()
-                articles = PublishedArticle.objects.all()
                 with open(f_path, 'w', newline='' , encoding='utf-8') as f:
                     writer = csv.writer(f, delimiter=',')
                     for i in ques:
@@ -1131,10 +1125,6 @@ class Suggestions(View):
                             sugg_lst.append(i.question_text_english)
                             writer.writerow([i.question_text_english])
 
-                    for i in articles:
-                        if not i.title == "":
-                            sugg_lst.append(i.title)
-                            writer.writerow([i.title])
                 return JsonResponse({"suggestion": sugg_lst})
             else:
                 with open(f_path, 'r',encoding='utf-8') as f:
