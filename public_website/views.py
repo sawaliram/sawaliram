@@ -772,7 +772,7 @@ class ContactPage(FormView):
                 c.message = form.cleaned_data.get('message')
                 c.save()
 
-                send_mail(
+                a = send_mail(
                     subject='[Contact] ' + form.cleaned_data.get('subject'),
                     message='',
                     html_message=form.cleaned_data.get('message') + '<br><br> Senders email: ' + form.cleaned_data.get('emailid'),
@@ -780,18 +780,10 @@ class ContactPage(FormView):
                     recipient_list=['mail.sawaliram@gmail.com'],
                     fail_silently=False,
                 )
-
-<<<<<<< HEAD
-                messages.success(request, 'Your message has been sent! We will get back to you shortly')
-                return redirect('public_website:contact')
-            else:
-                messages.error(request, 'Error! Invalid Captcha!.')
-=======
                 messages.success(request, _('Your message has been sent! We will get back to you shortly.'))
                 return redirect('public_website:contact')
             else:
                 messages.error(request, _('Error! Invalid Captcha!.'))
->>>>>>> 0ab21a076cba8c32876c80ce598b1439b6a597e3
                 return redirect('public_website:contact')
 
         else:
