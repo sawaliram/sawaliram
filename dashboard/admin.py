@@ -77,6 +77,7 @@ class AnswerAdmin(admin.ModelAdmin):
         'submitted_by',
         'created_on',
         'updated_on',
+        'published_on',
     ]
     fields = [
         'question_id',

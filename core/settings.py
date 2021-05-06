@@ -130,7 +130,6 @@ sentry_sdk.init(
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.tifrh.res.in'
-EMAIL_HOST = 'localhost'
 EMAIL_HOST_USER = 'nitinpaul@tifrh.res.in'
 EMAIL_PORT = 25
 
