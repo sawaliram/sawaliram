@@ -948,7 +948,7 @@ class ApproveAnswerView(View):
         question_answered = Question.objects.get(pk=question_id)
 
         # create notification for user who submitted the answer
-        if question_answered.language.lower() != 'english':
+        if question_answered.language.lower() != 'en':
             question_text = question_answered.question_text_english
         else:
             question_text = question_answered.question_text
@@ -956,7 +956,7 @@ class ApproveAnswerView(View):
         published_notification = Notification(
             notification_type='published',
             title_text=str(request.user.get_full_name()) + ' published your answer',
-            description_text="Your answer for question '" + question_text + "'",
+            description_text="Your answer to the question '" + question_text + "'",
             target_url=reverse('public_website:view-answer', kwargs={'question_id': question_answered.id, 'answer_id': answer.id}),
             user=answer.submitted_by
         )
@@ -970,7 +970,7 @@ class ApproveAnswerView(View):
             # do not create notification for the user who is publishing
             # the answer
             if max(commentor_id) != request.user.id:
-                if question_answered.language.lower() != 'english':
+                if question_answered.language.lower() != 'en':
                     question_text = question_answered.question_text_english
                 else:
                     question_text = question_answered.question_text
