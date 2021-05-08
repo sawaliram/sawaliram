@@ -781,17 +781,10 @@ class ContactPage(FormView):
                     fail_silently=False,
                 )
 
-<<<<<<< HEAD
-                messages.success(request, 'Your message has been sent! We will get back to you shortly')
-                return redirect('public_website:contact')
-            else:
-                messages.error(request, 'Error! Invalid Captcha!.')
-=======
-                messages.success(request, _('Your message has been sent! We will get back to you shortly.'))
+                messages.success(request, _('Your message has been sent! We will get back to you shortly'))
                 return redirect('public_website:contact')
             else:
                 messages.error(request, _('Error! Invalid Captcha!.'))
->>>>>>> 0ab21a076cba8c32876c80ce598b1439b6a597e3
                 return redirect('public_website:contact')
 
         else:

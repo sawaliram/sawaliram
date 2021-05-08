@@ -657,7 +657,6 @@ class ReviewAnswersList(SearchView):
                             ).exclude(
                                 answers__submitted_by=request.user,
                             ).distinct()
-            
             results['questions'] = query_set.filter(
                     Q(question_text__search=request.GET.get('q')) |
                     Q(question_text_english__search=request.GET.get('q')) |
@@ -673,7 +672,6 @@ class ReviewAnswersList(SearchView):
                         ).exclude(
                             answers__submitted_by=request.user,
                         ).distinct()
-
             return results
 
     def get_page_title(self, request):
