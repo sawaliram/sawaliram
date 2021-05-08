@@ -772,7 +772,7 @@ class ContactPage(FormView):
                 c.message = form.cleaned_data.get('message')
                 c.save()
 
-                a = send_mail(
+                send_mail(
                     subject='[Contact] ' + form.cleaned_data.get('subject'),
                     message='',
                     html_message=form.cleaned_data.get('message') + '<br><br> Senders email: ' + form.cleaned_data.get('emailid'),
