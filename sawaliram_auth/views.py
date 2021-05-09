@@ -49,14 +49,16 @@ def send_verification_email(user):
     message = 'Hello ' + user.first_name + ',<br>'
     message += 'Thank you for signing up with Sawaliram! Please click on this link: https://sawaliram.org/users/verify/' + verification_code + ' to verify your email. <br><br>Yours truly,<br>Sawaliram'
 
-    send_mail(
-        subject='Sawaliram - verify your email',
-        message='',
-        html_message=message,
-        from_email='"Sawaliram" <mail@sawaliram.org>',
-        recipient_list=[user.email],
-        fail_silently=False,
-    )
+    if not settings.DEBUG:
+
+        send_mail(
+            subject='Sawaliram - verify your email',
+            message='',
+            html_message=message,
+            from_email='"Sawaliram" <mail@sawaliram.org>',
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
 
 
 class SignupView(View):
@@ -97,8 +99,6 @@ class SignupView(View):
                     password=form.cleaned_data['password']
                 )
                 user.save()
-
-                print(user)
 
                 users = Group.objects.get(name='users')
                 users.user_set.add(user)
