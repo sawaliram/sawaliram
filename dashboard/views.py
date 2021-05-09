@@ -670,11 +670,20 @@ class ReviewAnswersList(SearchView):
             )
             return results
         else:
-            results['questions'] = Question.objects.filter(
-                            answers__status='published',
-                        ).exclude(
-                            answers__submitted_by=request.user,
-                        ).distinct()
+            query_set = Question.objects.filter(
+                                answers__status='submitted',
+                            ).exclude(
+                                answers__submitted_by=request.user,
+                            ).distinct()
+
+            results['questions'] = query_set.annotate(
+                            num_comments=Count('answers__comments')
+                            ).order_by('-num_comments')
+
+            print(results)
+            # results['questions'] = Question.objects.filter(answers__status='submitted').exclude(answers__submitted_by=request.user,).annotate(num_comments=Count('answers__comments')).order_by('-num_comments')
+            # print(Question.objects.filter(answers__status='submitted').exclude(answers__submitted_by=request.user,).annotate(num_comments=Count('answers__comments')).order_by('-num_comments').distinct())
+            # print(Question.objects.filter(answers__status='submitted').values("answers__comments").order_by('answers__comments'))
 
             return results
 
