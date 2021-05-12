@@ -18,85 +18,92 @@
     </div>
 </div>
 
-<div id="getInvolvedList" class="sawaliram-accordion">
-    <h2>{% trans 'More ways to join hands with us' %}</h2>
-    <div class="card">
-        <div class="card-header" id="getInvolvedListHeadingOne" data-toggle="collapse" data-target="#getInvolvedListOne" aria-expanded="true" aria-controls="getInvolvedListOne">
-            <h3>
-            {% trans 'Are you a teacher, parent or an observer? Bring out the curious kid within you!' %}
-            </h3>
-            <i class="fas fa-plus"></i>
-        </div>
-        <div id="getInvolvedListOne" class="collapse" aria-labelledby="getInvolvedListHeadingOne" data-parent="#getInvolvedList">
-            <div class="card-body">
-                <p>{% trans 'As a teacher, parent or anyone interacting with children, you must have enjoyed and wondered about their active and inquisitive behaviour. Share your experiences by writing to us at mail.sawaliram@gmail.com or login to the Sawaliram dashboard to contribute questions, answers, articles or translations.'%}
-                </p>
-                <a href="{% url 'dashboard:home' %}" class="btn btn-primary">{% trans 'Go to Dashboard' %}</a>
-            </div>
-        </div>
+<div class="container my-5">
+    <div class="text-center mb-5">
+      <span class="secondary-tx text-uppercase">{% trans "More ways to join hands with us" %}</span>
+      <h1 class="text-capitalize font-weight-bold">{% trans "Frequently Asked " %}<span style="color: #FEB740;">{% trans "Questions" %}</span></h1>
     </div>
-    <div class="card">
-        <div class="card-header" id="getInvolvedListHeadingTwo" data-toggle="collapse" data-target="#getInvolvedListTwo" aria-expanded="true" aria-controls="getInvolvedListTwo">
-            <h3>
-            {% trans 'Natural or social scientist, or just an infovore? Share your learnings with Sawaliram!' %}
-            </h3>
-            <i class="fas fa-plus"></i>
-        </div>
-        <div id="getInvolvedListTwo" class="collapse" aria-labelledby="getInvolvedListHeadingTwo" data-parent="#getInvolvedList">
-            <div class="card-body">
-                <p>
-                {% trans 'Children’s innocent questions teach us much about the world. Do join us in answering these questions, in a way that will encourage and nurture their curiosity. Your answers will be helpful to teachers, parents and volunteers on the field who are interacting with children. Do write to us at mail.sawaliram@gmail.com or login to the dashboard to contribute.' %}
-                </p>
-                <a href="{% url 'dashboard:home' %}" class="btn btn-primary">{% trans 'Go to Dashboard' %}</a>
+
+    
+    <div class="row">
+      <div class="col-md-6 divcon">
+        <div class="my-3 p-4 bg-light br-15">
+          <div class="d-flex align-items-start">
+            <div class="mr-3 bg-dark text-white rounded-circle">
+              <svg fill="currentColor" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="Layer 2"><g data-name="menu-arrow"><rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/><path d="M17 9A5 5 0 0 0 7 9a1 1 0 0 0 2 0 3 3 0 1 1 3 3 1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.1A5 5 0 0 0 17 9z"/><circle cx="12" cy="19" r="1"/></g></g></svg>
             </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header" id="getInvolvedListHeadingThree" data-toggle="collapse" data-target="#getInvolvedListThree" aria-expanded="true" aria-controls="getInvolvedListThree">
-            <h3>
-            {% trans 'How well can you juggle between languages? Try it with us.' %}
-            </h3>
-            <i class="fas fa-plus"></i>
-        </div>
-        <div id="getInvolvedListThree" class="collapse" aria-labelledby="getInvolvedListHeadingThree" data-parent="#getInvolvedList">
-            <div class="card-body">
-                <p>
-                {% trans 'Curiosity is expressed best in our native tongue, and we must listen and talk with each other across languages. On Sawaliram’s multilingual website we are looking for people who could translate answers and other content into different Indian languages. As an open source platform you might also implement Sawaliram in your own country’s language(s). Do write to us at mail.sawaliram@gmail.com or login to the dashboard to contribute.' %}
-                </p>
-                <a href="{% url 'dashboard:home' %}" class="btn btn-primary">{% trans 'Go to Dashboard' %}</a>
+            <div class="">
+              <span class="text-dark stretched-link"><h6 class="mb-3" style="font-weight: 600; font-size: 1.1rem;">{% trans "Are you a teacher, parent or an observer? Bring out the curious kid within you!" %}</h6></span>
+              <p class="secondary-tx" style="line-height: 2;">{% trans "As a teacher, parent or anyone interacting with children, you must have enjoyed and wondered about their active and inquisitive behaviour. Share your experiences by writing to us at mail.sawaliram@gmail.com or login to the Sawaliram dashboard to contribute questions, answers, articles or translations." %}</p>
+              <a href="{% url 'dashboard:home' %}" class="btn btn-primary">{% trans "Go to Dashboard" %}</a>
             </div>
+          </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-header" id="getInvolvedListHeadingFour" data-toggle="collapse" data-target="#getInvolvedListFour" aria-expanded="true" aria-controls="getInvolvedListFour">
-            <h3>
-            {% trans 'Do you have a knack for racks of books (a library)?' %}
-            </h3>
-            <i class="fas fa-plus"></i>
-        </div>
-        <div id="getInvolvedListFour" class="collapse" aria-labelledby="getInvolvedListHeadingFour" data-parent="#getInvolvedList">
-            <div class="card-body">
-                <p>
-                {% trans 'The Sawaliram database uses the Dewey Decimal Classification (DDC) system (23rd edition) to categorise children’s questions. We would appreciate your help in encoding the questions. Also you could help us locate resources to answer children’s questions, to carry out research, and to write articles on curiosity. Please write to us at mail.sawaliram@gmail.com.'%}
-                </p>
+      </div>
+  
+      <div class="col-md-6 divcon">
+        <div class="my-3 p-4 bg-light br-15">
+          <div class="d-flex align-items-start">
+            <div class="mr-3 bg-dark text-white rounded-circle">
+              <svg fill="currentColor" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="Layer 2"><g data-name="menu-arrow"><rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/><path d="M17 9A5 5 0 0 0 7 9a1 1 0 0 0 2 0 3 3 0 1 1 3 3 1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.1A5 5 0 0 0 17 9z"/><circle cx="12" cy="19" r="1"/></g></g></svg>
             </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header" id="getInvolvedListHeadingFive" data-toggle="collapse" data-target="#getInvolvedListFive" aria-expanded="true" aria-controls="getInvolvedListFive">
-            <h3>
-            {% trans 'Are you a connoisseur of code? Do you love embarking on debugging journeys?' %}
-            </h3>
-            <i class="fas fa-plus"></i>
-        </div>
-        <div id="getInvolvedListFive" class="collapse" aria-labelledby="getInvolvedListHeadingFive" data-parent="#getInvolvedList">
-            <div class="card-body">
-                <p>
-                {% trans 'This website is open source and built by the community. You can help us build and improve the next big platform that can reach out to students in their classrooms. Head over to our github repository to learn all about how to get started!' %}
-                </p>
-                <a href="https://github.com/sawaliram/sawaliram" target="_blank" class="btn btn-primary"><i class="fab fa-github"></i>{% trans 'Github repo' %}</a>
+            <div class="">
+              <span class="text-dark stretched-link"><h6 class="mb-3" style="font-weight: 600; font-size: 1.1rem;">{% trans "Natural or social scientist, or just an infovore? Share your learnings with Sawaliram!" %}</h6></span>
+              <p class="secondary-tx" style="line-height: 2;">{% trans "Children’s innocent questions teach us much about the world. Do join us in answering these questions, in a way that will encourage and nurture their curiosity. Your answers will be helpful to teachers, parents and volunteers on the field who are interacting with children. Do write to us at mail.sawaliram@gmail.com or login to the dashboard to contribute." %}</p>
+              <a href="{% url 'dashboard:home' %}" class="btn btn-primary">{% trans "Go to Dashboard" %}</a>
             </div>
+          </div>
         </div>
+      </div>
+  
+      <div class="col-md-6 divcon">
+        <div class="my-3 p-4 bg-light br-15">
+          <div class="d-flex align-items-start">
+            <div class="mr-3 bg-dark text-white rounded-circle">
+              <svg fill="currentColor" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="Layer 2"><g data-name="menu-arrow"><rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/><path d="M17 9A5 5 0 0 0 7 9a1 1 0 0 0 2 0 3 3 0 1 1 3 3 1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.1A5 5 0 0 0 17 9z"/><circle cx="12" cy="19" r="1"/></g></g></svg>
+            </div>
+            <div class="">
+              <span class="text-dark stretched-link"><h6 class="mb-3" style="font-weight: 600; font-size: 1.1rem;">{% trans "Do you have a knack for racks of books (a library)?" %}</h6></span>
+              <p class="secondary-tx" style="line-height: 2;">{% trans "The Sawaliram database uses the Dewey Decimal Classification (DDC) system (23rd edition) to categorise children’s questions. We would appreciate your help in encoding the questions. Also you could help us locate resources to answer children’s questions, to carry out research, and to write articles on curiosity. Please write to us at mail.sawaliram@gmail.com." %}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-6 divcon">
+        <div class="my-3 p-4 bg-light br-15">
+          <div class="d-flex align-items-start">
+            <div class="mr-3 bg-dark text-white rounded-circle">
+              <svg fill="currentColor" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="Layer 2"><g data-name="menu-arrow"><rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/><path d="M17 9A5 5 0 0 0 7 9a1 1 0 0 0 2 0 3 3 0 1 1 3 3 1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.1A5 5 0 0 0 17 9z"/><circle cx="12" cy="19" r="1"/></g></g></svg>
+            </div>
+            <div class="">
+              <span class="text-dark stretched-link"><h6 class="mb-3" style="font-weight: 600; font-size: 1.1rem;">{% trans "Are you a connoisseur of code? Do you love embarking on debugging journeys?" %}</h6></span>
+              <p class="secondary-tx" style="line-height: 2;">{% trans "This website is open source and built by the community. You can help us build and improve the next big platform that can reach out to students in their classrooms. Head over to our github repository to learn all about how to get started!" %}</p>
+              <a href="https://github.com/sawaliram/sawaliram" target="_blank" class="btn btn-primary"><i class="fab fa-github"></i> {% trans "Github repo" %}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-6 divcon">
+        <div class="my-3 p-4 bg-light br-15">
+          <div class="d-flex align-items-start">
+            <div class="mr-3 bg-dark text-white rounded-circle">
+              <svg fill="currentColor" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="Layer 2"><g data-name="menu-arrow"><rect width="24" height="24" transform="rotate(180 12 12)" opacity="0"/><path d="M17 9A5 5 0 0 0 7 9a1 1 0 0 0 2 0 3 3 0 1 1 3 3 1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.1A5 5 0 0 0 17 9z"/><circle cx="12" cy="19" r="1"/></g></g></svg>
+            </div>
+            <div class="">
+              <span class="text-dark stretched-link"><h6 class="mb-3" style="font-weight: 600; font-size: 1.1rem;">{% trans "How well can you juggle between languages? Try it with us." %}</h6></span>
+              <p class="secondary-tx" style="line-height: 2;">{% trans "Curiosity is expressed best in our native tongue, and we must listen and talk with each other across languages. On Sawaliram’s multilingual website we are looking for people who could translate answers and other content into different Indian languages. As an open source platform you might also implement Sawaliram in your own country’s language(s). Do write to us at mail.sawaliram@gmail.com or login to the dashboard to contribute." %}</p>
+              <a href="{% url 'dashboard:home' %}" class="btn btn-primary">{% trans "Go to Dashboard" %}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  
     </div>
-</div>
+  </div>
+
 {% endblock %}

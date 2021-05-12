@@ -5352,6 +5352,20 @@ button.social-login i {
 }
 
 
-@media (max-width: 576px) {
-    background-size: cover;
+/* ======== Get-involved page faq ======== */
+.divcon {
+    transition:1s all;
+    border-radius: 15px;
+}
+
+.divcon:hover {
+    background-color: #FEB740;
+}
+
+.br-15 {
+    border-radius: 15px;
+}
+  
+.secondary-tx {
+    color: #6c757d!important;
 }
