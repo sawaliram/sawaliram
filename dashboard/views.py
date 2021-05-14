@@ -4,6 +4,8 @@ import random
 import os
 import urllib
 
+from datetime import datetime
+
 from django.utils.translation import gettext as _
 
 from django import forms
@@ -71,8 +73,6 @@ from dashboard.models import (
     DraftArticleTranslation,
     Comment,
     Dataset)
-from django.db.models import Count
-
 from sawaliram_auth.models import Notification, User, VolunteerRequest
 from public_website.views import SearchView
 
@@ -668,7 +668,7 @@ class ReviewAnswersList(SearchView):
             return results
         else:
             results['questions'] = Question.objects.filter(
-                            answers__status='published',
+                            answers__status='submitted',
                         ).exclude(
                             answers__submitted_by=request.user,
                         ).distinct()
@@ -936,6 +936,7 @@ class ApproveAnswerView(View):
 
         answer.approved_by = request.user
         answer.status = 'published'
+        answer.published_on = datetime.now()
         answer.save()
 
         messages.success(request, (_('Thanks ' + request.user.first_name + ' for publishing the answer, it will now be visible to all users')))

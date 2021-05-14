@@ -32,4 +32,5 @@ urlpatterns = [
     path('resources', views.ResourcesPage.as_view(), name='resources'),
     path('articles', views.ArticlesPage.as_view(), name='articles'),
     path('analytics/', views.AnalyticsPage.as_view(), name='analytics'),
+    path('suggest/', views.Suggestions.as_view(), name='suggestions'),
 ]

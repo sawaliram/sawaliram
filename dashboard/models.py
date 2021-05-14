@@ -245,6 +245,7 @@ class Answer(models.Model):
         null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+    published_on = models.DateTimeField(blank=True, null=True)
 
     comments = GenericRelation('dashboard.Comment')
 
@@ -605,7 +606,6 @@ class Article(DraftableModel):
         default='',
         blank=True,
         null=True)
-    published_on = models.DateTimeField(auto_now_add=True)
 
     comments = GenericRelation('dashboard.Comment')
 
