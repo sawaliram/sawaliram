@@ -5358,8 +5358,10 @@ button.social-login i {
     border-radius: 15px;
 }
 
-.divcon:hover {
-    background-color: #FEB740;
+.divcon:hover,
+.divcon:focus {
+  box-shadow: 0 1em 1em -0.4em #FEB740;
+  transform: translateY(-0.5em);
 }
 
 .br-15 {
@@ -5368,4 +5370,8 @@ button.social-login i {
   
 .secondary-tx {
     color: #6c757d!important;
+}
+
+.bt-20 {
+    margin-top: 20px;
 }
