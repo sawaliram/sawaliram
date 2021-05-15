@@ -1549,7 +1549,7 @@ class BaseStartTranslation(FormView):
         form = super().get_form()
 
         # Decide language options
-        available_languages = self.source.list_available_languages()
+        available_languages = self.answer.list_available_languages()
         unavailable_languages = []
         for l in settings.CONTENT_LANGUAGES:
             if l not in available_languages:
