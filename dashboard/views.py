@@ -624,14 +624,66 @@ class ViewQuestionsView(SearchView):
 @method_decorator(volunteer_permission_required, name='dispatch')
 class AnswerQuestions(SearchView):
     def get_querysets(self, request):
+        '''
+        Returns a dict of querysets, one for each data type
+        '''
+
         results = {}
-        results['questions'] = Question.objects.all()
+
+        if hasattr(self, 'get_queryset'):
+            warnings.warn('get_queryset is deprecated. Please use get_querysets instead.')
+
+            results['questions'] = self.get_queryset(request)
+            return results
+
+        filters = self.filters
+        search_categories = filters.get('search_categories', [])
+
+
+        if not search_categories:
+            search_categories.append('questions')
+
+
+        if 'q' in request.GET and request.GET.get('q') != '':
+            if not search_categories:
+                results['questions'] = Question.objects.filter(
+                            Q(pk__iexact=request.GET.get('q')) |
+                            Q(question_text__search=request.GET.get('q')) |
+                            Q(question_text_english__search=request.GET.get('q')) |
+                            Q(school__search=request.GET.get('q')) |
+                            Q(area__search=request.GET.get('q')) |
+                            Q(state__search=request.GET.get('q')) |
+                            Q(field_of_interest__search=request.GET.get('q')) |
+                            Q(published_source__search=request.GET.get('q'))
+                        )
+
+            else:
+                if 'questions' in search_categories:
+                    results['questions'] = Question.objects.filter(
+                            Q(pk__iexact=request.GET.get('q')) |
+                            Q(question_text__search=request.GET.get('q')) |
+                            Q(question_text_english__search=request.GET.get('q')) |
+                            Q(school__search=request.GET.get('q')) |
+                            Q(area__search=request.GET.get('q')) |
+                            Q(state__search=request.GET.get('q')) |
+                            Q(field_of_interest__search=request.GET.get('q')) |
+                            Q(published_source__search=request.GET.get('q'))
+                        )
+                else:
+                    results['questions'] = Question.objects.none()
+
+        else:
+            if 'questions' in search_categories:
+                results['questions'] = Question.objects.all()
+            else:
+                results['questions'] = Question.objects.none()
+
         return results
+
 
     def set_filters(self, params):
         filters = super().set_filters(params)
 
-        # set question_categories to 'unanswered' by default
         if len(filters['question_categories']) == 0:
             if 'questions' not in params:
                 filters['question_categories'].append('unanswered')
@@ -639,11 +691,21 @@ class AnswerQuestions(SearchView):
         self.filters = filters
         return filters
 
+    def get_search_query(self, request):
+        """
+        Returns the search query
+        """
+        if 'q' in request.GET:
+            return request.GET.get('q')
+        else:
+            return ""
+
     def get_page_title(self, request):
         return _('Answer Questions')
 
     def get_enable_breadcrumbs(self, request):
         return 'Yes'
+
 
 
 @method_decorator(login_required, name='dispatch')
