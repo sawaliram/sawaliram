@@ -97,7 +97,7 @@
         {% if questions or articles %}
         <div class="head-area">
             <span class="results-count">
-                Showing {% if result_size == 1 %}1{% else %}{{ results.start_index}}-{{ results.end_index }}{% endif %} of {{ result_size }} result{{ result_size|pluralize }}
+                Showing {% if result_size == 1 %}1{% else %}{{ start_index }} - {{ end_index }} {% endif %}  of {{ result_size }} result{{ result_size|pluralize }}
             </span>
             <div class="dropdown">
                 <button class="btn sort-by-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="sortOptionSelector">

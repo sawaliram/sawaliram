@@ -361,9 +361,13 @@ class SearchView(View):
             result_id_list = [id['id'] for id in questions.values('id')]
             request.session['result_id_list'] = result_id_list
 
-        paginator = Paginator(questions, 15)
-
+        ITEMS_PER_PAGE = 15
+        paginator = Paginator(questions, ITEMS_PER_PAGE)
         page = request.GET.get('page', 1)
+        # Adding the number of questions/articles being shown based on the page number
+        start_index = (int(page)-1)*ITEMS_PER_PAGE + 1
+        end_index = start_index + ITEMS_PER_PAGE if (start_index + ITEMS_PER_PAGE <= questions.count()) else questions.count()
+
         questions_page_one = paginator.get_page(page)
 
         # get list of IDs of bookmarked items
@@ -378,6 +382,8 @@ class SearchView(View):
             'enable_breadcrumbs': self.get_enable_breadcrumbs(request),
             'questions': questions_page_one,
             'result_size': questions.count(), #The count for anwsers, etc. will be added to this below
+            'start_index': start_index,
+            'end_index': end_index,
             'subjects': subjects,
             'available_subjects': available_subjects,
             'states': states,
@@ -399,6 +405,8 @@ class SearchView(View):
         if articles and page == 1:
             context['articles'] = articles
             context['result_size'] = context['result_size'] + articles.count()
+
+
 
         # create list of active categories
         if page_title == _('Search') or page_title == _('Translate Content'):
