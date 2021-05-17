@@ -16,7 +16,7 @@ from django.utils.translation import (
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password, make_password
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from django.core.paginator import Paginator
@@ -60,6 +60,13 @@ import requests
 import collections
 from .lang import *
 from django.db.models import Count
+import datetime
+from datetime import timedelta
+from datetime import datetime as ts
+import os
+import time
+import csv
+
 
 
 class HomeView(View):
@@ -836,8 +843,6 @@ class ArticlesPage(View):
         return render(request, 'public_website/articles.html', context)
 
 
-
-
 class AnalyticsPage(View):
 
     #Dictionary to hold {state_name:state_ISO_code}
@@ -1084,3 +1089,45 @@ class AnalyticsPage(View):
         return json.dumps(lst)
         
 
+class Suggestions(View):
+    def get(self, request):
+        lst_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"../assets/suggestions/")) 
+
+        if not os.path.exists(lst_dir):
+            os.makedirs(lst_dir)
+
+        f_path = os.path.abspath(os.path.join(lst_dir, 'suggestions.csv'))
+
+        sugg_lst = []
+
+        if not os.path.isfile(f_path):
+            ques = Question.objects.all()
+            with open(f_path, 'w', newline='' , encoding='utf-8') as f:
+                writer = csv.writer(f, delimiter=',')
+                for i in ques:
+                    if not i.question_text_english == "":
+                        sugg_lst.append(i.question_text_english)
+                        writer.writerow([i.question_text_english])
+
+            return JsonResponse({"suggestion": sugg_lst})
+        else:
+            modTimestamp = os.path.getmtime(os.path.abspath(os.path.join(lst_dir, 'suggestions.csv')))
+            modificationTime = ts.fromtimestamp(modTimestamp)             
+            current_time = datetime.datetime.now() 
+
+            if (current_time - modificationTime) > timedelta(1): 
+                ques = Question.objects.all()
+                with open(f_path, 'w', newline='' , encoding='utf-8') as f:
+                    writer = csv.writer(f, delimiter=',')
+                    for i in ques:
+                        if not i.question_text_english == "":
+                            sugg_lst.append(i.question_text_english)
+                            writer.writerow([i.question_text_english])
+
+                return JsonResponse({"suggestion": sugg_lst})
+            else:
+                with open(f_path, 'r',encoding='utf-8') as f:
+                    reader = csv.reader(f)
+                    for i in reader:
+                        sugg_lst.append(''.join(i))
+                return JsonResponse({"suggestion": sugg_lst})
