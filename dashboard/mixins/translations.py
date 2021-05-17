@@ -15,7 +15,7 @@ class TranslationMixin(models.Model):
         abstract = True
 
     language = models.CharField(max_length=100,
-        choices=settings.LANGUAGE_CHOICES,
+        choices=settings.CONTENT_LANGUAGES,
         default='en')
 
     translated_by = models.ForeignKey(
