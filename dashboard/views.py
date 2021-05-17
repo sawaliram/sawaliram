@@ -670,20 +670,34 @@ class ReviewAnswersList(SearchView):
             )
             return results
         else:
-            query_set = Question.objects.filter(
+            ques = Question.objects.filter(
                                 answers__status='submitted',
                             ).exclude(
                                 answers__submitted_by=request.user,
                             ).distinct()
+            temp = {}
+            temp2 = []
 
-            results['questions'] = query_set.annotate(
-                            num_comments=Count('answers__comments')
-                            ).order_by('-num_comments')
+            for q in ques:
+                a = q.answers.all()   
+                for ans in a:
+                    comment = ans.comments.all()
+                    temp[q] = comment.count()
 
-            print(results)
-            # results['questions'] = Question.objects.filter(answers__status='submitted').exclude(answers__submitted_by=request.user,).annotate(num_comments=Count('answers__comments')).order_by('-num_comments')
-            # print(Question.objects.filter(answers__status='submitted').exclude(answers__submitted_by=request.user,).annotate(num_comments=Count('answers__comments')).order_by('-num_comments').distinct())
-            # print(Question.objects.filter(answers__status='submitted').values("answers__comments").order_by('answers__comments'))
+            sorted_tuples = sorted(temp.items(), key=lambda item: item[1])
+            sorted_dict = {k: v for k, v in sorted_tuples}
+            
+            res = sorted_dict.keys()
+            for b in res:
+                temp2.append(b.id)
+            
+            clauses = ' '.join(['WHEN id=%s THEN %s' % (pk, i) for i, pk in enumerate(temp2)])
+            ordering = 'CASE %s END' % clauses
+
+            results['questions'] = Question.objects.filter(id__in=temp2).extra(
+            select={'ordering': ordering}, order_by=('ordering',))
+
+            print(results['questions'])
 
             return results
 
