@@ -495,9 +495,9 @@ class SubmitUserCommentOnAnswer(View):
         comment.save()
 
         # create notification
-        if answer.answered_by.id != request.user.id:
+        if answer.submitted_by.id != request.user.id:
             answered_question = Question.objects.get(pk=question_id)
-            if answered_question.language.lower() != 'english':
+            if answered_question.language.lower() != 'en':
                 question_text = answered_question.question_text_english
             else:
                 question_text = answered_question.question_text
@@ -509,7 +509,7 @@ class SubmitUserCommentOnAnswer(View):
                 },
                 description_text="On your answer for the question '" + question_text + "'",
                 target_url=reverse('public_website:view-answer', kwargs={'question_id': question_id, 'answer_id': answer_id}),
-                user=answer.answered_by
+                user=answer.submitted_by
             )
             comment_notification.save()
 
@@ -787,7 +787,6 @@ class ContactPage(FormView):
                     recipient_list=['mail.sawaliram@gmail.com'],
                     fail_silently=False,
                 )
-
                 messages.success(request, _('Your message has been sent! We will get back to you shortly.'))
                 return redirect('public_website:contact')
             else:
