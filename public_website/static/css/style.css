@@ -5375,3 +5375,124 @@ button.social-login i {
 .bt-20 {
     margin-top: 20px;
 }
+
+
+ /* =================== BIBLIOGRAPHY SECTION ================ */
+ @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap");
+ 
+ .main-biblio_title {
+     margin-bottom: 0.5rem;
+     text-align: center;
+     font-size: 1.5rem;
+     color: #feb740;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-weight: 900;
+ }
+ 
+ .main-biblio_title:before,
+ .main-biblio_title:after {
+     content: "";
+     display: block;
+     margin: 0 0.2rem;
+     flex: 1;
+     border-bottom: 1px solid #feb740;
+ }
+ 
+ .biblio_wrapper {
+     width: 90%;
+     margin: auto;
+     margin-top: 3rem;
+     font-family: "Source Sans Pro", sans-serif;
+ }
+ 
+ @media (max-width: 768px) {
+     .biblio_wrapper {
+         padding: 0 0.3rem;
+     }
+ }
+ 
+ input[type=radio] {
+     display: none;
+ }
+ 
+ input[type=radio]:checked+.biblio_item .biblio_title {
+     color: #fff;
+     border-color: #feb740;
+     background-color: #feb740;
+ }
+ 
+ input[type=radio]:checked+.biblio_item .biblio_title:after {
+     transform: rotate(180deg);
+ }
+ 
+ input[type=radio]:checked+.biblio_item .content_biblio {
+     margin-top: 0.3rem;
+     margin-bottom: 0.3rem;
+     height: auto;
+     opacity: 1;
+     display: block;
+     transition: all 0.3s, opacity 0.7s;
+ }
+ 
+ .biblio_item {
+     display: block;
+     margin-bottom: 0.1rem;
+ }
+ 
+ .biblio_title {
+     padding: 10px;
+     border-radius: 30px;
+     color: #feb740;
+     border: 1px solid;
+     font-weight: bold;
+     cursor: pointer;
+     transition: all 0.2s;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-top: 13px;
+ }
+ 
+ .biblio_title:after {
+     content: "▼";
+     display: inline-block;
+     font-size: 12px;
+ }
+ 
+ .content_biblio {
+     width: 95%;
+     margin: auto;
+     padding: 0 0.5rem;
+     line-height: 1.6;
+     color: #797979;
+     border: 1px solid;
+     border-width: 0 1px;
+     height: 0;
+     opacity: 0;
+     display: none;
+     transition: all 0.2s;
+     padding: 8px;
+ }
+ 
+ .biblio_a {
+     text-decoration: wavy;
+     border-radius: 20px;
+     padding: 2px;
+     border: 1px solid #feb740;
+     padding-left: 10px;
+     padding-right: 10px;
+     font-weight: 600;
+     color: #87b24d;
+     margin-top: 4px;
+ }
+ 
+ .biblio_a:after {
+     content: " →";
+     display: inline-block;
+ }
+ 
+ .biblio_a:hover {
+     text-decoration: underline;
+ }
