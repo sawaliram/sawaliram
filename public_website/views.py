@@ -382,7 +382,7 @@ class SearchView(View):
             if (start_index + ITEMS_PER_PAGE <= questions.count()):
                 end_index = start_index + ITEMS_PER_PAGE
             else:
-                end_index = questions.count()
+                end_index = questions.count() + articles.count()
         print(start_index, end_index)
 
 
