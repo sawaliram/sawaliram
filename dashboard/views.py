@@ -1603,8 +1603,17 @@ class BaseStartTranslation(FormView):
     def get_form(self):
         form = super().get_form()
 
+        # get full absolute request url 
+        absolute_url = self.request.get_full_path()
+
+        # check whether its article
         # Decide language options
-        available_languages = self.answer.list_available_languages()
+        if 'article' in absolute_url:
+            available_languages = self.source.list_available_languages()
+        else:
+            available_languages = self.answer.list_available_languages()
+
+
         unavailable_languages = []
         for l in settings.CONTENT_LANGUAGES:
             if l not in available_languages:
