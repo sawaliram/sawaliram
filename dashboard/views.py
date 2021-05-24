@@ -1603,17 +1603,8 @@ class BaseStartTranslation(FormView):
     def get_form(self):
         form = super().get_form()
 
-        # get full absolute request url 
-        absolute_url = self.request.get_full_path()
-
-        # check whether its article
-        # Decide language options
-        if 'article' in absolute_url:
-            available_languages = self.source.list_available_languages()
-        else:
-            available_languages = self.answer.list_available_languages()
-
-
+        # Decide language options     
+        available_languages = self.source.list_available_languages()
         unavailable_languages = []
         for l in settings.CONTENT_LANGUAGES:
             if l not in available_languages:
@@ -1674,6 +1665,21 @@ class CreateAnswerTranslation(BaseStartTranslation):
     template_name = 'dashboard/answers/start_translation.html'
     success_view = 'dashboard:edit-answer-translation'
 
+    def get_form(self):
+        form = super().get_form()
+
+        # Decide language options     
+        available_languages = self.answer.list_available_languages()
+        unavailable_languages = []
+        for l in settings.CONTENT_LANGUAGES:
+            if l not in available_languages:
+                unavailable_languages.append(l)
+
+        form.fields.get('lang_from').choices = available_languages
+        form.fields.get('lang_to').choices = unavailable_languages
+
+        return form
+
     def get_source(self, source, answer, *args, **kwargs):
         question = super().get_source(source, *args, **kwargs)
         self.answer = get_object_or_404(self.answer_model, id=answer)
@@ -1683,6 +1689,7 @@ class CreateAnswerTranslation(BaseStartTranslation):
             raise Http404(_('No matching answer found.'))
 
         return question
+
 
     def form_valid(self, form):
         return redirect(
