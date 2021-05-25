@@ -73,6 +73,7 @@ from dashboard.models import (
     DraftArticleTranslation,
     Comment,
     Dataset)
+
 from sawaliram_auth.models import Notification, User, VolunteerRequest
 from public_website.views import SearchView
 
@@ -734,6 +735,7 @@ class ReviewAnswersList(SearchView):
                         ).exclude(
                             answers__submitted_by=request.user,
                         ).distinct()
+
             return results
 
     def get_page_title(self, request):
@@ -1026,7 +1028,7 @@ class ApproveAnswerView(View):
         question_answered = Question.objects.get(pk=question_id)
 
         # create notification for user who submitted the answer
-        if question_answered.language.lower() != 'english':
+        if question_answered.language.lower() != 'en':
             question_text = question_answered.question_text_english
         else:
             question_text = question_answered.question_text
@@ -1034,7 +1036,7 @@ class ApproveAnswerView(View):
         published_notification = Notification(
             notification_type='published',
             title_text=str(request.user.get_full_name()) + ' published your answer',
-            description_text="Your answer for question '" + question_text + "'",
+            description_text="Your answer to the question '" + question_text + "'",
             target_url=reverse('public_website:view-answer', kwargs={'question_id': question_answered.id, 'answer_id': answer.id}),
             user=answer.submitted_by
         )
@@ -1048,7 +1050,7 @@ class ApproveAnswerView(View):
             # do not create notification for the user who is publishing
             # the answer
             if max(commentor_id) != request.user.id:
-                if question_answered.language.lower() != 'english':
+                if question_answered.language.lower() != 'en':
                     question_text = question_answered.question_text_english
                 else:
                     question_text = question_answered.question_text
@@ -1494,49 +1496,102 @@ class CreateAnswerCommentView(CreateCommentView):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class TranslateAnswersList(SearchView):
+    # def set_filters(self, params):
+    #     filters = super().set_filters(params)
+        
+    #     search_categories = filters.get('search_categories', [])
+
+    #     if not search_categories:
+    #         search_categories.append('questions')
+    #     print(filters)
+
+    #     self.filters = filters
+    #     return filters
+
+
     def get_querysets(self, request):
         results = {}
+
+        filters = self.filters
+        search_categories = filters.get('search_categories', [])
+
+        if not search_categories:
+            search_categories.append('questions')
+
+
         if 'q' in request.GET and request.GET.get('q') != '':
-            query_set = Question.objects.filter(
-                                answers__isnull=False,
-                                answers__status=Answer.STATUS_PUBLISHED,
-                                answers__translations__isnull=True,
-                            ).distinct()
+            if not search_categories:
+                query_set = Question.objects.filter(
+                                    answers__isnull=False,
+                                    answers__status=Answer.STATUS_PUBLISHED,
+                                    answers__translations__isnull=True,
+                                ).distinct()
 
-            results['questions'] = query_set.filter(
-                    Q(question_text__search=request.GET.get('q')) |
-                    Q(question_text_english__search=request.GET.get('q')) |
-                    Q(school__search=request.GET.get('q')) |
-                    Q(area__search=request.GET.get('q')) |
-                    Q(state__search=request.GET.get('q')) |
-                    Q(field_of_interest__search=request.GET.get('q'))
-            )
+                results['questions'] = query_set.filter(
+                        Q(question_text__search=request.GET.get('q')) |
+                        Q(question_text_english__search=request.GET.get('q')) |
+                        Q(school__search=request.GET.get('q')) |
+                        Q(area__search=request.GET.get('q')) |
+                        Q(state__search=request.GET.get('q')) |
+                        Q(field_of_interest__search=request.GET.get('q'))
+                )
 
-            results['articles'] = (PublishedArticle.objects.filter(
-                translations__isnull=True,
-            )
-            .filter(
-                Q(title__search=request.GET.get('q')) |
-                Q(body__search=request.GET.get('q'))
-            )
-            .distinct())
+                results['articles'] = (PublishedArticle.objects.filter(
+                    translations__isnull=True,
+                )
+                .filter(
+                    Q(title__search=request.GET.get('q')) |
+                    Q(body__search=request.GET.get('q'))
+                )
+                .distinct())
+            else:
+                if 'questions' in search_categories:
+                    results['questions'] = Question.objects.filter(
+                                    answers__isnull=False,
+                                    answers__status=Answer.STATUS_PUBLISHED,
+                                    answers__translations__isnull=True,
+                                ).distinct()
+                else:
+                    results['questions'] = Question.objects.none()
+
+
+                if 'articles' in search_categories:
+                    results['articles'] = PublishedArticle.objects.filter(
+                        translations__isnull=True,
+                    ).distinct()
+                else:
+                    results['articles'] = PublishedArticle.objects.none()
         else:
-            results['questions'] = Question.objects.filter(
-                            answers__isnull=False,
-                            answers__status=Answer.STATUS_PUBLISHED,
-                            answers__translations__isnull=True,
-                        ).distinct()
-            results['articles'] = PublishedArticle.objects.filter(
-                translations__isnull=True,
-            ).distinct()
+            if 'questions' in search_categories:
+                results['questions'] = Question.objects.all()
+            else:
+                results['questions'] = Question.objects.none()
+
+            if 'articles' in search_categories:
+                results['articles'] = PublishedArticle.objects.all()
+            else:
+                results['articles'] = PublishedArticle.objects.none()
 
         return results
+
+    def set_filters(self, params):
+        filters = super().set_filters(params)
+
+        if len(filters['question_categories']) == 0:
+            if 'questions' not in params:
+                filters['question_categories'].append('answered')
+
+        self.filters = filters
+        return filters
+
 
     def get_page_title(self, request):
         return 'Translate Content'
 
     def get_enable_breadcrumbs(self, request):
         return 'Yes'
+
+
 
 
 class TranslationLanguagesForm(forms.Form):
@@ -1569,7 +1624,7 @@ class BaseStartTranslation(FormView):
         form = super().get_form()
 
         # Decide language options
-        available_languages = self.source.list_available_languages()
+        available_languages = self.answer.list_available_languages()
         unavailable_languages = []
         for l in settings.CONTENT_LANGUAGES:
             if l not in available_languages:

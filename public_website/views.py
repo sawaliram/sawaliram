@@ -360,10 +360,33 @@ class SearchView(View):
         if page_title == _('Review Answers') or page_title == _('Answer Questions'):
             result_id_list = [id['id'] for id in questions.values('id')]
             request.session['result_id_list'] = result_id_list
+        
 
-        paginator = Paginator(questions, 15)
+        ITEMS_PER_PAGE = 15
 
+        paginator = Paginator(questions, ITEMS_PER_PAGE)
         page = request.GET.get('page', 1)
+
+
+        # Adding the number of questions/articles being shown based on the page number
+        start_index = (int(page)-1)*ITEMS_PER_PAGE + 1
+
+        search_categories = self.filters.get('search_categories', [])
+
+        if ('articles' in search_categories and not 'questions' in search_categories):
+            if (start_index + ITEMS_PER_PAGE <=  articles.count()):
+                end_index = start_index + ITEMS_PER_PAGE
+            else:
+                end_index = articles.count()
+        else:
+            if (start_index + ITEMS_PER_PAGE <= questions.count()):
+                end_index = start_index + ITEMS_PER_PAGE
+            else:
+                end_index = questions.count() + articles.count()
+        print(start_index, end_index)
+
+
+
         questions_page_one = paginator.get_page(page)
 
         # get list of IDs of bookmarked items
@@ -377,7 +400,9 @@ class SearchView(View):
             'page_title': page_title,
             'enable_breadcrumbs': self.get_enable_breadcrumbs(request),
             'questions': questions_page_one,
-            'result_size': questions.count(), #The count for anwsers, etc. will be added to this below
+            'result_size': questions.count(), 
+            'start_index': start_index,
+            'end_index': end_index,
             'subjects': subjects,
             'available_subjects': available_subjects,
             'states': states,
@@ -495,9 +520,9 @@ class SubmitUserCommentOnAnswer(View):
         comment.save()
 
         # create notification
-        if answer.answered_by.id != request.user.id:
+        if answer.submitted_by.id != request.user.id:
             answered_question = Question.objects.get(pk=question_id)
-            if answered_question.language.lower() != 'english':
+            if answered_question.language.lower() != 'en':
                 question_text = answered_question.question_text_english
             else:
                 question_text = answered_question.question_text
@@ -509,7 +534,7 @@ class SubmitUserCommentOnAnswer(View):
                 },
                 description_text="On your answer for the question '" + question_text + "'",
                 target_url=reverse('public_website:view-answer', kwargs={'question_id': question_id, 'answer_id': answer_id}),
-                user=answer.answered_by
+                user=answer.submitted_by
             )
             comment_notification.save()
 
@@ -779,7 +804,7 @@ class ContactPage(FormView):
                 c.message = form.cleaned_data.get('message')
                 c.save()
 
-                a = send_mail(
+                send_mail(
                     subject='[Contact] ' + form.cleaned_data.get('subject'),
                     message='',
                     html_message=form.cleaned_data.get('message') + '<br><br> Senders email: ' + form.cleaned_data.get('emailid'),

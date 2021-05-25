@@ -30,8 +30,8 @@
       <div class="mx-auto flex btn btn-secondary mb-3">
         <span><label for="lang_from" class="fas fa-globe-asia"></label></span>
         <select id="lang_from" name="lang_from" class="input-plain text-center">
-          {% for value, label in object.source.list_available_languages %}
-          <option value="{{ value }}"{% if value == object.source.tr_language %} selected{% endif %}>{{ label }}</option>
+          {% for value, label in answer.source.list_available_languages %}
+          <option value="{{ value }}"{% if value == answer.source.tr_language %} selected{% endif %}>{{ label }}</option>
           {% endfor %}
         </select>
         <span><label for="lang_to" class="fas fa-arrow-right"></label></span>
