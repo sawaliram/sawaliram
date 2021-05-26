@@ -1604,7 +1604,7 @@ class BaseStartTranslation(FormView):
         form = super().get_form()
 
         # Decide language options
-        available_languages = self.source.list_available_languages()
+        available_languages = self.answer.list_available_languages()
         unavailable_languages = []
         for l in settings.CONTENT_LANGUAGES:
             if l not in available_languages:
@@ -1715,20 +1715,6 @@ class CreateAnswerTranslation(BaseStartTranslation):
 
         return context
 
-    def get_form(self):
-            form = super().get_form()
-
-            # Decide language options     
-            available_languages = self.answer.list_available_languages()
-            unavailable_languages = []
-            for l in settings.CONTENT_LANGUAGES:
-                if l not in available_languages:
-                    unavailable_languages.append(l)
-
-            form.fields.get('lang_from').choices = available_languages
-            form.fields.get('lang_to').choices = unavailable_languages
-
-            return form
 
     def get_enable_breadcrumbs(self):
         """
