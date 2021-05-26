@@ -4,6 +4,25 @@
 {% load to_language_name %}
 
 {% block tr_original %}
+{% block language_selector %}
+<div class="col-md-12 flex ">
+  <div class="mx-auto flex btn btn-secondary mb-3">
+    <span><label for="lang_from" class="fas fa-globe-asia"></label></span>
+    <select id="lang_from" name="lang_from" class="input-plain text-center">
+      {% for value, label in answer.source.list_available_languages %}
+      <option value="{{ value }}"{% if value == answer.source.tr_language %} selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <span><label for="lang_to" class="fas fa-arrow-right"></label></span>
+    <select id="lang_to" name="lang_to" class="input-plain text-center" style="ml-auto">
+      {% for value, label in content_language_choices %}
+      <option value="{{ value }}"{% if value == object.language %} selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+{% endblock %}
+
 <header>
   <h1 class="p-3">{{ object.source.tr_question_text }}</h1>
   <div class="meta-section mx-3">
