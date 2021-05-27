@@ -11,16 +11,7 @@
 <div class="user-profile-container {% if selected_user != request.user %}view-profile{% endif %}">
     <div class="user-profile-menu">
         <div class="mobile-messages-container">
-            {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="{% trans 'Close' %}">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% endfor %}
-            {% endif %}
+            {% include 'snippets/messages.html' %}
         </div>
         <img class="profile-picture" src="{{ selected_user.profile.profile_picture }}" alt="{% trans 'Profile Picture' %}" style="background-color:{{ selected_user.profile.profile_picture_bg }};">
         <h1 class="user-name">{{ selected_user.get_full_name }}</h1>
@@ -76,16 +67,7 @@
                 <button class="btn"><i class="fas fa-arrow-left"></i> Back</button>
             </div>
             <div class="desktop-messages-container">
-                {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="{% trans 'Close' %}">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    {% endfor %}
-                {% endif %}
+                {% include 'snippets/messages.html' %}
             </div>
             <div class="tab-pane fade {% if not active_tab %}{% if selected_user == request.user %}active show{% endif %}{% else %}{% if active_tab == 'settings' %}{% if selected_user == request.user %}active show{% endif %}{% endif %}{% endif %}" id="settings" role="tabpanel" aria-labelledby="settingsTab">
                 <h2>{% trans 'Your Avatar' %}</h2>
