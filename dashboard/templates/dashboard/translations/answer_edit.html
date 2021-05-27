@@ -1,23 +1,53 @@
 {% extends "dashboard/translations/base_edit.html" %}
 
+{% load i18n %}
+{% load to_language_name %}
+
 {% block tr_original %}
+{% block language_selector %}
+<div class="col-md-12 flex ">
+  <div class="mx-auto flex btn btn-secondary mb-3">
+    <span><label for="lang_from" class="fas fa-globe-asia"></label></span>
+    <select id="lang_from" name="lang_from" class="input-plain text-center">
+      {% for value, label in answer.source.list_available_languages %}
+      <option value="{{ value }}"{% if value == answer.source.tr_language %} selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <span><label for="lang_to" class="fas fa-arrow-right"></label></span>
+    <select id="lang_to" name="lang_to" class="input-plain text-center" style="ml-auto">
+      {% for value, label in content_language_choices %}
+      <option value="{{ value }}"{% if value == object.language %} selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+{% endblock %}
+
 <header>
-  <h1>{{ object.source.tr_question_text }}</h1>
-  <div class="credits-card hr-over flex">
-    <span class="credit-title">School</span>
-    <span>{{ object.source.tr_school }}</span>
+  <h1 class="p-3">{{ object.source.tr_question_text }}</h1>
+  <div class="meta-section mx-3">
+    <div class="highlighted-meta">
+      <i class="fas fa-university" title="{% trans 'School' %}"></i>
+      <span class="sr-only">{% trans 'School' %}</span>
+      <span class="meta-value">{{ object.source.tr_school }}</span>
+    </div>
+    <div class="highlighted-meta">
+      <i class="fas fa-book" alt="{% trans 'Curriculum followed' %}"></i>
+      <span class="sr-only">{% trans 'Curriculum followed' %}</span>
+      <span class="meta-value">{{ object.source.tr_curriculum_followed }}</span>
+    </div>
   </div>
-  <div class="credits-card hr-over flex">
-    <span class="credit-title">Area</span>
-    <span>{{ object.source.tr_area }}</span>
-  </div>
-  <div class="credits-card hr-over flex">
-    <span class="credit-title">State</span>
-    <span>{{ object.source.tr_state }}</span>
-  </div>
-  <div class="credits-card hr-over flex">
-    <span class="credit-title">Curriculum</span>
-    <span>{{ object.source.tr_curriculum_followed }}</span>
+  <div class="meta-section mx-3">
+    <div class="highlighted-meta">
+      <i class="fas fa-map-marker-alt" title="{% trans 'Area' %}"></i>
+      <span class="sr-only">{% trans 'Area' %}</span>
+      <span class="meta-value">{{ object.source.tr_area }}</span>
+    </div>
+    <div class="highlighted-meta">
+      <i class="fas fa-map-marked-alt" title="{% trans 'State' %}"></i>
+      <span class="sr-only">{% trans 'State' %}</span>
+      <span class="meta-value">{{ object.source.tr_state }}</span>
+    </div>
   </div>
 </header>
 <section class="hr-over">
@@ -29,40 +59,45 @@
 
 {% block tr_translation %}
 <header>
-  <h1><input type="text" name="{{ form.question_text.name }}" value="{{ form.question_text.value }}" placeholder="{{ object.source.tr_question_text }}" id="{{ form.question_text.id }}" class="input-plain input-title" /></h1>
-  <div class="hr-over flex">
-    <span>School</span>
-    <span><input type="text" class="input-plain" name="{{ form.school.name }}" value="{{ form.school.value }}" placeholder="{{ object.source.tr_school }}" id="{{ form.school.id }}" /></span>
+  <h1 class="border border-grey"><input type="text" name="{{ form.question_text.name }}" value="{{ form.question_text.value }}" placeholder="{{ object.source.tr_question_text }}" id="{{ form.question_text.id }}" class="input-plain input-title p-3" /></h1>
+  <div class="meta-section meta-input-section flex flex-column flex-md-row">
+    <div class="highlighted-meta bg-white border border-grey flex-fill flex align-items-center">
+      <i class="fas fa-university mr-2" title="{% trans 'School' %}"></i>
+      <span class="sr-only">{% trans 'School' %}</span>
+      <input type="text" class="input-plain" name="{{ form.school.name }}" value="{{ form.school.value }}" placeholder="{{ object.source.tr_school }}" id="{{ form.school.id }}" />
+    </div>
+    <div class="highlighted-meta bg-white border border-grey flex-fill flex align-items-center">
+      <i class="fas fa-book mr-2" alt="{% trans 'Curriculum followed' %}"></i>
+      <span class="sr-only">{% trans 'Curriculum followed' %}</span>
+      <input type="text" class="input-plain" name="{{ form.curriculum_followed.name }}" value="{{ form.curriculum_followed.value }}" placeholder="{{ object.source.tr_curriculum_followed }}" id="{{ form.curriculum_followed.id }}" />
+    </div>
   </div>
-  <div class="hr-over flex">
-    <span>Area</span>
-    <span><input type="text" class="input-plain" name="{{ form.area.name }}" value="{{ form.area.value }}" placeholder="{{ object.source.tr_area }}" id="{{ form.area.id }}" /></span>
-  </div>
-  <div class="hr-over flex">
-    <span>State</span>
-    <span><input type="text" class="input-plain" name="{{ form.state.name }}" value="{{ form.state.value }}" placeholder="{{ object.source.tr_state }}" id="{{ form.state.id }}" /></span>
-  </div>
-  <div class="hr-over flex">
-    <span>Curriculum</span>
-    <span><input type="text" class="input-plain" name="{{ form.curriculum_followed.name }}" value="{{ form.curriculum_followed.value }}" placeholder="{{ object.source.tr_curriculum_followed }}" id="{{ form.curriculum_followed.id }}" /></span>
+  <div class="meta-section meta-input-section flex flex-column flex-md-row">
+    <div class="highlighted-meta bg-white border border-grey flex-fill flex align-items-center">
+      <i class="fas fa-map-marker-alt mr-2" title="{% trans 'Area' %}"></i>
+      <span class="sr-only">{% trans 'Area' %}</span>
+      <input type="text" class="input-plain" name="{{ form.area.name }}" value="{{ form.area.value }}" placeholder="{{ object.source.tr_area }}" id="{{ form.area.id }}" />
+    </div>
+    <div class="highlighted-meta bg-white border border-grey flex-fill flex align-items-center">
+      <i class="fas fa-map-marked-alt mr-2" title="{% trans 'State' %}"></i>
+      <span class="sr-only">{% trans 'State' %}</span>
+      <input type="text" class="input-plain" name="{{ form.state.name }}" value="{{ form.state.value }}" placeholder="{{ object.source.tr_state }}" id="{{ form.state.id }}" />
+    </div>
   </div>
 </header>
-{% include 'dashboard/snippets/richtext_editor.html' with value=answer.answer_text %}
+<div class="bg-white">
+{% include 'dashboard/snippets/richtext_editor.html' with value=answer.answer_text class='' name='answer-text' %}
+</div>
 <footer id="submitbar">
-  <input type="hidden" name="answer-text" value="{{ answer.answer_text }}" />
-  <button type="submit" name="mode" value="submit" class="btn btn-primary">Submit translation</button>
-  <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">Save Draft</button>
-  <a href="{% url 'dashboard:delete-answer-translation' answer.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="Delete translation">
+  {% if object.is_submitted %}
+  <a href="{{ answer.get_absolute_url }}" class="btn btn-primary-hollow">{% trans 'Cancel' %}</a>
+  <button type="submit" name="mode" value="draft" class="btn btn-primary">{% trans 'Update translation' %}</button>
+  {% else %}
+  <button type="submit" name="mode" value="submit" class="btn btn-primary">{% trans 'Submit translation' %}</button>
+  <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">{% trans 'Save Draft' %}</button>
+  {% endif %}
+  <a href="{% url 'dashboard:delete-answer-translation' answer.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="{% trans 'Delete translation' %}">
     <i class="fas fa-trash"></i>
   </a>
 </footer>
-{% endblock %}
-
-{% block footer %}
-<script>
-    setupQuillEditor({
-        placeholder: 'Translation goes here...',
-        inputName: 'answer-text'
-    })
-</script>
 {% endblock %}

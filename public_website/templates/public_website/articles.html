@@ -1,0 +1,83 @@
+{% extends "public_website/base.html" %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {{ page_title }} | {% trans 'Sawaliram' %} {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+    #ref_data {
+        display: none;
+    }
+</style>
+
+<div class="articles-header">
+    <div class="dropdown">
+        <button class="btn sort-by-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="articleSortOptionSelector">
+            sorted by <span class="sort-by-text">{{ sort_by|capfirst }}</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="articleSortOptionSelector">
+            <span class="dropdown-item sort-by-option" data-sort="newest">{% trans 'Newest' %}</span>
+            <span class="dropdown-item sort-by-option" data-sort="oldest">{% trans 'Oldest' %}</span>
+        </div>
+    </div>
+</div>
+
+<div class="articles-container">
+    {% for article in articles %}
+        <div class="article-item">
+            {% if article.cover_image %}
+                <img class="article-cover" src="{{ article.cover_image }}" alt="Article cover image">
+            {% endif %}
+            <h2>{{ article.title }}</h2>
+                <p class="article-preview"></p>
+            <div class="article-details">
+                <span class="published-date">{{ article.published_on|date:'d M Y' }}</span>
+                <div class="credits">
+                    {% for credit in article.credits.all %}
+                        <span class="credit-name">
+                            {{ credit.credit_user_name }}{% if not forloop.last %}, {% endif %}
+                        </span>
+                    {% endfor %}
+
+                    
+                </div>
+                
+            </div>
+            <a href="{{ article.get_absolute_url }}" class="btn btn-small btn-primary read-article">Read Article</a>
+        </div>
+    {% endfor %}
+    {% if odd_article_count == 'True' %}
+        <div class="article-item empty"></div>
+    {% endif %}
+</div>
+
+<div id="ref_data">
+
+    {% for ar in stripped_articles %}
+        <span>
+            {{ ar|striptags|truncatechars:200 }}
+        </span>
+    {% endfor %}
+    
+</div>
+
+<script>
+    window.onload = () => {
+        refs = document.querySelectorAll(".article-preview");
+        target_refs = document.querySelectorAll("#ref_data > span");
+        var i = 0;
+
+        refs.forEach(el => {
+            el.textContent = target_refs[i].textContent;
+            i++;
+        });
+    }
+</script>
+
+{% endblock %}

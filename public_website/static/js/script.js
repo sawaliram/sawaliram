@@ -36,28 +36,37 @@ function closeMenusOnClickingDarkbackground() {
     });
 }
 
-function highlightSelectedVolunteerOption() {
-    $('.volunteer-option input:checkbox').change(function() {
-        if(this.checked) {
-            $(this).parent('.volunteer-option').addClass('selected');
+function setupAccessSelection() {
+    $('.access-item.selectable').click(function() {
+        $(this).find('.selected-check').toggleClass('show');
+        var access_form_field = $('input[name="' + $(this).data('permission') + '"]');
+        if (access_form_field.val() == 'false') {
+            access_form_field.val('true');
         }
         else {
-            $(this).parent('.volunteer-option').removeClass('selected');
+            access_form_field.val('false');
         }
+        enablePermissionWriteupTextarea();
     });
 }
 
-function openVolunteerOptionDialog() {
-    $('.volunteer-option input:checkbox').change(function() {
-        if(this.checked) {
-            $(this).parent('.volunteer-option').find('.volunteer-dialog textarea').prop('required', true);
-            $(this).parent('.volunteer-option').find('.volunteer-dialog').show(300);
+function enablePermissionWriteupTextarea() {
+    var permissions_toggled = false;
+    $('.access-item.selectable').each(function() {
+        if ($(this).find('.selected-check').hasClass('show')) {
+            permissions_toggled = true;
         }
         else {
-            $(this).parent('.volunteer-option').find('.volunteer-dialog textarea').prop('required', false);
-            $(this).parent('.volunteer-option').find('.volunteer-dialog').hide(300);
         }
     });
+    if (permissions_toggled == true) {
+        $('textarea.permission-writeup').prop('disabled', false);
+        $('button.submit-access-request').prop('disabled', false);
+    }
+    else {
+        $('textarea.permission-writeup').prop('disabled', true);
+        $('button.submit-access-request').prop('disabled', true);
+    }
 }
 
 function setupNavbarSearchBar() {
@@ -155,7 +164,7 @@ function processSelectedExcelSheet() {
     });
 }
 
-function setupSearchResultsPagination() {
+function setupResultsPagination() {
     $('.page-button').click(function() {
         var current_params = new URLSearchParams(location.search);
         current_params.set('page', $(this).data('page'));
@@ -163,12 +172,22 @@ function setupSearchResultsPagination() {
     });
 }
 
-function setupSearchResultsSort() {
-    $('.sort-by-option').click(function() {
-        var current_params = new URLSearchParams(location.search);
-        current_params.set('sort-by', $(this).data('sort'));
-        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
-    });
+function setupSearchResultsFilterPreservation() {
+    $('form.search').submit(function (e) {
+
+        // prevent form from submitting
+        e.preventDefault()
+
+        // get current param list
+        var params = new URLSearchParams(location.search)
+
+        // set current search string
+        var q = this.querySelector('[name=q]').value
+        params.set('q', q)
+
+        // redirect to the new page, after setting GET parameters
+        location.href = window.location.origin + window.location.pathname + '?' + params.toString()
+    })
 }
 
 function setupSearchResultsFilter() {
@@ -203,6 +222,49 @@ function setupSearchResultsFilter() {
             }
         }
     });
+}
+
+function setupUserListFilter() {
+    $('.apply-user-filter').click(function() {
+        var current_params = new URLSearchParams(location.search);
+        current_params.delete('permission');
+        current_params.delete('email');
+        current_params.delete('page');
+        $('input[name="user-permission"]:checked').each(function() {
+            current_params.append('permission', $(this).val());
+        });
+        current_params.append('email', $('input[name="verified-email"]:checked').val());
+        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
+    });
+}
+
+function setupSearchResultsMobileFilter() {
+    // display mobile filter
+    $('.mobile-filter-controls .filter-button').click(() => {
+		if ($(this).data('show-filter')) {
+			//$('.search-results').show()
+			$('.filter-sidebar').hide()
+			$(this).data('show-filter', false)
+		} else {
+			$('.filter-sidebar').show()
+			$('.filter-sidebar').css('width', '100%')
+			//$('.search-results').hide()
+			$(this).data('show-filter', true)
+		}
+	})
+}
+
+function setupSearchResultsMobileSort() {
+    // display mobile sort
+    $('.mobile-filter-controls .sort-by-button').click(() => {
+        if ($(this).data('show-menu')) {
+            $('.mobile-sort-by-popup').hide()
+            $(this).data('show-menu', false)
+        } else {
+            $('.mobile-sort-by-popup').show()
+            $(this).data('show-menu', true)
+        }
+    })
 }
 
 function setupSearchResultsClearAll() {
@@ -406,6 +468,14 @@ function setupViewNotification() {
     });
 }
 
+function updateURLOnTabSwitch() {
+    $('.nav-link').click(function() {
+        var current_url = window.location.href
+        var new_url = current_url.substring(0, current_url.indexOf('/profile/') + 9) + $(this).data('tab');
+        history.replaceState(null, '', new_url);
+    });
+}
+
 function setupHomePageCarouselRandomRhymes() {
     $('#homePageCarousel').on('slide.bs.carousel', function (event) {
         if (event.relatedTarget.classList.contains('rhyme-header')) {
@@ -452,6 +522,213 @@ function setupRemoveCredit() {
 setupAddCredit();
 setupRemoveCredit();
 
+function setupUserProfileMenuTabs() {
+
+    if ($(window).width() < 768) {
+        $('#userProfileMenuTabs .nav-link').on('show.bs.tab', function(event) {
+            $('.user-profile-content').addClass('show');
+        });
+        $('#settingsTab').removeClass('active');
+    }
+
+    $('#userProfileMenuTabs .nav-link').click(function(event) {
+        event.preventDefault();
+        $(this).tab('show');
+    });
+}
+
+function setupMobileCloseUserProfileContent() {
+
+    $('.mobile-tab-content-controls button').click(function() {
+        $('.tab-pane.active.show').removeClass('show');
+        $('.user-profile-content').removeClass('show');
+        $('.nav-link.active.show').removeClass('active');
+    });
+}
+
+function setupChooseProfilePictureModal() {
+
+    $('#changeProfilePictureModal').on('shown.bs.modal', function(event) {
+        $.ajax({
+            url: location.origin + '/get-profile-pictures-form',
+            type: 'GET',
+            success: function(response) {
+                $('#changeProfilePictureModal .choose-picture-form-container').html(response);
+            },
+            error: function(response) {
+                console.log(response);
+            },
+        });
+    });
+}
+
+function setupToggleCardDrawer() {
+
+    $('.open-card-drawer').click(function() {
+        $(this).parent('.card-controls').next('.card-drawer').css('display', 'flex');
+        $(this).hide();
+    });
+
+    $('.close-card-drawer').click(function() {
+        $(this).parent('.card-drawer').css('display', 'none');
+        $(this).parents('.card').find('.open-card-drawer').show();
+    });
+}
+
+function setupGeneralContentSort() {
+    $('.sort-by-option').click(function() {
+        var current_params = new URLSearchParams(location.search);
+        current_params.set('sort-by', $(this).data('sort'));
+        location.href = window.location.origin + window.location.pathname + '?' + current_params.toString();
+    });
+}
+
+function setupEditorToolbarSticky() {
+    const navbarHeight = $('.navbar').outerHeight();
+    const ckEditorElement = $('.editor-container .ck.ck-reset.ck-editor.ck-rounded-corners');
+    const stickyPanelElement = $('.editor-container .ck.ck-reset.ck-editor.ck-rounded-corners .ck.ck-sticky-panel');
+    const toolbarElement = stickyPanelElement.find('.ck.ck-toolbar.ck-toolbar_grouping');
+
+    window.onscroll = function() {
+        if (window.pageYOffset > ckEditorElement.offset().top - navbarHeight) {
+            stickyPanelElement.css('position', 'fixed');
+            stickyPanelElement.css('top', navbarHeight + 'px');
+            stickyPanelElement.css('width', ckEditorElement.width() + 'px');
+            stickyPanelElement.css('z-index', '1000');
+            toolbarElement.css('border-radius', '0');
+            toolbarElement.css('border-bottom', '1px solid #c4c4c4');
+        }
+        else {
+            stickyPanelElement.css('position', '');
+            stickyPanelElement.css('top', '');
+            stickyPanelElement.css('width', '');
+            stickyPanelElement.css('z-index', '');
+            toolbarElement.css('border-radius', '');
+            toolbarElement.css('border-bottom', '');
+        }
+    };
+}
+
+function initializeCKEditor() {
+    ClassicEditor
+        .create(document.querySelector( '#editor' ), {
+            toolbar: {
+                items: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedlist', 'numberedlist', 'indent', 'outdent', 'blockquote', 'horizontalline', '|', 'specialcharacters', 'mathtype', 'chemtype', 'subscript', 'superscript', '|', 'link', 'imageupload', 'inserttable', '|', 'undo', 'redo'],
+                viewportTopOffset: $('.navbar').outerHeight(),
+            },    
+            placeholder: 'Type your article here...',
+            image: {
+                toolbar: ['imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
+                styles: ['full', 'alignLeft', 'alignRight']
+            },
+            table: {
+                contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+            },
+            link: {
+                addTargetToExternalLinks: true
+            }
+        })
+        .then(editor => {
+            const wordCountPlugin = editor.plugins.get( 'WordCount' );
+            const wordCountWrapper = $('#wordCountWrapper');
+            wordCountWrapper.append(wordCountPlugin.wordCountContainer);
+            setupEditorToolbarSticky();
+        })
+        .catch(error => {
+            console.error( error );
+        });
+}
+
+function setupEditorLanguageSelector() {
+    $('.language-option').click(function() {
+        $('[name="language"]').val($(this).data('code'));
+        $('.selected-language').text($(this).text());
+    });
+}
+
+function setupCreditTitleSelector() {
+    $('.credit-title-option').click(function() {
+        $(this).parents('.dropdown').find('.selected-title').text($(this).text());
+        $(this).parents('.credit-entry').find('[name="credit-title"]').val($(this).data('title'));
+    });
+}
+
+function setupAddCreditEntry() {
+    $('.add-credit-entry').click(function() {
+        var credit_entry = $('.credit-entry:first').clone().addClass('removable').appendTo('.credit-entry-list');
+        credit_entry.find('.credit-user-name').val('').removeAttr('readonly').attr('value' ,'');
+        credit_entry.find('.credit-user-id').prop('value', '');
+        credit_entry.find('.credit-title').prop('value', 'author');
+        setupCreditTitleSelector();
+        setupRemoveCreditEntry();
+    });
+}
+
+function setupRemoveCreditEntry() {
+    $('.remove-credit-entry').click(function() {
+        $(this).parent('.credit-entry').remove();
+    });
+}
+
+function setupEditorDeleteFunctionality() {
+    $('button.editor-delete').click(function() {
+        $('.submit-container').hide();
+        $('.delete-container').show();
+    });
+
+    $('.editor-cancel-delete').click(function() {
+        $('.delete-container').hide();
+        $('.submit-container').show();
+    });
+}
+
+setupToggleCardDrawer();
+setupChooseProfilePictureModal();
+setupMobileCloseUserProfileContent();
+setupUserProfileMenuTabs();
+
+function autoResizeSelectFields() {
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Solution thanks to João Pimentel Ferreira           *
+     * in the following  StackOverflow answer:             *
+     *                                                     *
+     *     https://stackoverflow.com/a/55343177/1196444    *
+     *                                                     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    $('select').change(function(){
+        var text = $(this).find('option:selected').text()
+        var $aux = $('<select/>').append($('<option/>').text(text))
+        $(this).after($aux)
+        $(this).width($aux.width())
+        $aux.remove()
+    }).change()
+}
+
+function setupRemoveCreditEntry() {
+    $('.remove-credit-entry').click(function() {
+        $(this).parent('.credit-entry').remove();
+    });
+}
+
+function setupEditorDeleteFunctionality() {
+    $('button.editor-delete').click(function() {
+        $('.submit-container').hide();
+        $('.delete-container').show();
+    });
+
+    $('.editor-cancel-delete').click(function() {
+        $('.delete-container').hide();
+        $('.submit-container').show();
+    });
+}
+
+setupToggleCardDrawer();
+setupChooseProfilePictureModal();
+setupMobileCloseUserProfileContent();
+setupUserProfileMenuTabs();
+
 // ======== CALL GENERAL FUNCTIONS ========
 
 toggleNavbarMenu();
@@ -460,6 +737,8 @@ closeMenusOnClickingDarkbackground();
 enableLinkingtoTabs();
 setupNavbarSearchBar();
 setupSearchResultsSearch();
+setupGeneralContentSort();
+autoResizeSelectFields();
 
 // ======== CALL PAGE SPECIFIC FUNCTIONS ========
 
@@ -472,32 +751,32 @@ if (window.location.pathname.includes('/dashboard/question/submit') || window.lo
     processSelectedExcelSheet();
 }
 
+if (window.location.pathname.includes('/dashboard/manage-users')) {
+    setupUserListFilter();
+    setupResultsPagination();
+}
+
 if (
-    new RegExp("^/dashboard/translate/(articles|answers|questions)/\\d+/review").test(window.location.pathname) ||
+    new RegExp("^/dashboard/translate/(articles|answers|questions)/(\\d+/)?\\d+/(review|edit)").test(window.location.pathname) ||
+    new RegExp("^/dashboard/(article|answer)/(\\d+/)?\\d+/translate/from/(\\w+)/to/(\\w+)").test(window.location.pathname) ||
     new RegExp("^/dashboard/question/\\d+/answer/(new|\\d+)").test(window.location.pathname)
 ) {
-    setupQuillEditor({ placeholder: 'Type your answer here...' });
-    setupSubmissionLanguageSelector();
-    setupPublicationAutoFill();
-    activateTooltips();
+    initializeCKEditor();
+    setupEditorLanguageSelector();
+    setupCreditTitleSelector();
+    setupAddCreditEntry();
+    setupRemoveCreditEntry();
+    setupEditorDeleteFunctionality();
 }
 
 if (new RegExp('^/dashboard/article/\\d+/edit').test(window.location.pathname)) {
-    setupQuillEditor({});
-    activateTooltips();
+    initializeCKEditor();
+    setupEditorLanguageSelector();
+    setupCreditTitleSelector();
+    setupAddCreditEntry();
+    setupRemoveCreditEntry();
+    setupEditorDeleteFunctionality();
 }
-
-/* Breaking from tradition, this function is going intot the template so
- * that it can be better fine-tuned and generalised.
-
-if (new RegExp('^/dashboard/article/\\d+/translate/from/[A-Za-z-]+/to/[A-Za-z-]+').test(window.location.pathname)) {
-    setupQuillEditor({
-        placeholder: 'Translation goes here...',
-        inputName: 'body'
-    })
-}
-*/
-
 
 if (
     new RegExp("^/dashboard/article/\\d+/review").test(window.location.pathname) ||
@@ -505,8 +784,6 @@ if (
     new RegExp("^/dashboard/translate/articles/\\d+/review").test(window.location.pathname) ||
     new RegExp("^/dashboard/translate/answers/\\d+/review").test(window.location.pathname)
 ) {
-    // setupCommentFormDisplayToggle();
-    // setupCommentDeleteButtons();
     setupDeleteReviewComment();
 }
 
@@ -514,24 +791,27 @@ if (window.location.pathname.includes('/view-answer')) {
     setupDeleteReviewComment();
 }
 
-if (window.location.pathname.includes('/users/how-can-i-help')) {
-    highlightSelectedVolunteerOption();
-    openVolunteerOptionDialog();
+if (window.location.pathname.includes('/users/request-access')) {
+    setupAccessSelection();
 }
 
 if (
     window.location.pathname.includes('/dashboard/view-questions') ||
     window.location.pathname.includes('/dashboard/answer-questions') ||
-    window.location.pathname.includes('/dashboard/review-answers') ||
+    window.location.pathname.includes('/dashboard/review-answers') || 
+    window.location.pathname.includes('/dashboard/translate/answers') || 
     window.location.pathname.includes('/search')
    ) {
-    setupSearchResultsPagination();
-    setupSearchResultsSort();
+    setupResultsPagination();
     setupSearchResultsFilter();
+    setupSearchResultsFilterPreservation();
+    setupSearchResultsMobileFilter();
+    setupSearchResultsMobileSort();
     setupSearchResultsClearAll();
     setupBookmarkContentFunctionality();
 }
 
 if (window.location.pathname.includes('/user/')) {
     setupViewNotification();
+    updateURLOnTabSwitch();
 }

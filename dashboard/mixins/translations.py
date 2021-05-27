@@ -15,13 +15,13 @@ class TranslationMixin(models.Model):
         abstract = True
 
     language = models.CharField(max_length=100,
-        choices=settings.LANGUAGE_CHOICES,
+        choices=settings.CONTENT_LANGUAGES,
         default='en')
 
     translated_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='%(class)s',
-        on_delete=models.PROTECT)
+        on_delete=models.CASCADE)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

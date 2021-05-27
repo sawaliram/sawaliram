@@ -1,28 +1,7 @@
-<div id="editor" data-placeholder="Type your article here..." class="hr-over">
-  {{ value|safe }}
-</div>
+{% load i18n %}
+{% load to_language_name %}
 
-<div id="toolbar" class="justify-content-end hr-over">
-  <span class="ql-formats">
-    <button class="ql-bold"></button>
-    <button class="ql-italic"></button>
-    <button class="ql-underline"></button>
-  </span>
-  <span class="ql-formats">
-    <button class="ql-script" value="sub"></button>
-    <button class="ql-script" value="super"></button>
-  </span>
-  <span class="ql-formats">
-    <button class="ql-list" value="ordered"></button>
-    <button class="ql-list" value="bullet"></button>
-    <button class="ql-indent" value="-1"></button>
-    <button class="ql-indent" value="+1"></button>
-  </span>
-  <span class="ql-formats">
-    <button class="ql-blockquote"></button>
-    <button class="ql-link"></button>
-    <button class="ql-image"></button>
-    <button class="ql-video"></button>
-    <button class="ql-formula"></button>
-  </span>
-</div>
+<textarea id="editor"  name="{% if name is not None %}{{ name }}{% else %}rich-text-content{% endif %}" data-placeholder="{% trans 'Type your article here...' %}" class="{% if class is not None %}{{ class }}{% else %}hr-over{% endif %}">
+  {{ value|safe }}
+</textarea>
+<div id="wordCountWrapper"></div>

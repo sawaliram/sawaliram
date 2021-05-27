@@ -2,6 +2,7 @@
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -16,10 +17,17 @@ SECRET_KEY = os.environ.get('sawaliram_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('sawaliram_debug_value') == 'True'
 
-ALLOWED_HOSTS = ['10.10.9.33', '117.198.100.10', '.sawaliram.org', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    '10.10.9.33',
+    '10.1.0.49',
+    '117.198.100.10',
+    '.sawaliram.org',
+    '127.0.0.1',
+    'localhost',
+]
 
+# SSL/HTTPS Configuration
 if not DEBUG:
-    # SSL/HTTPS Configuration
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
@@ -31,6 +39,7 @@ INSTALLED_APPS = [
     'public_website.apps.PublicWebsiteConfig',
     'sawaliram_auth.apps.SawaliramAuthConfig',
     'dashboard.apps.DashboardConfig',
+    'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -87,6 +96,26 @@ DATABASES = {
     }
 }
 
+# Cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'localhost:11211',
+        'TIMEOUT': None,
+    }
+}
+
+# Celery
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+CELERY_BEAT_SCHEDULE = {
+    'update-dashboard-tasks-stats': {
+        'task': 'dashboard.tasks.updateDashboardTasksStats',
+        'schedule': crontab(minute=0, hour='*/1'),
+        'args': (),
+    }
+}
+
 # Custom Auth System settings
 AUTH_USER_MODEL = 'sawaliram_auth.User'
 LOGIN_URL = '/users/signin'
@@ -96,6 +125,17 @@ sentry_sdk.init(
     dsn="https://06e228b93d3644cd83a7d6b4ff1e66a1@sentry.io/1434408",
     integrations=[DjangoIntegration()]
 )
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.tifrh.res.in'
+EMAIL_HOST_USER = 'nitinpaul@tifrh.res.in'
+EMAIL_PORT = 25
+
+
+#CAPTCHA
+GOOGLE_RECAPTCHA_SITE_KEY = os.environ.get('GOOGLE_SITE_KEY')
+GOOGLE_RECAPTCHA_SECRET_KEY = os.environ.get('GOOGLE_SECRET_KEY')
 
 
 # Password validation
@@ -184,7 +224,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
-
-if os.environ.get('environment') == 'heroku':
-    import django_heroku
-    django_heroku.settings(locals())

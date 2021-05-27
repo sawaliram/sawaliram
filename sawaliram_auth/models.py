@@ -30,7 +30,7 @@ class UserManager(BaseUserManager):
         Creates and saves a user as superuser
         """
         email = self.normalize_email(email)
-        user = self.create_user('Super', 'User', email, password)
+        user = self.create_user('Super', 'User', 'Sawaliram', email, password)
         user.is_staff()
         user.is_superuser = True
         user.save()
@@ -47,6 +47,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     organisation = models.CharField(max_length=200, default='')
     organisation_role = models.CharField(max_length=50, null=True, blank=True)
     intro_text = models.CharField(max_length=300, null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True, null=True)
 
     objects = UserManager()
 
@@ -72,13 +74,35 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_superuser
 
 
+class Profile(models.Model):
+    """Define the data model for user profile"""
+
+    class Meta:
+        db_table = 'user_profile'
+
+    profile_picture = models.CharField(max_length=100, null=True)
+    profile_picture_bg = models.CharField(max_length=100, null=True)
+    verification_code = models.TextField(null=True)
+    verification_code_expiry = models.DateTimeField(null=True)
+    password_reset_code = models.TextField(null=True)
+    password_reset_code_expiry = models.DateTimeField(null=True)
+    email_verified = models.BooleanField(default=False)
+    user = models.OneToOneField(
+        'sawaliram_auth.User',
+        related_name='profile',
+        on_delete=models.CASCADE
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+
 class VolunteerRequest(models.Model):
     """Define the data model for a volunteer request by a user"""
 
     class Meta:
         db_table = 'volunteer_request'
 
-    permission_requested = models.CharField(max_length=50)
+    permissions_requested = models.CharField(max_length=50)
     request_text = models.TextField(null=True)
     status = models.CharField(max_length=50, default='pending')
     requested_by = models.ForeignKey(
@@ -99,7 +123,7 @@ class Bookmark(models.Model):
     question = models.ForeignKey(
         'dashboard.Question',
         related_name='bookmarks',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
         blank=True,
         null=True)

@@ -2,31 +2,46 @@
 
 {% load static %}
 
-{% block title %} Sign-up | Sawaliram {% endblock %}
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {% trans 'Sign-up' %} | {% trans 'Sawaliram' %} {% endblock %}
 
 {% block content %}
 
 <div class="row onboarding-form-section">
     <div class="col-md onboarding-text-column">
-        <h1>Welcome to the Sawaliram family!</h1>
+        <h1>{% trans 'Welcome to the Sawaliram family!' %}</h1>
         <p>
+        {% blocktrans %}
             Hi there,<br>
             Thanks for volunteering to help with answering, translating or collecting questions, and managing the Sawaliram site. I’m sure you will enjoy the innocent, yet deep and wonderful questions that children ask, just as much as I do!<br>
             <br>
             Warmly,<br>
             Sawaliram
+        {% endblocktrans %}
         </p>
         <p class="signin-message">
-            Already a member? <a href="{% url 'sawaliram_auth:signin' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="link-secondary">Sign in!</a>
+            {% trans 'Already a member?' %} <a href="{% url 'sawaliram_auth:signin' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="link-secondary">{% trans 'Sign in!' %}</a>
         </p>
     </div>
     <div class="col-md onboarding-form-column">
+        {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+            {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+        {% endif %}
         <form action="{% url 'sawaliram_auth:signup' %}" method="POST">
             {% csrf_token %}
             {% for field in form %}
                 {% if form.errors %}
                     {% for error in field.errors %}
-                        <p class="error">{{ error|escape }}</p>
+                        <p class="form-error">{{ error|escape }}</p>
                     {% endfor %}
                 {% endif %}
                 <span class="{% if field.errors %}error-field{% endif %}">
@@ -34,10 +49,13 @@
                 </span>
             {% endfor %}
             <datalist id="organisationChoices">
-                <option value="TIFR Centre for Interdisciplinary Sciences, Hyderabad"></option>
-                <option value="Eklavya"></option>
-                <option value="Homi Bhabha Centre for Science Education"></option>
+                <option value="{% trans 'TIFR Centre for Interdisciplinary Sciences, Hyderabad' %}"></option>
+                <option value="{% trans 'Eklavya' %}"></option>
+                <option value="{% trans 'Homi Bhabha Centre for Science Education' %}"></option>
             </datalist>
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            <div class="g-recaptcha" data-sitekey="{{recaptcha_site_key}}"></div>
+            <br>
             <input class="btn btn-primary" type="submit" value="Sign-up">
         </form>
         <!-- <p class="alternate-login-options-heading"><span>or sign-up with</span></p>

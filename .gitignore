@@ -2,16 +2,18 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+db.sqlite3
 # C extensions
 *.so
-
+local_manage.py
+core/settingslocal.py
 # Distribution / packaging
 .Python
 build/
 develop-eggs/
 dist/
 downloads/
+suggestions/
 eggs/
 .eggs/
 lib/

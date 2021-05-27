@@ -2,6 +2,11 @@
 
 import random
 import os
+import urllib
+
+from datetime import datetime
+
+from django.utils.translation import gettext as _
 
 from django import forms
 from django.shortcuts import (
@@ -10,9 +15,13 @@ from django.shortcuts import (
     get_object_or_404,
 )
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import get_language_info
 from django.utils.decorators import method_decorator
-from django.db.models import Subquery, Q
+from django.db.models import Q, Subquery
+from django.core.paginator import Paginator
+from django.contrib.contenttypes.models import ContentType
 from django.views import View
 from django.views.generic import (
     DetailView,
@@ -20,10 +29,9 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from django import forms
 from django.http import (
     HttpResponse,
-    Http404, # Page Not found
+    Http404,
 )
 from django.contrib import messages
 from django.core.exceptions import (
@@ -32,6 +40,7 @@ from django.core.exceptions import (
     SuspiciousOperation,
     ImproperlyConfigured,
 )
+from django.core.cache import cache
 from django.urls import reverse
 
 from django.conf import settings
@@ -49,6 +58,7 @@ from dashboard.models import (
     SubmittedTranslatedQuestion,
     Answer,
     AnswerCredit,
+    ArticleCredit,
     AnswerTranslation,
     DraftAnswerTranslation,
     SubmittedAnswerTranslation,
@@ -63,7 +73,8 @@ from dashboard.models import (
     DraftArticleTranslation,
     Comment,
     Dataset)
-from sawaliram_auth.models import Notification, User
+
+from sawaliram_auth.models import Notification, User, VolunteerRequest
 from public_website.views import SearchView
 
 import pandas as pd
@@ -78,9 +89,21 @@ class DashboardHome(View):
 
     def get(self, request):
         """Return the dashboard home view."""
+
+        tasks_stats = {
+            'total_users': cache.get('total_users', 0),
+            'pending_access_requests': cache.get('pending_access_requests', 0),
+            'new_datasets': cache.get('new_datasets', 0),
+            'submitted_articles': cache.get('submitted_articles', 0),
+            'unanswered_questions': cache.get('unanswered_questions', 0),
+            'unreviewed_answers': cache.get('unreviewed_answers', 0),
+            'total_questions': cache.get('total_questions', 0),
+            'items_to_translate': cache.get('items_to_translate', 0),
+            'published_articles': cache.get('published_articles', 0),
+        }
         context = {
-            'grey_background': 'True',
-            'page_title': 'Dashboard Home',
+            'page_title': _('Dashboard Home'),
+            'tasks_stats': tasks_stats,
             'enable_breadcrumbs': 'Yes'
         }
         return render(request, 'dashboard/home.html', context)
@@ -96,7 +119,7 @@ class SubmitQuestionsView(View):
         """Return the submit questions view."""
         context = {
             'grey_background': 'True',
-            'page_title': 'Submit Questions',
+            'page_title': _('Submit Questions'),
             'enable_breadcrumbs': 'Yes',
         }
         return render(request, 'dashboard/submit-questions.html', context)
@@ -181,10 +204,10 @@ class SubmitQuestionsView(View):
         excel_sheet.to_excel(writer, 'Sheet 1')
         writer.save()
 
-        messages.success(request, 'Thank you for the questions! We will get to work preparing the questions to be answered and translated.')
+        messages.success(request, (_('Thank you for the questions! We will get to work preparing the questions to be answered and translated.')))
         context = {
             'grey_background': 'True',
-            'page_title': 'Submit Questions',
+            'page_title': _('Submit Questions'),
             'enable_breadcrumbs': 'Yes',
         }
         return render(request, 'dashboard/submit-questions.html', context)
@@ -259,7 +282,118 @@ class ValidateNewExcelSheet(View):
 
         return HttpResponse(response)
 
-# Manage Content
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class ManageUsersView(View):
+    def get(self, request):
+        users = User.objects.all().order_by('profile__created_on')
+        all_user_count = len(users)
+
+        access_requests = VolunteerRequest.objects.filter(status='pending')
+
+        permissions_to_filter_by = [urllib.parse.unquote(item) for item in request.GET.getlist('permission')]
+        if permissions_to_filter_by:
+            users = users.filter(groups__name__in=permissions_to_filter_by)
+
+        filter_by_email = request.GET.get('email')
+        if filter_by_email:
+            if request.GET.get('email') == 'verified':
+                users = users.filter(profile__email_verified=True)
+            elif request.GET.get('email') == 'unverified':
+                users = users.filter(Q(profile__email_verified=False) | Q(profile__isnull=True))
+
+        sort_by = request.GET.get('sort-by', 'newest')
+        if sort_by == 'newest':
+            users = users.order_by('-profile__created_on')
+
+        # remove duplicate results
+        users = users.distinct()
+
+        # search
+        search_query = ''
+        if 'q' in request.GET and request.GET.get('q') != '':
+            search_query = request.GET.get('q')
+
+            # search by ID
+            if search_query.isdigit():
+                users = users.filter(pk=int(search_query))
+            else:
+                # search by Name/Organisation
+                keyword_list = search_query.split(' ')
+                Q_object = Q(first_name__icontains=keyword_list[0]) | Q(last_name__icontains=keyword_list[0]) | Q(organisation__icontains=keyword_list[0])
+                for keyword in keyword_list[1:]:
+                    Q_object.add((Q(first_name__icontains=keyword_list[0]) | Q(last_name__icontains=keyword_list[0]) | Q(organisation__icontains=keyword_list[0])), Q_object.connector)
+                users = users.filter(Q_object)
+
+        # get total result size
+        result_size = len(users)
+
+        # paginate users list
+        paginated_user_list = Paginator(users, 30)
+        page = request.GET.get('page', 1)
+        user_list_page = paginated_user_list.get_page(page)
+
+        context = {
+            'users': user_list_page,
+            'all_user_count': all_user_count,
+            'result_size': result_size,
+            'sort_by': sort_by,
+            'permissions_to_filter_by': permissions_to_filter_by,
+            'filter_by_email': filter_by_email,
+            'search_query': search_query,
+            'access_requests': access_requests,
+            'page_title': _('Manage Users'),
+            'enable_breadcrumbs': 'Yes',
+            'grey_background': 'True'
+        }
+
+        # get active tab
+        if 'active_tab' in request.session:
+            context['active_tab'] = request.session['active_tab']
+            del request.session['active_tab']
+
+        return render(request, 'dashboard/manage-users.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class ChangeUserPermissions(View):
+    def post(self, request):
+        granted_permissions = request.POST.getlist('granted-permissions')
+        permissions = ['admins', 'reviewers', 'experts', 'writers', 'translators', 'volunteers']
+        user = User.objects.get(id=request.POST.get('user-id'))
+
+        for permission in permissions:
+            if permission in granted_permissions:
+                Group.objects.get(name=permission).user_set.add(user)
+                # remove pending volunteer request, if any
+                pending_requests = VolunteerRequest.objects \
+                                                   .filter(requested_by_id=user.id) \
+                                                   .filter(permissions_requested=permission) \
+                                                   .filter(status='pending')
+                if pending_requests:
+                    for pending_request in pending_requests:
+                        pending_request.status = 'processed'
+                        pending_request.save()
+            else:
+                pass
+                Group.objects.get(name=permission).user_set.remove(user)
+
+        messages.success(request, (_('User permissions updated for ' + user.first_name + ' ' + user.last_name)))
+        return redirect(request.META['HTTP_REFERER'])
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class DeleteUser(View):
+    def post(self, request):
+        user = User.objects.get(id=request.POST.get('user-id'))
+        user.delete()
+
+        messages.success(request, (_('User ' + user.first_name + ' ' + user.last_name + ' has been deleted')))
+        return redirect(request.META['HTTP_REFERER'])
+
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
@@ -270,15 +404,17 @@ class ManageContentView(View):
         articles = (SubmittedArticle
             .objects.all().order_by('-updated_on'))
         article_translations = (SubmittedArticleTranslation
-            .objects.all()
+            .objects
+            .exclude(translated_by=request.user)
             .order_by('-updated_on'))
         answer_translations = (SubmittedAnswerTranslation
-            .objects.all()
+            .objects
+            .exclude(translated_by=request.user)
             .order_by('-updated_on'))
 
         context = {
             'grey_background': 'True',
-            'page_title': 'Manage Content',
+            'page_title': _('Manage Content'),
             'enable_breadcrumbs': 'Yes',
             'datasets': datasets,
             'articles': articles,
@@ -338,6 +474,8 @@ class ValidateCuratedExcelSheet(View):
                 row_errors.append('Question field cannot be empty')
             if row['Question Language'] != row['Question Language']:
                 row_errors.append('Question Language field cannot be empty')
+            if len(row['Question Language']) != 2:
+                row_errors.append('Question Language must be an ISO 639-1 code')
             if row['Context'] != row['Context']:
                 row_errors.append('Context field cannot be empty')
             if row['Published (Yes/No)'] == 'Yes' and row['Publication Name'] != row['Publication Name']:
@@ -399,23 +537,23 @@ class CurateDataset(View):
         try:
             dataset = Dataset.objects.get(id=dataset_id)
         except ObjectDoesNotExist:
-            messages.error(request, 'We could not find that dataset by ID. Make sure you did not edit any other field except "Field of Interest"')
+            messages.error(request, (_('We could not find that dataset by ID. Make sure you did not edit any other field except "Field of Interest"')))
 
             datasets = Dataset.objects.all().order_by('-created_on')
             context = {
                 'grey_background': 'True',
-                'page_title': 'Manage Content',
+                'page_title': _('Manage Content'),
                 'datasets': datasets
             }
             return render(request, 'dashboard/manage-content.html', context)
 
         if dataset.status == 'curated':
-            messages.error(request, 'This dataset is already curated. Make sure you are uploading the correct file.')
+            messages.error(request, (_('This dataset is already curated. Make sure you are uploading the correct file.')))
 
             datasets = Dataset.objects.all().order_by('-created_on')
             context = {
                 'grey_background': 'True',
-                'page_title': 'Manage Content',
+                'page_title': _('Manage Content'),
                 'datasets': datasets
             }
             return render(request, 'dashboard/manage-content.html', context)
@@ -457,12 +595,12 @@ class CurateDataset(View):
         dataset.save()
 
         # return to Manage Content and show success message
-        messages.success(request, 'Questions saved successfully! These will now be available for answering and translation.')
+        messages.success(request, (_('Questions saved successfully! These will now be available for answering and translation.')))
 
         datasets = Dataset.objects.all().order_by('-created_on')
         context = {
             'grey_background': 'True',
-            'page_title': 'Manage Content',
+            'page_title': _('Manage Content'),
             'datasets': datasets
         }
         return render(request, 'dashboard/manage-content.html', context)
@@ -471,22 +609,13 @@ class CurateDataset(View):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class ViewQuestionsView(SearchView):
-    def get_queryset(self, request):
-        if 'q' in request.GET:
-            return Question.objects.filter(
-                    Q(question_text__icontains=request.GET.get('q')) |
-                    Q(question_text_english__icontains=request.GET.get('q')) |
-                    Q(school__icontains=request.GET.get('q')) |
-                    Q(area__icontains=request.GET.get('q')) |
-                    Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q')) |
-                    Q(published_source__icontains=request.GET.get('q'))
-            )
-        else:
-            return Question.objects.all()
+    def get_querysets(self, request):
+        results = {}
+        results['questions'] = Question.objects.all()
+        return results
 
     def get_page_title(self, request):
-        return 'View Questions'
+        return _('View Questions')
 
     def get_enable_breadcrumbs(self, request):
         return 'Yes'
@@ -495,59 +624,122 @@ class ViewQuestionsView(SearchView):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class AnswerQuestions(SearchView):
-    def get_queryset(self, request):
-        if 'q' in request.GET:
-            query_set = Question.objects.exclude(id__in=Subquery(
-                                    Answer.objects.all().values('question_id')))
-            return query_set.filter(
-                    Q(question_text__icontains=request.GET.get('q')) |
-                    Q(question_text_english__icontains=request.GET.get('q')) |
-                    Q(school__icontains=request.GET.get('q')) |
-                    Q(area__icontains=request.GET.get('q')) |
-                    Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q')) |
-                    Q(published_source__icontains=request.GET.get('q'))
-            )
+    def get_querysets(self, request):
+        '''
+        Returns a dict of querysets, one for each data type
+        '''
+
+        results = {}
+
+        if hasattr(self, 'get_queryset'):
+            warnings.warn('get_queryset is deprecated. Please use get_querysets instead.')
+
+            results['questions'] = self.get_queryset(request)
+            return results
+
+        filters = self.filters
+        search_categories = filters.get('search_categories', [])
+
+
+        if not search_categories:
+            search_categories.append('questions')
+
+
+        if 'q' in request.GET and request.GET.get('q') != '':
+            if not search_categories:
+                results['questions'] = Question.objects.filter(
+                            Q(pk__iexact=request.GET.get('q')) |
+                            Q(question_text__search=request.GET.get('q')) |
+                            Q(question_text_english__search=request.GET.get('q')) |
+                            Q(school__search=request.GET.get('q')) |
+                            Q(area__search=request.GET.get('q')) |
+                            Q(state__search=request.GET.get('q')) |
+                            Q(field_of_interest__search=request.GET.get('q')) |
+                            Q(published_source__search=request.GET.get('q'))
+                        )
+
+            else:
+                if 'questions' in search_categories:
+                    results['questions'] = Question.objects.filter(
+                            Q(pk__iexact=request.GET.get('q')) |
+                            Q(question_text__search=request.GET.get('q')) |
+                            Q(question_text_english__search=request.GET.get('q')) |
+                            Q(school__search=request.GET.get('q')) |
+                            Q(area__search=request.GET.get('q')) |
+                            Q(state__search=request.GET.get('q')) |
+                            Q(field_of_interest__search=request.GET.get('q')) |
+                            Q(published_source__search=request.GET.get('q'))
+                        )
+                else:
+                    results['questions'] = Question.objects.none()
+
         else:
-            return Question.objects.exclude(id__in=Subquery(
-                                    Answer.objects.all().values('question_id')))
+            if 'questions' in search_categories:
+                results['questions'] = Question.objects.all()
+            else:
+                results['questions'] = Question.objects.none()
+
+        return results
+
+
+    def set_filters(self, params):
+        filters = super().set_filters(params)
+
+        if len(filters['question_categories']) == 0:
+            if 'questions' not in params:
+                filters['question_categories'].append('unanswered')
+
+        self.filters = filters
+        return filters
+
+    def get_search_query(self, request):
+        """
+        Returns the search query
+        """
+        if 'q' in request.GET:
+            return request.GET.get('q')
+        else:
+            return ""
 
     def get_page_title(self, request):
-        return 'Answer Questions'
+        return _('Answer Questions')
 
     def get_enable_breadcrumbs(self, request):
         return 'Yes'
 
 
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class ReviewAnswersList(SearchView):
-    def get_queryset(self, request):
+    def get_querysets(self, request):
+        results = {}
         if 'q' in request.GET:
             query_set = Question.objects.filter(
-                                answers__approved_by__isnull=True,
-                                answers__submitted_by__isnull=False,
+                                answers__status='submitted',
                             ).exclude(
                                 answers__submitted_by=request.user,
                             ).distinct()
-            return query_set.filter(
-                    Q(question_text__icontains=request.GET.get('q')) |
-                    Q(question_text_english__icontains=request.GET.get('q')) |
-                    Q(school__icontains=request.GET.get('q')) |
-                    Q(area__icontains=request.GET.get('q')) |
-                    Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q'))
+            results['questions'] = query_set.filter(
+                    Q(question_text__search=request.GET.get('q')) |
+                    Q(question_text_english__search=request.GET.get('q')) |
+                    Q(school__search=request.GET.get('q')) |
+                    Q(area__search=request.GET.get('q')) |
+                    Q(state__search=request.GET.get('q')) |
+                    Q(field_of_interest__search=request.GET.get('q'))
             )
+            return results
         else:
-            return Question.objects.filter(
-                            answers__approved_by__isnull=True,
-                            answers__submitted_by__isnull=False,
+            results['questions'] = Question.objects.filter(
+                            answers__status='submitted',
                         ).exclude(
                             answers__submitted_by=request.user,
                         ).distinct()
 
+            return results
+
     def get_page_title(self, request):
-        return 'Review Answers'
+        return _('Review Answers')
 
     def get_enable_breadcrumbs(self, request):
         return 'Yes'
@@ -580,19 +772,27 @@ class SubmitAnswerView(View):
             'question': question_to_answer,
             'grey_background': 'True',
             'enable_breadcrumbs': 'Yes',
-            'page_title': 'Submit Answer',
+            'page_title': _('Submit Answer'),
             'prev_item_id': prev_item_id,
             'next_item_id': next_item_id,
             'submission_mode': 'submit'
         }
 
+        # Prefill draft answer if in edit mode
+        if request.GET.get('mode') == 'edit':
+            try:
+                draft_answer = Answer.objects.get(pk=request.GET.get('answer'))
+                if draft_answer:
+                    context['draft_answer'] = draft_answer
+            except Answer.DoesNotExist:
+                pass
+
         # Prefill draft answer, if any
         try:
-            if request.GET.get('mode') == 'edit':
-                context['draft_answer'] = Answer.objects.get(pk=request.GET.get('answer'))
-            else:
-                context['draft_answer'] = request.user.answers.get(
+            draft_answer = request.user.answers.get(
                     question_id=question_to_answer, status='draft')
+            if draft_answer:
+                context['draft_answer'] = draft_answer
         except Answer.DoesNotExist:
             pass
 
@@ -618,19 +818,21 @@ class SubmitAnswerView(View):
             'question': question_to_answer,
             'grey_background': 'True',
             'enable_breadcrumbs': 'Yes',
-            'page_title': 'Submit Answer',
+            'prev_item_id': prev_item_id,
+            'next_item_id': next_item_id,
+            'page_title': _('Submit Answer'),
         }
 
         if request.POST.get('mode') == 'draft':
             # Save draft
 
             # Fetch or create draft
-            draft, createdp = request.user.answers.get_or_create(
+            draft, created = request.user.answers.get_or_create(
                 question_id=question_to_answer, status='draft')
 
             # Update values and save
             draft.answer_text = request.POST.get('rich-text-content')
-            draft.language = LANGUAGE_CODES[request.POST.get('submission-language')]
+            draft.language = request.POST.get('language')
             draft.submitted_by = request.user
             draft.save()
 
@@ -654,14 +856,12 @@ class SubmitAnswerView(View):
                 credit.save()
 
             # show success message to the user
-            messages.success(request, ('Your answer has been saved!'
+            messages.success(request, (_('Your answer has been saved!'
                 ' You can return to this page any time to '
-                'continue editing, or go to "Drafts" in your User Profile.'))
+                'continue editing, or go to "Drafts" in your User Profile.')))
 
             # Set draft in context to re-display
             context['draft_answer'] = draft
-            context['prev_item_id'] = prev_item_id
-            context['next_item_id'] = next_item_id
 
             return render(request, 'dashboard/submit-answer.html', context)
 
@@ -675,7 +875,7 @@ class SubmitAnswerView(View):
                 answer.status = 'submitted'
 
             answer.answer_text = request.POST.get('rich-text-content')
-            answer.language = LANGUAGE_CODES[request.POST.get('submission-language')]
+            answer.language = request.POST.get('language')
             answer.save()
 
             # Save credits
@@ -699,7 +899,7 @@ class SubmitAnswerView(View):
 
             # show message to the user
             if request.POST.get('mode') == 'edit':
-                messages.success(request, ('Your answer has been updated!'))
+                messages.success(request, (_('Your answer has been updated!')))
 
                 # create notifications for users who commented on the answer
                 commentor_id_list = list(answer.comments.all()
@@ -720,11 +920,15 @@ class SubmitAnswerView(View):
                     )
                     edit_notification.save()
 
-                return redirect('dashboard:review-answer', question_id=question_to_answer.id, answer_id=answer.id)
             else:
-                messages.success(request, ('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!'))
+                messages.success(request, (_('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!')))
 
-            if next_item_id:
+            if request.POST.get('mode') == 'edit' and answer.status == 'draft':
+                context['draft_answer'] = answer
+                return render(request, 'dashboard/submit-answer.html', context)
+            elif request.POST.get('mode') == 'edit' and answer.status == 'submitted':
+                return redirect('dashboard:review-answer', question_id=question_to_answer.id, answer_id=answer.id)
+            elif request.POST.get('mode') == 'submit' and next_item_id:
                 question_to_answer = Question.objects.get(pk=next_item_id)
                 context['prev_item_id'] = prev_item_id
                 context['next_item_id'] = next_item_id
@@ -753,8 +957,7 @@ class ReviewAnswerView(View):
             'answer': answer,
             'comments': answer.comments.all(),
             'comment_form': CommentForm(),
-            'grey_background': 'True',
-            'page_title': 'Submit Review',
+            'page_title': _('Submit Review'),
             'enable_breadcrumbs': 'Yes'
         }
 
@@ -775,17 +978,19 @@ class ApproveAnswerView(View):
             answer_id=answer_id)
 
     def post(self, request, question_id, answer_id):
-        """Mark the answer as approved"""
+        """
+        Mark the answer as approved
+        """
 
         try:
             answer = Answer.objects.get(
                 pk=answer_id,
-                approved_by__isnull=True)
+                status='submitted')
         except Answer.DoesNotExist:
-            raise Http404('Answer does not exist')
+            raise Http404(_('Answer does not exist'))
 
         if request.user == answer.submitted_by:
-            raise PermissionDenied('You cannot approve your own answer')
+            raise PermissionDenied(_('You cannot approve your own answer'))
 
         if request.method != 'POST':
             return redirect(
@@ -794,14 +999,16 @@ class ApproveAnswerView(View):
                 answer_id=answer_id)
 
         answer.approved_by = request.user
+        answer.status = 'published'
+        answer.published_on = datetime.now()
         answer.save()
 
-        messages.success(request, ('Thanks ' + request.user.first_name + ' for publishing the answer, it will now be visible to all users'))
+        messages.success(request, (_('Thanks ' + request.user.first_name + ' for publishing the answer, it will now be visible to all users')))
 
         question_answered = Question.objects.get(pk=question_id)
 
         # create notification for user who submitted the answer
-        if question_answered.language.lower() != 'english':
+        if question_answered.language.lower() != 'en':
             question_text = question_answered.question_text_english
         else:
             question_text = question_answered.question_text
@@ -809,7 +1016,7 @@ class ApproveAnswerView(View):
         published_notification = Notification(
             notification_type='published',
             title_text=str(request.user.get_full_name()) + ' published your answer',
-            description_text="Your answer for question '" + question_text + "'",
+            description_text="Your answer to the question '" + question_text + "'",
             target_url=reverse('public_website:view-answer', kwargs={'question_id': question_answered.id, 'answer_id': answer.id}),
             user=answer.submitted_by
         )
@@ -823,7 +1030,7 @@ class ApproveAnswerView(View):
             # do not create notification for the user who is publishing
             # the answer
             if max(commentor_id) != request.user.id:
-                if question_answered.language.lower() != 'english':
+                if question_answered.language.lower() != 'en':
                     question_text = question_answered.question_text_english
                 else:
                     question_text = question_answered.question_text
@@ -839,8 +1046,32 @@ class ApproveAnswerView(View):
 
         return redirect('dashboard:review-answers')
 
-# Write Articles
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteSubmittedAnswer(View):
+
+    def post(self, request, answer_id):
+        """
+        Delete submitted answers (non-published)
+        """
+        try:
+            answer = Answer.objects.get(
+                pk=answer_id,
+                status='submitted')
+        except Answer.DoesNotExist:
+            raise Http404(_('Answer does not exist'))
+
+        if answer.submitted_by == request.user:
+            answer.delete()
+        else:
+            raise PermissionDenied(_('You can only delete your own answers.'))
+
+        messages.success(request, 'The submitted answer has been deleted')
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='submissions')
+
+
+# Write Articles
 def create_article(request):
     '''
     Create a blank draft and redirect to WriteArticleView
@@ -851,6 +1082,7 @@ def create_article(request):
     return redirect(reverse('dashboard:edit-article',
       kwargs={'draft_id': draft.id}))
 
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class EditArticleView(View):
@@ -859,7 +1091,7 @@ class EditArticleView(View):
     '''
 
     model = ArticleDraft
-    template = 'dashboard/articles/edit.html'
+    template = 'dashboard/articles/write-article.html'
     success_message = 'Thanks! Your article has been submitted.'
     draft_save_message = 'Your changes have been saved.'
 
@@ -893,12 +1125,14 @@ class EditArticleView(View):
         '''
 
         article = self.get_article(draft_id)
+        article_drafts = ArticleDraft.objects.filter(author=request.user)
         context = {
             'article': article,
+            'article_drafts': article_drafts,
             'grey_background': 'True',
-            'page_title': 'Write Article',
+            'page_title': _('Write Article'),
             'enable_breadcrumbs': 'Yes',
-            'language_choices': settings.LANGUAGE_CHOICES,
+            'language_choices': settings.CONTENT_LANGUAGES,
         }
 
         return render(request, self.template, context)
@@ -909,11 +1143,13 @@ class EditArticleView(View):
         '''
 
         article = self.get_article(draft_id)
+        article_drafts = ArticleDraft.objects.filter(author=request.user)
         context = {
             'article': article,
+            'article_drafts': article_drafts,
             'grey_background': 'True',
-            'language_choices': settings.LANGUAGE_CHOICES,
-            'page_title': 'Write Article',
+            'language_choices': settings.CONTENT_LANGUAGES,
+            'page_title': _('Write Article'),
             'enable_breadcrumbs': 'Yes'
         }
 
@@ -922,6 +1158,25 @@ class EditArticleView(View):
         article.language = request.POST.get('language')
 
         if request.POST.get('mode') == 'draft':
+
+            # Save credits
+            # delete existing credits for the answer, if any
+            for credit in article.credits.all():
+                credit.delete()
+
+            credit_titles = request.POST.getlist('credit-title')
+            credited_user_names = request.POST.getlist('credit-user-name')
+            credited_user_ids = request.POST.getlist('credit-user-id')
+
+            for i in range(len(credited_user_names)):
+                credit = ArticleCredit()
+                credit.credit_title = credit_titles[i]
+                credit.credit_user_name = credited_user_names[i]
+                if credited_user_ids[i]:
+                    credit.is_user = True
+                    credit.user = User.objects.get(pk=credited_user_ids[i])
+                credit.article = article
+                credit.save()
 
             article.save()
 
@@ -938,11 +1193,30 @@ class EditArticleView(View):
             # Get and submit article
             submitted_article = self.submit_article(article)
 
+            # Save credits
+            # delete existing credits for the answer, if any
+            for credit in submitted_article.credits.all():
+                credit.delete()
+
+            credit_titles = request.POST.getlist('credit-title')
+            credited_user_names = request.POST.getlist('credit-user-name')
+            credited_user_ids = request.POST.getlist('credit-user-id')
+
+            for i in range(len(credited_user_names)):
+                credit = ArticleCredit()
+                credit.credit_title = credit_titles[i]
+                credit.credit_user_name = credited_user_names[i]
+                if credited_user_ids[i]:
+                    credit.is_user = True
+                    credit.user = User.objects.get(pk=credited_user_ids[i])
+                credit.article = submitted_article
+                credit.save()
+
             messages.success(request, self.success_message)
             return redirect('dashboard:review-article', article=submitted_article.id)
 
         else:
-            raise SuspiciousOperation('Are you trying to save draft or submit?')
+            raise SuspiciousOperation(_('Are you trying to save draft or submit?'))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -971,20 +1245,45 @@ class DeleteArticleView(View):
 
     def post(self, request, article):
         """
-        Delete a previously published comment on an answer
+        Deletes selected draft article
         """
 
         article = self.fetch_article(article)
 
         if request.user != article.author:
-            raise PermissionDenied('You are not authorised to delete that comment.')
+            raise PermissionDenied(_('You are not authorised to delete this article.'))
 
         article.delete()
 
-        return redirect('dashboard:home')
+        messages.success(request, 'The draft article has been deleted')
+
+        if request.POST.get('origin') == 'write-article':
+            return redirect('dashboard:home')
+
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='drafts')
+
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('admins'), name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class DeleteSubmittedArticle(View):
+
+    def post(self, request, article_id):
+        """
+        Deletes submitted article
+        """
+        article = get_object_or_404(SubmittedArticle, id=article_id)
+
+        if request.user != article.author:
+            raise PermissionDenied(_('You can only delete your own articles.'))
+
+        article.delete()
+
+        messages.success(request, 'The submitted article has been deleted')
+        return redirect('public_website:user-profile', user_id=request.user.id, active_tab='submissions')
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
 class ReviewSubmittedArticleView(View):
     '''
     Add updates to a submitted article
@@ -999,12 +1298,13 @@ class ReviewSubmittedArticleView(View):
             'article': article,
             'grey_background': 'True',
             'comments': article.comments.all(),
-            'page_title': 'Review Article',
+            'page_title': _('Review Article'),
             'comment_form': CommentForm(),
             'enable_breadcrumbs': 'Yes'
         }
 
         return render(request, self.template, context)
+
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('admins'), name='dispatch')
@@ -1024,20 +1324,21 @@ class ApproveSubmittedArticleView(View):
 
         # Check that the publisher is not the author
         if article.author == request.user:
-            raise PermissionDenied('You cannot publish your own article.')
+            raise PermissionDenied(_('You cannot publish your own article.'))
 
         a = article.publish(request.user)
 
         messages.success(request, self.success_message)
-        return redirect('dashboard:review-article', article=a.id)
+        return redirect(a.get_absolute_url())
+
 
 # Comments
-
 class CommentForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea(attrs={
         'placeholder': 'Enter your comment...',
         'rows': '4',
     }))
+
 
 class CommentMixin:
     '''
@@ -1065,6 +1366,7 @@ class CommentMixin:
     def setup(self, request, target_type, target, *args, **kwargs):
         self.target = self.get_target(target_type, target)
         return super().setup(request, *args, **kwargs)
+
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')
@@ -1174,31 +1476,102 @@ class CreateAnswerCommentView(CreateCommentView):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class TranslateAnswersList(SearchView):
-    def get_queryset(self, request):
-        if 'q' in request.GET:
-            query_set = Question.objects.filter(
-                                answers__isnull=False,
-                                answers__translations__isnull=True,
-                            ).distinct()
-            return query_set.filter(
-                    Q(question_text__icontains=request.GET.get('q')) |
-                    Q(question_text_english__icontains=request.GET.get('q')) |
-                    Q(school__icontains=request.GET.get('q')) |
-                    Q(area__icontains=request.GET.get('q')) |
-                    Q(state__icontains=request.GET.get('q')) |
-                    Q(field_of_interest__icontains=request.GET.get('q'))
-            )
+    # def set_filters(self, params):
+    #     filters = super().set_filters(params)
+        
+    #     search_categories = filters.get('search_categories', [])
+
+    #     if not search_categories:
+    #         search_categories.append('questions')
+    #     print(filters)
+
+    #     self.filters = filters
+    #     return filters
+
+
+    def get_querysets(self, request):
+        results = {}
+
+        filters = self.filters
+        search_categories = filters.get('search_categories', [])
+
+        if not search_categories:
+            search_categories.append('questions')
+
+
+        if 'q' in request.GET and request.GET.get('q') != '':
+            if not search_categories:
+                query_set = Question.objects.filter(
+                                    answers__isnull=False,
+                                    answers__status=Answer.STATUS_PUBLISHED,
+                                    answers__translations__isnull=True,
+                                ).distinct()
+
+                results['questions'] = query_set.filter(
+                        Q(question_text__search=request.GET.get('q')) |
+                        Q(question_text_english__search=request.GET.get('q')) |
+                        Q(school__search=request.GET.get('q')) |
+                        Q(area__search=request.GET.get('q')) |
+                        Q(state__search=request.GET.get('q')) |
+                        Q(field_of_interest__search=request.GET.get('q'))
+                )
+
+                results['articles'] = (PublishedArticle.objects.filter(
+                    translations__isnull=True,
+                )
+                .filter(
+                    Q(title__search=request.GET.get('q')) |
+                    Q(body__search=request.GET.get('q'))
+                )
+                .distinct())
+            else:
+                if 'questions' in search_categories:
+                    results['questions'] = Question.objects.filter(
+                                    answers__isnull=False,
+                                    answers__status=Answer.STATUS_PUBLISHED,
+                                    answers__translations__isnull=True,
+                                ).distinct()
+                else:
+                    results['questions'] = Question.objects.none()
+
+
+                if 'articles' in search_categories:
+                    results['articles'] = PublishedArticle.objects.filter(
+                        translations__isnull=True,
+                    ).distinct()
+                else:
+                    results['articles'] = PublishedArticle.objects.none()
         else:
-            return Question.objects.filter(
-                            answers__isnull=False,
-                            answers__translations__isnull=True,
-                        ).distinct()
+            if 'questions' in search_categories:
+                results['questions'] = Question.objects.all()
+            else:
+                results['questions'] = Question.objects.none()
+
+            if 'articles' in search_categories:
+                results['articles'] = PublishedArticle.objects.all()
+            else:
+                results['articles'] = PublishedArticle.objects.none()
+
+        return results
+
+    def set_filters(self, params):
+        filters = super().set_filters(params)
+
+        if len(filters['question_categories']) == 0:
+            if 'questions' not in params:
+                filters['question_categories'].append('answered')
+
+        self.filters = filters
+        return filters
+
 
     def get_page_title(self, request):
-        return 'Translate Answers'
+        return 'Translate Content'
 
     def get_enable_breadcrumbs(self, request):
         return 'Yes'
+
+
 
 
 class TranslationLanguagesForm(forms.Form):
@@ -1230,7 +1603,7 @@ class BaseStartTranslation(FormView):
     def get_form(self):
         form = super().get_form()
 
-        # Decide language options
+        # Decide language options     
         available_languages = self.source.list_available_languages()
         unavailable_languages = []
         for l in settings.CONTENT_LANGUAGES:
@@ -1259,8 +1632,8 @@ class BaseStartTranslation(FormView):
     def get_success_view(self):
         if not hasattr(self, 'success_view'):
             raise ImproperlyConfigured((
-                'No success_view set. Please set the success_view '
-                'property or override get_success_view.'
+                _('No success_view set. Please set the success_view '
+                'property or override get_success_view.')
             ))
         return self.success_view
 
@@ -1272,6 +1645,8 @@ class BaseStartTranslation(FormView):
             source=self.source.id,
         )
 
+    
+
 class CreateArticleTranslation(BaseStartTranslation):
     '''
     Initiate the translation of an article
@@ -1281,6 +1656,26 @@ class CreateArticleTranslation(BaseStartTranslation):
     answer_model = Answer
     template_name = 'dashboard/articles/start_translation.html'
     success_view = 'dashboard:edit-article-translation'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['enable_breadcrumbs'] =self.get_enable_breadcrumbs()
+        context['page_title'] = self.get_page_title()
+
+        return context
+
+
+    def get_enable_breadcrumbs(self):
+        """
+        Returns the setting to enable breadcrumbs
+        """
+        return 'Yes'
+
+
+    def get_page_title(self):
+
+        return _('Translate Article')
+
 
 class CreateAnswerTranslation(BaseStartTranslation):
     '''
@@ -1292,15 +1687,31 @@ class CreateAnswerTranslation(BaseStartTranslation):
     template_name = 'dashboard/answers/start_translation.html'
     success_view = 'dashboard:edit-answer-translation'
 
+    def get_form(self):
+        form = super().get_form()
+
+        # Decide language options     
+        available_languages = self.answer.list_available_languages()
+        unavailable_languages = []
+        for l in settings.CONTENT_LANGUAGES:
+            if l not in available_languages:
+                unavailable_languages.append(l)
+
+        form.fields.get('lang_from').choices = available_languages
+        form.fields.get('lang_to').choices = unavailable_languages
+
+        return form
+
     def get_source(self, source, answer, *args, **kwargs):
         question = super().get_source(source, *args, **kwargs)
         self.answer = get_object_or_404(self.answer_model, id=answer)
 
         # Check that they match
         if self.answer.question_id != question:
-            raise Http404('No matching answer found.')
+            raise Http404(_('No matching answer found.'))
 
         return question
+
 
     def form_valid(self, form):
         return redirect(
@@ -1314,8 +1725,24 @@ class CreateAnswerTranslation(BaseStartTranslation):
     def get_context_data(self):
         context = super().get_context_data()
         context['answer'] = self.answer
+        context['enable_breadcrumbs'] =self.get_enable_breadcrumbs()
+        context['page_title'] = self.get_page_title()
+
 
         return context
+
+
+    def get_enable_breadcrumbs(self):
+        """
+        Returns the setting to enable breadcrumbs
+        """
+        return 'Yes'
+
+
+    def get_page_title(self):
+
+        return _('Translate Answer')
+
 
 # Translate Article
 class BaseEditTranslation(UpdateView):
@@ -1329,6 +1756,7 @@ class BaseEditTranslation(UpdateView):
     conflict_url = None
     source_model = None
     view_name = None
+    default_status = None
 
     def get_object(self, queryset=None):
         '''
@@ -1343,12 +1771,12 @@ class BaseEditTranslation(UpdateView):
         user = self.request.user
 
         if lang_from not in valid_languages:
-            raise Http404('Invalid language: {}'
-                .format(lang_from))
+            raise Http404(_('Invalid language: {}'
+                .format(lang_from)))
 
         if lang_to not in valid_languages:
-            raise Http404('Invalid language: {}'
-                .format(lang_to))
+            raise Http404(_('Invalid language: {}'
+                .format(lang_to)))
 
         # Fetch source model
         source = get_object_or_404(self.source_model,
@@ -1364,7 +1792,7 @@ class BaseEditTranslation(UpdateView):
             'source': source,
             'translated_by': user,
             'language': lang_to,
-            'status': self.model.STATUS_DRAFT,
+            'status': self.get_default_status(),
         }
 
         try:
@@ -1392,11 +1820,23 @@ class BaseEditTranslation(UpdateView):
         '''
         if self.conflict_url is None:
             raise ImproperlyConfigured((
-                'No URL to redirect to. Either provide a URL or '
-                'define a get_conflict_url method on the Model.'
+                _('No URL to redirect to. Either provide a URL or '
+                'define a get_conflict_url method on the Model.')
             ))
 
         return self.conflict_url
+
+    def get_default_status(self):
+        '''
+        Returns the expected status of the Draftable we're translating.
+        Defaults to using the set variable, if exists, or the selected
+        model's STATUS_DRAFT property if it doesn't.
+        '''
+
+        if self.default_status is not None:
+            return self.default_status
+        else:
+            return self.model.STATUS_DRAFT
 
     def form_valid(self, form):
         '''
@@ -1415,10 +1855,7 @@ class BaseEditTranslation(UpdateView):
             kwargs = self.kwargs
             kwargs['lang_from'] = lang_from
             kwargs['lang_to'] = lang_to
-            self.success_url = reverse(
-                self.get_view_name(),
-                kwargs=kwargs,
-            )
+            self.kwargs = self.get_success_url(**kwargs)
 
         response = super().form_valid(form)
 
@@ -1448,15 +1885,17 @@ class BaseEditTranslation(UpdateView):
     def get_view_name(self):
         if self.view_name is None:
             raise ImproperlyConfigured((
-                'No view name specified. Please set view_name as '
-                'found in the urlconf.'
+                _('No view name specified. Please set view_name as '
+                'found in the urlconf.')
             ))
 
         return self.view_name
 
-    def get_success_url(self):
+    def get_success_url(self, **kwargs):
+        if not kwargs:
+            kwargs = self.kwargs
         if self.success_url is None:
-            self.success_url = reverse(self.get_view_name(), kwargs=self.kwargs)
+            self.success_url = reverse(self.get_view_name(), kwargs=kwargs)
 
         return self.success_url
 
@@ -1484,6 +1923,26 @@ class EditArticleTranslation(BaseEditTranslation):
     template_name = 'dashboard/translations/article_edit.html'
     view_name = 'dashboard:edit-article-translation'
 
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['enable_breadcrumbs'] =self.get_enable_breadcrumbs()
+        context['page_title'] = self.get_page_title()
+
+        return context
+
+
+    def get_enable_breadcrumbs(self):
+        """
+        Returns the setting to enable breadcrumbs
+        """
+        return 'Yes'
+
+
+    def get_page_title(self):
+
+        return _('Edit Article Translation')
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')
 class EditAnswerTranslation(BaseEditTranslation):
@@ -1492,6 +1951,7 @@ class EditAnswerTranslation(BaseEditTranslation):
     fields = Question.translatable_fields
     template_name = 'dashboard/translations/answer_edit.html'
     view_name = 'dashboard:edit-answer-translation'
+
 
     def get_object(self):
         '''
@@ -1512,7 +1972,7 @@ class EditAnswerTranslation(BaseEditTranslation):
 
         # Make sure the question and answer match
         if source_answer.question_id != question.source:
-            raise Http404('No matching answer found')
+            raise Http404(_('No matching answer found'))
 
         # Select the specific translated answer, if it exists
         # This will be saved as self.answer
@@ -1546,6 +2006,9 @@ class EditAnswerTranslation(BaseEditTranslation):
 
         context = super().get_context_data(*args, **kwargs)
         context['answer'] = self.answer
+        context['enable_breadcrumbs'] =self.get_enable_breadcrumbs()
+        context['page_title'] = self.get_page_title()
+
         return context
 
     def form_valid(self, form):
@@ -1555,6 +2018,7 @@ class EditAnswerTranslation(BaseEditTranslation):
         answer_text = self.request.POST.get('answer-text')
         if answer_text:
             self.answer.answer_text = answer_text
+            self.answer.language = self.request.POST.get('lang_to') or self.answer.language
             self.answer.save()
 
         # If submitting, mark the answer as submitted for
@@ -1566,6 +2030,60 @@ class EditAnswerTranslation(BaseEditTranslation):
 
         return response
 
+
+    def get_enable_breadcrumbs(self):
+        """
+        Returns the setting to enable breadcrumbs
+        """
+        return 'Yes'
+
+
+    def get_page_title(self):
+
+        return _('Edit Answer Translation')
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class EditSubmittedArticleTranslation(EditArticleTranslation):
+    model = SubmittedArticleTranslation
+    view_name = 'dashboard:review-article-translation'
+    default_status = SubmittedArticleTranslation.STATUS_SUBMITTED
+
+    def get_object(self):
+        obj = get_object_or_404(self.model, id=self.kwargs.get('pk'))
+        self.source = obj.source
+
+        return obj
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.view_name, kwargs={'pk': self.object.id})
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('volunteers'), name='dispatch')
+class EditSubmittedAnswerTranslation(EditAnswerTranslation):
+    model = SubmittedTranslatedQuestion
+    view_name = 'dashboard:review-answer-translation'
+    default_status = SubmittedArticleTranslation.STATUS_SUBMITTED
+
+    def get_object(self):
+        question = get_object_or_404(self.model, id=self.kwargs.get('pk'))
+        self.source = question.source
+
+        # Get the related source answer
+        answer = get_object_or_404(AnswerTranslation,
+            id=self.kwargs.get('answer'))
+
+        # Make sure the question and answer match
+        if answer.source.question_id != question.source:
+            raise Http404('No matching translations found')
+
+        self.answer = answer
+
+        return question
+
+    def get_success_url(self, **kwargs):
+        return self.answer.get_absolute_url()
 
 class BaseDeleteTranslation(DeleteView):
     '''
@@ -1585,7 +2103,7 @@ class BaseDeleteTranslation(DeleteView):
     def get_object(self, *args, **kwargs):
         obj = super().get_object(*args, **kwargs)
         if obj.translated_by != self.request.user:
-            raise PermissionDenied("That's not your translation!")
+            raise PermissionDenied(_("That's not your translation!"))
 
         return obj
 
@@ -1689,7 +2207,6 @@ class ReviewAnswerTranslation(BaseReview):
         return context
 
 
-
 class ReviewArticleTranslation(BaseReview):
     '''
     Review a translated article
@@ -1697,33 +2214,6 @@ class ReviewArticleTranslation(BaseReview):
 
     model = SubmittedArticleTranslation
     template_name = 'dashboard/translations/article_review.html'
-
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('admins'), name='dispatch')
-class ApproveSubmittedArticleView(View):
-
-    model = SubmittedArticle
-    success_message = 'The article has been published successfully'
-
-    def get(self, request, article):
-        '''
-        Not valid; redirect user back to article
-        '''
-        return redirect(reverse('dashboard:review-article', kwargs={'article': article}))
-
-    def post(self, request, article):
-        article = get_object_or_404(self.model, id=article)
-
-        # Check that the publisher is not the author
-        if article.author == request.user:
-            raise PermissionDenied('You cannot publish your own article.')
-
-        a = article.publish(request.user)
-
-        messages.success(request, self.success_message)
-        return redirect('dashboard:review-article', article=a.id)
-
 
 class BaseApproveTranslation(View):
 
@@ -1748,10 +2238,59 @@ class BaseApproveTranslation(View):
 
         # Check that the publisher is not the author
         if obj.translated_by == request.user:
-            raise PermissionDenied('You cannot approve your own submissions')
+            raise PermissionDenied(_('You cannot approve your own submissions'))
 
         p = obj.publish(request.user)
 
+
+        # Send out notifications...
+
+        # ...to the translator
+        Notification.objects.create(
+            notification_type='published',
+            title_text=('{} published your {}'
+                .format(
+                    self.request.user.get_full_name(),
+                    p._meta.verbose_name,
+                ))[:50], # truncate it due to character limit
+            description_text=('Published {}'
+                .format(p)),
+            target_url = p.get_absolute_url(),
+            user=p.translated_by,
+        )
+
+        # ...to the original author
+        Notification.objects.create(
+            notification_type='published',
+            title_text=((
+                '{user} translated your {source_type}'
+                ' to {language}')
+                .format(
+                    user=p.translated_by,
+                    source_type=p.source._meta.verbose_name,
+                    language=(get_language_info(p.language)
+                        .get('name_translated')),
+                ))[:50], # truncate it due to character limit
+            description_text='Translated {}'.format(p.source),
+            target_url=p.get_absolute_url(),
+            user=p.source.author,
+        )
+
+        # ...to the peer reviewers
+        for u in set([c.author for c in p.comments.all()]):
+            Notification.objects.create(
+                notification_type='published',
+                title_text=((
+                    'The translation by {} that you commented on '
+                    'has been published.')
+                    .format(p.translated_by)
+                    )[:50], # truncate it due to character limit
+                    description_text='Translated {}'.format(p.source),
+                target_url=p.get_absolute_url(),
+                user=u,
+            )
+
+        # Create success message and return
         messages.success(request, self.success_message)
         return redirect(p.get_absolute_url())
 
@@ -1792,6 +2331,63 @@ class ApproveAnswerTranslation(BaseApproveTranslation):
         question.publish(self.request.user)
 
         return response
+
+# Admin functions
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('admins'), name='dispatch')
+class AdminBulkUpdateField(View):
+    '''
+    Prompt and bulk update a model field
+    '''
+
+    def get_model(self):
+        try:
+            model_type = ContentType.objects.get(
+                pk=self.request.GET.get('ct'))
+        except ContentType.ObjectDoesNotExist:
+            raise Http404('Invalid model')
+
+        self.model = model_type.model_class()
+
+        return self.model
+
+    def get_queryset(self, ids):
+        model = self.get_model()
+        try:
+            id_list = [int(i) for i in ids.split(',')]
+        except ValueError:
+            id_list= []
+
+        return model.objects.filter(pk__in=id_list)
+
+    def get(self, request):
+        context = {
+            'objects': self.get_queryset(request.GET.get('ids')),
+            'model_name': self.model._meta.verbose_name_plural,
+            'field_name': request.GET.get('field'),
+        }
+
+        return render(
+            request,
+            'admin/actions/bulk_update_field.html',
+            context
+        )
+
+    def post(self, request):
+        new_value = request.POST.get('new_value')
+        field_name = request.GET.get('field')
+
+        if not new_value:
+            return redirect(request.build_absolute_uri())
+
+        queryset = self.get_queryset(request.GET.get('ids'))
+
+        updated = queryset.update(**{field_name: new_value})
+        messages.success(request,
+            _('%s items updated successfully') % updated)
+
+        return redirect('admin:dashboard_%s_changelist' % queryset.model.__name__.lower())
 
 
 # Legacy Functions
@@ -1842,10 +2438,15 @@ def submit_encoded_dataset(request):
     return render(request, 'dashboard/excel-submitted-successfully.html')
 
 
-def get_error_404_view(request, exception):
+def get_error_404_view(request, exception, template_name='dashboard/404.html'):
     """Return the custom 404 page."""
 
-    response = render(request, 'dashboard/404.html')
+    referer = request.headers.get('Referer')
+
+    response = render(request, template_name,
+        {
+            'referer': referer
+        })
     response.status_code = 404  # Not Found
     return response
 

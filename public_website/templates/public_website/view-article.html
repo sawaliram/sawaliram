@@ -1,0 +1,47 @@
+{% extends 'public_website/base.html' %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %}{{ article.tr_title }} | {% trans 'Sawaliram' %}{% endblock %}
+
+{% block content %}
+
+<article class="article row">
+  <header class="article-meta col-sm-3">
+    <h1>{{ article.tr_title }}</h1>
+    <p>
+      {{ article.published_on|date:'d M Y' }}
+    </p>
+    <div class="credits-section">
+        {% for credit in article.credits.all %}
+            <div class="credit-card">
+                <p>{{ credit.credit_user_name }}</p>
+                <span>{{ credit.credit_title|capfirst }}</span>
+            </div>
+        {% endfor %}
+    </div>
+    {% if article.is_translated %}
+    <p>{% trans 'Translated by' %} <a href="{% url 'public_website:user-profile' article.translation.translator.id %}" class="text-secondary">{{ranslation.translator.get_full_name }}</a></p>
+    {% endif %}
+    {% if article.translations %}
+    <div class="dropdown">
+      <button class="btn btn-secondary btn-small dropdown-toggle" type="button" id="translationSelectorButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {% trans 'Read article in' %}: {{ article.tr_language|to_language_name }}
+      </button>
+      <div class="dropdown-menu" aria-labelledby="translationSelectorButton">
+        {% for lang, language in article.list_available_languages %}
+        <a class="dropdown-item" href="{{ request.get_base_path }}?lang={{ lang }}">{{ language }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </header>
+  <section class="article-body col-sm-6">
+    {{ article.tr_body|safe }}
+  </section>
+  <aside class="article-footer col-sm-3">
+  </aside>
+</article>
+    
+{% endblock %}

@@ -27,7 +27,7 @@
             {% elif source_question.tr_state %}
                 {{ source_question.tr_state }}
             {% endif %}
-        </span>    
+        </span>
     </span>
     {% endif %}
 
@@ -64,7 +64,7 @@
             {% elif source_question.tr_state %}
                 {{ question.state|default:source_question.tr_state }}
             {% endif %}
-        </span>    
+        </span>
     </span>
     {% endif %}
 
@@ -73,4 +73,7 @@
 <section class="hr-over">
     {{ object.answer_text|safe }}
 </section>
+{% endblock %}
+{% block edit_button %}
+<a class="btn btn-secondary" href="{{ object.get_edit_url }}">Edit Translation</a>
 {% endblock %}

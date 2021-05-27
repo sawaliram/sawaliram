@@ -44,7 +44,7 @@ class Dataset(models.Model):
     submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='submitted_datasets',
-        on_delete=models.PROTECT)
+        on_delete=models.CASCADE)
     status = models.CharField(max_length=100)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -77,12 +77,12 @@ class QuestionArchive(models.Model):
     published = models.BooleanField(default=False)
     published_source = models.CharField(max_length=200, default='', blank=True)
     published_date = models.DateField(default=datetime.date.today)
-    question_asked_on = models.DateField(null=True)
+    question_asked_on = models.DateField(null=True, blank=True)
     notes = models.CharField(max_length=1000, default='')
     submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='archived_questions',
-        on_delete=models.PROTECT)
+        on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
@@ -164,14 +164,15 @@ class Question(models.Model):
     question_format = models.CharField(max_length=100, blank=True)
     language = models.CharField(max_length=100, blank=True)
     contributor = models.CharField(max_length=100, blank=True)
-    contributor_role = models.CharField(max_length=100, blank=True)
     context = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=200, blank=True)
+    contributor_role = models.CharField(max_length=100, blank=True)
     medium_language = models.CharField(max_length=100, blank=True)
     curriculum_followed = models.CharField(max_length=100, default='', blank=True)
     published = models.BooleanField(default=False)
     published_source = models.CharField(max_length=200, default='', blank=True)
     published_date = models.DateField(default=datetime.date.today)
-    question_asked_on = models.DateField(null=True)
+    question_asked_on = models.DateField(null=True, blank=True)
     notes = models.CharField(max_length=1000, default='', blank=True)
     dataset_id = models.CharField(max_length=100, default='', blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -179,12 +180,12 @@ class Question(models.Model):
     curated_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='curated_questions',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='')
     encoded_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='encoded_questions',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
         blank=True,
         null=True)
@@ -211,6 +212,12 @@ class Answer(models.Model):
     translation_model = 'dashboard.PublishedAnswerTranslation'
     translatable_fields = ['answer_text']
 
+    # Statuses
+
+    STATUS_DRAFT = 'draft'
+    STATUS_SUBMITTED = 'submitted'
+    STATUS_PUBLISHED = 'published'
+
     class Meta:
         db_table = 'answer'
 
@@ -227,16 +234,18 @@ class Answer(models.Model):
     submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='answers',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='')
     approved_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='approved_answers',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
+        blank=True,
         null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+    published_on = models.DateTimeField(blank=True, null=True)
 
     comments = GenericRelation('dashboard.Comment')
 
@@ -327,6 +336,28 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
                 }
             )
 
+
+    def get_delete_url(self):
+        '''
+        Generates the URL at which to delete an answer. Note that this
+        currently points to the linked question; both are deleted at
+        the same time.
+        '''
+
+        return reverse('dashboard:delete-answer-translation', kwargs={
+            'pk': self.id
+        })
+
+    def __str__(self):
+        return 'Q{}A{}T{} [{}->{}]: {}'.format(
+            self.source.question_id.id,
+            self.source.id,
+            self.id,
+            self.source.language,
+            self.language,
+            self.source.question_id.question_text,
+        )
+
 class DraftAnswerTranslation(
     AnswerTranslation.get_draft_model(),
     AnswerTranslation,
@@ -359,8 +390,9 @@ class PublishedAnswerTranslation(
     class Meta:
         proxy = True
 
+
 class AnswerCredit(models.Model):
-    """Define the data model for answer and article credits"""
+    """Define the data model for answer credits"""
 
     class Meta:
         db_table = 'answer_credit'
@@ -368,13 +400,14 @@ class AnswerCredit(models.Model):
 
     credit_title = models.CharField(max_length=50)
     credit_title_order = models.IntegerField(default=0)
-    credit_user_name = models.CharField(max_length=50)
+    credit_user_name = models.CharField(max_length=100)
     is_user = models.BooleanField(default=False)
     user = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='answer_credits',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
+        blank=True,
         null=True)
     answer = models.ForeignKey(
         'Answer',
@@ -385,13 +418,49 @@ class AnswerCredit(models.Model):
 
     def save(self, *args, **kwargs):
         credit_sorting_order = {
-            'publication': 1,
-            'author': 2,
-            'co-author': 3,
+            'author': 1,
+            'co-author': 2,
+            'publication': 3,
             'submitter': 4
         }
         self.credit_title_order = credit_sorting_order[self.credit_title]
         super(AnswerCredit, self).save(*args, **kwargs)
+
+
+class ArticleCredit(models.Model):
+    """Define the data model for article credits"""
+
+    class Meta:
+        db_table = 'article_credit'
+        ordering = ['credit_title_order']
+
+    credit_title = models.CharField(max_length=50)
+    credit_title_order = models.IntegerField(default=0)
+    credit_user_name = models.CharField(max_length=100)
+    is_user = models.BooleanField(default=False)
+    user = models.ForeignKey(
+        'sawaliram_auth.User',
+        related_name='article_credits',
+        on_delete=models.CASCADE,
+        default='',
+        blank=True,
+        null=True)
+    article = models.ForeignKey(
+        'Article',
+        related_name='credits',
+        on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        credit_sorting_order = {
+            'author': 1,
+            'co-author': 2,
+            'publication': 3,
+            'submitter': 4
+        }
+        self.credit_title_order = credit_sorting_order[self.credit_title]
+        super(ArticleCredit, self).save(*args, **kwargs)
 
 
 class UncuratedSubmission(models.Model):
@@ -407,7 +476,7 @@ class UncuratedSubmission(models.Model):
     submitted_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='submissions',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='')
     curated = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -459,7 +528,7 @@ class TranslatedQuestion(DraftableModel, TranslationMixin):
             self.id,
             self.source.language,
             self.language,
-            self.question_text,
+            self.question_text or self.source.question_text,
         )
 
     def get_absolute_url(self):
@@ -490,6 +559,7 @@ class PublishedTranslatedQuestion(
     class Meta:
         proxy = True
 
+
 @translatable
 class Article(DraftableModel):
     '''
@@ -500,7 +570,7 @@ class Article(DraftableModel):
 
     This is internally tracked via the 'status' parameter. You can
     also query articles with the specified status by using its proxy
-    model (which internally checks the 'status' prameter before
+    model (which internally checks the 'status' parameter before
     returning results).
     '''
 
@@ -509,15 +579,22 @@ class Article(DraftableModel):
 
     title = models.CharField(max_length=1000, null=True)
     language = models.CharField(max_length=100,
-        choices=settings.LANGUAGE_CHOICES,
+        choices=settings.CONTENT_LANGUAGES,
         default='en')
-    author = models.ForeignKey('sawaliram_auth.User',
+    author = models.ForeignKey(
+        'sawaliram_auth.User',
         related_name='articles',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
         null=True)
 
     body = models.TextField(null=True)
+
+    cover_image = models.CharField(
+        max_length=100,
+        default='',
+        blank=True,
+        null=True)
 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -525,10 +602,10 @@ class Article(DraftableModel):
     approved_by = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='approved_articles',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         default='',
+        blank=True,
         null=True)
-    published_on = models.DateTimeField(auto_now_add=True)
 
     comments = GenericRelation('dashboard.Comment')
 
@@ -592,7 +669,7 @@ class Comment(models.Model):
     author = models.ForeignKey(
         'sawaliram_auth.User',
         related_name='comments',
-        on_delete=models.PROTECT)
+        on_delete=models.CASCADE)
 
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -641,12 +718,13 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
             self.id,
             self.source.language,
             self.language,
-            self.title,
+            self.title or self.source.title,
         )
 
     def get_absolute_url(self):
         '''
-        Returns the edit page of the translation
+        Returns the default page of the translation, depending on
+        publish status
         '''
 
         if self.is_published:
@@ -675,6 +753,36 @@ class ArticleTranslation(DraftableModel, TranslationMixin):
                     'lang_to': self.language,
                 }
             )
+
+    def get_edit_url(self):
+        '''
+        Returns the edit URL of a translation, depending on publish
+        status. Published pieces will have no edit URL.
+        '''
+
+        if self.is_draft:
+            return reverse(
+                'dashboard:edit-article-translation',
+                kwargs={
+                    'source': self.source.id,
+                    'lang_from': self.source.language,
+                    'lang_to': self.language,
+                }
+            )
+        elif self.is_submitted:
+            return reverse(
+                'dashboard:edit-submitted-article-translation',
+                kwargs={
+                    'pk': self.id
+                }
+            )
+        else:
+            return # don't return anything :P
+
+    def get_delete_url(self):
+        return reverse('dashboard:delete-article-translation', kwargs={
+            'pk': self.id
+        })
 
 class DraftArticleTranslation(
     ArticleTranslation.get_draft_model(),
