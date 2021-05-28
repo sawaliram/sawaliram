@@ -10,6 +10,8 @@
 
 {% block content %}
 
+{% include 'snippets/messages.html' %}
+
 <h1 class="question-text-heading">Are you sure you want to delete the following comment?</h1>
 <div>
     {{ comment.text|safe }}
