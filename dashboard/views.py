@@ -2376,7 +2376,7 @@ class BaseApproveTranslation(View):
                     title_text=((
                         'The translation by {} that you commented on '
                         'has been published.')
-                        .format(p.translated_by)
+                        .format(p.translated_by.get_full_name())
                         )[:50], # truncate it due to character limit
                     description_text='Translated {}'.format(p.source),
                     target_url=p.get_absolute_url(),
