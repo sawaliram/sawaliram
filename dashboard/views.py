@@ -1880,6 +1880,12 @@ class BaseEditTranslation(UpdateView):
 
             return redirect(submission.get_absolute_url())
 
+
+        if self.request.POST.get('mode') == 'draft':
+            messages.success(self.request, (_('Your translation has been saved!'
+                ' You can return to this page any time to '
+                'continue editing, or go to "Drafts" in your User Profile.')))
+                
         return response
 
     def get_view_name(self):
