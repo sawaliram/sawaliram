@@ -1623,8 +1623,8 @@ class BaseStartTranslation(FormView):
     def get_form(self):
         form = super().get_form()
 
-        # Decide language options
-        available_languages = self.answer.list_available_languages()
+        # Decide language options     
+        available_languages = self.source.list_available_languages()
         unavailable_languages = []
         for l in settings.CONTENT_LANGUAGES:
             if l not in available_languages:
@@ -1665,6 +1665,8 @@ class BaseStartTranslation(FormView):
             source=self.source.id,
         )
 
+    
+
 class CreateArticleTranslation(BaseStartTranslation):
     '''
     Initiate the translation of an article
@@ -1674,6 +1676,26 @@ class CreateArticleTranslation(BaseStartTranslation):
     answer_model = Answer
     template_name = 'dashboard/articles/start_translation.html'
     success_view = 'dashboard:edit-article-translation'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['enable_breadcrumbs'] =self.get_enable_breadcrumbs()
+        context['page_title'] = self.get_page_title()
+
+        return context
+
+
+    def get_enable_breadcrumbs(self):
+        """
+        Returns the setting to enable breadcrumbs
+        """
+        return 'Yes'
+
+
+    def get_page_title(self):
+
+        return _('Translate Article')
+
 
 class CreateAnswerTranslation(BaseStartTranslation):
     '''
@@ -1685,6 +1707,21 @@ class CreateAnswerTranslation(BaseStartTranslation):
     template_name = 'dashboard/answers/start_translation.html'
     success_view = 'dashboard:edit-answer-translation'
 
+    def get_form(self):
+        form = super().get_form()
+
+        # Decide language options     
+        available_languages = self.answer.list_available_languages()
+        unavailable_languages = []
+        for l in settings.CONTENT_LANGUAGES:
+            if l not in available_languages:
+                unavailable_languages.append(l)
+
+        form.fields.get('lang_from').choices = available_languages
+        form.fields.get('lang_to').choices = unavailable_languages
+
+        return form
+
     def get_source(self, source, answer, *args, **kwargs):
         question = super().get_source(source, *args, **kwargs)
         self.answer = get_object_or_404(self.answer_model, id=answer)
@@ -1694,6 +1731,7 @@ class CreateAnswerTranslation(BaseStartTranslation):
             raise Http404(_('No matching answer found.'))
 
         return question
+
 
     def form_valid(self, form):
         return redirect(
@@ -1707,8 +1745,24 @@ class CreateAnswerTranslation(BaseStartTranslation):
     def get_context_data(self):
         context = super().get_context_data()
         context['answer'] = self.answer
+        context['enable_breadcrumbs'] =self.get_enable_breadcrumbs()
+        context['page_title'] = self.get_page_title()
+
 
         return context
+
+
+    def get_enable_breadcrumbs(self):
+        """
+        Returns the setting to enable breadcrumbs
+        """
+        return 'Yes'
+
+
+    def get_page_title(self):
+
+        return _('Translate Answer')
+
 
 # Translate Article
 class BaseEditTranslation(UpdateView):
@@ -1889,6 +1943,26 @@ class EditArticleTranslation(BaseEditTranslation):
     template_name = 'dashboard/translations/article_edit.html'
     view_name = 'dashboard:edit-article-translation'
 
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['enable_breadcrumbs'] =self.get_enable_breadcrumbs()
+        context['page_title'] = self.get_page_title()
+
+        return context
+
+
+    def get_enable_breadcrumbs(self):
+        """
+        Returns the setting to enable breadcrumbs
+        """
+        return 'Yes'
+
+
+    def get_page_title(self):
+
+        return _('Edit Article Translation')
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')
 class EditAnswerTranslation(BaseEditTranslation):
@@ -1897,6 +1971,7 @@ class EditAnswerTranslation(BaseEditTranslation):
     fields = Question.translatable_fields
     template_name = 'dashboard/translations/answer_edit.html'
     view_name = 'dashboard:edit-answer-translation'
+
 
     def get_object(self):
         '''
@@ -1951,6 +2026,9 @@ class EditAnswerTranslation(BaseEditTranslation):
 
         context = super().get_context_data(*args, **kwargs)
         context['answer'] = self.answer
+        context['enable_breadcrumbs'] =self.get_enable_breadcrumbs()
+        context['page_title'] = self.get_page_title()
+
         return context
 
     def form_valid(self, form):
@@ -1972,6 +2050,17 @@ class EditAnswerTranslation(BaseEditTranslation):
 
         return response
 
+
+    def get_enable_breadcrumbs(self):
+        """
+        Returns the setting to enable breadcrumbs
+        """
+        return 'Yes'
+
+
+    def get_page_title(self):
+
+        return _('Edit Answer Translation')
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('volunteers'), name='dispatch')
