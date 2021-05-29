@@ -206,6 +206,23 @@
                         {% if page_title == 'Review Article' %}
                             <a href="{% url 'dashboard:manage-content' %}">{% trans 'Manage Content' %}</a> >
                         {% endif %}
+
+                        {% if page_title == 'Translate Answer' %}
+                            <a href="{% url 'dashboard:translate-answers' %}">{% trans 'Translate Content' %}</a> >
+                        {% endif %}
+
+                        {% if page_title == 'Translate Article' %}
+                            <a href="{% url 'dashboard:translate-answers' %}">{% trans 'Translate Content' %}</a> >
+                        {% endif %}
+
+                        {% if page_title == 'Edit Answer Translation' %}
+                            <a href="{% url 'dashboard:translate-answers' %}">{% trans 'Translate Content' %}</a> >
+                        {% endif %}
+
+                        {% if page_title == 'Edit Article Translation' %}
+                            <a href="{% url 'dashboard:translate-answers' %}">{% trans 'Translate Content' %}</a> >
+                        {% endif %}
+
                     {% endif %}
                     {{ page_title }}
                 </p>
