@@ -357,8 +357,8 @@ class AnswerTranslation(DraftableModel, TranslationMixin):
             self.language,
             self.source.question_id.question_text,
         )
-    def __str__(self): 
-        return self.get_full_name()
+    def get_full_name(self): 
+        return self.get_full_name
 
 class DraftAnswerTranslation(
     AnswerTranslation.get_draft_model(),
