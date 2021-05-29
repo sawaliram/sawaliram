@@ -1432,6 +1432,7 @@ class CreateCommentView(CommentMixin, FormView):
             # Create notification for the comment
 
             if self.target.author != self.request.user:
+                
                 Notification.objects.create(
                     notification_type='comment',
                     title_text=('{} left a comment on your {}'
@@ -1448,22 +1449,24 @@ class CreateCommentView(CommentMixin, FormView):
         if hasattr(self.target, 'comments'):
             # Create notification for the comment for other reviewers
 
-            for u in set([c.author for c in self.target.comments.all()]):
-                if u != self.request.user:
-                    Notification.objects.create(
-                        notification_type='comment',
-                        title_text=('{} left a comment on your {}'
-                            .format(
-                                self.request.user.get_full_name(),
-                                self.target._meta.verbose_name,
-                            ))[:50],
-                        description_text=('Commented on {}'
-                            .format(self.target)),
-                        target_url=self.target.get_absolute_url(),
-                        user=u,
-                    )
+            if self.target.translated_by != self.request.user:
+                for u in set([c.author for c in self.target.comments.all()]):
+                    
+                    if u != self.request.user:
+                        Notification.objects.create(
+                            notification_type='comment',
+                            title_text=('{} left a comment on your {}'
+                                .format(
+                                    self.request.user.get_full_name(),
+                                    self.target._meta.verbose_name,
+                                )),
+                            description_text=('Commented on {}'
+                                .format(self.target)),
+                            target_url=self.target.get_absolute_url(),
+                            user=u,
+                        )
         if hasattr(self.target, 'translated_by'):
-            # Create notification for the comment
+            # Create notification for the comment for Translator
 
             if self.target.translated_by != self.request.user:
                 Notification.objects.create(
@@ -1472,12 +1475,28 @@ class CreateCommentView(CommentMixin, FormView):
                         .format(
                             self.request.user.get_full_name(),
                             self.target._meta.verbose_name,
-                        ))[:50],
+                        )),
                     description_text=('Commented on {}'
                         .format(self.target)),
                     target_url=self.target.get_absolute_url(),
                     user=self.target.translated_by,
-                )            
+                )      
+            else:
+                for u in set([c.author for c in self.target.comments.all()]):
+                    
+                    if u != self.target.translated_by:
+                        Notification.objects.create(
+                            notification_type='comment',
+                            title_text=('{} (Translator) left a comment on {}'
+                                .format(
+                                    self.request.user.get_full_name(),
+                                    self.target._meta.verbose_name,
+                                )),
+                            description_text=('Commented on {}'
+                                .format(self.target)),
+                            target_url=self.target.get_absolute_url(),
+                            user=u,
+                        )
 
         return super().form_valid(form)
 
@@ -2192,7 +2211,7 @@ class BaseApproveTranslation(View):
                 .format(
                     self.request.user.get_full_name(),
                     p._meta.verbose_name,
-                ))[:50], # truncate it due to character limit
+                )),
             description_text=('Published {}'
                 .format(p)),
             target_url = p.get_absolute_url(),
@@ -2210,7 +2229,7 @@ class BaseApproveTranslation(View):
                     source_type=p.source._meta.verbose_name,
                     language=(get_language_info(p.language)
                         .get('name_translated')),
-                ))[:50], # truncate it due to character limit
+                )), 
             description_text='Translated {}'.format(p.source),
             target_url=p.get_absolute_url(),
             user=p.source.author,
@@ -2225,7 +2244,7 @@ class BaseApproveTranslation(View):
                         'The translation by {} that you commented on '
                         'has been published.')
                         .format(p.translated_by.get_full_name())
-                        )[:50], # truncate it due to character limit
+                        ),
                     description_text='Translated {}'.format(p.source),
                     target_url=p.get_absolute_url(),
                     user=u,
