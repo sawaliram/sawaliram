@@ -211,6 +211,7 @@
                 {% if page_title != _('Translate Content') %}
                     {% for answer in question.answers.all %}
                         {% if page_title == _('Review Answers') %}
+                            {% if answer.is_submitted %}
                             <div class="answer-preview">
                                 <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
                                 {% for credit in answer.credits.all %}
@@ -223,6 +224,7 @@
                                     <a href="{% url 'dashboard:review-answer' question_id=question.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
                                 </div>
                             </div>
+                            {% endif %}
                         {% endif %}
                         {% if page_title == _('View Questions') or page_title == _('Search') or page_title == _('Answer Questions') %}
                             {% if answer.status == 'published' %}
