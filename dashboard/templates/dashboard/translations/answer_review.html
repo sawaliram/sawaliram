@@ -1,6 +1,11 @@
 {% extends "dashboard/translations/base_review.html" %}
 
 {% block comment_form_action %}{% url 'dashboard:submit-answer-translation-comment' target=object.id %}{% endblock %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+
 {% block tr_original %}
 <header>
   <h1>{{ source_question.tr_question_text }}</h1>
@@ -74,6 +79,10 @@
     {{ object.answer_text|safe }}
 </section>
 {% endblock %}
+
+
 {% block edit_button %}
-<a class="btn btn-secondary" href="{{ object.get_edit_url }}">Edit Translation</a>
+    {% if tr_answer_edit_url %}
+        <a class="btn btn-secondary" href="{{ tr_answer_edit_url }}">{% trans 'Edit Translation' %}</a>
+    {% endif %}
 {% endblock %}
