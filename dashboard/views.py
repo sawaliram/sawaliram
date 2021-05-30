@@ -2008,6 +2008,7 @@ class EditAnswerTranslation(BaseEditTranslation):
         context['answer'] = self.answer
         context['enable_breadcrumbs'] =self.get_enable_breadcrumbs()
         context['page_title'] = self.get_page_title()
+        context['available_languages'] = self.kwargs.get('lang_from')
 
         return context
 
@@ -2064,7 +2065,8 @@ class EditSubmittedArticleTranslation(EditArticleTranslation):
 class EditSubmittedAnswerTranslation(EditAnswerTranslation):
     model = SubmittedTranslatedQuestion
     view_name = 'dashboard:review-answer-translation'
-    default_status = SubmittedArticleTranslation.STATUS_SUBMITTED
+    default_status = SubmittedAnswerTranslation.STATUS_SUBMITTED
+
 
     def get_object(self):
         question = get_object_or_404(self.model, id=self.kwargs.get('pk'))
@@ -2074,8 +2076,11 @@ class EditSubmittedAnswerTranslation(EditAnswerTranslation):
         answer = get_object_or_404(AnswerTranslation,
             id=self.kwargs.get('answer'))
 
+        
+        print(question.source.id, answer.source.question_id.id, question.id)
+
         # Make sure the question and answer match
-        if answer.source.question_id != question.source:
+        if answer.source.question_id.id != question.source.id:
             raise Http404('No matching translations found')
 
         self.answer = answer
@@ -2160,25 +2165,54 @@ class ReviewAnswerTranslation(BaseReview):
     '''
 
     model = SubmittedAnswerTranslation
+
+    '''
+    This model is for fetching submitted translated question
+    '''
+
+    translated_question_model = SubmittedTranslatedQuestion
     template_name = 'dashboard/translations/answer_review.html'
+
+
+    def get_edit_url(self, question):
+        '''
+        Get edit url for answer translation editing 
+        '''
+
+        if self.object.is_submitted:
+            return reverse(
+                'dashboard:edit-submitted-answer-translation',
+                kwargs={
+                    'pk': question.id,
+                    'answer': self.object.id
+                }
+            )
+
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+
         try:
-            context['question'] = (SubmittedTranslatedQuestion
+            question = (SubmittedTranslatedQuestion
             .objects
             .filter(
                 source=self.object.source.question_id,
                 translated_by=self.object.translated_by,
                 language=self.object.language,
             )[0])
+
+            context['question'] = question
+            context['tr_answer_edit_url'] = self.get_edit_url(question)
+            
+            # print(self.get_edit_url(question))
         except IndexError:
             pass
 
+        
         context['source_question'] = self.object.source.question_id
         context['source_question'].set_language(
             self.request.session.get('lang', settings.DEFAULT_LANGUAGE))
-
+        
         return context
 
 
