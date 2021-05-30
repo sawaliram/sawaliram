@@ -13,6 +13,7 @@
     <p>
       {{ article.published_on|date:'d M Y' }}
     </p>
+
     <div class="credits-section">
         {% for credit in article.credits.all %}
             <div class="credit-card">
@@ -20,10 +21,16 @@
                 <span>{{ credit.credit_title|capfirst }}</span>
             </div>
         {% endfor %}
+
+        {% if article.is_translated %}
+        <div class="credit-card">
+            <p>{{ article.translated_by.get_full_name }}</p>
+            <span>{% trans 'Translator' %}</span>
+        </div>
+        {% endif %}
     </div>
-    {% if article.is_translated %}
-    <p>{% trans 'Translated by' %} <a href="{% url 'public_website:user-profile' article.translation.translator.id %}" class="text-secondary">{{ranslation.translator.get_full_name }}</a></p>
-    {% endif %}
+
+
     {% if article.translations %}
     <div class="dropdown">
       <button class="btn btn-secondary btn-small dropdown-toggle" type="button" id="translationSelectorButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
