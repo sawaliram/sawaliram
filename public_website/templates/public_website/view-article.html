@@ -22,6 +22,17 @@
             </div>
         {% endfor %}
 
+
+
+        {% if article.is_submitted %}
+            <div class="credit-card">
+                <p>{{ article.submitted_by.get_full_name }}</p>
+                <span>{% trans 'Submitter' %}</span>
+            </div>
+        {% endif %}
+
+
+
         {% if article.is_translated %}
         <div class="credit-card">
             <p>{{ article.translated_by.get_full_name }}</p>
