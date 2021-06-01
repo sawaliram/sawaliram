@@ -714,7 +714,7 @@ class AnswerQuestions(SearchView):
 class ReviewAnswersList(SearchView):
     def get_querysets(self, request):
         results = {}
-        if 'q' in request.GET:
+        if 'q' in request.GET and request.GET.get('q') != '':
             query_set = Question.objects.filter(
                                 answers__status='submitted',
                             ).exclude(
@@ -756,8 +756,6 @@ class ReviewAnswersList(SearchView):
 
             results['questions'] = Question.objects.filter(id__in=temp2).extra(
             select={'ordering': ordering}, order_by=('ordering',))
-
-            print(results['questions'])
 
             return results
 
