@@ -543,7 +543,7 @@ class SubmitUserCommentOnAnswer(View):
                 title_text=_('%(name)s left a comment on your answer') % {
                     'name': str(request.user.get_full_name()),
                 },
-                description_text="On your answer for the question '" + question_text + "'",
+                description_text="On your answer for the question '" + question_text + "'.",
                 target_url=reverse('public_website:view-answer', kwargs={'question_id': question_id, 'answer_id': answer_id}),
                 user=answer.submitted_by
             )
@@ -671,7 +671,7 @@ class UpdateUserName(View):
         request.user.last_name = request.POST.get('last-name')
         request.user.save()
 
-        messages.success(request, 'Your personal info has been updated')
+        messages.success(request, 'Your personal info has been updated.')
         return redirect('public_website:user-profile', user_id=request.user.id, active_tab='settings')
 
 
@@ -687,7 +687,7 @@ class UpdateOrganisationInfo(View):
             request.user.organisation_role = request.POST.get('organisation-role')
             request.user.save()
 
-        messages.success(request, 'Your organisation info has been updated')
+        messages.success(request, 'Your organisation info has been updated.')
         return redirect('public_website:user-profile', user_id=request.user.id, active_tab='settings')
 
 
@@ -700,16 +700,16 @@ class UpdateUserPassword(View):
             if request.POST.get('new-password') == request.POST.get('confirm-new-password'):
                 match_check_new = check_password(request.POST.get('new-password'), request.user.password)
                 if match_check_new:
-                    messages.error(request, (_('New password cannot be same as the current password')))
+                    messages.error(request, (_('New password cannot be same as the current password.')))
                 else:
                     request.user.password = make_password(password=request.POST.get('new-password'))
                     request.user.save()
                     login(request, request.user)
                     messages.success(request, (_('Your password has been updated!')))
             else:
-                messages.error(request, _('Make sure you entered the new password correctly both times'))
+                messages.error(request, _('Make sure you entered the new password correctly both times.'))
         else:
-            messages.error(request, _('The password you entered is incorrect'))
+            messages.error(request, _('The password you entered is incorrect.'))
 
         return redirect('public_website:user-profile', user_id=request.user.id, active_tab='settings')
 
@@ -721,7 +721,7 @@ class UpdateProfilePicture(View):
         user_profile.profile_picture = request.POST.get('picture')
         user_profile.save()
 
-        messages.success(request, 'Your profile picture has been updated')
+        messages.success(request, 'Your profile picture has been updated.')
         return redirect('public_website:user-profile', user_id=request.user.id)
 
 
