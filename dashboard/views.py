@@ -2389,7 +2389,7 @@ class BaseApproveTranslation(View):
 
         # ...to the peer reviewers
         for u in set([c.author for c in p.comments.all()]):
-            if u != self.request.user:
+            if u != self.request.user and u != p.translated_by:
                 Notification.objects.create(
                     notification_type='published',
                     title_text=((
