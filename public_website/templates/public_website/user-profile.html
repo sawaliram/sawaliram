@@ -366,7 +366,7 @@
                                 <h3 class="low-margin-title">
                                     {% trans 'Dataset' %} #{{ submitted_question.id }} 
                                 </h3>
-                                <p class="small submitted-date">{{ submitted_question.question_count }} {% trans 'questions' %}, submitted on {{ submitted_question.created_on|date:"jS F, Y" }}</p>
+                                <p class="small submitted-date">{{ submitted_question.question_count }} {% trans 'questions' %}, submitted on {{ submitted_question.created_on|date:"j F, Y" }}</p>
                                 {% if selected_user == request.user  %}
                                     {% if submitted_question.status == 'new' %}
                                     <p class="small pending">
@@ -401,7 +401,7 @@
                                         {% endif %}
                                     </h3>
                                     <p class="small submitted-date">
-                                        Submitted on {{ submitted_answer.created_on|date:"jS F, Y" }}
+                                        Submitted on {{ submitted_answer.created_on|date:"j F, Y" }}
                                     </p>
                                     <p class="small pending">
                                         <i class="fas fa-clock"></i> {% trans 'Answer under review' %}
@@ -438,7 +438,7 @@
                                     {% endif %}
                                 </h3>
                                 <p class="small submitted-date">
-                                    Submitted on {{ published_answer.created_on|date:"jS F, Y" }} | Last edited on {{ published_answer.updated_on|date:"jS F, Y" }}
+                                    Submitted on {{ published_answer.created_on|date:"j F, Y" }} | Last edited on {{ published_answer.updated_on|date:"j F, Y" }}
                                 </p>
                                 <p class="small success">
                                     <i class="fas fa-check-circle"></i> {% trans 'Answer reviewed and published' %}
@@ -465,7 +465,7 @@
                                     <div class="card sw-shadow">
                                         <h3 class="low-margin-title">{{ published_article.title }}</h3>
                                         <p class="small submitted-date">
-                                            Submitted on {{ published_article.created_on|date:"jS F, Y" }}
+                                            Submitted on {{ published_article.created_on|date:"j F, Y" }}
                                         </p>
                                         {% if selected_user == request.user %}
                                             <p class="small success">
@@ -489,7 +489,7 @@
                                     <div class="card sw-shadow">
                                         <h3 class="low-margin-title">{{ submitted_article.title }}</h3>
                                         <p class="small submitted-date">
-                                            Submitted on {{ submitted_article.created_on|date:"jS F, Y" }}
+                                            Submitted on {{ submitted_article.created_on|date:"j F, Y" }}
                                         </p>
                                         <p class="small pending">
                                             <i class="fas fa-clock"></i> {% trans 'Article under review' %}
@@ -524,7 +524,7 @@
                                     <div class="card sw-shadow">
                                         <h3 class="low-margin-title">{{ published_article.title }}</h3>
                                         <p class="small submitted-date">
-                                            Submitted on {{ published_article.created_on|date:"jS F, Y" }}
+                                            Submitted on {{ published_article.created_on|date:"j F, Y" }}
                                         </p>
                                         {% if selected_user == request.user %}
                                             <p class="small success">
@@ -567,7 +567,7 @@
                                         <span class="badge badge-secondary">{{ submitted_answer.source.language }} -> {{ submitted_answer.language }}</span>
                                     </h3>
                                     <p class="small pending">
-                                        <i class="fas fa-clock"></i> {% trans 'Answer translation under review since' %} {{ submitted_answer.created_on|date:"jS F, Y" }}
+                                        <i class="fas fa-clock"></i> {% trans 'Answer translation under review since' %} {{ submitted_answer.created_on|date:"j F, Y" }}
                                     </p>
                                     <hr>
                                     <p class="grey-text">
@@ -599,7 +599,7 @@
                                     <span class="badge badge-secondary">{{ published_answer.source.language }} -> {{ published_answer.language }}</span>
                                 </h3>
                                 <p class="small submitted-date">
-                                    Submitted on {{ published_answer.created_on|date:"jS F, Y" }} | Last edited on {{ published_answer.updated_on|date:"jS F, Y" }}
+                                    Submitted on {{ published_answer.created_on|date:"j F, Y" }} | Last edited on {{ published_answer.updated_on|date:"j F, Y" }}
                                 </p>
                                 <p class="small success">
                                     <i class="fas fa-check-circle"></i> {% trans 'Answer translation reviewed and published' %}
@@ -632,7 +632,7 @@
                                             <a href="{{ submitted_article.source.get_absolute_url }}" class="grey-link">{{ submitted_article.source.title }}</a>
                                         </p>
                                         <p class="small pending">
-                                            <i class="fas fa-clock"></i> {% trans 'Article translation under review since' %} {{ submitted_article.created_on|date:"jS F, Y" }}
+                                            <i class="fas fa-clock"></i> {% trans 'Article translation under review since' %} {{ submitted_article.created_on|date:"j F, Y" }}
                                         </p>
                                         <hr>
                                         <p class="grey-text">
@@ -670,7 +670,7 @@
                                         <a href="{{ published_article.source.get_absolute_url }}" class="grey-link">{{ published_article.source.title }}</a>
                                     </p>
                                     <p class="small submitted-date">
-                                        <i class="fas fa-clock"></i> Submitted on {{ published_article.created_on|date:"jS F, Y" }}
+                                        <i class="fas fa-clock"></i> Submitted on {{ published_article.created_on|date:"j F, Y" }}
                                     </p>
                                     {% if selected_user == request.user %}
                                         <p class="small success">
