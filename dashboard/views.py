@@ -1859,7 +1859,7 @@ class BaseEditTranslation(UpdateView):
 
         response = super().form_valid(form)
 
-        print(self.object.id, self.object.source)
+        # print(self.object.id, self.object.source)
 
         if self.request.POST.get('mode') == 'submit':
             # The user wants to submit, so we'll do our own
@@ -2077,7 +2077,7 @@ class EditSubmittedAnswerTranslation(EditAnswerTranslation):
             id=self.kwargs.get('answer'))
 
         
-        print(question.source.id, answer.source.question_id.id, question.id)
+        # print(question.source.id, answer.source.question_id.id, question.id)
 
         # Make sure the question and answer match
         if answer.source.question_id.id != question.source.id:
