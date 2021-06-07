@@ -714,7 +714,7 @@ class AnswerQuestions(SearchView):
 class ReviewAnswersList(SearchView):
     def get_querysets(self, request):
         results = {}
-        if 'q' in request.GET:
+        if 'q' in request.GET and request.GET.get('q') != '':
             query_set = Question.objects.filter(
                                 answers__status='submitted',
                             ).exclude(
@@ -730,11 +730,32 @@ class ReviewAnswersList(SearchView):
             )
             return results
         else:
-            results['questions'] = Question.objects.filter(
-                            answers__status='submitted',
-                        ).exclude(
-                            answers__submitted_by=request.user,
-                        ).distinct()
+            ques = Question.objects.filter(
+                                answers__status='submitted',
+                            ).exclude(
+                                answers__submitted_by=request.user,
+                            ).distinct()
+            temp = {}
+            temp2 = []
+
+            for q in ques:
+                a = q.answers.all()   
+                for ans in a:
+                    comment = ans.comments.all()
+                    temp[q] = comment.count()
+
+            sorted_tuples = sorted(temp.items(), key=lambda item: item[1])
+            sorted_dict = {k: v for k, v in sorted_tuples}
+            
+            res = sorted_dict.keys()
+            for b in res:
+                temp2.append(b.id)
+            
+            clauses = ' '.join(['WHEN id=%s THEN %s' % (pk, i) for i, pk in enumerate(temp2)])
+            ordering = 'CASE %s END' % clauses
+
+            results['questions'] = Question.objects.filter(id__in=temp2).extra(
+            select={'ordering': ordering}, order_by=('ordering',))
 
             return results
 
