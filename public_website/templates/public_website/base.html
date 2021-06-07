@@ -19,7 +19,21 @@
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>        
 
         <title>{% block title %} {% endblock %}</title>
-        </head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@9.1.1/dist/css/autoComplete.min.css">
+        <style>
+            .autoComplete_result:hover {
+                background-color:#ffebcc;
+            }
+
+            .autoComplete_highlighted {
+                color: #FEB740;
+            }
+
+            .no_result span {
+                padding: 8px;
+            }
+        </style>
+    </head>
     <body class="d-flex flex-column {% block body_styles %}{% if grey_background == 'True' %}grey-background{% endif %}{% endblock %}">
 
         <div class="menu-background slow-transition"></div>
@@ -118,8 +132,8 @@
 
         <div class="navbar-search-box slow-transition">
             <div class="navbar-search-form-wrapper">
-                <form action="{% url 'public_website:search' %}" class="navbar-search-form slow-transition" method="GET">
-                    <input type="text" id="ques" class="search-field" name="q" placeholder="{% trans 'Search for questions, articles and resources' %}" autocomplete="off">
+                <form  id="nav-form" action="{% url 'public_website:search' %}" class="navbar-search-form slow-transition" method="GET">
+                    <input type="text" class="search-field" name="q" placeholder="{% trans 'Search for questions, articles and resources' %}" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" id="search-field">
                 </form>
                 <button class="btn close-navbar-search-box"><i class="fas fa-times"></i></button>
             </div>
@@ -192,6 +206,23 @@
                         {% if page_title == 'Review Article' %}
                             <a href="{% url 'dashboard:manage-content' %}">{% trans 'Manage Content' %}</a> >
                         {% endif %}
+
+                        {% if page_title == 'Translate Answer' %}
+                            <a href="{% url 'dashboard:translate-answers' %}">{% trans 'Translate Content' %}</a> >
+                        {% endif %}
+
+                        {% if page_title == 'Translate Article' %}
+                            <a href="{% url 'dashboard:translate-answers' %}">{% trans 'Translate Content' %}</a> >
+                        {% endif %}
+
+                        {% if page_title == 'Edit Answer Translation' %}
+                            <a href="{% url 'dashboard:translate-answers' %}">{% trans 'Translate Content' %}</a> >
+                        {% endif %}
+
+                        {% if page_title == 'Edit Article Translation' %}
+                            <a href="{% url 'dashboard:translate-answers' %}">{% trans 'Translate Content' %}</a> >
+                        {% endif %}
+
                     {% endif %}
                     {{ page_title }}
                 </p>
@@ -261,5 +292,50 @@
         <script src="{% static 'js/script.js' %}"></script>
         
         {% block footer %}{% endblock %}
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@9.1.1/dist/js/autoComplete.min.js"></script>
+        <script>
+            var url = "{% url 'public_website:suggestions' %}";
+            var suggestions;
+
+            fetch(url).then(response => response.json()).then(dx => {
+                suggestions = dx.suggestion;
+
+                const autoCompleteJS = new autoComplete({
+                    selector: '#search-field',
+                    data: {
+                        src: suggestions
+                    },
+                    trigger: {
+                        event: ["input", "focus"]
+                    },
+                    resultsList: {
+                        noResults: (list, query) => {
+                            const message = document.createElement("div");
+                            message.setAttribute("class", "no_result");
+                            message.innerHTML = `<span style="display: flex; align-items: center; font-weight: 100; color: rgba(0,0,0,.2);">Found No Results for "${query}"</span>`;
+                            list.appendChild(message);
+                        }
+                    },
+                    resultItem: {
+                        highlight: {
+                            render: true
+                        },
+                        content: (data, element) => {
+                            element.style = "display: flex; justify-content: space-between;";
+                            element.innerHTML = `<span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                    ${data.match}</span>`;
+                        }
+                    },
+                    onSelection: (feedback) => {
+                        document.querySelector("#search-field").blur();
+                        const selection = feedback.selection.value;
+                        document.querySelector("#search-field").value = selection;
+                        $('#nav-form').submit();
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

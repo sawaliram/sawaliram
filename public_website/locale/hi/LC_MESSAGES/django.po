@@ -1,0 +1,1984 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-01 09:03+0530\n"
+"PO-Revision-Date: 2021-06-05 11:30+0530\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 3.0\n"
+
+#: .\templates\public_website\about.html:5
+#: .\templates\public_website\base.html:68
+#: .\templates\public_website\base.html:69 .\views.py:752
+msgid "About"
+msgstr ""
+
+#: .\templates\public_website\about.html:5
+#: .\templates\public_website\articles.html:6
+#: .\templates\public_website\faq.html:6
+#: .\templates\public_website\get-involved.html:6
+#: .\templates\public_website\home.html:6
+#: .\templates\public_website\research.html:6
+#: .\templates\public_website\resources.html:6
+#: .\templates\public_website\search.html:7
+#: .\templates\public_website\view-answer.html:9
+#: .\templates\public_website\view-article.html:6
+msgid "Sawaliram"
+msgstr ""
+
+#: .\templates\public_website\about.html:12
+msgid "...and Sawaliram was born!"
+msgstr ""
+
+#: .\templates\public_website\about.html:13
+msgid "about"
+msgstr ""
+
+#: .\templates\public_website\about.html:16
+msgid ""
+"\n"
+"            It was 1972 and a group of scientists, university academics, "
+"graduate students and school teachers were\n"
+"            gathering in the village of Rasulia, in the Hoshangabad District "
+"of Madhya Pradesh State. \n"
+"            They wished to develop an active, inquiring and experiment-based "
+"science program, a curriculum that \n"
+"            was rooted in rural India.Their efforts led to the landmark "
+"'Hoshangabad Science Teaching \n"
+"            Program <a href=\"https://www.eklavya.in/past-work-top/"
+"programmes-past-top/hstp\">(HSTP)</a>', one that was implemented in the next "
+"30 years over large tracts of the State.' \n"
+"         "
+msgstr ""
+
+#: .\templates\public_website\about.html:26
+msgid ""
+"\n"
+"            HSTP and its <a href=\"https://www.eklavya.in/past-work-top/"
+"programmes-past-top/hstp/224-workbook\">'Bal Vaigyanik'</a> ('Child "
+"Scientist' in Hindi) textbooks offered children many opportunities t\n"
+"            o observe, experiment and investigate their surroundings.  As a "
+"result children came up with a host of \n"
+"            intriguing questions which they and their teachers naturally "
+"lacked the resources to handle. \n"
+"            Thus it was that 'Sawaliram' was born. The year was 1978. \n"
+"        "
+msgstr ""
+
+#: .\templates\public_website\about.html:35
+msgid ""
+"\n"
+"            Over the decades that followed tens of thousands of children "
+"sent postcards and letters to Sawaliram \n"
+"            and were rewarded with personalised replies by volunteers. A few "
+"hundreds of these questions and answers\n"
+"            were published in magazines. \n"
+"        "
+msgstr "dh"
+
+#: .\templates\public_website\about.html:43
+msgid ""
+"\n"
+"            The trend of responding to children's questions caught on in "
+"other places. In Mumbai, at the Homi Bhabha \n"
+"            Centre for Science Education, the 'Shanka-samadhan' ('Curiosity "
+"satisfied') program addressed questions \n"
+"            mailed in by children. In Kerala a group of scientists, "
+"engineers and writers got together in the 1960s \n"
+"            with an aim to develop scientific and technical literature in "
+"Indian languages. By the start of the \n"
+"            1970s the 'Kerala Shastra Sahitya Parishad (KSSP)' was "
+"publishing magazines for children and responding \n"
+"            to their questions. KSSP's ideal of a 'People’s Science "
+"Movement' was adopted by popular groups in other \n"
+"            States of India, leading in 1988 to the <a href=\"https://aipsn."
+"net/resources-2/\">'All India People's Science Network'</a>, in which many "
+"groups have \n"
+"            run their own Q&A programs in different Indian languages. \n"
+"        "
+msgstr ""
+
+#: .\templates\public_website\about.html:55
+msgid ""
+"\n"
+"            The magic of children's questions has touched many, among them a "
+"few well-known Indian scientists who \n"
+"            took it upon themselves to call for children's questions and "
+"answer them through personal letters. \n"
+"            Today many science institutes, universities and colleges conduct "
+"outreach programs with Q&A sessions. \n"
+"            In classrooms as well, students may ask questions. \n"
+"        "
+msgstr "hhbbhb"
+
+#: .\templates\public_website\about.html:63
+msgid ""
+"\n"
+"            The Sawaliram website is built as a repository for all of these "
+"questions which are being continually \n"
+"            asked by children over the years. Sawaliram provides a home "
+"where children's questions can be submitted, \n"
+"            viewed, answered, queried and analysed. Significantly these "
+"questions give us all: parents, educators, \n"
+"            curriculum makers, writers and researchers, a glimpse into the "
+"rich and multifaceted world of the child. \n"
+"        "
+msgstr ""
+
+#: .\templates\public_website\about.html:81
+msgid "Our Team"
+msgstr ""
+
+#: .\templates\public_website\about.html:83
+msgid ""
+" \n"
+"                        The Sawaliram website is collaboratively developed "
+"and maintained by the Tata Institute of \n"
+"                        Fundamental Research (TIFR Centre for "
+"Interdisciplinary Sciences), Hyderabad, and Eklavya, \n"
+"                        an NGO based in Bhopal, Madhya Pradesh. \n"
+"                    "
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:31
+msgid ""
+"As children ask, Sawaliram listens, and remembers. The Sawaliram repository "
+"is built out of questions that children have been continuously asking to "
+"adults around them."
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:32
+msgid "Now let us ask some questions on these questions."
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:33
+msgid ""
+"As the repository grows with your contributions, we will find newer ways to "
+"query children's questions, to know, what are they asking about? What makes "
+"them curious? And how could we nurture that questioning habit?"
+msgstr "fhhhhhfff hhfh"
+
+#: .\templates\public_website\analytics-home.html:49
+#: .\templates\public_website\analytics-home.html:63
+msgid "In which languages were the questions asked?"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:64
+msgid "Question language"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:66
+msgid "When were these questions collected?"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:67
+msgid "Year of asking question"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:69
+msgid "How many questions did girls and boys ask?"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:70
+msgid "Gender"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:72
+msgid "In which language medium did the questioners study? "
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:73
+msgid "Medium of instruction"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:75
+msgid "In which class did the questioners study?"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:76
+msgid "Student class"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:78
+msgid "What curriculum does the school follow? "
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:79
+msgid "Curriculum followed"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:92
+msgid "Gender Split"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:96
+msgid "STEM"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:97
+msgid "STEM vs. other subjects"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:111
+msgid "Composition of Datasets"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:114
+msgid "How were the questions originally asked?"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:124
+msgid "When were the questions asked?"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:141
+msgid "From which state were these questions asked?"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:160
+msgid "Hover/Click over the states/bubbles to view the information."
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:166
+msgid ""
+"States of India are shown as per the available open source map. The Union "
+"Territory of Ladakh will be depicted when a TopoJSON map is available."
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:172
+msgid ""
+"For more analytics and to try your own visualisation ideas see our page on "
+"Tableau Public"
+msgstr ""
+
+#: .\templates\public_website\analytics-home.html:177
+msgid "Contact us to access data"
+msgstr ""
+
+#: .\templates\public_website\articles.html:25
+#: .\templates\public_website\search.html:17
+#: .\templates\public_website\search.html:108
+msgid "Newest"
+msgstr ""
+
+#: .\templates\public_website\articles.html:26
+#: .\templates\public_website\search.html:18
+#: .\templates\public_website\search.html:109
+msgid "Oldest"
+msgstr ""
+
+#: .\templates\public_website\base.html:48
+#: .\templates\public_website\base.html:49
+#: .\templates\public_website\home.html:74
+#: .\templates\public_website\research.html:6
+#: .\templates\public_website\search.html:32 .\views.py:760
+msgid "Research"
+msgstr ""
+
+#: .\templates\public_website\base.html:52
+#: .\templates\public_website\base.html:53
+#: .\templates\public_website\home.html:80
+#: .\templates\public_website\search.html:31
+#: .\templates\public_website\user-profile.html:478
+#: .\templates\public_website\user-profile.html:538 .\views.py:862
+msgid "Articles"
+msgstr ""
+
+#: .\templates\public_website\base.html:58
+#: .\templates\public_website\base.html:59
+#: .\templates\public_website\home.html:86
+#: .\templates\public_website\search.html:33 .\views.py:830
+msgid "Resources"
+msgstr ""
+
+#: .\templates\public_website\base.html:62
+#: .\templates\public_website\base.html:63 .\views.py:902
+msgid "Analytics"
+msgstr ""
+
+#: .\templates\public_website\base.html:72
+#: .\templates\public_website\base.html:73
+#: .\templates\public_website\base.html:249
+msgid "Team"
+msgstr ""
+
+#: .\templates\public_website\base.html:78
+#: .\templates\public_website\base.html:79 .\views.py:776
+msgid "Contact Us"
+msgstr ""
+
+#: .\templates\public_website\base.html:82
+#: .\templates\public_website\base.html:243
+#: .\templates\public_website\get-involved.html:6
+#: .\templates\public_website\get-involved.html:13 .\views.py:744
+msgid "Get Involved"
+msgstr ""
+
+#: .\templates\public_website\base.html:83
+msgid "Get Involved!"
+msgstr ""
+
+#: .\templates\public_website\base.html:96
+#: .\templates\public_website\user-profile.html:25
+msgid "Profile Picture"
+msgstr ""
+
+#: .\templates\public_website\base.html:98
+msgid "View Profile"
+msgstr ""
+
+#: .\templates\public_website\base.html:102
+#: .\templates\public_website\user-profile.html:39
+msgid "User Settings"
+msgstr ""
+
+#: .\templates\public_website\base.html:103
+#: .\templates\public_website\user-profile.html:40
+msgid "Settings"
+msgstr ""
+
+#: .\templates\public_website\base.html:106
+#: .\templates\public_website\user-profile.html:45
+msgid "User Drafts"
+msgstr ""
+
+#: .\templates\public_website\base.html:107
+#: .\templates\public_website\user-profile.html:46
+msgid "Drafts"
+msgstr ""
+
+#: .\templates\public_website\base.html:110
+#: .\templates\public_website\user-profile.html:51
+msgid "User Notifications"
+msgstr ""
+
+#: .\templates\public_website\base.html:111
+#: .\templates\public_website\user-profile.html:52
+msgid "Notifications"
+msgstr ""
+
+#: .\templates\public_website\base.html:117
+#: .\templates\public_website\user-profile.html:60
+msgid "User Submissions"
+msgstr ""
+
+#: .\templates\public_website\base.html:118
+#: .\templates\public_website\user-profile.html:61
+msgid "Submissions"
+msgstr ""
+
+#: .\templates\public_website\base.html:121
+#: .\templates\public_website\user-profile.html:66
+msgid "User Bookmarks"
+msgstr ""
+
+#: .\templates\public_website\base.html:122
+#: .\templates\public_website\user-profile.html:67
+msgid "Bookmarks"
+msgstr ""
+
+#: .\templates\public_website\base.html:125
+msgid "User Signout"
+msgstr ""
+
+#: .\templates\public_website\base.html:126
+#: .\templates\public_website\base.html:181
+msgid "Signout"
+msgstr ""
+
+#: .\templates\public_website\base.html:136
+msgid "Search for questions, articles and resources"
+msgstr ""
+
+#: .\templates\public_website\base.html:147
+msgid "Sawaliram Home"
+msgstr ""
+
+#: .\templates\public_website\base.html:175
+msgid "My Profile"
+msgstr ""
+
+#: .\templates\public_website\base.html:178
+msgid "Dashboard"
+msgstr ""
+
+#: .\templates\public_website\base.html:198
+msgid "Dashboard Home"
+msgstr ""
+
+#: .\templates\public_website\base.html:201
+#: .\templates\public_website\search.html:203
+#: .\templates\public_website\search.html:205
+#: .\templates\public_website\search.html:227
+#: .\templates\public_website\search.html:237 .\views.py:360
+msgid "Answer Questions"
+msgstr ""
+
+#: .\templates\public_website\base.html:204
+#: .\templates\public_website\search.html:213 .\views.py:360
+msgid "Review Answers"
+msgstr ""
+
+#: .\templates\public_website\base.html:207
+msgid "Manage Content"
+msgstr ""
+
+#: .\templates\public_website\base.html:211
+#: .\templates\public_website\base.html:215
+#: .\templates\public_website\base.html:219
+#: .\templates\public_website\base.html:223
+#: .\templates\public_website\search.html:26
+#: .\templates\public_website\search.html:125
+#: .\templates\public_website\search.html:211
+#: .\templates\public_website\search.html:244 .\views.py:429
+msgid "Translate Content"
+msgstr ""
+
+#: .\templates\public_website\base.html:241
+msgid ""
+"Get involved as a parent, teacher, observer, coder or subject expert. <br>  "
+"Or simply by contributing to Sawaliram."
+msgstr ""
+
+#: .\templates\public_website\base.html:250
+msgid "Contact"
+msgstr ""
+
+#: .\templates\public_website\base.html:251
+#: .\templates\public_website\faq.html:6
+msgid "FAQ"
+msgstr ""
+
+#: .\templates\public_website\base.html:252
+msgid "GitHub"
+msgstr ""
+
+#: .\templates\public_website\base.html:283
+msgid "Copyright Sawaliram/Eklavya 2021. All rights reserved."
+msgstr ""
+
+#: .\templates\public_website\faq.html:10
+msgid "1. What do I get from visiting Sawaliram.org?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:11
+msgid ""
+"Sawaliram is an open source website and open access repository of children’s "
+"questions from across India. It is created with an aim to encourage "
+"questioning and curiosity-based learning among school age children. On "
+"Sawaliram, you will find questions asked by children belonging to different "
+"States of India, from different backgrounds and in different languages. You "
+"may view expert answers to some of these questions, read interesting blogs "
+"and find research articles and resources related to ‘Curiosity and "
+"Questioning’."
+msgstr ""
+
+#: .\templates\public_website\faq.html:13
+msgid "2. Why is Sawaliram building a repository of children’s questions?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:14
+msgid ""
+"Children inherently have lots of questions and doubts, arising from their "
+"day-to-day observations as well as from school learning. These questions "
+"often remain un-answered and even un-asked, particularly when resources to "
+"answer the questions are not within the child’s reach. Sawaliram gives a "
+"voice to these children and makes their questions available for experts to "
+"answer. Sawaliram also hopes to create an awareness in the society regarding "
+"the need to nurture the inherent curiosity of children for the better "
+"learning of all of us."
+msgstr ""
+
+#: .\templates\public_website\faq.html:16
+msgid "3. How is Sawaliram different from other Q & A websites?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:17
+msgid ""
+"Though Sawaliram deals with questions and answers, it is different from "
+"other Q & A websites in several ways. First, it privileges questions from "
+"children belonging to rural and less-privileged sections of the society who "
+"may not themselves have access to the internet. Second, Sawaliram highlights "
+"the fact that, even in the absence of resources, children do ask a variety "
+"of interesting and spontaneous questions, which deserve the attention of all "
+"adults, including educators. More important, Sawaliram aims to be a resource "
+"for parents, teachers, curriculum developers, writers and researchers to "
+"understand and appreciate curiosity and questioning among children."
+msgstr ""
+
+#: .\templates\public_website\faq.html:19
+msgid "4. I am a student; will Sawaliram help me prepare for my exams?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:20
+msgid ""
+"The short answer is, “No”. Sawaliram targets spontaneous curiosity and not "
+"exam-based question-answering. We rely on the voluntary efforts of experts "
+"to answer questions in their spare time, so you may not get your answers "
+"immediately. But you should definitely add your doubts and questions "
+"regarding any specific topics throughout the year and perhaps get your "
+"answers from a subject expert. In case your question matches an already "
+"existing question asked by another student, you would have a chance of "
+"getting an answer sooner."
+msgstr ""
+
+#: .\templates\public_website\faq.html:22
+msgid "5. Can I add a list of questions from my friends to Sawaliram?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:23
+msgid ""
+"If you have collected a set of questions from students you may add them to "
+"the database by creating a profile and logging into the dashboard. DO read "
+"the guidelines carefully before entering the questions into the template."
+msgstr ""
+
+#: .\templates\public_website\faq.html:26
+msgid ""
+"6. I added some questions to Sawaliram, how will I know when my questions "
+"are answered?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:27
+msgid ""
+"You will receive a notification on the dashboard whenever new answers are "
+"added for the dataset you have entered.  In the next phase we will add an "
+"option of email notification. You may not get answers for all the questions "
+"at once."
+msgstr ""
+
+#: .\templates\public_website\faq.html:29
+msgid "7. Who gives answers to all these questions?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:30
+msgid ""
+"For answering the questions, we have a number of subject experts on board "
+"our team, who range from scientists and teachers to graduate and "
+"undergraduate students."
+msgstr ""
+
+#: .\templates\public_website\faq.html:32
+msgid "8. I am a school teacher; In what ways can Sawaliram help me?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:33
+msgid ""
+"Through Sawaliram you will know the pattern of questioning among children "
+"and also find out common misconceptions among them. You may use this "
+"information to design your teaching methodology with a child-centered "
+"perspective, for ensuring better engagement from students."
+msgstr ""
+
+#: .\templates\public_website\faq.html:35
+msgid "9. Being a teacher, can I contribute to Sawaliram?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:36
+msgid ""
+"Yes. You can contribute to Sawaliram by sharing with us the spontaneous "
+"questions from students of your school or locality. You may enroll as a "
+"subject expert if you are interested in answering children’s questions and "
+"also share your experiences of teaching and interacting with children, in "
+"the form of articles and blogs."
+msgstr ""
+
+#: .\templates\public_website\faq.html:38
+msgid ""
+"10. I work in a rural school with no internet access, how can I make use of "
+"Sawaliram?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:39
+msgid ""
+"You can make good use of Sawaliram by acting as a connecting link between "
+"the rural school and Sawaliram. You can collect students’ questions from the "
+"school and enter them as a volunteer in the Sawaliram database periodically, "
+"when you come to city or a place where you find internet access. Also you "
+"can download articles, blogs, answers, etc. from Sawaliram and distribute to "
+"your school."
+msgstr ""
+
+#: .\templates\public_website\faq.html:41
+msgid "11. I am a writer, can I contribute to Sawaliram in some way?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:42
+msgid ""
+"Yes. If you are interested in the area of Curiosity and Questioning among "
+"children, you can express your view and opinions in the form of blogs for "
+"the Sawaliram website."
+msgstr ""
+
+#: .\templates\public_website\faq.html:44
+msgid "12. How can Sawaliram help me improve my parenting?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:45
+msgid ""
+"Through Sawaliram you will come across the common questioning patterns and "
+"misconceptions among school going children, which are not usually "
+"communicated to parents or regular teachers. This information will be highly "
+"useful for improving your parenting methods and to understand your child "
+"better."
+msgstr ""
+
+#: .\templates\public_website\faq.html:47
+msgid ""
+"13. Is Sawaliram an educational website, which I can recommend to my child?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:48
+msgid ""
+"Yes, Sawaliram is an educational website, which can be recommended to your "
+"child for overall cognitive enrichment. However, it should not be confused "
+"with academic websites meant for helping with competitive exam preparation."
+msgstr ""
+
+#: .\templates\public_website\faq.html:50
+msgid "14. I am a researcher, how can I get involved with Sawaliram?"
+msgstr ""
+
+#: .\templates\public_website\faq.html:51
+msgid ""
+"You may register with Sawaliram as a subject expert and contribute by "
+"answering children’s questions. On the website you will also find resources "
+"helpful for research on children’s questions."
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:15
+msgid "Contribute to Sawaliram and <br> help us grow!"
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:16
+msgid "Donate"
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:22
+msgid "More ways to join hands with us"
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:23
+msgid "Frequently Asked "
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:23
+#: .\templates\public_website\search.html:30
+#: .\templates\public_website\search.html:39
+#: .\templates\public_website\user-profile.html:375
+#: .\templates\public_website\user-profile.html:720
+msgid "Questions"
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:35
+msgid ""
+"Are you a teacher, parent or an observer? Bring out the curious kid within "
+"you!"
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:36
+msgid ""
+"As a teacher, parent or anyone interacting with children, you must have "
+"enjoyed and wondered about their active and inquisitive behaviour. Share "
+"your experiences by writing to us at mail.sawaliram@gmail.com or login to "
+"the Sawaliram dashboard to contribute questions, answers, articles or "
+"translations."
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:37
+#: .\templates\public_website\get-involved.html:52
+#: .\templates\public_website\get-involved.html:68
+msgid "Go to Dashboard"
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:50
+msgid ""
+"Natural or social scientist, or just an infovore? Share your learnings with "
+"Sawaliram!"
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:51
+msgid ""
+"Children’s innocent questions teach us much about the world. Do join us in "
+"answering these questions, in a way that will encourage and nurture their "
+"curiosity. Your answers will be helpful to teachers, parents and volunteers "
+"on the field who are interacting with children. Do write to us at mail."
+"sawaliram@gmail.com or login to the dashboard to contribute."
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:66
+msgid "How well can you juggle between languages? Try it with us."
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:67
+msgid ""
+"Curiosity is expressed best in our native tongue, and we must listen and "
+"talk with each other across languages. On Sawaliram’s multilingual website "
+"we are looking for people who could translate answers and other content into "
+"different Indian languages. As an open source platform you might also "
+"implement Sawaliram in your own country’s language(s). Do write to us at "
+"mail.sawaliram@gmail.com or login to the dashboard to contribute."
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:82
+msgid ""
+"Are you a connoisseur of code? Do you love embarking on debugging journeys?"
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:83
+msgid ""
+"This website is open source and built by the community. You can help us "
+"build and improve the next big platform that can reach out to students in "
+"their classrooms. Head over to our github repository to learn all about how "
+"to get started!"
+msgstr ""
+
+#: .\templates\public_website\get-involved.html:84
+msgid "GitHub repo"
+msgstr ""
+
+#: .\templates\public_website\home.html:6
+msgid "Home"
+msgstr ""
+
+#: .\templates\public_website\home.html:15
+msgid ""
+"Know more about <br> Sawaliram,<br> the curious crow <br> who collects "
+"questions."
+msgstr ""
+
+#: .\templates\public_website\home.html:16
+msgid "Know more about Sawaliram, the curious crow who collects questions."
+msgstr ""
+
+#: .\templates\public_website\home.html:27
+msgid "View Sawaliram's vast repository of questions."
+msgstr ""
+
+#: .\templates\public_website\home.html:28
+msgid "View Sawalirams vast repository of questions."
+msgstr ""
+
+#: .\templates\public_website\home.html:29
+msgid "View"
+msgstr ""
+
+#: .\templates\public_website\home.html:41
+msgid ""
+"Access the database of <br> questions filtered by <br>  region, language, "
+"<br>  gender, etc."
+msgstr ""
+
+#: .\templates\public_website\home.html:42
+msgid ""
+"Access the database of questions filtered by region, language, gender, etc."
+msgstr ""
+
+#: .\templates\public_website\home.html:43
+msgid "View Analytics"
+msgstr ""
+
+#: .\templates\public_website\home.html:61
+msgid "Drop your queries or keywords here..."
+msgstr ""
+
+#: .\templates\public_website\home.html:76
+msgid ""
+"What is curiosity really? At home and  <br> school, in the mind and in "
+"society. <br> See what researchers find."
+msgstr ""
+
+#: .\templates\public_website\home.html:77
+msgid "Learn More"
+msgstr ""
+
+#: .\templates\public_website\home.html:82
+msgid ""
+"Stories about curiosity from near and far, now and long ago. <br> Your "
+"stories could be here too!"
+msgstr ""
+
+#: .\templates\public_website\home.html:83
+msgid "View Articles"
+msgstr ""
+
+#: .\templates\public_website\home.html:88
+msgid ""
+"View books, magazines, websites,  Q&A collections, everything you want to "
+"know about curiosity and questioning."
+msgstr ""
+
+#: .\templates\public_website\home.html:89
+msgid "View Resources"
+msgstr ""
+
+#: .\templates\public_website\research.html:13
+msgid "Why research?"
+msgstr ""
+
+#: .\templates\public_website\research.html:14
+msgid "Research reveals a striking gap between curiosity and questioning."
+msgstr ""
+
+#: .\templates\public_website\research.html:17
+msgid ""
+"In everyday situations it is natural for us to talk about ‘curiosity’ and "
+"‘questioning’ interchangeably: when we are curious, we ask questions, and a "
+"questioning child demonstrates curiosity. Yet, research shows up a striking "
+"gap between curiosity and questioning."
+msgstr ""
+
+#: .\templates\public_website\research.html:18
+msgid ""
+"‘Curiosity’ is a basic drive that goes way back in our evolutionary history, "
+"to perhaps hundreds of millions of years ago. Human babies from two months "
+"of age show curiosity while they perceive and explore their environment. As "
+"they learn to talk, the pre-schoolers curiosity bursts forth into tens of "
+"thousands of questions they ask, every year."
+msgstr ""
+
+#: .\templates\public_website\research.html:21
+msgid ""
+"As children grow up and go to school, the picture changes dramatically. "
+"Researchers search in vain for questions asked by students in classrooms. At "
+"the same time psychologists and neuroscientists are convinced that, despite "
+"appearances, curiosity persists through adolescence, adulthood and even old "
+"age, though perhaps taking on newer forms. Such disconnects between "
+"curiosity and questioning, placed together with Sawaliram's rich "
+"repositories of children's questions, give reasons for us to raise our own "
+"questions, and provide the motivation that drives our group’s research."
+msgstr ""
+
+#: .\templates\public_website\research.html:28
+msgid "Our focus is on understanding the nature of children’s questions."
+msgstr ""
+
+#: .\templates\public_website\research.html:29
+msgid ""
+"Children’s questions are a resource for teachers and researchers to learn "
+"about their motives and interests, their doubts and misunderstandings. Our "
+"focus is on understanding the nature of children’s questions when they are "
+"provided facilitative conditions and contexts that encourage questioning. We "
+"support participating teachers to create such conditions in their own "
+"classrooms. The open access database of Sawaliram may be queried online or "
+"made available to researchers for specific projects. Our larger goal is to "
+"find ways to encourage curiosity and questioning in children, and to "
+"translate our findings into an effective curricular and pedagogic program "
+"for the Indian school system."
+msgstr ""
+
+#: .\templates\public_website\research.html:36
+msgid "Global studies on curiosity and questioning"
+msgstr ""
+
+#: .\templates\public_website\research.html:37
+msgid "Curiosity and questioning - an Indian view"
+msgstr ""
+
+#: .\templates\public_website\research.html:40
+msgid "Research methods and working with data"
+msgstr ""
+
+#: .\templates\public_website\research.html:41
+msgid "Schools and organisations participating"
+msgstr ""
+
+#: .\templates\public_website\research.html:49
+msgid "Development of curiosity"
+msgstr ""
+
+#: .\templates\public_website\research.html:51
+msgid ""
+" Chouinard, M., Harris, P., & Maratsos, M. (2007). Children's Questions: A "
+"Mechanism for Cognitive Development. <i>Monographs of the Society for "
+"Research in Child Development, 72</i>(1), I-129.  <br> <a class=\"biblio_a\" "
+"href=\"https://www.jstor.org/stable/30163594?seq=1#page_scan_tab_contents\" "
+"target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:52
+msgid ""
+" Engel, S. (2015). <i>The Hungry Mind: The Origins of Curiosity in Childhood."
+"</i> Cambridge, MA: Harvard University Press.  <br> <a class=\"biblio_a\" "
+"href=\"https://www.hup.harvard.edu/catalog.php?isbn=9780674736757\" target="
+"\"_blank\">About the book</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:53
+msgid ""
+" Harris, P. L. (2015). <i>Trusting What You’re Told: How Children Learn from "
+"Others.</i> Cambridge, MA: Belknap Press.  <br> <a class=\"biblio_a\" href="
+"\"https://www.hup.harvard.edu/catalog.php?isbn=9780674503830\" target="
+"\"_blank\">About the book</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:54
+msgid ""
+" Jirout, J. & Klahr, D. (2012). Children’s scientific curiosity: In search "
+"of an operational definition of an elusive concept. <i>Developmental Review, "
+"32</i>, 125–160. doi: 10.1016/j.dr.2012.04.002  <br> <a class=\"biblio_a\" "
+"href=\"https://www.sciencedirect.com/science/article/pii/S0273229712000123\" "
+"target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:55
+msgid ""
+" Reio, T. G. (2010). What about adolescent curiosity and risk taking? In J. "
+"L. DeVitis & L. Irwin-DeVitis (Eds.),<i>Adolescent Education: A Reader</i> "
+"(pp. 99-109). New York: Peter Lang Publishing.  <br> <a class=\"biblio_a\" "
+"href=\"https://eric.ed.gov/?id=ED531404\" target=\"_blank\">About the book</"
+"a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:56
+msgid ""
+" Shah, P. E., Weeks, H. M., Richards B., & Jaciroti, N. (2018). Early "
+"Childhood Curiosity and Kindergarten Reading and Math Academic Achievement. "
+"<i>Pediatric Research, 84</i> (Supplement C).  <br> <a class=\"biblio_a\" "
+"href=\"https://www.researchgate.net/"
+"publication/324788918_Early_Childhood_Curiosity_and_Kindergarten_Reading_and_Math_Academic_Achievement"
+"\" target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:57
+msgid ""
+" Tizard, B. & Hughes, M. (2002). <i>Young Children Learning</i> (2nd "
+"Edition) Blackwell Publishing.  <br> <a class=\"biblio_a\" href=\"https://"
+"onlinelibrary.wiley.com/doi/book/10.1002/9780470774328\" target=\"_blank"
+"\">About the book</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:62
+msgid "Psychology and neuroscience of curiosity"
+msgstr ""
+
+#: .\templates\public_website\research.html:64
+msgid ""
+"Baranes, A., Oudeyer, P.-Y., & Gottlieb, J. (2015). Eye movements reveal "
+"epistemic curiosity in human observers. <i>Vision Research, 117</i>, 81-90. "
+"doi: 10.1016/j.visres.2015.10.009  <br> <a class=\"biblio_a\" href=\"https://"
+"www.sciencedirect.com/science/article/pii/S0042698915003430\" target=\"_blank"
+"\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:65
+msgid ""
+"Collins, N. (updated, June 14, 2017). For memory, curiosity is its own "
+"reward: A new study suggests a neural link between curiosity, motivation, "
+"and memory.<i>Pacific Standard.</i>  <br> <a class=\"biblio_a\" href="
+"\"https://psmag.com/social-justice/memories-curiosity-reward-91486\" target="
+"\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:66
+msgid ""
+"Gottlieb, J., Oudeyer, P.-Y., Lopes, M., & Baranes, A. (2013). Information-"
+"seeking, curiosity, and attention: computational and neural mechanisms. "
+"<i>Trends in Cognitive Science, 17</i>, 585-593. doi:10.1016/j."
+"tics.2013.09.001  <br> <a class=\"biblio_a\" href=\"https://www.ncbi.nlm.nih."
+"gov/pmc/articles/PMC4193662/\" target=\"_blank\">Read manuscript</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:67
+msgid ""
+"Gottlieb, J., & Oudeyer, P. (2018). Towards a neuroscience of active "
+"sampling and curiosity. <i>Nature Reviews Neuroscience, 19</i>, 758-770. "
+"doi:10.1038/s41583-018-0078-0  <br> <a class=\"biblio_a\" href=\"https://www."
+"nature.com/articles/s41583-018-0078-0 \" target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:68
+msgid ""
+"Gruber, M. J., Gelman. B. D., & Ranganath, C. (2014). States of curiosity "
+"modulate hippocampus-dependent learning via the dopaminergic circuit. "
+"<i>Neuron, 84</i>, 486-496. doi: 10.1016/j.neuron.2014.08.060   <br> <a "
+"class=\"biblio_a\" href=\"https://www.sciencedirect.com/science/article/pii/"
+"S0896627314008046\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:69
+msgid ""
+"Hemmelder. V., & Blanchard, T. (Updated 2017, September 15). Why humans are "
+"hard-wired for curiosity. <i>Huffpost</i>   <br> <a class=\"biblio_a\" href="
+"\"https://www.huffpost.com/entry/why-humans-are-hardwired-_b_11984748\" "
+"target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:70
+msgid ""
+"James, W. (1899). <i>Talks to teachers on psychology: and to students on "
+"some of life's ideals </i>. New York: H. Holt  <br> <a class=\"biblio_a\" "
+"href=\"https://archive.org/details/in.ernet.dli.2015.216830/page/n11\" "
+"target=\"_blank\">Read book</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:71
+msgid ""
+"Kidd, C., & Hayden, B. Y. (2015). The Psychology and Neuroscience of "
+"Curiosity. <i>Neuron, 88</i>, 449-460. doi:10.1016/j.neuron.2015.09.010. "
+"<br> <a class=\"biblio_a\" href=\"https://www.sciencedirect.com/science/"
+"article/pii/S0896627315007679\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:72
+msgid ""
+"Loewenstein, G. (1994). The Psychology of Curiosity: A Review and "
+"Reinterpretation. <i>Psychological Bulletin, 116</i>, 75-98. "
+"doi:10.1037/0033-2909.116.1.75.  <br> <a class=\"biblio_a\" href=\"https://"
+"pdfs.semanticscholar.org/f946/7adac17f3ef6d65cdcf38b46afb974abfa55.pdf\" "
+"target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:73
+msgid ""
+"Malone, T. W. (1981), Toward a Theory of Intrinsically Motivating "
+"Instruction. <i>Cognitive Science, 5</i>, 333-369. doi:10.1207/"
+"s15516709cog0504_2  <br> <a class=\"biblio_a\" href=\"https://onlinelibrary."
+"wiley.com/doi/epdf/10.1207/s15516709cog0504_2\" target=\"_blank\">Read "
+"artcile</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:74
+msgid ""
+"Mcgillivray, S., Murayama, K., & Castel, A. D. (2015). Thirst for knowledge: "
+"The effects of curiosity and interest on memory in younger and older adults. "
+"<i>Psychology and Aging, 30</i>(4), 835-841. doi: 10.1037/a0039801  <br> <a "
+"class=\"biblio_a\" href=\"https://www.ncbi.nlm.nih.gov/pubmed/26479013\" "
+"target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:75
+msgid ""
+"Pisula, W. (2009). Curiosity and Information Seeking in Animal and Human "
+"Behavior. Boca Raton: BrownWalker Press.  <br> <a class=\"biblio_a\" href="
+"\"https://pdfs.semanticscholar.org/2ee6/9c58a96d4b492c44b34229ef2f1110e4b571."
+"pdf\" target=\"_blank\">Read introduction</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:76
+msgid ""
+"Sakaki, M., Yagi, A., & Murayama, K. (2018). Curiosity in old age: A "
+"possible key to achieving adaptive aging. <i>Neuroscience & Biobehavioral "
+"Reviews, 88</i>, 106-116. doi: 10.1016/j.neubiorev.2018.03.007  <br> <a "
+"class=\"biblio_a\" href=\"https://www.sciencedirect.com/science/article/pii/"
+"S014976341730653X\" target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:77
+msgid ""
+"Silvia, P. J. (2008). Interest - The curious emotion. <i>Current Directions "
+"in Psychological Science, 17(1)</i>, 57-60.  <br> <a class=\"biblio_a\" href="
+"\"https://journals.sagepub.com/doi/10.1111/j.1467-8721.2008.00548.x\" target="
+"\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:78
+msgid ""
+"von Stumm, S., Hell, B., & Chamorro-Premuzic, T. (2011). The hungry mind: "
+"Intellectual curiosity is the third pillar of academic performance. "
+"<i>Perspectives on Psychological Science, 6</i>(6), 574–588. doi: "
+"10.1177/1745691611421204  <br> <a class=\"biblio_a\" href=\"https://www."
+"hungrymindlab.com/wp-content/uploads/2015/10/von-Stumm-et-al-2011.pdf\" "
+"target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:79
+msgid ""
+"Sun, F. W., Stepanovic, M. R., Andreano, J., Barrett, L. F., Touroutoglou, "
+"A., & Dickerson, B. C. (2016). Youthful brains in older adults: Preserved "
+"neuroanatomy in the default mode and salience networks contributes to "
+"youthful memory in superaging. <i>Journal of Neuroscience, 36</i>(37), "
+"9659-9668. doi: 10.1523/jneurosci.1492-16.2016  <br> <a class=\"biblio_a\" "
+"href=\"https://www.jneurosci.org/content/jneuro/36/37/9659.full.pdf\" target="
+"\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:84
+msgid "Inquiry-based teaching and learning"
+msgstr ""
+
+#: .\templates\public_website\research.html:86
+msgid ""
+"Baumfield, V., & Mroz, M. (2002). Investigating pupil’s questions in the "
+"primary classroom. <i>Educational Research, 44</i>(2), 129-140.  <br> <a "
+"class=\"biblio_a\" href=\"https://www.tandfonline.com/doi/"
+"abs/10.1080/00131880110107388\" target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:87
+msgid ""
+"Brill, G., & Yarden, A. (2003). Learning biology through research papers: A "
+"stimulus for question-asking by high-school students. <i>Cell Biology "
+"Education, 2</i>, 266-274.  <br> <a class=\"biblio_a\" href=\"https://www."
+"lifescied.org/doi/pdf/10.1187/cbe.02-12-0062\" target=\"_blank\">Read "
+"article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:88
+msgid ""
+"Chin, C. (2002). Student-generated questions: Encouraging inquisitive minds "
+"in learning science. <i>Teaching and Learning (Institute of Education, "
+"Singapore), 23</i>(1), 59-67.  <br> <a class=\"biblio_a\" href=\"https://"
+"repository.nie.edu.sg/bitstream/10497/292/1/TL-23-1-59.pdf\" target=\"_blank"
+"\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:89
+msgid ""
+"Chin, C., Brown, D. E., & Bruce, B. C. (2002). Student-generated questions: "
+"A meaningful aspect of learning in science. <i>International Journal of "
+"Science Education, 24</i>(5), 521-549.  <br> <a class=\"biblio_a\" href="
+"\"https://www.tandfonline.com/doi/abs/10.1080/09500690110095249\" target="
+"\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:90
+msgid ""
+"Chin, C., & Kayalvizhi, G. (2002). Posing problems for open investigations: "
+"What questions do pupils ask? <i>Research in Science & Technological "
+"Education, 20</i>(2), 269-287.  <br> <a class=\"biblio_a\" href=\"https://"
+"www.tandfonline.com/doi/abs/10.1080/0263514022000030499\" target=\"_blank"
+"\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:91
+msgid ""
+"Chin, C., & Osborne, J. (2008). Students’ questions: a potential resource "
+"for teaching and learning of science. <i>Studies in Science Education, 44</"
+"i>, 1-39. doi: 10.1080/03057260701828101  <br> <a class=\"biblio_a\" href="
+"\"https://www.tandfonline.com/doi/full/10.1080/03057260701828101?"
+"scroll=top&needAccess=true\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:92
+msgid ""
+"Coutinho, M. J., & Almeida, P. A. (2014). Promoting student questioning in "
+"the learning of Natural Sciences. <i>Procedia - Social and Behavioural "
+"Sciences, 116</i>,3781-3785.  <br> <a class=\"biblio_a\" href=\"https://ddd."
+"uab.cat/pub/edlc/edlc_a2013nExtra/edlc_a2013nExtrap54.pdf\" target=\"_blank"
+"\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:93
+msgid ""
+"Dillon, J. T. (1988). The remedial status of student questioning. </"
+"i>Journal of Curriculum Studies, 20</i>(3), 197-210. "
+"doi:10.1080/0022027880200301  <br> <a class=\"biblio_a\" href=\"https://www."
+"tandfonline.com/doi/abs/10.1080/0022027880200301\" target=\"_blank\">Read "
+"abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:94
+msgid ""
+"Engel, S. (2011). Children's need to know: Curiosity in schools. <i>Harvard "
+"Educational Review, 81</i>(4), 625-645. doi: 10.17763/haer.81.4."
+"h054131316473115  <br> <a class=\"biblio_a\" href=\"https://hepgjournals.org/"
+"doi/10.17763/haer.81.4.h054131316473115\" target=\"_blank\">Read abstract</"
+"a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:95
+msgid ""
+"Friesen, S., & Scott, D. (2013) Inquiry-based learning: A review of the "
+"research literature. Paper prepared for the Alberta Ministry of Education, "
+"University of Calgary, Alberta.  <br> <a class=\"biblio_a\" href=\"https://"
+"galileo.org/focus-on-inquiry-lit-review.pdf\" target=\"_blank\">Read "
+"article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:96
+msgid ""
+"Gallas, K. (1995). <i>Talking their way into science: Hearing children’s "
+"questions and theories, responding with curricula</i>. New York: Teachers "
+"College Press.  <br> <a class=\"biblio_a\" href=\"https://www.goodreads.com/"
+"book/show/1101168.Talking_Their_Way_Into_Science\" target=\"_blank\">Read "
+"book</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:97
+msgid ""
+"Hofstein, A., Shore, R., & Kipnis, M (2004). Providing high school chemistry "
+"students with opportunities to develop learning skills in an inquiry-type "
+"laboratory: A case study. <i>Journal of Science Education, 26</i>(1), 47-62. "
+"doi: 10.1080/0950069032000070342  <br> <a class=\"biblio_a\" href=\"https://"
+"www.researchgate.net/"
+"publication/238384787_Investigation_the_effectiveness_of_laboratory_works_related_to_acids_and_bases_on_learning_achievements_and_attitudes_toward_laboratory"
+"\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:98
+msgid ""
+"Jenkins, E. W. (2006). The student voice and school science education. "
+"<i>Studies in Science Education, 42</i>, 49-88.  <br> <a class=\"biblio_a\" "
+"href=\"https://www.tandfonline.com/doi/abs/10.1080/03057260608560220?"
+"journalCode=rsse20\" target=\"_blank\">Read abstract</a>  <br> <a class="
+"\"biblio_a\" href=\"https://www.uv.uio.no/ils/english/research/projects/rose/"
+"publications/eng-jenkins-sse2006.pdf\" target=\"_blank\">PDF</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:99
+msgid ""
+"Kawalkar, A. (2020). <i>Transacting inquiry in middle school science "
+"classrooms: A study exploring the nature of discourse and a spectrum of "
+"outcomes</i>.  <br> <a class=\"biblio_a\" href=\"http://www.hbcse.tifr.res."
+"in/research-development/ph.d.-theses/aisha-kawalkar-synopsis\" target="
+"\"_blank\">Synopsis</a>  <br> <a class=\"biblio_a\" href=\"http://www.hbcse."
+"tifr.res.in/research-development/ph.d.-theses/aisha-kawalkar-thesis/\" "
+"target=\"_blank\">Thesis</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:99
+#: .\templates\public_website\research.html:112
+#: .\templates\public_website\research.html:113
+#: .\templates\public_website\research.html:126
+#: .\templates\public_website\research.html:127
+msgid " target=\"_blank\">PDF</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:100
+msgid ""
+"Pedrosa de Jesus, H., Teixeira-Dias, J. J. C., & Watts, M. (2003). Questions "
+"of chemistry. <i>International Journal of Science Education, 25</i>(8), 1015–"
+"1034. doi:  10.1080/09500690305022  <br> <a class=\"biblio_a\" href="
+"\"https://www.researchgate.net/publication/317225593_Questions_of_Chemistry"
+"\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:101
+msgid ""
+"Scardamalia, M., & Bereiter, C. (1992). Text-based and knowledge-based "
+"questioning by children. <i>Cognition and Instruction, 9</i>(3), 177-199.  "
+"<br> <a class=\"biblio_a\" href=\"http://www.ikit.org/fulltext/1992_Text-"
+"based.pdf\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:102
+msgid ""
+"Sezen-Barrie, A., Miller-Rushing, A., & Hufnagel, E. (2019). ‘It’s a gassy "
+"world’: starting with students’ wondering questions to inform climate change "
+"education. <i>Environmental Education Research</i>, doi: "
+"10.1080/13504622.2019.1610158  <br> <a class=\"biblio_a\" href=\"https://www."
+"tandfonline.com/doi/full/10.1080/13504622.2019.1607258?"
+"scroll=top&needAccess=true\" target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:103
+msgid ""
+"Wu, P.-H., Kuo, C.-Y., Wu, H.-K., Jen, T.-H., Hsu, Y.-S. (2018). Learning "
+"benefits of secondary school students' inquiry-related curiosity: A cross-"
+"grade comparison of the relationships among learning experiences, curiosity, "
+"engagement, and inquiry abilities. <i>Science Education, 102</i>, 917-950.  "
+"<br> <a class=\"biblio_a\" href=\"https://onlinelibrary.wiley.com/doi/"
+"abs/10.1002/sce.21456\" target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:108
+msgid "Analysis of questions"
+msgstr ""
+
+#: .\templates\public_website\research.html:110
+msgid ""
+"Baram-Tsabari, A., & Yarden, A. (2005). Characterizing children’s "
+"spontaneous interests in science and technology. <i>International Journal of "
+"Science Education, 27</i>(7), 803-826. doi:10.1080/09500690500038389  <br> "
+"<a class=\"biblio_a\" href=\"https://www.researchgate.net/"
+"publication/228667483_Characterizing_childrens'_spontaneous_interest_in_science_and_technology"
+"\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:111
+msgid ""
+"Baram-Tsabari, A., Sethi, R. J., Bry, L., & Yarden, A. (2006). Using "
+"questions sent to an ask-a-scientist site to identify children’s interests "
+"in science. <i>Science Education, 90</i>, 1050-1072.  <br> <a class="
+"\"biblio_a\" href=\"https://onlinelibrary.wiley.com/doi/epdf/10.1002/"
+"sce.20163\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:112
+#, python-format
+msgid ""
+"Chakravarty, S., Srivastava, A., & Patil, K. (2020). Middle schoolers primed "
+"to reason counterfactually ask more interesting questions. In Mashood, K. "
+"K., and Sengupta, T. (Eds.). <i>Proceedings of epiSTEME-8 Conference (Strand "
+"2 - Cognitive and affective studies of STME)</i> (pp. 139-147), Mumbai: Homi "
+"Bhabha Centre for Science Education.  <br> <a class=\"biblio_a\" href="
+"\"https://episteme8.hbcse.tifr.res.in/proceedings/MIDDLE-SCHOOLERS%%20PRIMED"
+"%%20TO%%20REASON%%20COUNTERFACTUALLY%%20ASK%%20MORE%%20INTERESTING"
+"%%20QUESTIONS.pdf\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:113
+#, python-format
+msgid ""
+"Sengupta, D., Chandrika, D., Dey, B. K., & Ramadas, J. (2020). The "
+"conditions, contexts and character of children’s questions in an outreach "
+"program. In Mashood, K. K., and Sengupta, T. (Eds.).  <i>Proceedings of "
+"epiSTEME-8 Conference (Strand 3 - Language, Pedagogy and Curriculum in "
+"STME)</i> (pp. 238-246), Mumbai: Homi Bhabha Centre for Science Education.  "
+"<br> <a class=\"biblio_a\" href=\"https://episteme8.hbcse.tifr.res.in/"
+"proceedings/THE%%20CONDITIONS,%%20CONTEXT%%20AND%%20CHARACTER%%20OF"
+"%%20CHILDREN%%E2%%80%%99S%%20QUESTIONS%%20IN%%20AN%%20OUTREACH%%20PROGRAM.pdf"
+"\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:114
+msgid ""
+"Vijaysimha, I. (2019). Teachers’ questions in the classroom. <i>Voices of "
+"Teachers and Teacher Educators, 7(2)</i>, 1-12.  <br> <a class=\"biblio_a\" "
+"href=\"http://ncert.nic.in/publication/journals/pdf_files/vtte_feb_2019.pdf"
+"\" target=\"_blank\">Read paper</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:119
+msgid "Sociocultural factors in curiosity"
+msgstr ""
+
+#: .\templates\public_website\research.html:121
+#, python-format
+msgid ""
+"Clarke, P. (2001). <i>Teaching and learning: The culture of pedagogy</i>. "
+"New Delhi, India: Sage Publications.  <br> <a class=\"biblio_a\" href="
+"\"https://www.abebooks.com/servlet/BookDetailsPL?bi=16785662112&searchurl=an"
+"%%3DCLARKE%%252C%%2BPREMA%%26sortby%%3D17&cm_sp=snippet-_-srp1-_-title1\" "
+"target=\"_blank\">About the book</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:122
+msgid ""
+"Evans, R., Luft, J., Czerniak, C., & Pea, C. (2014). <i>The Role of Science "
+"Teachers’ Beliefs in International Classrooms: From Teacher Actions to "
+"Student Learning. Rotterdam</i>: Sense Publishers.  <br> <a class=\"biblio_a"
+"\" href=\"https://www.springer.com/gp/book/9789462095571\" target=\"_blank"
+"\">About the book</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:123
+msgid ""
+"Kumar, K. (1989). <i>Social character of learning</i>. New Delhi, India: "
+"Sage Publications.  <br> <a class=\"biblio_a\" href=\"http://www."
+"arvindguptatoys.com/arvindgupta/socialcharacter.pdf\" target=\"_blank\">Read "
+"book</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:124
+msgid ""
+"Narain, D. (1964). Growing up in India. <i>Family Process Journal, 3</i>, "
+"127-154. doi:10.1111/j.1545-5300.1964.00127.x  <br> <a class=\"biblio_a\" "
+"href=\"https://onlinelibrary.wiley.com/doi/abs/10.1111/"
+"j.1545-5300.1964.00127.x\" target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:125
+msgid ""
+"Sarangapani, P. (2003). <i>Constructing School Knowledge: An Ethnography of "
+"Learning in an Indian Village</i>. New Delhi, India: Sage Publications.  "
+"<br> <a class=\"biblio_a\" href=\"https://us.sagepub.com/en-us/nam/"
+"constructing-school-knowledge/book225744\" target=\"_blank\">About the book</"
+"a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:126
+msgid ""
+"Singh, G. (2020). Student Questioning in Student Talk: Understanding the "
+"process and its role in doing science. <i>ResearchGate</i>. doi:10.13140/"
+"RG.2.2.33282.09928  <br> <a class=\"biblio_a\" href=\"https://www."
+"researchgate.net/"
+"publication/342981443_Student_Questioning_in_Student_Talk_Understanding_the_process_and_its_role_in_doing_science"
+"\" target=\"_blank\">Read Thesis</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:127
+msgid ""
+"Singh, G., Shaikh, R., & Haydock, K. (2019). Understanding student "
+"questioning. <i>Cultural Studies of Science Education,14</i>(3), 643-697. "
+"doi: 10.1007/s11422-018-9866-0  <br> <a class=\"biblio_a\" href=\"https://rd."
+"springer.com/article/10.1007/s11422-018-9866-0\" target=\"_blank\">Read "
+"abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:132
+msgid "Gender and curiosity"
+msgstr ""
+
+#: .\templates\public_website\research.html:134
+msgid ""
+"Baram-Tsabari, A., & Yarden, A. (2011). Quantifying the gender gap in "
+"science interests. <i>International Journal of Science and Mathematics "
+"Education, 9</i>(3), 523-550. doi: 10.1007/s10763-010-9194-7  <br> <a class="
+"\"biblio_a\" href=\"https://www.researchgate.net/"
+"publication/225335558_Quantifying_The_Gender_Gap_in_Science_Interests\" "
+"target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:135
+msgid ""
+"Engelhard, G., & Monsaas, J. A. (1988). Grade level, gender, and school-"
+"related curiosity in urban elementary schools. <i>The Journal of Educational "
+"Research, 82</i>(1), 22-26. doi: 10.1080/00220671.1988.10885860  <br> <a "
+"class=\"biblio_a\" href=\"https://www.tandfonline.com/doi/"
+"abs/10.1080/00220671.1988.10885860\" target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:136
+#, python-format
+msgid ""
+"Jones, M. G., Howe, A., & Rua, M. J. (2000). Gender differences in students' "
+"experiences, interests, and attitudes toward science and scientists. "
+"<i>Science Education, 84</i>(2), 180-192. doi: 10.1002/"
+"(SICI)1098-237X(200003)84:2<180::AID-SCE3>3.0.CO;2-X  <br> <a class="
+"\"biblio_a\" href=\"https://onlinelibrary.wiley.com/doi/abs/10.1002/%%28SICI"
+"%%291098-237X%%28200003%%2984%%3A2%%3C180%%3A%%3AAID-SCE3%%3E3.0.CO%%3B2-X\" "
+"target=\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:137
+msgid ""
+"Stark, R., & Gray, D. (1999). Gender preferences in learning science. "
+"<i>International Journal of Science Education, 21</i>(6), 633-643, doi: "
+"10.1080/095006999290480  <br> <a class=\"biblio_a\" href=\"https://www."
+"researchgate.net/publication/236859822_Gender_Preferences_in_Learning_Science"
+"\" target=\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:138
+msgid ""
+"Taber, K. S. (1991). Gender differences in science preferences on starting "
+"secondary school. <i>Research in Science & Technological Education, 9</"
+"i>(2), 245-251. doi: 10.1080/0263514910090210  <br> <a class=\"biblio_a\" "
+"href=\"https://www.tandfonline.com/doi/abs/10.1080/0263514910090210\" target="
+"\"_blank\">Read abstract</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:139
+msgid ""
+"Weinburgh, M. (1995). Gender differences in student attitudes toward "
+"science: a meta-analysis of the literature from 1970 to 1991.<i> Journal of "
+"Research in Science Teaching, 32</i>(4), 387-398. doi: 10.1002/"
+"tea.3660320407  <br> <a class=\"biblio_a\" href=\"https://onlinelibrary."
+"wiley.com/doi/abs/10.1002/tea.36603204071\" target=\"_blank\">Read abstract</"
+"a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:144
+msgid "History, philosophy and ethics of curiosity"
+msgstr ""
+
+#: .\templates\public_website\research.html:146
+msgid ""
+"Bunk, S. (2000). Curiosity and the scientific method. <i>The Scientist</i>.  "
+"<br> <a class=\"biblio_a\" href=\"https://www.the-scientist.com/perspective/"
+"curiosity-and-the-scientific-method-56061\" target=\"_blank\">Read article</"
+"a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:147
+msgid ""
+"Livio, M. (2017). <i>Why: What Makes Us Curious</i>. New York: Simon & "
+"Schuster Paperbacks.  <br> <a class=\"biblio_a\" href=\"https://www.mario-"
+"livio.com/books\" target=\"_blank\">About the book</a> "
+msgstr ""
+
+#: .\templates\public_website\research.html:148
+msgid ""
+"Sarukkai, S. (2009). Science and the ethics of curiosity. <i>Current "
+"Science, 97</i>(6), 756-767.  <br> <a class=\"biblio_a\" href=\"http://"
+"eprints.nias.res.in/148/1/Science_and_the_ethics_of_curiosity.pdf\" target="
+"\"_blank\">Read article</a> "
+msgstr ""
+
+#: .\templates\public_website\search.html:12
+#: .\templates\public_website\search.html:22
+msgid "Filters"
+msgstr ""
+
+#: .\templates\public_website\search.html:13
+msgid "Sort By"
+msgstr ""
+
+#: .\templates\public_website\search.html:23
+msgid "Clear All"
+msgstr ""
+
+#: .\templates\public_website\search.html:26
+#: .\templates\public_website\search.html:227 .\views.py:226 .\views.py:429
+msgid "Search"
+msgstr ""
+
+#: .\templates\public_website\search.html:41
+msgid "Answered"
+msgstr ""
+
+#: .\templates\public_website\search.html:42
+msgid "Unanswered"
+msgstr ""
+
+#: .\templates\public_website\search.html:47
+msgid "Subjects"
+msgstr ""
+
+#: .\templates\public_website\search.html:55
+msgid "States"
+msgstr ""
+
+#: .\templates\public_website\search.html:63
+msgid "Languages"
+msgstr ""
+
+#: .\templates\public_website\search.html:71
+msgid "Curriculum Followed"
+msgstr ""
+
+#: .\templates\public_website\search.html:92
+msgid "Search these results"
+msgstr ""
+
+#: .\templates\public_website\search.html:117
+msgid "Article"
+msgstr ""
+
+#: .\templates\public_website\search.html:126
+#: .\templates\public_website\search.html:251
+msgid "Translate"
+msgstr ""
+
+#: .\templates\public_website\search.html:137
+msgid "Question"
+msgstr ""
+
+#: .\templates\public_website\search.html:138
+msgid "Bookmarked"
+msgstr ""
+
+#: .\templates\public_website\search.html:223
+msgid "Review"
+msgstr ""
+
+#: .\templates\public_website\search.html:227
+msgid "View Questions"
+msgstr ""
+
+#: .\templates\public_website\search.html:275
+msgid "No results found. Try changing the filters or search for something else"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:18
+#: .\templates\public_website\user-profile.html:83
+msgid "Close"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:91
+msgid "Your Avatar"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:99
+msgid "Your first name"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:100
+msgid "Avoid titles like Dr, Prof, Miss"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:103
+msgid "Your last name"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:104
+msgid "Your last name/surname"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:107
+msgid "Update name"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:110
+msgid "Organisation"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:111
+msgid "Details of your affiliated school, institute or organisation"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:116
+msgid "Your role"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:117
+msgid "Eg. Teacher, Volunteer, Faculty, Student"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:118
+msgid "Your organisation"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:119
+msgid "Eg. Eklavya, TIFR, HBCSE"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:120
+msgid "Update organisation"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:123
+msgid "Security"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:124
+msgid "Manage your password"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:129
+msgid "Your current password"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:130
+msgid "Current password"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:131
+msgid "New Password"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:132
+msgid "New password"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:133
+#: .\templates\public_website\user-profile.html:134
+msgid "Confirm new password"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:135
+msgid "Update password"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:138
+msgid "Permissions"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:139
+msgid "Request for access to various volunteer tasks"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:186
+msgid "Request Access"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:209
+#: .\templates\public_website\user-profile.html:235
+msgid "Continue writing"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:210
+#: .\templates\public_website\user-profile.html:236
+#: .\templates\public_website\user-profile.html:269
+#: .\templates\public_website\user-profile.html:302
+#: .\templates\public_website\user-profile.html:435
+#: .\templates\public_website\user-profile.html:523
+#: .\templates\public_website\user-profile.html:598
+#: .\templates\public_website\user-profile.html:663
+#: .\templates\public_website\user-profile.html:742
+#: .\templates\public_website\view-answer.html:126
+msgid "Delete"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:215
+#: .\templates\public_website\user-profile.html:307
+#: .\templates\public_website\user-profile.html:440
+#: .\templates\public_website\user-profile.html:603
+msgid "Are you sure you want to delete this answer?"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:217
+#: .\templates\public_website\user-profile.html:243
+#: .\templates\public_website\user-profile.html:276
+#: .\templates\public_website\user-profile.html:309
+#: .\templates\public_website\user-profile.html:441
+#: .\templates\public_website\user-profile.html:529
+#: .\templates\public_website\user-profile.html:604
+#: .\templates\public_website\user-profile.html:669
+#: .\templates\public_website\user-profile.html:750
+msgid "Yes, Delete"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:219
+#: .\templates\public_website\user-profile.html:245
+#: .\templates\public_website\user-profile.html:278
+#: .\templates\public_website\user-profile.html:311
+#: .\templates\public_website\user-profile.html:443
+#: .\templates\public_website\user-profile.html:531
+#: .\templates\public_website\user-profile.html:606
+#: .\templates\public_website\user-profile.html:671
+#: .\templates\public_website\user-profile.html:752
+msgid "Cancel"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:241
+#: .\templates\public_website\user-profile.html:528
+msgid "Are you sure you want to delete this article?"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:268
+#: .\templates\public_website\user-profile.html:301
+msgid "Continue editing"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:274
+msgid "Are you sure you want to delete this article translation?"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:377
+msgid "All the questions you have submitted will appear here"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:379
+msgid "All questions submitted by"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:385
+msgid "Dataset"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:387
+msgid "questions"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:391
+msgid "Questions under review"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:395
+msgid "Questions reviewed and ready to answer and translate"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:403
+msgid "Answers"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:405
+msgid "All your answers to submitted questions will appear here"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:407
+msgid "All published answers written by"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:425
+msgid "Answer under review"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:462
+msgid "Answer reviewed and published"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:479
+msgid "All your submitted articles will appear here"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:490
+#: .\templates\public_website\user-profile.html:549
+msgid "Article reviewed and published"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:513
+msgid "Article under review"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:539
+msgid "All articles written by"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:567
+msgid "Translations"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:569
+msgid "All content translated by"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:571
+msgid "All your submitted translations will appear here"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:588
+msgid "Answer translation under review since"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:623
+msgid "Answer translation reviewed and published"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:653
+msgid "Article translation under review since"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:668
+msgid "Are you sure you want to delete this translation?"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:695
+msgid "Article translation reviewed and published"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:713
+msgid "You have no submitted content"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:721
+msgid "All your saved questions will appear here"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:738
+msgid "Answer question"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:747
+msgid "Are you sure you want to delete this bookmark?"
+msgstr ""
+
+#: .\templates\public_website\user-profile.html:759
+msgid "You have not bookmarked any content"
+msgstr ""
+
+#: .\templates\public_website\view-answer.html:9 .\views.py:457
+msgid "View Answer"
+msgstr ""
+
+#: .\templates\public_website\view-answer.html:63
+msgid "Class"
+msgstr ""
+
+#: .\templates\public_website\view-answer.html:80
+msgid "Read answer in:"
+msgstr ""
+
+#: .\templates\public_website\view-answer.html:112
+msgid "Comments"
+msgstr ""
+
+#: .\templates\public_website\view-answer.html:115
+msgid "Join the conversation"
+msgstr ""
+
+#: .\templates\public_website\view-answer.html:116
+msgid "Add Comment"
+msgstr ""
+
+#: .\templates\public_website\view-answer.html:129
+msgid "Are you sure?"
+msgstr ""
+
+#: .\templates\public_website\view-answer.html:130
+msgid "Yes"
+msgstr ""
+
+#: .\templates\public_website\view-answer.html:131
+msgid "No"
+msgstr ""
+
+#: .\templates\public_website\view-article.html:25
+msgid "Translated by"
+msgstr ""
+
+#: .\templates\public_website\view-article.html:30
+msgid "Read article in"
+msgstr ""
+
+#: .\views.py:75
+msgid "Leaves or fruits or sprouting shoots?"
+msgstr ""
+
+#: .\views.py:76
+msgid "Sun or stars or life on Mars?"
+msgstr ""
+
+#: .\views.py:77
+msgid "Constellations or the fate of nations?"
+msgstr ""
+
+#: .\views.py:78
+msgid "Curly tresses or yellow school buses?"
+msgstr ""
+
+#: .\views.py:79
+msgid "Birds in the sky or a firefly?"
+msgstr ""
+
+#: .\views.py:83
+msgctxt "website homepage"
+msgid "Home"
+msgstr ""
+
+#: .\views.py:472
+msgid "Article does not exist"
+msgstr ""
+
+#: .\views.py:514 .\views.py:557
+msgid "Answer does not exist"
+msgstr ""
+
+#: .\views.py:532
+#, python-format
+msgid "%(name)s left a comment on your answer"
+msgstr ""
+
+#: .\views.py:562
+msgid "No matching comment"
+msgstr ""
+
+#: .\views.py:586
+msgid "You are not authorised to delete that comment."
+msgstr ""
+
+#. Translators: This is the title for the User Profile page
+#: .\views.py:624
+#, python-format
+msgid "%(name)s's Profile"
+msgstr ""
+
+#: .\views.py:692
+msgid "New password cannot be same as the current password"
+msgstr ""
+
+#: .\views.py:697
+msgid "Your password has been updated!"
+msgstr ""
+
+#: .\views.py:699
+msgid "Make sure you entered the new password correctly both times"
+msgstr ""
+
+#: .\views.py:701
+msgid "The password you entered is incorrect"
+msgstr ""
+
+#: .\views.py:768
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: .\views.py:815
+msgid "Your message has been sent! We will get back to you shortly."
+msgstr ""
+
+#: .\views.py:818
+msgid "Error! Invalid Captcha!."
+msgstr ""
+
+#: .\views.py:822
+msgid "Error! Message has not been submitted."
+msgstr ""
+
+#: .\views.py:1011 .\views.py:1015 .\views.py:1029
+msgid "Not known"
+msgstr ""

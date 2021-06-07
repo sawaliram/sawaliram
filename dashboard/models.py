@@ -579,7 +579,7 @@ class Article(DraftableModel):
 
     title = models.CharField(max_length=1000, null=True)
     language = models.CharField(max_length=100,
-        choices=settings.LANGUAGE_CHOICES,
+        choices=settings.CONTENT_LANGUAGES,
         default='en')
     author = models.ForeignKey(
         'sawaliram_auth.User',

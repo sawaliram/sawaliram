@@ -49,14 +49,16 @@ def send_verification_email(user):
     message = 'Hello ' + user.first_name + ',<br>'
     message += 'Thank you for signing up with Sawaliram! Please click on this link: https://sawaliram.org/users/verify/' + verification_code + ' to verify your email. <br><br>Yours truly,<br>Sawaliram'
 
-    send_mail(
-        subject='Sawaliram - verify your email',
-        message='',
-        html_message=message,
-        from_email='"Sawaliram" <mail@sawaliram.org>',
-        recipient_list=[user.email],
-        fail_silently=False,
-    )
+    if not settings.DEBUG:
+
+        send_mail(
+            subject='Sawaliram - verify your email',
+            message='',
+            html_message=message,
+            from_email='"Sawaliram" <mail@sawaliram.org>',
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
 
 
 class SignupView(View):
@@ -98,20 +100,28 @@ class SignupView(View):
                 )
                 user.save()
 
-                print(user)
-
                 users = Group.objects.get(name='users')
                 users.user_set.add(user)
+               
+                if not settings.DEBUG:
 
-                send_verification_email(user)
+                    send_verification_email(user)
 
-                context = {
-                    'message': 'Thank you for joining Sawaliram! A verification mail will be sent to your registered email address. Make sure to check the spam folder if you do not receive the email shortly.',
-                    'show_resend': True,
-                    'resend_message': "Did not receive the verification mail?",
-                    'user_id': user.id
-                }
-                return render(request, 'sawaliram_auth/verify-email-info.html', context)
+                    context = {
+                        'message': 'Thank you for joining Sawaliram! A verification mail will be sent to your registered email address. Make sure to check the spam folder if you do not receive the email shortly.',
+                        'show_resend': True,
+                        'resend_message': "Did not receive the verification mail?",
+                        'user_id': user.id
+                    }
+                    return render(request, 'sawaliram_auth/verify-email-info.html', context)
+                else:
+                    form = SignInForm(auto_id=False)
+                    context = {
+                        'form': form,
+                        
+                    }
+                    return render(request, 'sawaliram_auth/signin.html', context)
+
             else:
                 context = {
                     'form': form,
@@ -227,9 +237,25 @@ class SigninView(View):
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password'])
             if user is not None:
-                try:
-                    user_profile = Profile.objects.get(user=user.id)
-                    if not user_profile.email_verified:
+                if not settings.DEBUG:
+                    try:
+                        user_profile = Profile.objects.get(user=user.id)
+                        if not user_profile.email_verified:
+                            context = {
+                                'message': 'Verify your registered email address to login to your Sawaliram account. Make sure to check your spam folder if you did not receive the email.',
+                                'show_resend': True,
+                                'resend_message': "Did not receive the verification mail?",
+                                'user_id': user.id
+                            }
+                            return render(request, 'sawaliram_auth/verify-email-info.html', context)
+                        else:
+                            login(request, user)
+                            if request.POST.get('next') != '':
+                                return redirect(request.POST.get('next'))
+                            else:
+                                return redirect('public_website:home')
+                    except Profile.DoesNotExist:
+                        send_verification_email(user)
                         context = {
                             'message': 'Verify your registered email address to login to your Sawaliram account. Make sure to check your spam folder if you did not receive the email.',
                             'show_resend': True,
@@ -237,21 +263,12 @@ class SigninView(View):
                             'user_id': user.id
                         }
                         return render(request, 'sawaliram_auth/verify-email-info.html', context)
+                else:
+                    login(request, user)
+                    if request.POST.get('next') != '':
+                        return redirect(request.POST.get('next'))
                     else:
-                        login(request, user)
-                        if request.POST.get('next') != '':
-                            return redirect(request.POST.get('next'))
-                        else:
-                            return redirect('public_website:home')
-                except Profile.DoesNotExist:
-                    send_verification_email(user)
-                    context = {
-                        'message': 'Verify your registered email address to login to your Sawaliram account. Make sure to check your spam folder if you did not receive the email.',
-                        'show_resend': True,
-                        'resend_message': "Did not receive the verification mail?",
-                        'user_id': user.id
-                    }
-                    return render(request, 'sawaliram_auth/verify-email-info.html', context)
+                        return redirect('public_website:home')
             else:
                 context = {
                     'form': form,

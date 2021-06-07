@@ -26,16 +26,8 @@
         </p>
     </div>
     <div class="col-md onboarding-form-column">
-        {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-            {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        {% endfor %}
-        {% endif %}
+        {% include 'snippets/messages.html' %}
+        
         <form action="{% url 'sawaliram_auth:signup' %}" method="POST">
             {% csrf_token %}
             {% for field in form %}

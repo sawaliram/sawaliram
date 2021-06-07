@@ -16,7 +16,7 @@ from django.utils.translation import (
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password, make_password
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from django.core.paginator import Paginator
@@ -60,6 +60,13 @@ import requests
 import collections
 from .lang import *
 from django.db.models import Count
+import datetime
+from datetime import timedelta
+from datetime import datetime as ts
+import os
+import time
+import csv
+
 
 
 class HomeView(View):
@@ -353,10 +360,33 @@ class SearchView(View):
         if page_title == _('Review Answers') or page_title == _('Answer Questions'):
             result_id_list = [id['id'] for id in questions.values('id')]
             request.session['result_id_list'] = result_id_list
+        
 
-        paginator = Paginator(questions, 15)
+        ITEMS_PER_PAGE = 15
 
+        paginator = Paginator(questions, ITEMS_PER_PAGE)
         page = request.GET.get('page', 1)
+
+
+        # Adding the number of questions/articles being shown based on the page number
+        start_index = (int(page)-1)*ITEMS_PER_PAGE + 1
+
+        search_categories = self.filters.get('search_categories', [])
+
+        if ('articles' in search_categories and not 'questions' in search_categories):
+            if (start_index + ITEMS_PER_PAGE <=  articles.count()):
+                end_index = start_index + ITEMS_PER_PAGE
+            else:
+                end_index = articles.count()
+        else:
+            if (start_index + ITEMS_PER_PAGE <= questions.count()):
+                end_index = start_index + ITEMS_PER_PAGE
+            else:
+                end_index = questions.count() + articles.count()
+        print(start_index, end_index)
+
+
+
         questions_page_one = paginator.get_page(page)
 
         # get list of IDs of bookmarked items
@@ -370,7 +400,9 @@ class SearchView(View):
             'page_title': page_title,
             'enable_breadcrumbs': self.get_enable_breadcrumbs(request),
             'questions': questions_page_one,
-            'result_size': questions.count(), #The count for anwsers, etc. will be added to this below
+            'result_size': questions.count(), 
+            'start_index': start_index,
+            'end_index': end_index,
             'subjects': subjects,
             'available_subjects': available_subjects,
             'states': states,
@@ -488,9 +520,9 @@ class SubmitUserCommentOnAnswer(View):
         comment.save()
 
         # create notification
-        if answer.answered_by.id != request.user.id:
+        if answer.submitted_by.id != request.user.id:
             answered_question = Question.objects.get(pk=question_id)
-            if answered_question.language.lower() != 'english':
+            if answered_question.language.lower() != 'en':
                 question_text = answered_question.question_text_english
             else:
                 question_text = answered_question.question_text
@@ -500,9 +532,9 @@ class SubmitUserCommentOnAnswer(View):
                 title_text=_('%(name)s left a comment on your answer') % {
                     'name': str(request.user.get_full_name()),
                 },
-                description_text="On your answer for the question '" + question_text + "'",
+                description_text="On your answer for the question '" + question_text + "'.",
                 target_url=reverse('public_website:view-answer', kwargs={'question_id': question_id, 'answer_id': answer_id}),
-                user=answer.answered_by
+                user=answer.submitted_by
             )
             comment_notification.save()
 
@@ -628,7 +660,7 @@ class UpdateUserName(View):
         request.user.last_name = request.POST.get('last-name')
         request.user.save()
 
-        messages.success(request, 'Your personal info has been updated')
+        messages.success(request, 'Your personal info has been updated.')
         return redirect('public_website:user-profile', user_id=request.user.id, active_tab='settings')
 
 
@@ -644,7 +676,7 @@ class UpdateOrganisationInfo(View):
             request.user.organisation_role = request.POST.get('organisation-role')
             request.user.save()
 
-        messages.success(request, 'Your organisation info has been updated')
+        messages.success(request, 'Your organisation info has been updated.')
         return redirect('public_website:user-profile', user_id=request.user.id, active_tab='settings')
 
 
@@ -657,16 +689,16 @@ class UpdateUserPassword(View):
             if request.POST.get('new-password') == request.POST.get('confirm-new-password'):
                 match_check_new = check_password(request.POST.get('new-password'), request.user.password)
                 if match_check_new:
-                    messages.error(request, (_('New password cannot be same as the current password')))
+                    messages.error(request, (_('New password cannot be same as the current password.')))
                 else:
                     request.user.password = make_password(password=request.POST.get('new-password'))
                     request.user.save()
                     login(request, request.user)
                     messages.success(request, (_('Your password has been updated!')))
             else:
-                messages.error(request, _('Make sure you entered the new password correctly both times'))
+                messages.error(request, _('Make sure you entered the new password correctly both times.'))
         else:
-            messages.error(request, _('The password you entered is incorrect'))
+            messages.error(request, _('The password you entered is incorrect.'))
 
         return redirect('public_website:user-profile', user_id=request.user.id, active_tab='settings')
 
@@ -678,7 +710,7 @@ class UpdateProfilePicture(View):
         user_profile.profile_picture = request.POST.get('picture')
         user_profile.save()
 
-        messages.success(request, 'Your profile picture has been updated')
+        messages.success(request, 'Your profile picture has been updated.')
         return redirect('public_website:user-profile', user_id=request.user.id)
 
 
@@ -780,7 +812,6 @@ class ContactPage(FormView):
                     recipient_list=['mail.sawaliram@gmail.com'],
                     fail_silently=False,
                 )
-
                 messages.success(request, _('Your message has been sent! We will get back to you shortly.'))
                 return redirect('public_website:contact')
             else:
@@ -835,8 +866,6 @@ class ArticlesPage(View):
             'sort_by': sort_by
         }
         return render(request, 'public_website/articles.html', context)
-
-
 
 
 class AnalyticsPage(View):
@@ -1085,3 +1114,45 @@ class AnalyticsPage(View):
         return json.dumps(lst)
         
 
+class Suggestions(View):
+    def get(self, request):
+        lst_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"../assets/suggestions/")) 
+
+        if not os.path.exists(lst_dir):
+            os.makedirs(lst_dir)
+
+        f_path = os.path.abspath(os.path.join(lst_dir, 'suggestions.csv'))
+
+        sugg_lst = []
+
+        if not os.path.isfile(f_path):
+            ques = Question.objects.all()
+            with open(f_path, 'w', newline='' , encoding='utf-8') as f:
+                writer = csv.writer(f, delimiter=',')
+                for i in ques:
+                    if not i.question_text_english == "":
+                        sugg_lst.append(i.question_text_english)
+                        writer.writerow([i.question_text_english])
+
+            return JsonResponse({"suggestion": sugg_lst})
+        else:
+            modTimestamp = os.path.getmtime(os.path.abspath(os.path.join(lst_dir, 'suggestions.csv')))
+            modificationTime = ts.fromtimestamp(modTimestamp)             
+            current_time = datetime.datetime.now() 
+
+            if (current_time - modificationTime) > timedelta(1): 
+                ques = Question.objects.all()
+                with open(f_path, 'w', newline='' , encoding='utf-8') as f:
+                    writer = csv.writer(f, delimiter=',')
+                    for i in ques:
+                        if not i.question_text_english == "":
+                            sugg_lst.append(i.question_text_english)
+                            writer.writerow([i.question_text_english])
+
+                return JsonResponse({"suggestion": sugg_lst})
+            else:
+                with open(f_path, 'r',encoding='utf-8') as f:
+                    reader = csv.reader(f)
+                    for i in reader:
+                        sugg_lst.append(''.join(i))
+                return JsonResponse({"suggestion": sugg_lst})
