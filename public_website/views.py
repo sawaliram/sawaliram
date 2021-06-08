@@ -46,6 +46,7 @@ from dashboard.models import (
     SubmittedAnswerTranslation,
     PublishedArticleTranslation,
     PublishedAnswerTranslation,
+    AnswerTranslation,
     AnswerTranslationCredit,
     ArticleTranslationCredit,
 )
