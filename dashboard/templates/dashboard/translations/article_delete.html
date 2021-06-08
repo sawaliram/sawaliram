@@ -12,6 +12,8 @@
 {% block content %}
 
 <div class="wide-container">
+  {% include 'snippets/messages.html' %}
+  
   <h3><i class="fas fa-exclamation-triangle"></i> {% trans 'Delete translation' %}</h3>
   <p>{% trans 'Are you sure you want to delete the following translation? This action cannot be undone.' %}</p>
 

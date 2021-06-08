@@ -14,8 +14,13 @@
     </div>
     <div class="mobile-sort-by-popup text-right m-3">
         <b class="text-muted"><small>Sorted by: </small></b>
-        <span class="sort-by-option{% if sort_by == 'newest' %} font-weight-bold text-secondary{% endif %}" data-sort="newest">{% trans 'Newest' %}</span>
-        <span class="sort-by-option{% if sort_by == 'oldest' %} font-weight-bold text-secondary{% endif %}" data-sort="oldest">{% trans 'Oldest' %}</span>
+        {% if page_title == _('Review Answers') %}
+            <span class="sort-by-option{% if sort_by == 'comments' %} font-weight-bold text-secondary{% endif %}" data-sort="comments">{% trans 'Comments' %}</span>
+            <span class="sort-by-option{% if sort_by == 'date' %} font-weight-bold text-secondary{% endif %}" data-sort="date">{% trans 'Date' %}</span>
+        {% else %} 
+            <span class="sort-by-option{% if sort_by == 'newest' %} font-weight-bold text-secondary{% endif %}" data-sort="newest">{% trans 'Newest' %}</span>
+            <span class="sort-by-option{% if sort_by == 'oldest' %} font-weight-bold text-secondary{% endif %}" data-sort="oldest">{% trans 'Oldest' %}</span>
+        {% endif %}
     </div>
     <div class="filter-sidebar">
         <div class="filter-head">
@@ -78,16 +83,7 @@
         </div>
     </div>
     <div class="search-results">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-dismissible fade show {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-        {% endif %}
+        {% include 'snippets/messages.html' %}
         <form action="" class="search" method="GET">
             <input class="search-field" type="text" name="q" placeholder="{% trans 'Search these results' %}" {% if search_query %} value="{{ search_query }}" {% endif %}>
             <button class="search-field-submit" type="submit">
@@ -97,17 +93,24 @@
         {% if questions or articles %}
         <div class="head-area">
             <span class="results-count">
-                Showing {% if result_size == 1 %}1{% else %}{{ start_index}} - {{ end_index }} {% endif %} of {{ result_size }} result{{ result_size|pluralize }}
+                Showing {% if result_size == 1 %}1{% else %}{{ results.start_index}}-{{ results.end_index }}{% endif %} of {{ result_size }} result{{ result_size|pluralize }}
             </span>
             <div class="dropdown">
                 <button class="btn sort-by-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="sortOptionSelector">
                     sorted by <span class="sort-by-text">{{ sort_by|capfirst }}</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="dropdown-menu" aria-labelledby="sortOptionSelector">
-                    <span class="dropdown-item sort-by-option" data-sort="newest">{% trans 'Newest' %}</span>
-                    <span class="dropdown-item sort-by-option" data-sort="oldest">{% trans 'Oldest' %}</span>
-                </div>
+                {% if page_title == _('Review Answers') %}
+                    <div class="dropdown-menu" aria-labelledby="sortOptionSelector">
+                        <span class="dropdown-item sort-by-option" data-sort="comments">{% trans 'Comments' %}</span>
+                        <span class="dropdown-item sort-by-option" data-sort="date">{% trans 'Date' %}</span>
+                    </div>
+                {% else %}
+                    <div class="dropdown-menu" aria-labelledby="sortOptionSelector">
+                        <span class="dropdown-item sort-by-option" data-sort="newest">{% trans 'Newest' %}</span>
+                        <span class="dropdown-item sort-by-option" data-sort="oldest">{% trans 'Oldest' %}</span>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <ul class="search-results-list">
@@ -210,19 +213,21 @@
                 </div>
                 {% if page_title != _('Translate Content') %}
                     {% for answer in question.answers.all %}
-                        {% if page_title == _('Review Answers') %}
-                            <div class="answer-preview">
-                                <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
-                                {% for credit in answer.credits.all %}
-                                    <h4>
-                                        {% trans credit.credit_title %}: {{ credit.credit_user_name }}
-                                    </h4>
-                                {% endfor %}
-                                <div class="preview-answer-controls dual-item-controls-section">
-                                    <span class="answer-review-count"><i class="far fa-comment-alt"></i> {{ answer.comments.all|length }} Comment{{ answer.comments.all|length|pluralize }}</span>
-                                    <a href="{% url 'dashboard:review-answer' question_id=question.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
+                        {% if answer.status != 'published'%}
+                            {% if page_title == _('Review Answers') %}
+                                <div class="answer-preview">
+                                    <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
+                                    {% for credit in answer.credits.all %}
+                                        <h4>
+                                            {% trans credit.credit_title %}: {{ credit.credit_user_name }}
+                                        </h4>
+                                    {% endfor %}
+                                    <div class="preview-answer-controls dual-item-controls-section">
+                                        <span class="answer-review-count"><i class="far fa-comment-alt"></i> {{ answer.comments.all|length }} Comment{{ answer.comments.all|length|pluralize }}</span>
+                                        <a href="{% url 'dashboard:review-answer' question_id=question.id answer_id=answer.id %}" class="btn btn-small btn-primary">{% trans 'Review' %}</a>
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         {% endif %}
                         {% if page_title == _('View Questions') or page_title == _('Search') or page_title == _('Answer Questions') %}
                             {% if answer.status == 'published' %}
