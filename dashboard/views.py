@@ -1719,42 +1719,6 @@ class CreateAnswerTranslation(BaseStartTranslation):
 
 
 
-        # if request.POST.get('mode') == 'draft':
-            # Save draft
-
-            # Fetch or create draft
-            # draft, created = request.user.answers.get_or_create(
-            #     question_id=question_to_answer, status='draft')
-
-            # # Update values and save
-            # draft.answer_text = request.POST.get('rich-text-content')
-            # draft.language = request.POST.get('language')
-            # draft.submitted_by = request.user
-            # draft.save()
-
-            # Save credits
-            # delete existing credits for the answer, if any
-        # for credit in draft.credits.all():
-        #     credit.delete()
-
-        #     credit_titles = request.POST.getlist('credit-title')
-        #     credited_user_names = request.POST.getlist('credit-user-name')
-        #     credited_user_ids = request.POST.getlist('credit-user-id')
-
-        #     for i in range(len(credited_user_names)):
-        #         credit = AnswerCredit()
-        #         credit.credit_title = credit_titles[i]
-        #         credit.credit_user_name = credited_user_names[i]
-        #         if credited_user_ids[i]:
-        #             credit.is_user = True
-        #             credit.user = User.objects.get(pk=credited_user_ids[i])
-        #         credit.answer = draft
-        #         credit.save()
-        # return super().post(request, *args, **kwargs)
-
-
-
-
     def form_valid(self, form):
         return redirect(
             self.get_success_view(),
