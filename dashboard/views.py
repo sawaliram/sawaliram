@@ -2486,6 +2486,17 @@ def get_error_404_view(request, exception, template_name='dashboard/404.html'):
     response.status_code = 404  # Not Found
     return response
 
+def get_error_500_view(request, exception, template_name='dashboard/500.html'):
+	"""Return the custom 500 page."""
+
+    referer = request.headers.get('Referer')
+	
+    response = render(request, template_name,
+        {
+            'referer': referer
+        })
+    response.status_code = 500  # Internal Server error
+    return response
 
 def get_work_in_progress_view(request):
     """Return work-in-progress view."""
