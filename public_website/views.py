@@ -46,7 +46,8 @@ from dashboard.models import (
     SubmittedAnswerTranslation,
     PublishedArticleTranslation,
     PublishedAnswerTranslation,
-    AnswerTranslation,
+    AnswerTranslationCredit,
+    ArticleTranslationCredit,
 )
 from sawaliram_auth.models import User, Bookmark, Notification
 from public_website.models import AnswerUserComment, ContactUsSubmission

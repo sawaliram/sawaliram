@@ -23,22 +23,12 @@
         {% endfor %}
 
 
-
-        {% if article.is_submitted %}
+        {% for credit in article.translation.translation_credits.all %}
             <div class="credit-card">
-                <p>{{ article.submitted_by.get_full_name }}</p>
-                <span>{% trans 'Submitter' %}</span>
+                <p>{{ credit.credit_user_name }}</p>
+                <span>{{ credit.credit_title|capfirst }}</span>
             </div>
-        {% endif %}
-
-
-
-        {% if article.is_translated %}
-        <div class="credit-card">
-            <p>{{ article.translated_by.get_full_name }}</p>
-            <span>{% trans 'Translator' %}</span>
-        </div>
-        {% endif %}
+        {% endfor %}
     </div>
 
 

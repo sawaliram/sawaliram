@@ -14,6 +14,8 @@ from .models import (
     TranslatedQuestion,
     AnswerCredit,
     ArticleCredit,
+    AnswerTranslationCredit,
+    ArticleTranslationCredit,
 )
 
 
@@ -57,9 +59,18 @@ class AnswerCreditInline(admin.TabularInline):
     view_on_site = False
     show_change_link = True
 
-
 class ArticleCreditInline(admin.TabularInline):
     model = ArticleCredit
+    view_on_site = False
+    show_change_link = True
+
+class AnswerTranslationCreditInline(admin.TabularInline):
+    model = AnswerTranslationCredit
+    view_on_site = False
+    show_change_link = True
+
+class ArticleTranslationCreditInline(admin.TabularInline):
+    model = ArticleTranslationCredit
     view_on_site = False
     show_change_link = True
 
@@ -184,6 +195,9 @@ class AnswerTranslationAdmin(admin.ModelAdmin):
         'translated_by',
         publish_status,
     ]
+    inlines = [
+        AnswerTranslationCreditInline,
+    ]
     date_hierarchy = 'created'
 
 @admin.register(ArticleTranslation)
@@ -195,5 +209,8 @@ class ArticleTranslationAdmin(admin.ModelAdmin):
         'language',
         'translated_by',
         publish_status,
+    ]
+    inlines = [
+        ArticleTranslationCreditInline,
     ]
     date_hierarchy = 'created'

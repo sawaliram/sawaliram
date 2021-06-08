@@ -32,6 +32,7 @@ from django.views.generic import (
 from django.http import (
     HttpResponse,
     Http404,
+    response,
 )
 from django.contrib import messages
 from django.core.exceptions import (
@@ -72,7 +73,9 @@ from dashboard.models import (
     SubmittedArticleTranslation,
     DraftArticleTranslation,
     Comment,
-    Dataset)
+    Dataset,
+    AnswerTranslationCredit,
+    ArticleTranslationCredit)
 
 from sawaliram_auth.models import Notification, User, VolunteerRequest
 from public_website.views import SearchView
@@ -1713,6 +1716,45 @@ class CreateAnswerTranslation(BaseStartTranslation):
         return question
 
 
+
+
+
+        # if request.POST.get('mode') == 'draft':
+            # Save draft
+
+            # Fetch or create draft
+            # draft, created = request.user.answers.get_or_create(
+            #     question_id=question_to_answer, status='draft')
+
+            # # Update values and save
+            # draft.answer_text = request.POST.get('rich-text-content')
+            # draft.language = request.POST.get('language')
+            # draft.submitted_by = request.user
+            # draft.save()
+
+            # Save credits
+            # delete existing credits for the answer, if any
+        # for credit in draft.credits.all():
+        #     credit.delete()
+
+        #     credit_titles = request.POST.getlist('credit-title')
+        #     credited_user_names = request.POST.getlist('credit-user-name')
+        #     credited_user_ids = request.POST.getlist('credit-user-id')
+
+        #     for i in range(len(credited_user_names)):
+        #         credit = AnswerCredit()
+        #         credit.credit_title = credit_titles[i]
+        #         credit.credit_user_name = credited_user_names[i]
+        #         if credited_user_ids[i]:
+        #             credit.is_user = True
+        #             credit.user = User.objects.get(pk=credited_user_ids[i])
+        #         credit.answer = draft
+        #         credit.save()
+        # return super().post(request, *args, **kwargs)
+
+
+
+
     def form_valid(self, form):
         return redirect(
             self.get_success_view(),
@@ -1937,6 +1979,33 @@ class EditArticleTranslation(BaseEditTranslation):
 
         return context
 
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        if self.request.POST.get('mode') == 'draft':
+            # Save credits
+            # delete existing credits for the answer, if any
+            for credit in self.object.translation_credits.all():
+                credit.delete()
+
+            credit_titles = self.request.POST.getlist('credit-title')
+            credited_user_names = self.request.POST.getlist('credit-user-name')
+            credited_user_ids = self.request.POST.getlist('credit-user-id')
+
+            for i in range(len(credited_user_names)):
+                credit = ArticleTranslationCredit()
+                credit.credit_title = credit_titles[i]
+                credit.credit_user_name = credited_user_names[i]
+                if credited_user_ids[i]:
+                    credit.is_user = True
+                    credit.user = User.objects.get(pk=credited_user_ids[i])
+                credit.article = self.object
+                credit.save()
+
+            self.object.save()
+        return response
+
 
     def get_enable_breadcrumbs(self):
         """
@@ -2026,10 +2095,28 @@ class EditAnswerTranslation(BaseEditTranslation):
         if answer_text:
             self.answer.answer_text = answer_text
             self.answer.language = self.request.POST.get('lang_to') or self.answer.language
+
+
+            for credit in self.answer.translation_credits.all():
+                credit.delete()
+
+            credit_titles = self.request.POST.getlist('credit-title')
+            credited_user_names = self.request.POST.getlist('credit-user-name')
+            credited_user_ids = self.request.POST.getlist('credit-user-id')
+
+            for i in range(len(credited_user_names)):
+                credit = AnswerTranslationCredit()
+                credit.credit_title = credit_titles[i]
+                credit.credit_user_name = credited_user_names[i]
+                if credited_user_ids[i]:
+                    credit.is_user = True
+                    credit.user = User.objects.get(pk=credited_user_ids[i])
+                credit.answer = self.answer
+                credit.save()
+
             self.answer.save()
 
-        # If submitting, mark the answer as submitted for
-        # review too
+    
 
         if self.request.POST.get('mode') == 'submit':
             submission = self.answer.submit_draft()
@@ -2083,8 +2170,6 @@ class EditSubmittedAnswerTranslation(EditAnswerTranslation):
             id=self.kwargs.get('answer'))
 
         
-        # print(question.source.id, answer.source.question_id.id, question.id)
-
         # Make sure the question and answer match
         if answer.source.question_id.id != question.source.id:
             raise Http404('No matching translations found')
