@@ -13,7 +13,7 @@
 
 <div class="error-page-wrapper text-center">
     <img src="{% static 'error_icons/500.png' %}" alt="{% trans 'Internal Server Error' %}">
-    <h3> {% trans 'Sorry something has gone wrong on the server!' %}</h3>
+    <h3> {% trans 'Internal Server Error!' %}</h3>
     <a href="{% if referer %}{{ referer }}{% else %}{% url 'public_website:home' %}{% endif %}" {% if referer %}onclick="window.history.back();" {% endif %}class="btn btn-secondary">{% if referer %}{% trans 'Back to previous page' %}{% else %}{% trans 'Return home' %}{% endif %}</a>
 </div>
 
