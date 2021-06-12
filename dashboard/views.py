@@ -1523,10 +1523,10 @@ class TranslateAnswersList(SearchView):
         if 'q' in request.GET and request.GET.get('q') != '':
             if not search_categories:
                 query_set = Question.objects.filter(
-                                    answers__isnull=False,
-                                    answers__status=Answer.STATUS_PUBLISHED,
-                                    answers__translations__isnull=True,
-                                ).distinct()
+                                answers__isnull=False,
+                                answers__status=Answer.STATUS_PUBLISHED,
+                                answers__translations__isnull=True,
+                            ).distinct()
 
                 results['questions'] = query_set.filter(
                         Q(question_text__search=request.GET.get('q')) |
