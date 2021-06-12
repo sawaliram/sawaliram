@@ -64,7 +64,7 @@
             </div>
         {% endif %}
 
-        {% if request.user|has_group:"reviewer" %}
+        {% if request.user|has_group:"reviewers" %}
             <div class="task-card sw-shadow">
                 <div class="task-image-wrapper">
                     <img src="{% static 'icons/review_answers.png' %}" alt="{% trans 'Review Answers' %}">
