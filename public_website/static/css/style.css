@@ -630,7 +630,7 @@ button.search-field-submit {
 
 .navbar .navbar-search-icon,
 .navbar .user-signin {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     cursor: pointer;
 }
 
@@ -734,10 +734,12 @@ button.search-field-submit {
 }
 
 .navbar .user-signin {
-    border-radius: 50%;
-    padding: 0.8rem 1rem;
-    background-color:#fff;
-    color:#000;
+    border: 1px solid #FEB740;
+    border-radius: 30px;
+    padding: 5px;
+    color: #000;
+    background-color: #fff;
+    cursor: pointer;
 }
 
 .navbar .user-signin:hover {
