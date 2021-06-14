@@ -1947,9 +1947,8 @@ class EditArticleTranslation(BaseEditTranslation):
     def form_valid(self, form):
         response = super().form_valid(form)
 
+
         if self.request.POST.get('mode') == 'draft':
-            # Save credits
-            # delete existing credits for the answer, if any
             for credit in self.object.translation_credits.all():
                 credit.delete()
 
