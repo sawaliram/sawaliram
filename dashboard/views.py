@@ -1547,11 +1547,20 @@ class TranslateAnswersList(SearchView):
                 .distinct())
             else:
                 if 'questions' in search_categories:
-                    results['questions'] = Question.objects.filter(
-                                    answers__isnull=False,
-                                    answers__status=Answer.STATUS_PUBLISHED,
-                                    answers__translations__isnull=True,
-                                ).distinct()
+                    query_set = Question.objects.filter(
+                                answers__isnull=False,
+                                answers__status=Answer.STATUS_PUBLISHED,
+                                answers__translations__isnull=True,
+                            ).distinct()
+
+                    results['questions'] = query_set.filter(
+                            Q(question_text__search=request.GET.get('q')) |
+                            Q(question_text_english__search=request.GET.get('q')) |
+                            Q(school__search=request.GET.get('q')) |
+                            Q(area__search=request.GET.get('q')) |
+                            Q(state__search=request.GET.get('q')) |
+                            Q(field_of_interest__search=request.GET.get('q'))
+                    )
                 else:
                     results['questions'] = Question.objects.none()
 
