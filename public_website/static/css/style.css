@@ -5498,3 +5498,11 @@ button.social-login i {
  .biblio_a:hover {
      text-decoration: underline;
  }
+
+ .btm {
+    margin-bottom: auto;
+  }
+
+  .pl-8 {
+    padding-left: 8px;
+  }

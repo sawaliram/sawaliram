@@ -363,7 +363,7 @@ class SearchView(View):
         if sort_by == 'comments':
             questions = questions
             articles = articles
-        else:
+        if sort_by == "date":
             questions = questions.order_by('published_date')
             articles = articles.order_by('published_on')
 
