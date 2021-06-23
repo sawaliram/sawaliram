@@ -456,9 +456,9 @@ class AnswerTranslationCredit(models.Model):
 
     def save(self, *args, **kwargs):
         credit_sorting_order = {
-            'translator-author': 1,
-            'translator-co-author': 2,
-            'translator-submitter': 3
+            'translator': 1,
+            'co-translator': 2,
+            'translation-submitter': 3
         }
         self.credit_title_order = credit_sorting_order[self.credit_title]
         super(AnswerTranslationCredit, self).save(*args, **kwargs)
@@ -529,9 +529,9 @@ class ArticleTranslationCredit(models.Model):
 
     def save(self, *args, **kwargs):
         credit_sorting_order = {
-            'translator-author': 1,
-            'translator-co-author': 2,
-            'translator-submitter': 3
+            'translator': 1,
+            'co-translator': 2,
+            'translation-submitter': 3
         }
         self.credit_title_order = credit_sorting_order[self.credit_title]
         super(ArticleTranslationCredit, self).save(*args, **kwargs)
