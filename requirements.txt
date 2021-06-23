@@ -4,7 +4,7 @@ billiard==3.6.4.0
 celery==5.0.5
 certifi==2020.12.5
 dj-database-url==0.5.0
-Django==3.2
+Django==3.2.4
 entrypoints==0.3
 et-xmlfile==1.1.0
 flake8==3.9.1
@@ -27,7 +27,7 @@ sentry-sdk==1.0.0
 six==1.15.0
 sqlparse==0.4.1
 typed-ast==1.4.3
-urllib3==1.26.4
+urllib3==1.26.5
 vine==5.0.0
 whitenoise==5.2.0
 wrapt==1.12.1

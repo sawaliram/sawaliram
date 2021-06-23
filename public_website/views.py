@@ -344,19 +344,30 @@ class SearchView(View):
             questions = questions.filter(language__in=languages_to_filter_by)
             articles = articles.filter(language__in=languages_to_filter_by) # TODO support translations
 
+
         # sort the questions if sort-by parameter exists
-        # default: newest
-        sort_by = request.GET.get('sort-by', 'newest')
+        # default: newest and comments(for Review Answers page)
+        page_title = self.get_page_title(request)
+        if page_title == _('Review Answers'):
+            sort_by = request.GET.get('sort-by', 'comments')
+        else:
+            sort_by = request.GET.get('sort-by', 'newest')
+
 
         if sort_by == 'newest':
             questions = questions.order_by('-created_on')
             articles = articles.order_by('-published_on')
-        else:
+        if sort_by == 'oldest':
             questions = questions.order_by('created_on')
+            articles = articles.order_by('published_on')
+        if sort_by == 'comments':
+            questions = questions
+            articles = articles
+        if sort_by == "date":
+            questions = questions.order_by('published_date')
             articles = articles.order_by('published_on')
 
         # save list of IDs for Submit Answer/Review Answer
-        page_title = self.get_page_title(request)
         if page_title == _('Review Answers') or page_title == _('Answer Questions'):
             result_id_list = [id['id'] for id in questions.values('id')]
             request.session['result_id_list'] = result_id_list

@@ -97,6 +97,22 @@
                         <span>{{ credit.credit_title|capfirst }}</span>
                     </div>
                 {% endfor %}
+
+
+                {% if answer.is_submitted %}
+                    <div class="credit-card">
+                        <p>{{ answer.submitted_by.get_full_name }}</p>
+                        <span>{% trans 'Submitter' %}</span>
+                    </div>
+                {% endif %}
+
+
+                {% if answer.is_translated %}
+                    <div class="credit-card">
+                        <p>{{ answer.translated_by.get_full_name }}</p>
+                        <span>{% trans 'Translator' %}</span>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="answer-prompt">
