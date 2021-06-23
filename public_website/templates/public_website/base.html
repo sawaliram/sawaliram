@@ -209,10 +209,9 @@
                         {% if page_title == 'Submit Review' %}
                             <a href="{% url 'dashboard:review-answers' %}">{% trans 'Review Answers' %}</a> >
                         {% endif %}
-                        {% if page_title == 'Review Article' %}
-                            <a href="{% url 'dashboard:manage-content' %}">{% trans 'Manage Content' %}</a> >
-                        {% endif %}
 
+                        <!-- removed 'dashboard:manage-content' as per issue #409 -->
+                        
                         {% if page_title == 'Translate Answer' %}
                             <a href="{% url 'dashboard:translate-answers' %}">{% trans 'Translate Content' %}</a> >
                         {% endif %}
