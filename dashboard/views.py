@@ -714,7 +714,7 @@ class AnswerQuestions(SearchView):
 class ReviewAnswersList(SearchView):
     def get_querysets(self, request):
         results = {}
-        if 'q' in request.GET:
+        if 'q' in request.GET and request.GET.get('q') != '':
             query_set = Question.objects.filter(
                                 answers__status='submitted',
                             ).exclude(
@@ -730,11 +730,32 @@ class ReviewAnswersList(SearchView):
             )
             return results
         else:
-            results['questions'] = Question.objects.filter(
-                            answers__status='submitted',
-                        ).exclude(
-                            answers__submitted_by=request.user,
-                        ).distinct()
+            ques = Question.objects.filter(
+                                answers__status='submitted',
+                            ).exclude(
+                                answers__submitted_by=request.user,
+                            ).distinct()
+            temp = {}
+            temp2 = []
+
+            for q in ques:
+                a = q.answers.all()   
+                for ans in a:
+                    comment = ans.comments.all()
+                    temp[q] = comment.count()
+
+            sorted_tuples = sorted(temp.items(), key=lambda item: item[1])
+            sorted_dict = {k: v for k, v in sorted_tuples}
+            
+            res = sorted_dict.keys()
+            for b in res:
+                temp2.append(b.id)
+            
+            clauses = ' '.join(['WHEN id=%s THEN %s' % (pk, i) for i, pk in enumerate(temp2)])
+            ordering = 'CASE %s END' % clauses
+
+            results['questions'] = Question.objects.filter(id__in=temp2).extra(
+            select={'ordering': ordering}, order_by=('ordering',))
 
             return results
 
@@ -919,26 +940,6 @@ class SubmitAnswerView(View):
                         user=User.objects.get(pk=max(commentor_id))
                     )
                     edit_notification.save()
-
-                # create notifications for users who commented on the answer
-                commentor_id_list = list(answer.comments.all()
-                                        .values_list('author')
-                                        .distinct('author'))
-                for commentor_id in commentor_id_list:
-                    if question_to_answer.language.lower() != 'english':
-                        question_text = question_to_answer.question_text_english
-                    else:
-                        question_text = question_to_answer.question_text
-
-                    edit_notification = Notification(
-                        notification_type='updated',
-                        title_text=str(request.user.get_full_name()) + ' updated their answer',
-                        description_text="You commented on an answer for question '" + question_text + "'",
-                        target_url=reverse('dashboard:review-answer', kwargs={'question_id': question_to_answer.id, 'answer_id': answer.id}),
-                        user=User.objects.get(pk=max(commentor_id))
-                    )
-                    edit_notification.save()
-
 
             else:
                 messages.success(request, (_('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!')))
@@ -1603,10 +1604,12 @@ class TranslationLanguagesForm(forms.Form):
     lang_from = forms.ChoiceField(choices=settings.CONTENT_LANGUAGES,
         widget=forms.Select(attrs={
             'class': 'custom-select btn-primary',
+            'style': 'min-width:150px;',
         }))
     lang_to = forms.ChoiceField(choices=settings.CONTENT_LANGUAGES  ,
         widget=forms.Select(attrs={
             'class': 'custom-select btn-primary',
+            'style': 'min-width:150px;',
         }))
 
 
@@ -1879,7 +1882,7 @@ class BaseEditTranslation(UpdateView):
 
         response = super().form_valid(form)
 
-        print(self.object.id, self.object.source)
+        # print(self.object.id, self.object.source)
 
         if self.request.POST.get('mode') == 'submit':
             # The user wants to submit, so we'll do our own
@@ -1900,6 +1903,12 @@ class BaseEditTranslation(UpdateView):
 
             return redirect(submission.get_absolute_url())
 
+
+        if self.request.POST.get('mode') == 'draft':
+            messages.success(self.request, (_('Your translation has been saved!'
+                ' You can return to this page any time to '
+                'continue editing, or go to "Drafts" in your User Profile.')))
+                
         return response
 
     def get_view_name(self):
@@ -2028,6 +2037,7 @@ class EditAnswerTranslation(BaseEditTranslation):
         context['answer'] = self.answer
         context['enable_breadcrumbs'] =self.get_enable_breadcrumbs()
         context['page_title'] = self.get_page_title()
+        context['available_languages'] = self.kwargs.get('lang_from')
 
         return context
 
@@ -2084,7 +2094,8 @@ class EditSubmittedArticleTranslation(EditArticleTranslation):
 class EditSubmittedAnswerTranslation(EditAnswerTranslation):
     model = SubmittedTranslatedQuestion
     view_name = 'dashboard:review-answer-translation'
-    default_status = SubmittedArticleTranslation.STATUS_SUBMITTED
+    default_status = SubmittedAnswerTranslation.STATUS_SUBMITTED
+
 
     def get_object(self):
         question = get_object_or_404(self.model, id=self.kwargs.get('pk'))
@@ -2094,8 +2105,11 @@ class EditSubmittedAnswerTranslation(EditAnswerTranslation):
         answer = get_object_or_404(AnswerTranslation,
             id=self.kwargs.get('answer'))
 
+        
+        # print(question.source.id, answer.source.question_id.id, question.id)
+
         # Make sure the question and answer match
-        if answer.source.question_id != question.source:
+        if answer.source.question_id.id != question.source.id:
             raise Http404('No matching translations found')
 
         self.answer = answer
@@ -2180,25 +2194,54 @@ class ReviewAnswerTranslation(BaseReview):
     '''
 
     model = SubmittedAnswerTranslation
+
+    '''
+    This model is for fetching submitted translated question
+    '''
+
+    translated_question_model = SubmittedTranslatedQuestion
     template_name = 'dashboard/translations/answer_review.html'
+
+
+    def get_edit_url(self, question):
+        '''
+        Get edit url for answer translation editing 
+        '''
+
+        if self.object.is_submitted:
+            return reverse(
+                'dashboard:edit-submitted-answer-translation',
+                kwargs={
+                    'pk': question.id,
+                    'answer': self.object.id
+                }
+            )
+
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+
         try:
-            context['question'] = (SubmittedTranslatedQuestion
+            question = (SubmittedTranslatedQuestion
             .objects
             .filter(
                 source=self.object.source.question_id,
                 translated_by=self.object.translated_by,
                 language=self.object.language,
             )[0])
+
+            context['question'] = question
+            context['tr_answer_edit_url'] = self.get_edit_url(question)
+            
+            # print(self.get_edit_url(question))
         except IndexError:
             pass
 
+        
         context['source_question'] = self.object.source.question_id
         context['source_question'].set_language(
             self.request.session.get('lang', settings.DEFAULT_LANGUAGE))
-
+        
         return context
 
 
@@ -2445,6 +2488,17 @@ def get_error_404_view(request, exception, template_name='dashboard/404.html'):
     response.status_code = 404  # Not Found
     return response
 
+def get_error_500_view(request):
+    """Return the custom 500 page."""
+
+    referer = request.headers.get('Referer')
+
+    response = render(request, 'dashboard/500.html',
+        {
+            'referer': referer
+        })
+    response.status_code = 500  # Internal Server Error
+    return response
 
 def get_work_in_progress_view(request):
     """Return work-in-progress view."""
