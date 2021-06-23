@@ -213,8 +213,8 @@
                 </div>
                 {% if page_title != _('Translate Content') %}
                     {% for answer in question.answers.all %}
-                        {% if answer.status != 'published'%}
-                            {% if page_title == _('Review Answers') %}
+                        {% if page_title == _('Review Answers') %}
+                            {% if answer.status != 'published'%}
                                 <div class="answer-preview">
                                     <p>{{ answer.answer_text|striptags|truncatechars:200 }}</p>
                                     {% for credit in answer.credits.all %}
