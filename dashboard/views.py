@@ -941,26 +941,6 @@ class SubmitAnswerView(View):
                     )
                     edit_notification.save()
 
-                # create notifications for users who commented on the answer
-                commentor_id_list = list(answer.comments.all()
-                                        .values_list('author')
-                                        .distinct('author'))
-                for commentor_id in commentor_id_list:
-                    if question_to_answer.language.lower() != 'english':
-                        question_text = question_to_answer.question_text_english
-                    else:
-                        question_text = question_to_answer.question_text
-
-                    edit_notification = Notification(
-                        notification_type='updated',
-                        title_text=str(request.user.get_full_name()) + ' updated their answer',
-                        description_text="You commented on an answer for question '" + question_text + "'",
-                        target_url=reverse('dashboard:review-answer', kwargs={'question_id': question_to_answer.id, 'answer_id': answer.id}),
-                        user=User.objects.get(pk=max(commentor_id))
-                    )
-                    edit_notification.save()
-
-
             else:
                 messages.success(request, (_('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!')))
 
@@ -1624,10 +1604,12 @@ class TranslationLanguagesForm(forms.Form):
     lang_from = forms.ChoiceField(choices=settings.CONTENT_LANGUAGES,
         widget=forms.Select(attrs={
             'class': 'custom-select btn-primary',
+            'style': 'min-width:150px;',
         }))
     lang_to = forms.ChoiceField(choices=settings.CONTENT_LANGUAGES  ,
         widget=forms.Select(attrs={
             'class': 'custom-select btn-primary',
+            'style': 'min-width:150px;',
         }))
 
 
