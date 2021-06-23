@@ -32,7 +32,6 @@ from django.views.generic import (
 from django.http import (
     HttpResponse,
     Http404,
-    response,
 )
 from django.contrib import messages
 from django.core.exceptions import (
@@ -2043,26 +2042,24 @@ class EditArticleTranslation(BaseEditTranslation):
     def form_valid(self, form):
         response = super().form_valid(form)
 
+        for credit in self.object.translation_credits.all():
+            credit.delete()
 
-        if self.request.POST.get('mode') == 'draft':
-            for credit in self.object.translation_credits.all():
-                credit.delete()
+        credit_titles = self.request.POST.getlist('credit-title')
+        credited_user_names = self.request.POST.getlist('credit-user-name')
+        credited_user_ids = self.request.POST.getlist('credit-user-id')
 
-            credit_titles = self.request.POST.getlist('credit-title')
-            credited_user_names = self.request.POST.getlist('credit-user-name')
-            credited_user_ids = self.request.POST.getlist('credit-user-id')
+        for i in range(len(credited_user_names)):
+            credit = ArticleTranslationCredit()
+            credit.credit_title = credit_titles[i]
+            credit.credit_user_name = credited_user_names[i]
+            if credited_user_ids[i]:
+                credit.is_user = True
+                credit.user = User.objects.get(pk=credited_user_ids[i])
+            credit.article = self.object
+            credit.save()
 
-            for i in range(len(credited_user_names)):
-                credit = ArticleTranslationCredit()
-                credit.credit_title = credit_titles[i]
-                credit.credit_user_name = credited_user_names[i]
-                if credited_user_ids[i]:
-                    credit.is_user = True
-                    credit.user = User.objects.get(pk=credited_user_ids[i])
-                credit.article = self.object
-                credit.save()
-
-            self.object.save()
+        self.object.save()
         return response
 
 

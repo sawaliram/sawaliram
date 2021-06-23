@@ -86,9 +86,9 @@
                               <i class="fas fa-chevron-down"></i>
                           </button>
                           <div class="dropdown-menu" aria-labelledby="creditTitleSelector">
-                              <span class="dropdown-item credit-title-option" data-title="translator-author">{% trans 'Translator' %}</span>
-                              <span class="dropdown-item credit-title-option" data-title="translator-co-author">{% trans 'Translator Co-author' %}</span>
-                              <span class="dropdown-item credit-title-option" data-title="translator-submitter">{% trans 'Translator Submitter' %}</span>
+                              <span class="dropdown-item credit-title-option" data-title="translator">{% trans 'Translator' %}</span>
+                              <span class="dropdown-item credit-title-option" data-title="co-translator">{% trans 'Co-translator' %}</span>
+                              <span class="dropdown-item credit-title-option" data-title="translation-submitter">{% trans 'Translation-submitter' %}</span>
                           </div>
                       </div>
                       <input type="hidden" class="credit-title" name="credit-title" value="{{ credit.credit_title }}">
@@ -105,12 +105,12 @@
                           <i class="fas fa-chevron-down"></i>
                       </button>
                       <div class="dropdown-menu" aria-labelledby="creditTitleSelector">
-                        <span class="dropdown-item credit-title-option" data-title="translator-author">{% trans 'Translator' %}</span>
-                        <span class="dropdown-item credit-title-option" data-title="translator-co-author">{% trans 'Translator Co-author' %}</span>
-                        <span class="dropdown-item credit-title-option" data-title="translator-submitter">{% trans 'Translator Submitter' %}</span>
+                        <span class="dropdown-item credit-title-option" data-title="translator">{% trans 'Translator' %}</span>
+                        <span class="dropdown-item credit-title-option" data-title="co-translator">{% trans 'Co-translator' %}</span>
+                        <span class="dropdown-item credit-title-option" data-title="translation-submitter">{% trans 'Translation-submitter' %}</span>
                       </div>
                   </div>
-                  <input type="hidden" class="credit-title" name="credit-title" value="translator-author">
+                  <input type="hidden" class="credit-title" name="credit-title" value="translator">
                   <input type="text" class="credit-user-name square-ish" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="{% trans 'Full Name' %}" readonly>
                   <input type="hidden" class="credit-user-id" name="credit-user-id" value="{{ request.user.id }}">
                   <button type="button" class="btn remove-credit-entry"><i class="fas fa-times"></i></button>
