@@ -1677,10 +1677,12 @@ class TranslationLanguagesForm(forms.Form):
     lang_from = forms.ChoiceField(choices=settings.CONTENT_LANGUAGES,
         widget=forms.Select(attrs={
             'class': 'custom-select btn-primary',
+            'style': 'min-width:150px;',
         }))
     lang_to = forms.ChoiceField(choices=settings.CONTENT_LANGUAGES  ,
         widget=forms.Select(attrs={
             'class': 'custom-select btn-primary',
+            'style': 'min-width:150px;',
         }))
 
 
