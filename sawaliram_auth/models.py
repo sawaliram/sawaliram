@@ -142,7 +142,7 @@ class Notification(models.Model):
         db_table = 'notifications'
 
     notification_type = models.CharField(max_length=50)
-    title_text = models.CharField(max_length=50)
+    title_text = models.CharField(max_length=80)
     description_text = models.CharField(max_length=500)
     target_url = models.CharField(max_length=50)
     user = models.ForeignKey(

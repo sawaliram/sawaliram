@@ -941,6 +941,26 @@ class SubmitAnswerView(View):
                     )
                     edit_notification.save()
 
+                # create notifications for users who commented on the answer
+                commentor_id_list = list(answer.comments.all()
+                                        .values_list('author')
+                                        .distinct('author'))
+                for commentor_id in commentor_id_list:
+                    if question_to_answer.language.lower() != 'english':
+                        question_text = question_to_answer.question_text_english
+                    else:
+                        question_text = question_to_answer.question_text
+
+                    edit_notification = Notification(
+                        notification_type='updated',
+                        title_text=str(request.user.get_full_name()) + ' updated their answer',
+                        description_text="You commented on an answer for question '" + question_text + "'",
+                        target_url=reverse('dashboard:review-answer', kwargs={'question_id': question_to_answer.id, 'answer_id': answer.id}),
+                        user=User.objects.get(pk=max(commentor_id))
+                    )
+                    edit_notification.save()
+
+
             else:
                 messages.success(request, (_('Thanks ' + request.user.first_name + '! Your answer will be reviewed soon!')))
 
@@ -1433,6 +1453,7 @@ class CreateCommentView(CommentMixin, FormView):
             # Create notification for the comment
 
             if self.target.author != self.request.user:
+                
                 Notification.objects.create(
                     notification_type='comment',
                     title_text=('{} left a comment on your {}.'
@@ -1445,6 +1466,58 @@ class CreateCommentView(CommentMixin, FormView):
                     target_url=self.target.get_absolute_url(),
                     user=self.target.author,
                 )
+
+        if hasattr(self.target, 'comments'):
+            # Create notification for the comment for other reviewers
+
+            if self.target.translated_by != self.request.user:
+                for u in set([c.author for c in self.target.comments.all()]):
+                    
+                    if u != self.request.user:
+                        Notification.objects.create(
+                            notification_type='comment',
+                            title_text=('{} left a comment on your {}'
+                                .format(
+                                    self.request.user.get_full_name(),
+                                    self.target._meta.verbose_name,
+                                )),
+                            description_text=('Commented on {}'
+                                .format(self.target)),
+                            target_url=self.target.get_absolute_url(),
+                            user=u,
+                        )
+        if hasattr(self.target, 'translated_by'):
+            # Create notification for the comment for Translator
+
+            if self.target.translated_by != self.request.user:
+                Notification.objects.create(
+                    notification_type='comment',
+                    title_text=('{} left a comment on your {}'
+                        .format(
+                            self.request.user.get_full_name(),
+                            self.target._meta.verbose_name,
+                        )),
+                    description_text=('Commented on {}'
+                        .format(self.target)),
+                    target_url=self.target.get_absolute_url(),
+                    user=self.target.translated_by,
+                )      
+            else:
+                for u in set([c.author for c in self.target.comments.all()]):
+                    
+                    if u != self.target.translated_by:
+                        Notification.objects.create(
+                            notification_type='comment',
+                            title_text=('{} (Translator) left a comment on {}'
+                                .format(
+                                    self.request.user.get_full_name(),
+                                    self.target._meta.verbose_name,
+                                )),
+                            description_text=('Commented on {}'
+                                .format(self.target)),
+                            target_url=self.target.get_absolute_url(),
+                            user=u,
+                        )
 
         return super().form_valid(form)
 
@@ -2290,7 +2363,7 @@ class BaseApproveTranslation(View):
                 .format(
                     self.request.user.get_full_name(),
                     p._meta.verbose_name,
-                ))[:50], # truncate it due to character limit
+                )),
             description_text=('Published {}'
                 .format(p)),
             target_url = p.get_absolute_url(),
@@ -2308,7 +2381,7 @@ class BaseApproveTranslation(View):
                     source_type=p.source._meta.verbose_name,
                     language=(get_language_info(p.language)
                         .get('name_translated')),
-                ))[:50], # truncate it due to character limit
+                )), 
             description_text='Translated {}'.format(p.source),
             target_url=p.get_absolute_url(),
             user=p.source.author,
@@ -2316,17 +2389,18 @@ class BaseApproveTranslation(View):
 
         # ...to the peer reviewers
         for u in set([c.author for c in p.comments.all()]):
-            Notification.objects.create(
-                notification_type='published',
-                title_text=((
-                    'The translation by {} that you commented on '
-                    'has been published.')
-                    .format(p.translated_by)
-                    )[:50], # truncate it due to character limit
+            if u != self.request.user and u != p.translated_by:
+                Notification.objects.create(
+                    notification_type='published',
+                    title_text=((
+                        'The translation by {} that you commented on '
+                        'has been published.')
+                        .format(p.translated_by.get_full_name())
+                        ),
                     description_text='Translated {}'.format(p.source),
-                target_url=p.get_absolute_url(),
-                user=u,
-            )
+                    target_url=p.get_absolute_url(),
+                    user=u,
+                )
 
         # Create success message and return
         messages.success(request, self.success_message)
