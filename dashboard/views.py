@@ -1491,7 +1491,7 @@ class CreateCommentView(CommentMixin, FormView):
         if hasattr(self.target, 'translated_by'):
             # Create notification for the comment for Translator
 
-            if self.target.translated_by != self.request.user:
+            if self.target.translated_by != self.request.user and self.target.translated_by != None:
                 Notification.objects.create(
                     notification_type='comment',
                     title_text=('{} left a comment on your {}'
