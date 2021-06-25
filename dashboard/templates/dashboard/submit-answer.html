@@ -29,8 +29,12 @@
         {% if question.language.lower == 'en' %}
             <h1>{{ question.question_text }}</h1>
         {% else %}
-            <h1>{{ question.question_text_english }}</h1>
+            {% if question.question_text != question.question_text_english %}
+                <h1>{{ question.question_text_english }}</h1>
+            {% endif%}
         {% endif %}
+
+        <h2>{{ question.question_text }}</h2>
         {% if question.school or question.area or question.state or question.question_asked_on %}
             <div class="question-meta">
                 {% if question.school %}
