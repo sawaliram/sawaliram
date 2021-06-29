@@ -634,10 +634,19 @@ button.search-field-submit {
     cursor: pointer;
 }
 
+.sign-text{
+    color: #000;
+    text-decoration: none;
+}
+
 @media (max-width: 576px) {
     .navbar .navbar-search-icon,
     .navbar .user-signin {
         font-size: 1rem;
+    }
+
+    .sign-text {
+        display: none;
     }
 }
 
@@ -650,11 +659,21 @@ button.search-field-submit {
     position: relative;
 }
 
+.iconz {
+    width: 30px;
+    height: 30px;
+}
+
 @media (max-width: 576px) {
     .navbar .navbar-user-wrapper {
         padding: 0 0.5rem;
         padding-right: 0.3rem;
         line-height: 1;
+    }
+
+    .iconz {
+        width: 25px;
+        height: 25px;
     }
 }
 
