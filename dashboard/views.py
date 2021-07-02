@@ -54,6 +54,7 @@ from dashboard.models import (
     QuestionArchive,
     Question,
     TranslatedQuestion,
+    PublishedTranslatedQuestion,
     DraftTranslatedQuestion,
     SubmittedTranslatedQuestion,
     Answer,
