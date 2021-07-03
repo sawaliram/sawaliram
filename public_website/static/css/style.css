@@ -3980,7 +3980,8 @@ figure.image figcaption {
     background-image: url("/static/illustrations/Path_1734.svg");
     background-size: cover;
 	background-repeat: no-repeat;
-    padding: 6rem 1rem;
+    padding: 7rem 2rem;
+    height: 700px;
     margin-top: 3rem;
 }
 
