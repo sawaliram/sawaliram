@@ -32,3 +32,7 @@ vine==5.0.0
 whitenoise==5.2.0
 wrapt==1.12.1
 xlrd==2.0.1
+django-compressor
+django-htmlmin
+cssmin
+jsmin
