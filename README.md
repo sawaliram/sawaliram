@@ -74,3 +74,23 @@ python manage.py runserver
 Visit localhost:8000 in your browser to see the Sawaliram homepage in all it's glory!
 
 You are now ready to write some code! Begin by reading our [contributing guide](https://github.com/tifrh/sawaliram/blob/master/contributing.md) to help you get started!
+
+# Minification instructions
+
+These instructions are about minification of static files such as `html`, `css` , `js` etc. 
+We are using **django-compressor**.
+
+To minify run these commands:
+
+To minify on the production server run this
+
+```
+python manage.py compress
+```
+
+And to test it in local server run this:
+```
+python manage.py compress --force
+```
+
+We are passing `--force` argument to test it in local server as by default the Offline compression is disabled.
