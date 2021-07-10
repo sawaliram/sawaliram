@@ -15,6 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 
 urlpatterns = [
     path('', include('public_website.urls', namespace='public_site')),
@@ -23,5 +27,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+                              
 handler404 = 'dashboard.views.get_error_404_view'
 handler500 = 'dashboard.views.get_error_500_view' 

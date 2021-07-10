@@ -609,6 +609,97 @@ function setupEditorToolbarSticky() {
     };
 }
 
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+
+// custom Image Upload Adapter
+class ImageUploadAdapter {
+    constructor( loader ) {
+        this.loader = loader;
+    }
+
+    upload() {
+        return this.loader.file
+            .then( file => new Promise( ( resolve, reject ) => {
+                this._initRequest();
+                this._initListeners( resolve, reject, file );
+                this._sendRequest( file );
+            } ) );
+    }
+
+    abort() {
+        if ( this.xhr ) {
+            this.xhr.abort();
+        }
+    }
+
+    _initRequest() {
+        const xhr = this.xhr = new XMLHttpRequest();
+
+        xhr.open( 'POST', mediaUrl , true );
+        xhr.responseType = 'json';
+    }
+
+    _initListeners( resolve, reject, file ) {
+        const xhr = this.xhr;
+        const loader = this.loader;
+        const genericErrorText = `Couldn't upload file: ${ file.name }.`;
+
+        xhr.addEventListener( 'error', () => reject( genericErrorText ) );
+        xhr.addEventListener( 'abort', () => reject() );
+        xhr.addEventListener( 'load', () => {
+            const response = xhr.response;
+
+            if ( !response || response.error ) {
+                return reject( response && response.error ? response.error.message : genericErrorText );
+            }
+
+            // The image url that will be passed to image src tag.
+            resolve( {
+                default: response.fileurl
+            } );
+        } );
+
+
+        if ( xhr.upload ) {
+            xhr.upload.addEventListener( 'progress', evt => {
+                if ( evt.lengthComputable ) {
+                    loader.uploadTotal = evt.total;
+                    loader.uploaded = evt.loaded;
+                }
+            } );
+        }
+    }
+
+
+    _sendRequest( file ) {
+        const data = new FormData();
+        // we are using image key here 
+        data.append( 'image', file );
+
+        this.xhr.setRequestHeader("X-CSRFToken", csrftoken);
+
+        // Send the request.
+        this.xhr.send( data );
+    }
+}
+
+    
 function initializeCKEditor() {
     ClassicEditor
         .create(document.querySelector( '#editor' ), {
@@ -626,18 +717,26 @@ function initializeCKEditor() {
             },
             link: {
                 addTargetToExternalLinks: true
-            }
+            },
         })
         .then(editor => {
             const wordCountPlugin = editor.plugins.get( 'WordCount' );
             const wordCountWrapper = $('#wordCountWrapper');
             wordCountWrapper.append(wordCountPlugin.wordCountContainer);
             setupEditorToolbarSticky();
+
+
+            editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
+                return new ImageUploadAdapter( loader );
+            };
+
         })
         .catch(error => {
             console.error( error );
         });
 }
+
+
 
 function setupEditorLanguageSelector() {
     $('.language-option').click(function() {
