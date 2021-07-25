@@ -1,0 +1,91 @@
+{% extends "dashboard/translations/base_edit.html" %}
+
+{% load i18n %}
+
+{% block tr_original %}
+<header class="flex">
+  <h1>{{ object.source.tr_title }}</h1>
+</header>
+<section class="hr-over">
+  {{ object.source.tr_body|safe }}
+</section>
+<footer>
+
+</footer>
+{% endblock %}
+
+{% block tr_translation %}
+<header class="flex">
+  <h1 class="w-100"><input type="text" name="{{ form.title.name }}" value="{{ form.title.value }}" placeholder="{{ object.source.tr_title }}" id="{{ form.title.id }}" class="input-plain input-title p-3" /></h1>
+</header>
+<div class="bg-white">
+  {% include 'dashboard/snippets/richtext_editor.html' with value=form.body.value class='' name=form.body.name %}
+</div>
+
+
+
+<div class="editor-container">
+  <div class="editor-header-controls">
+    <div class="credits-container">
+      <h2>Credits</h2>
+      <div class="credit-entry-list">
+          {% if object.body %}
+              {% for credit in object.translation_credits.all %}
+                  <div class="credit-entry {% if not credit.credit_user_name == request.user.get_full_name %}removable{% endif %}">
+                      <div class="dropdown">
+                          <button class="btn square-ish credit-title-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="creditTitleSelector">
+                              <span class="selected-title">{{ credit.credit_title|capfirst }}</span>
+                              <i class="fas fa-chevron-down"></i>
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="creditTitleSelector">
+                              <span class="dropdown-item credit-title-option" data-title="translator">{% trans 'Translator' %}</span>
+                              <span class="dropdown-item credit-title-option" data-title="co-translator">{% trans 'Co-translator' %}</span>
+                              <span class="dropdown-item credit-title-option" data-title="translation-submitter">{% trans 'Translation-submitter' %}</span>
+                          </div>
+                      </div>
+                      <input type="hidden" class="credit-title" name="credit-title" value="{{ credit.credit_title }}">
+                      <input type="text" class="credit-user-name square-ish" name="credit-user-name" required value="{{ credit.credit_user_name }}" placeholder="{% trans 'Full Name' %}" {% if credit.credit_user_name == request.user.get_full_name %}readonly{% endif %}>
+                      <input type="hidden" class="credit-user-id" name="credit-user-id" value="{{ request.user.id }}">
+                      <button type="button" class="btn remove-credit-entry"><i class="fas fa-times"></i></button>
+                  </div>
+              {% endfor %}
+          {% else %}
+              <div class="credit-entry">
+                  <div class="dropdown">
+                      <button class="btn square-ish credit-title-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="creditTitleSelector">
+                          <span class="selected-title">Translator</span>
+                          <i class="fas fa-chevron-down"></i>
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="creditTitleSelector">
+                        <span class="dropdown-item credit-title-option" data-title="translator">{% trans 'Translator' %}</span>
+                        <span class="dropdown-item credit-title-option" data-title="co-translator">{% trans 'Co-translator' %}</span>
+                        <span class="dropdown-item credit-title-option" data-title="translation-submitter">{% trans 'Translation-submitter' %}</span>
+                      </div>
+                  </div>
+                  <input type="hidden" class="credit-title" name="credit-title" value="translator">
+                  <input type="text" class="credit-user-name square-ish" name="credit-user-name" required value="{{ request.user.get_full_name }}" placeholder="{% trans 'Full Name' %}" readonly>
+                  <input type="hidden" class="credit-user-id" name="credit-user-id" value="{{ request.user.id }}">
+                  <button type="button" class="btn remove-credit-entry"><i class="fas fa-times"></i></button>
+              </div>
+          {% endif %}
+      </div>
+      <button type="button" class="btn grey-button square-ish add-credit-entry"><i class="fas fa-user-plus"></i> Add</button>
+    </div>
+  </div>
+</div>
+
+
+
+<footer id="submitbar">
+  {% if object.is_submitted %}
+  <a href="{{ object.get_absolute_url }}" class="btn btn-primary-hollow">{% trans 'Cancel' %}</a>
+  <button type="submit" name="mode" value="draft" class="btn btn-primary">{% trans 'Update translation' %}</button>
+  {% else %}
+  <button type="submit" name="mode" value="submit" class="btn btn-primary">{% trans 'Submit translation' %}</button>
+  <button type="submit" name="mode" value="draft" class="btn btn-primary-hollow">{% trans 'Save Draft' %}</button>
+  {% endif %}
+  <a href="{% url 'dashboard:delete-article-translation' object.id %}" class="text-danger float-right" data-toggle="tooltip" data-placement="left" title="{% trans 'Delete translation' %}">
+    <i class="fas fa-trash"></i>
+  </a>
+</footer>
+{% endblock %}

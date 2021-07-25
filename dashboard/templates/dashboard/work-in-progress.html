@@ -1,0 +1,18 @@
+{% extends "dashboard/base.html" %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {% trans 'Work In Progress' %} | {% trans 'Sawaliram' %} {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="error-page-wrapper">
+    <img src="{% static 'error_icons/coding.png' %}" alt="{% trans 'Work in progress' %}">
+    <h3>{% trans 'Much code needs to be written before this feature is available!' %}</h3>
+    <button type="button" onclick="window.history.back();" class="btn btn-dark">{% trans 'Back to previous page' %}</button>
+</div>
+
+{% endblock %}

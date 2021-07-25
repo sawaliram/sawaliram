@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        {% load static %}
+        <link rel="shortcut icon" type="image/png" href="{% static 'icons/favicon.ico' %}"/>
+        
+        <link rel="stylesheet" href="{% static 'css/reboot.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+        <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+
+        <title>Verify Email | Sawaliram</title>
+    </head>
+    <body class="auth-interstitial-body">
+        <div class="auth-interstitial-content">
+            <div class="message-section">
+                <img src="{% static 'icons/verify_email_pending.png' %}" alt="Verify Email">
+                <p>{{ message|safe }}</p>
+            </div>
+            {% if show_resend == True %}
+            <form class="resend-mail" action="{% url 'sawaliram_auth:verify-email-info' %}" method="POST">
+                {% csrf_token %}
+                <span>{{ resend_message }}</span>
+                <input type="hidden" name="user-id" value="{{ user_id }}">
+                <button class="btn btn-small btn-primary" type="submit">Resend Mail</button>
+            </form>
+            {% endif %}
+        </div>
+    </body>
+</html>

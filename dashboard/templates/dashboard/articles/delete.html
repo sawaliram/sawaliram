@@ -1,0 +1,31 @@
+{% extends "public_website/base.html" %}
+
+{% load static %}
+{% load i18n %}
+{% load to_language_name %}
+
+{% block head_includes %}
+    <link href="{% static 'css/quill.sawaliram.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}{% trans 'Delete Article' %} | {% trans 'Sawaliram' %}{% endblock %}
+
+{% block content %}
+<div class="wide-container">
+  <h3><i class="fas fa-exclamation-triangle"></i> {% trans 'Delete article' %}</h3>
+  <p>{% trans 'Are you sure you want to delete the following article? This action cannot be undone.'%}</p>
+  
+  <ul class="card-list">
+    <li class="task-details">
+      <h4><a href="{% url 'dashboard:edit-article' article.id %}">{{ article.title }}</a></h4>
+      {{ article.body|striptags|truncatechars:140 }}
+    </li>
+  </ul>
+
+  <form action="{% url 'dashboard:delete-article' article.id %}" method="POST">
+    {% csrf_token %}
+    <a class="btn btn-small btn-secondary" href="{% url 'dashboard:edit-article' article.id %}"><i class="fas fa-arrow-left"></i> Go back</a>
+    <button type="submit" class="btn btn-small btn-danger-hollow"><i class="fas fa-trash"></i> Delete article</button>
+  </form>
+</div>
+{% endblock %}

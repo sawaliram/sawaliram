@@ -1,0 +1,20 @@
+{% extends "public_website/base.html" %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {% trans 'Page Not Found' %} | {% trans 'Sawaliram' %} {% endblock %}
+
+{% load static %}
+
+{% block navbar %} {% endblock %}
+
+{% block content %}
+
+<div class="error-page-wrapper text-center">
+    <img src="{% static 'error_icons/404.png' %}" alt="{% trans 'Page not found' %}">
+    <h3> {% trans 'Looks like you took a wrong turn, this page does not exist!' %}</h3>
+    <a href="{% if referer %}{{ referer }}{% else %}{% url 'public_website:home' %}{% endif %}" {% if referer %}onclick="window.history.back();" {% endif %}class="btn btn-secondary">{% if referer %}{% trans 'Back to previous page' %}{% else %}{% trans 'Return home' %}{% endif %}</a>
+</div>
+
+{% endblock %}

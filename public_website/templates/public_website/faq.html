@@ -1,0 +1,53 @@
+{% extends "public_website/base.html" %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+{% block title %} {% trans 'FAQ' %} | {% trans 'Sawaliram' %} {% endblock %}
+
+{% block content %}
+<div class="faq-wrapper">
+    <h2>{% trans '1. What do I get from visiting Sawaliram.org?' %}</h2>
+    <p>{% trans 'Sawaliram is an open source website and open access repository of children’s questions from across India. It is created with an aim to encourage questioning and curiosity-based learning among school age children. On Sawaliram, you will find questions asked by children belonging to different States of India, from different backgrounds and in different languages. You may view expert answers to some of these questions, read interesting blogs and find research articles and resources related to ‘Curiosity and Questioning’.' %}</p>
+
+    <h2>{% trans '2. Why is Sawaliram building a repository of children’s questions?' %}</h2>
+    <p>{% trans 'Children inherently have lots of questions and doubts, arising from their day-to-day observations as well as from school learning. These questions often remain un-answered and even un-asked, particularly when resources to answer the questions are not within the child’s reach. Sawaliram gives a voice to these children and makes their questions available for experts to answer. Sawaliram also hopes to create an awareness in the society regarding the need to nurture the inherent curiosity of children for the better learning of all of us.' %}</p>
+
+    <h2>{% trans '3. How is Sawaliram different from other Q & A websites?' %}</h2>
+    <p>{% trans 'Though Sawaliram deals with questions and answers, it is different from other Q & A websites in several ways. First, it privileges questions from children belonging to rural and less-privileged sections of the society who may not themselves have access to the internet. Second, Sawaliram highlights the fact that, even in the absence of resources, children do ask a variety of interesting and spontaneous questions, which deserve the attention of all adults, including educators. More important, Sawaliram aims to be a resource for parents, teachers, curriculum developers, writers and researchers to understand and appreciate curiosity and questioning among children.' %}</p>
+
+    <h2>{% trans '4. I am a student; will Sawaliram help me prepare for my exams?' %}</h2>
+    <p>{% trans 'The short answer is, “No”. Sawaliram targets spontaneous curiosity and not exam-based question-answering. We rely on the voluntary efforts of experts to answer questions in their spare time, so you may not get your answers immediately. But you should definitely add your doubts and questions regarding any specific topics throughout the year and perhaps get your answers from a subject expert. In case your question matches an already existing question asked by another student, you would have a chance of getting an answer sooner.' %}</p>
+
+    <h2>{% trans '5. Can I add a list of questions from my friends to Sawaliram?' %}</h2>
+    <p>{% trans 'If you have collected a set of questions from students you may add them to the database by creating a profile and logging into the dashboard. DO read the guidelines carefully before entering the questions into the template.' %} 
+    </p>
+
+    <h2>{% trans '6. I added some questions to Sawaliram, how will I know when my questions are answered?' %}</h2>
+    <p>{% trans 'You will receive a notification on the dashboard whenever new answers are added for the dataset you have entered.  In the next phase we will add an option of email notification. You may not get answers for all the questions at once.' %}</p>
+
+    <h2>{% trans '7. Who gives answers to all these questions?' %}</h2>
+    <p>{% trans 'For answering the questions, we have a number of subject experts on board our team, who range from scientists and teachers to graduate and undergraduate students.' %}</p>
+
+    <h2>{% trans '8. I am a school teacher; In what ways can Sawaliram help me?' %}</h2>
+    <p>{% trans 'Through Sawaliram you will know the pattern of questioning among children and also find out common misconceptions among them. You may use this information to design your teaching methodology with a child-centered perspective, for ensuring better engagement from students.' %}</p>
+
+    <h2>{% trans '9. Being a teacher, can I contribute to Sawaliram?' %}</h2>
+    <p>{% trans 'Yes. You can contribute to Sawaliram by sharing with us the spontaneous questions from students of your school or locality. You may enroll as a subject expert if you are interested in answering children’s questions and also share your experiences of teaching and interacting with children, in the form of articles and blogs.' %}</p>
+
+    <h2>{% trans '10. I work in a rural school with no internet access, how can I make use of Sawaliram?' %}</h2>
+    <p>{% trans 'You can make good use of Sawaliram by acting as a connecting link between the rural school and Sawaliram. You can collect students’ questions from the school and enter them as a volunteer in the Sawaliram database periodically, when you come to city or a place where you find internet access. Also you can download articles, blogs, answers, etc. from Sawaliram and distribute to your school.' %}</p>
+
+    <h2>{% trans '11. I am a writer, can I contribute to Sawaliram in some way?' %}</h2>
+    <p>{% trans 'Yes. If you are interested in the area of Curiosity and Questioning among children, you can express your view and opinions in the form of blogs for the Sawaliram website.' %}</p>
+
+    <h2>{% trans '12. How can Sawaliram help me improve my parenting?' %}</h2>
+    <p>{% trans 'Through Sawaliram you will come across the common questioning patterns and misconceptions among school going children, which are not usually communicated to parents or regular teachers. This information will be highly useful for improving your parenting methods and to understand your child better.' %}</p>
+
+    <h2>{% trans '13. Is Sawaliram an educational website, which I can recommend to my child?' %}</h2>
+    <p>{% trans 'Yes, Sawaliram is an educational website, which can be recommended to your child for overall cognitive enrichment. However, it should not be confused with academic websites meant for helping with competitive exam preparation.' %}</p>
+
+    <h2>{% trans '14. I am a researcher, how can I get involved with Sawaliram?' %}</h2>
+    <p>{% trans 'You may register with Sawaliram as a subject expert and contribute by answering children’s questions. On the website you will also find resources helpful for research on children’s questions.' %}</p>
+</div>
+{% endblock %}

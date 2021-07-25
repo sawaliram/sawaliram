@@ -1,0 +1,43 @@
+{% extends "public_website/base.html" %}
+
+{% load static %}
+
+{% load i18n %}
+{% load to_language_name %}
+
+{% block head_includes %}
+    <link href="{% static 'css/quill.sawaliram.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}{% trans 'Translate Answer' %} | {% trans 'Sawaliram' %}{% endblock %}
+
+{% block content %}
+<div class="wide-container">
+  {% include 'snippets/messages.html' %}
+  <h3><i class="fas fa-language"></i> {% trans 'Translate answer' %}</h3>
+  <p>{% trans 'You are about to translate the following question and answer:' %}</p>
+  
+  <ul class="card-list">
+    <li class="task-details">
+      <h4><a href="{{ answer.get_absolute_url }}">{{ source.question_text }}</a></h4>
+      {{swer_text|striptags|truncatechars:140 }}
+    </li>
+  </ul>
+
+  <form action="{{ request.get_current_url }}" method="POST" class="flex">
+    <a class="btn btn-secondary" href="{{ answer.get_absolute_url }}"><i class="fas fa-arrow-left"> </i> {% trans 'Go back' %}</a>
+    {% csrf_token %}
+    <div class="input-group" style="width: auto; margin-left: auto;">
+      <div class="input-group-prepend">
+        <label for="{{ form.lang_from.id_for_label }}" class="form-control btn btn-primary"><i class="fas fa-globe"> </i></label>
+      </div>
+      {{ form.lang_from }}
+      <label for="{{ form.lang_to.id_for_label }}" class="form-control btn btn-primary"><i class="fas fa-arrow-right"></i></label>
+      {{ form.lang_to }}
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-language"></i> {% trans 'Start translation' %}</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

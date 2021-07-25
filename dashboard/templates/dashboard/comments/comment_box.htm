@@ -1,0 +1,31 @@
+{% load render_linebreaks %}
+
+<li class="comment-box">
+    <div class="comment-header">
+        <h3>
+            {{ comment.author.get_full_name }}
+            {% if show_target %}
+            <small class="text-muted">on <a href="{{ comment.target.get_absolute_url }}" class="text-muted">{{ comment.target }}</a></small>
+            {% endif %}
+        </h3>
+        {% if comment.author == request.user and show_delete %}
+        <div class="delete-comment-wrapper">
+            <button type="submit" class="btn delete-comment slow-transition">Delete <i class="far fa-trash-alt"></i></button>
+            <form action="{% url 'dashboard:delete-comment' comment.id %}" class="delete-comment-form slow-transition" method="POST">
+                {% csrf_token %}
+                <span>Are you sure?</span>
+                <button class="btn confirm-delete delete-yes">Yes</button> /
+                <button class="btn confirm-delete delete-no">No</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    <p class="comment-date">{{ comment.created_on|date:"j F, Y" }}</p>
+    {% if editable %}
+    <textarea class="input-plain"{% if input_name %} name="{{ input_name }}"{% endif %} placeholder="enter comment here..." required autofocus>{{ comment.text|escape|render_linebreaks|safe }}</textarea>
+    {% else %}
+    <p class="comment-text">
+        {{ comment.text|escape|render_linebreaks|safe }}
+    </p>
+    {% endif %}
+</li>

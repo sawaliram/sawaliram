@@ -1,0 +1,11 @@
+
+{% for row, error_list in errors.items %}
+    <div class="error-list-row">
+        <p>{{ row }}:</p>
+        <ul>
+            {% for error in error_list %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endfor %}
