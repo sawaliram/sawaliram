@@ -73,7 +73,7 @@ def update_sheet(spreadsheet, csv_file_name):
 @shared_task
 def update_to_cloud_task():
     scope = ['https://spreadsheets.google.com/feeds',"https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name('secret_google_sheet/credentials.json', scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_name(os.environ.get('google_secret_key_file'), scope)
     client = gspread.authorize(creds)
     spreadsheet = client.open("questions")
     fields = ['state', 'student_gender', 'student_class', 'question_format', 'contributor_role', 'context', 'medium_language', 'curriculum_followed', 'question_asked_on', 'field_of_interest', 'language']
