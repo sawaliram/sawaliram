@@ -116,7 +116,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'update-csv-to-cloud-task':{
         'task': 'dashboard.tasks.update_to_cloud_task',
-        'schedule':crontab(minute=0, hour=0, day_of_week='monday'),
+        'schedule':crontab(minute=0, hour=9),
         'args': (),
     }
 }
