@@ -688,8 +688,14 @@ class Article(DraftableModel):
     class Meta:
         db_table = 'articles'
 
+
     def get_slug(self):
-        return slugify(self.title)
+        slug = slugify(self.title, allow_unicode=True)
+        if slug:
+            return slug
+        else:
+            return 'article'
+
 
     def __str__(self):
         return 'Article #{}: {}'.format(self.id, self.title)

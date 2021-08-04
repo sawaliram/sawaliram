@@ -6,7 +6,16 @@
 {% block tr_original %}
 
 <header>
+  {% if object.source.language.lower ==  answer.source.language.lower %}
   <h1 class="p-3">{{ object.source.tr_question_text }}</h1>
+  {% else %}
+    {% if object.source.question_text_english %}
+    <h1 class="p-3">{{ object.source.question_text_english }}</h1>
+    {% else %}
+    <h1 class="p-3">{{ object.source.tr_question_text }}</h1>
+    {% endif %}
+  {% endif %}
+
   <div class="meta-section mx-3">
     <div class="highlighted-meta">
       <i class="fas fa-university" title="{% trans 'School' %}"></i>
@@ -41,7 +50,7 @@
 
 {% block tr_translation %}
 <header>
-  <h1 class="border border-grey"><input type="text" name="{{ form.question_text.name }}" value="{{ form.question_text.value }}" placeholder="{{ object.source.tr_question_text }}" id="{{ form.question_text.id }}" class="input-plain input-title p-3" /></h1>
+  <h1 class="border border-grey"><input type="text" name="{{ form.question_text.name }}" value="{% if object.language == 'en' %}{% if object.source.question_text_english %}{{ object.source.question_text_english }}{% else %}{{ object.source.tr_question_text }}{% endif %}{% else %}{{ form.question_text.value }}{% endif %}" placeholder="{{ object.source.tr_question_text }}" id="{{ form.question_text.id }}" class="input-plain input-title p-3" /></h1>
   <div class="meta-section meta-input-section flex flex-column flex-md-row">
     <div class="highlighted-meta bg-white border border-grey flex-fill flex align-items-center">
       <i class="fas fa-university mr-2" title="{% trans 'School' %}"></i>

@@ -634,10 +634,19 @@ button.search-field-submit {
     cursor: pointer;
 }
 
+.sign-text{
+    color: #000;
+    text-decoration: none;
+}
+
 @media (max-width: 576px) {
     .navbar .navbar-search-icon,
     .navbar .user-signin {
         font-size: 1rem;
+    }
+
+    .sign-text {
+        display: none;
     }
 }
 
@@ -650,11 +659,21 @@ button.search-field-submit {
     position: relative;
 }
 
+.iconz {
+    width: 30px;
+    height: 30px;
+}
+
 @media (max-width: 576px) {
     .navbar .navbar-user-wrapper {
         padding: 0 0.5rem;
         padding-right: 0.3rem;
         line-height: 1;
+    }
+
+    .iconz {
+        width: 25px;
+        height: 25px;
     }
 }
 
@@ -3977,15 +3996,18 @@ figure.image figcaption {
 }
 
 .research-second-section {
-    background-color: #f2f2f2;
-    padding: 3rem 2rem;
+    background-image: url("/static/illustrations/Path_1734.svg");
+    background-size: cover;
+	background-repeat: no-repeat;
+    padding: 7rem 2rem;
+    height: 700px;
     margin-top: 3rem;
 }
 
 @media (max-width: 576px) {
     .research-second-section {
         margin-top: 2rem;
-        padding: 2rem 1rem;
+        padding: 8rem 1rem;
     }
 }
 
@@ -5405,7 +5427,7 @@ button.social-login i {
  .biblio_wrapper {
      width: 90%;
      margin: auto;
-     margin-top: 3rem;
+     margin-top: 6rem;
      font-family: "Source Sans Pro", sans-serif;
  }
  
