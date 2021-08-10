@@ -298,9 +298,11 @@
         {% compress js %}
         <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-        {% block script_includes %} {% endblock %}
         <script src="{% static 'js/script.js' %}"></script>
         {% endcompress %}
+        
+        {% block script_includes %} {% endblock %}
+
         
         {% block footer %}{% endblock %}
 
