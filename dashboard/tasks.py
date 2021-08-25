@@ -59,12 +59,12 @@ def update_local_csv(objects, fields, csv_file_name):
             writer.writerow(row)
 
 
-def update_sheet(spreadsheet, csv_file_name):
+def update_sheet(client, spreadsheet, csv_file_name):
     """
     Updates the google sheet "sheet" with the data from the file csv_file_name
     """
     with open(csv_file_name, 'r') as file_ob:
-        content = file_ob.read()
+        content = file_ob.read().encode('utf-8')
         client.import_csv(spreadsheet.id, data=content)
 
 
@@ -80,4 +80,4 @@ def update_to_cloud_task():
     csv_file_name = "question_tableau.csv"
     objects = Question.objects.values(*fields)
     update_local_csv(objects, fields, csv_file_name)
-    update_sheet(spreadsheet, csv_file_name)
+    update_sheet(client, spreadsheet, csv_file_name)
