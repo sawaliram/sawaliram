@@ -76,7 +76,7 @@ def update_to_cloud_task():
     creds = ServiceAccountCredentials.from_json_keyfile_name(os.environ.get('google_secret_key_file'), scope)
     client = gspread.authorize(creds)
     spreadsheet = client.open("questions")
-    fields = ['state', 'student_gender', 'student_class', 'question_format', 'contributor_role', 'context', 'medium_language', 'curriculum_followed', 'question_asked_on', 'field_of_interest', 'language', 'question_text_english']
+    fields = ['state', 'student_gender', 'student_class', 'question_format', 'contributor_role', 'context', 'medium_language', 'curriculum_followed', 'question_asked_on', 'field_of_interest', 'language', 'question_text_english', 'question_text']
     csv_file_name = "question_tableau.csv"
     objects = Question.objects.values(*fields)
     update_local_csv(objects, fields, csv_file_name)
