@@ -497,7 +497,7 @@ class ValidateCuratedExcelSheet(View):
         else:
             response = 'validated'
 
-        return HttpResponse(response)
+        return HttpResponse(response, content_type="text/plain")
 
 
 @method_decorator(login_required, name='dispatch')
