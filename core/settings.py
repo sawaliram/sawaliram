@@ -131,7 +131,7 @@ LOGIN_URL = '/users/signin'
 
 # Sentry settings
 sentry_sdk.init(
-    dsn="https://06e228b93d3644cd83a7d6b4ff1e66a1@sentry.io/1434408",
+    dsn="https://1a42cb652cad417694d12c50b855d456@o1007142.ingest.sentry.io/5969821",
     integrations=[DjangoIntegration()]
 )
 
