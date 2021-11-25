@@ -122,5 +122,6 @@ set-environment.sh
 
 # dirs to ignore
 staticfiles/
-assets/submissions
+uploads/submissions
+assets/
 

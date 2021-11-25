@@ -1,4 +1,4 @@
-"""Define the functions that handle various requests by returnig a view"""
+ra"""Define the functions that handle various requests by returnig a view"""
 
 import random
 import os
@@ -194,7 +194,7 @@ class SubmitQuestionsView(View):
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         raw_filename = 'dataset_' + str(dataset.id) + '_raw.xlsx'
         writer = pd.ExcelWriter(
-            os.path.join(BASE_DIR, 'assets/submissions/raw/' + raw_filename))
+            os.path.join(BASE_DIR, 'uploads/submissions/raw/' + raw_filename))
         excel_sheet.to_excel(writer, 'Sheet 1')
         writer.save()
 
@@ -203,7 +203,7 @@ class SubmitQuestionsView(View):
         excel_sheet['dataset_id'] = dataset.id
         uncurated_filename = 'dataset_' + str(dataset.id) + '_uncurated.xlsx'
         writer = pd.ExcelWriter(
-            os.path.join(BASE_DIR, 'assets/submissions/uncurated/' + uncurated_filename))
+            os.path.join(BASE_DIR, 'uploads/submissions/uncurated/' + uncurated_filename))
         excel_sheet.to_excel(writer, 'Sheet 1')
         writer.save()
 

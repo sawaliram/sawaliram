@@ -10,15 +10,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         path_to_raw_submissions_dir = os.path.join(
-            os.path.dirname(__file__), '../../../assets') \
+            os.path.dirname(__file__), '../../../uploads') \
             + '/submissions/raw'
 
         path_to_uncurated_submissions_dir = os.path.join(
-            os.path.dirname(__file__), '../../../assets') \
+            os.path.dirname(__file__), '../../../uploads') \
             + '/submissions/uncurated'
 
         path_to_unencoded_submissions_dir = os.path.join(
-            os.path.dirname(__file__), '../../../assets') \
+            os.path.dirname(__file__), '../../../uploads') \
             + '/submissions/unencoded'
 
         if not os.path.exists(path_to_raw_submissions_dir):
