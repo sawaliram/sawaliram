@@ -619,7 +619,7 @@ class UserProfileView(View):
             article_drafts = ArticleDraft.objects.filter(author=user_id)
             translated_answer_drafts = DraftAnswerTranslation.objects.filter(translated_by=user_id)
             translated_article_drafts = DraftArticleTranslation.objects.filter(translated_by=user_id)
-            notifications = Notification.objects.filter(user=user_id)
+            notifications = Notification.objects.filter(user=user_id).order_by('-created_on')
             submitted_questions = Dataset.objects.filter(submitted_by=user_id)
             submitted_answers = Answer.objects.filter(submitted_by=user_id, status='submitted')
             submitted_articles = SubmittedArticle.objects.filter(author=user_id)
