@@ -149,7 +149,15 @@
                 <div class="left-section">
                     <i class="fas fa-bars navbar-menu-toggle"></i>
                     <a class="navbar-brand slow-transition" href="{% url 'public_website:home' %}">
-                        <img class="slow-transition" id="mainLogo" src="{% static 'logos/sawaliram_logo.png' %}" alt="{% trans 'Sawaliram Home' %}">
+                       {% if page_title == _('Search') %}
+                        <img class="slow-transition" id="mainLogo" src="{% static 'logos/Logo-2.svg' %}" alt="{% trans 'Sawaliram Home' %}">
+                      {% elif page_title == _('Resources') %}
+                        <img class="slow-transition" id="mainLogo" src="{% static 'logos/Logo-4.svg' %}" alt="{% trans 'Sawaliram Home' %}">
+                     {% elif page_title == _('View Answer') %}
+                        <img class="slow-transition" id="mainLogo" src="{% static 'logos/Logo-3.svg' %}" alt="{% trans 'Sawaliram Home' %}">
+                     {% else %}
+                         <img class="slow-transition" id="mainLogo" src="{% static 'logos/MainLogo-1.svg' %}" alt="{% trans 'Sawaliram Home' %}">
+                     {% endif %}
                     </a>
                 </div>
                 <div class="right-section">
