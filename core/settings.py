@@ -129,6 +129,11 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'dashboard.tasks.update_to_cloud_task',
         'schedule':crontab(minute=0, hour=9),
         'args': (),
+    },
+    'db-backup':{
+        'task': 'dashboard.tasks.db_backup_to_file',
+        'schedule':crontab(minute=0, hour=0, day_of_week=0, day_of_month=1),
+        'args': (),
     }
 }
 

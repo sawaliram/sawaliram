@@ -81,3 +81,8 @@ def update_to_cloud_task():
     objects = Question.objects.values(*fields)
     update_local_csv(objects, fields, csv_file_name)
     update_sheet(client, spreadsheet, csv_file_name)
+
+
+@shared_task
+def db_backup_to_file():
+    management.call_command('dbbackup', interactive=False)
