@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'compressor',
+    'dbbackup',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +100,12 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+# Database backup
+# https://django-dbbackup.readthedocs.io/en/master/configuration.html
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': 'dbbackups'}
 
 # Cache
 CACHES = {
