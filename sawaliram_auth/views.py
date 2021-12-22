@@ -120,6 +120,13 @@ class SignupView(View):
                         'form': form,
                         
                     }
+                    test_mail={'Subject':'Sawaliram - verify your email',
+                         'From':'mail@sawaliram.org',
+                          'To': user.email,
+                          'Message':'Hello ' + user.first_name + ' Thank you for signing up with Sawaliram!'
+                         }
+                    print(test_mail)
+
                     return render(request, 'sawaliram_auth/signin.html', context)
 
             else:
