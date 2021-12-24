@@ -130,12 +130,29 @@ class SignupView(View):
                     return render(request, 'sawaliram_auth/signin.html', context)
 
             else:
-                context = {
-                    'form': form,
-                    'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY
-                }
-                messages.error(request, _('Error! Invalid Captcha!.'))
-                return render(request, 'sawaliram_auth/signup.html', context)
+                user = User.objects.create_user(
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name'],
+                    organisation=form.cleaned_data['organisation'],
+                    email=form.cleaned_data['email'],
+                    password=form.cleaned_data['password']
+                )
+                 user.save()
+
+                 users = Group.objects.get(name='users')
+                 users.user_set.add(user)
+                 form = SignInForm(auto_id=False)
+                 context = {
+                        'form': form,
+                        
+                    }
+                 test_mail={'Subject':'Sawaliram - verify your email',
+                         'From':'mail@sawaliram.org',
+                          'To': user.email,
+                          'Message':'Hello ' + user.first_name + ' Thank you for signing up with Sawaliram!'
+                         }
+                 print(test_mail)
+                 return render(request, 'sawaliram_auth/signin.html', context)
 
         context = {
             'form': form,
