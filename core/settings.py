@@ -46,9 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'compressor',
 ]
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',
+    'htmlmin.middleware.HtmlMinifyMiddleware',
+    'htmlmin.middleware.MarkRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -113,6 +117,11 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'dashboard.tasks.updateDashboardTasksStats',
         'schedule': crontab(minute=0, hour='*/1'),
         'args': (),
+    },
+    'update-csv-to-cloud-task':{
+        'task': 'dashboard.tasks.update_to_cloud_task',
+        'schedule':crontab(minute=0, hour=9),
+        'args': (),
     }
 }
 
@@ -122,7 +131,7 @@ LOGIN_URL = '/users/signin'
 
 # Sentry settings
 sentry_sdk.init(
-    dsn="https://06e228b93d3644cd83a7d6b4ff1e66a1@sentry.io/1434408",
+    dsn="https://1a42cb652cad417694d12c50b855d456@o1007142.ingest.sentry.io/5969821",
     integrations=[DjangoIntegration()]
 )
 
@@ -228,3 +237,19 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# settings for compressor to minify html content and static files such as css or js too 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
+COMPRESS_ENABLED = True
+COMPRESS_CSS_HASHING_METHOD = 'content'
+COMPRESS_CSS_FILTERS = ["compressor.filters.cssmin.CSSMinFilter"]
+COMPRESS_JS_FILTERS = ["compressor.filters.jsmin.JSMinFilter"]
+
+
+HTML_MINIFY = True
+KEEP_COMMENTS_ON_MINIFYING = True
