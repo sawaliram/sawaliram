@@ -38,6 +38,9 @@
                 padding: 8px;
             }
         </style>
+        <script>
+            var mediaUrl = "{% url 'dashboard:saveimagedata'%}";
+        </script>
     </head>
     <body class="d-flex flex-column {% block body_styles %}{% if grey_background == 'True' %}grey-background{% endif %}{% endblock %}">
 

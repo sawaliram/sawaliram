@@ -5,6 +5,7 @@ import os
 import urllib
 
 from datetime import datetime
+from django.http.response import JsonResponse
 
 from django.utils.translation import gettext as _
 
@@ -54,7 +55,6 @@ from dashboard.models import (
     QuestionArchive,
     Question,
     TranslatedQuestion,
-    PublishedTranslatedQuestion,
     DraftTranslatedQuestion,
     SubmittedTranslatedQuestion,
     Answer,
@@ -75,17 +75,18 @@ from dashboard.models import (
     Comment,
     Dataset,
     AnswerTranslationCredit,
-    ArticleTranslationCredit)
+    ArticleTranslationCredit,
+    PublishedTranslatedQuestion)
 
 from sawaliram_auth.models import Notification, User, VolunteerRequest
 from public_website.views import SearchView
 
+from django.core.files.storage import FileSystemStorage
 import pandas as pd
 from pprint import pprint
 
 
 # Dashboard Home
-
 @method_decorator(login_required, name='dispatch')
 @method_decorator(volunteer_permission_required, name='dispatch')
 class DashboardHome(View):
@@ -2271,6 +2272,7 @@ class DeleteAnswerTranslation(BaseDeleteTranslation):
     model = AnswerTranslation
     template_name = 'dashboard/translations/answer_delete.html'
 
+
     def delete(self, request, *args, **kwargs):
         '''
         Also delete the question object while we're about it
@@ -2295,6 +2297,7 @@ class DeleteAnswerTranslation(BaseDeleteTranslation):
             q[0].delete()
 
         return super().delete(request, *args, **kwargs)
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -2651,3 +2654,17 @@ def get_work_in_progress_view(request):
     response = render(request, 'dashboard/work-in-progress.html')
     response.status_code = 501  # Not Implemented
     return response
+
+
+# save the image in media directory after upload
+class Saveimagedata(View):
+    def post(self, request):
+        if request.method == "POST":
+            image = request.FILES['image'] if 'image' in request.FILES else None
+
+            if image:
+                fs = FileSystemStorage()
+                file = fs.save(image.name, image)
+                url = fs.url(file)
+
+                return JsonResponse({"fileurl": url })
