@@ -1,4 +1,4 @@
-ra"""Define the functions that handle various requests by returnig a view"""
+"""Define the functions that handle various requests by returnig a view"""
 
 import random
 import os
