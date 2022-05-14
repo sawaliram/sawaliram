@@ -209,7 +209,7 @@ LANGUAGE_COOKIE_NAME = 'lang'
 
 # Translation files
 LOCALE_PATHS = [
-    BASE_DIR + '/locale',
+    'locale',
 ]
 
 # For backward compatibility since old functions still expect this
