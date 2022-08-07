@@ -10,10 +10,10 @@ et-xmlfile==1.1.0
 flake8==3.9.1
 isort==5.8.0
 jdcal==1.4.1
-kombu==5.0.2
+kombu==5.2.2
 lazy-object-proxy==1.6.0
 mccabe==0.6.1
-numpy==1.22
+numpy==1.23.1
 openpyxl==3.0.7
 pandas==1.1.5
 psycopg2-binary==2.8.6
