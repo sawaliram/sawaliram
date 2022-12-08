@@ -2,7 +2,7 @@ amqp==5.0.6
 astroid==2.5.6
 billiard==3.6.4.0
 celery==5.2.2
-certifi==2020.12.5
+certifi==2022.12.7
 dj-database-url==0.5.0
 Django==3.2.14
 entrypoints==0.3
