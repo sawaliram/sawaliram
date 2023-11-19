@@ -14,7 +14,7 @@ kombu==5.2.2
 lazy-object-proxy==1.6.0
 mccabe==0.6.1
 numpy==1.26.1
-openpyxl==3.0.7
+openpyxl==3.1.2
 pandas==2.1.2
 psycopg2-binary==2.9.9
 pycodestyle==2.7.0
