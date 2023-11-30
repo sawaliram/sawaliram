@@ -197,7 +197,7 @@ class SubmitQuestionsView(View):
         writer = pd.ExcelWriter(
             os.path.join(BASE_DIR, 'uploads/submissions/raw/' + raw_filename))
         excel_sheet.to_excel(writer, 'Sheet 1')
-        writer.save()
+        writer.close()
 
         # create file for curation
         excel_sheet['Field of Interest'] = ''
@@ -206,7 +206,7 @@ class SubmitQuestionsView(View):
         writer = pd.ExcelWriter(
             os.path.join(BASE_DIR, 'uploads/submissions/uncurated/' + uncurated_filename))
         excel_sheet.to_excel(writer, 'Sheet 1')
-        writer.save()
+        writer.close()
 
         messages.success(request, (_('Thank you for the questions! We will get to work preparing the questions to be answered and translated.')))
         context = {
