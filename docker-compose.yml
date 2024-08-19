@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=sawaliram
+    ports:
+      - "5432:5432"
+    volumes:
+     - db:/var/lib/postgresql/data
+    network_mode: "host"
+
+  rabbitmq:
+    image: rabbitmq
+    restart: always
+    ports:
+      # AMQP protocol port
+      - "5672:5672"
+      # HTTP management UI
+      - "15672:15672"
+    network_mode: "host"
+
+  web:
+    build: .
+    container_name: django-sawaliram-app
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/app
+    environment:
+      - sawaliram_secret_key={DJANGO_SCRET_KEY}
+      - environment=${DJANGO_ENV}
+      - sawaliram_debug_value={SAWALIRAM_DEBUG_VALUE}
+      - sawaliram_db_password=secret
+      - GOOGLE_SECRET_KEY={GOOGLE_SECRET_KEY}
+      - GOOGLE_SITE_KEY={GOOGLE_SITE_KEY}
+    depends_on:
+      - postgres
+    network_mode: "host"
+
+volumes:
+  db:
+  
