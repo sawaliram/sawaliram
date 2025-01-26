@@ -31,7 +31,7 @@ services:
     volumes:
       - .:/app
     environment:
-      - sawaliram_secret_key=$DJANGO_SCRET_KEY
+      - sawaliram_secret_key=$DJANGO_SECRET_KEY
       - environment=$DJANGO_ENV
       - sawaliram_debug_value=$SAWALIRAM_DEBUG_VALUE
       - sawaliram_db_password=secret
