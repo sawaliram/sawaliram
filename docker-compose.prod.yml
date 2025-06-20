@@ -10,7 +10,7 @@ services:
       - "5432:5432"
     volumes:
      - db:/var/lib/postgresql/data
-    network_mode: "host"
+    # network_mode: "host"
 
   rabbitmq:
     image: rabbitmq
@@ -20,12 +20,18 @@ services:
       - "5672:5672"
       # HTTP management UI
       - "15672:15672"
-    network_mode: "host"
+    # network_mode: "host"
 
   web:
     build: .
     container_name: django-sawaliram-app
-    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    command: > 
+      gunicorn core.wsgi:application
+      --bind 0.0.0.0:8000
+      --timeout 120
+      --access-logfile -
+      --error-logfile -
+      --log-level debug
     ports:
       - '8000:8000'
     volumes:
@@ -39,7 +45,7 @@ services:
       - GOOGLE_SITE_KEY=$GOOGLE_SITE_KEY
     depends_on:
       - postgres
-    network_mode: "host"
+    # network_mode: "host"
 
 volumes:
   db:
