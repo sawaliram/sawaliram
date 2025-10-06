@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=sawaliram
+    volumes:
+     - db:/var/lib/postgresql/data
+    network_mode: "host"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    network_mode: "host"
+
+  web:
+    build: .
+    container_name: django-sawaliram-app
+    command: sh -c "python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:8000 --timeout 120 --access-logfile - --error-logfile - --log-level info"
+    volumes:
+      - .:/app
+    environment:
+      - sawaliram_secret_key=${DJANGO_SECRET_KEY:-your-secret-key-here}
+      - environment=${DJANGO_ENV:-production}
+      - sawaliram_debug_value=False
+      - sawaliram_db_password=secret
+      - DB_HOST=localhost
+      - GOOGLE_SECRET_KEY=${GOOGLE_SECRET_KEY:-}
+      - GOOGLE_SITE_KEY=${GOOGLE_SITE_KEY:-}
+    depends_on:
+      - postgres
+      - rabbitmq
+    network_mode: "host"
+
+volumes:
+  db:
