@@ -22,6 +22,11 @@ services:
       - "15672:15672"
     network_mode: "host"
 
+  memcached:
+    image: memcached:alpine
+    restart: always
+    network_mode: "host"
+
   web:
     build: .
     container_name: django-sawaliram-app
@@ -39,6 +44,8 @@ services:
       - GOOGLE_SITE_KEY=$GOOGLE_SITE_KEY
     depends_on:
       - postgres
+      - rabbitmq
+      - memcached
     network_mode: "host"
 
 volumes:
