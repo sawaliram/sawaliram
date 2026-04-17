@@ -11,7 +11,7 @@ flake8==3.9.1
 isort==5.8.0
 jdcal==1.4.1
 kombu==5.2.2
-lazy-object-proxy==1.6.0
+lazy-object-proxy==1.10.0
 mccabe==0.6.1
 numpy==1.26.1
 openpyxl==3.1.2
@@ -20,13 +20,12 @@ psycopg2-binary==2.9.9
 pycodestyle==2.7.0
 pyflakes==2.3.1
 python-dateutil==2.8.2
-python-memcached==1.59
+pymemcache==4.0.0
 pytz==2021.1
 requests==2.25.1
 sentry-sdk==1.0.0
 six==1.15.0
 sqlparse==0.4.2
-typed-ast==1.5.5
 urllib3==1.26.5
 vine==5.0.0
 whitenoise==5.2.0

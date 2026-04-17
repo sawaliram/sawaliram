@@ -15,6 +15,11 @@ services:
     restart: always
     network_mode: "host"
 
+  memcached:
+    image: memcached:alpine
+    restart: always
+    network_mode: "host"
+
   web:
     build: .
     container_name: django-sawaliram-app
@@ -32,6 +37,7 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+      - memcached
     network_mode: "host"
 
 volumes:
