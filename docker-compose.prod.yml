@@ -7,23 +7,22 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=sawaliram
     volumes:
-     - db:/var/lib/postgresql/data
-    network_mode: "host"
+      - db:/var/lib/postgresql/data
 
   rabbitmq:
     image: rabbitmq:3-management
     restart: always
-    network_mode: "host"
 
   memcached:
     image: memcached:alpine
     restart: always
-    network_mode: "host"
 
   web:
     build: .
     container_name: django-sawaliram-app
-    command: sh -c "python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:8000 --timeout 120 --access-logfile - --error-logfile - --log-level info"
+    command: sh -c "python manage.py migrate && python manage.py compress --force && python manage.py collectstatic --noinput && gunicorn core.wsgi:application --bind 0.0.0.0:8000 --timeout 120 --access-logfile - --error-logfile - --log-level info"
+    ports:
+      - "8000:8000"
     volumes:
       - .:/app
     environment:
@@ -31,14 +30,16 @@ services:
       - environment=${DJANGO_ENV:-production}
       - sawaliram_debug_value=False
       - sawaliram_db_password=${DB_PASSWORD}
-      - DB_HOST=localhost
+      - DB_HOST=postgres
+      - CELERY_BROKER_URL=amqp://rabbitmq
+      - MEMCACHED_LOCATION=memcached:11211
       - GOOGLE_SECRET_KEY=${GOOGLE_SECRET_KEY:-}
       - GOOGLE_SITE_KEY=${GOOGLE_SITE_KEY:-}
+      - SECURE_SSL_REDIRECT=${SECURE_SSL_REDIRECT:-True}
     depends_on:
       - postgres
       - rabbitmq
       - memcached
-    network_mode: "host"
 
 volumes:
   db:
