@@ -9,30 +9,27 @@ services:
     ports:
       - "5432:5432"
     volumes:
-     - db:/var/lib/postgresql/data
-    network_mode: "host"
+      - db:/var/lib/postgresql/data
 
   rabbitmq:
     image: rabbitmq
     restart: always
     ports:
-      # AMQP protocol port
       - "5672:5672"
-      # HTTP management UI
       - "15672:15672"
-    network_mode: "host"
 
   memcached:
     image: memcached:alpine
     restart: always
-    network_mode: "host"
+    ports:
+      - "11211:11211"
 
   web:
     build: .
     container_name: django-sawaliram-app
     command: python manage.py runserver 0.0.0.0:8000
     ports:
-      - '8000:8000'
+      - "8000:8000"
     volumes:
       - .:/app
     environment:
@@ -40,14 +37,15 @@ services:
       - environment=$DJANGO_ENV
       - sawaliram_debug_value=$SAWALIRAM_DEBUG_VALUE
       - sawaliram_db_password=secret
+      - DB_HOST=postgres
+      - CELERY_BROKER_URL=amqp://rabbitmq
+      - MEMCACHED_LOCATION=memcached:11211
       - GOOGLE_SECRET_KEY=$GOOGLE_SECRET_KEY
       - GOOGLE_SITE_KEY=$GOOGLE_SITE_KEY
     depends_on:
       - postgres
       - rabbitmq
       - memcached
-    network_mode: "host"
 
 volumes:
   db:
-  
