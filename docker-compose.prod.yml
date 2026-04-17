@@ -4,7 +4,7 @@ services:
     restart: always
     environment:
       - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=secret
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=sawaliram
     volumes:
      - db:/var/lib/postgresql/data
@@ -22,10 +22,10 @@ services:
     volumes:
       - .:/app
     environment:
-      - sawaliram_secret_key=${DJANGO_SECRET_KEY:-your-secret-key-here}
+      - sawaliram_secret_key=${DJANGO_SECRET_KEY}
       - environment=${DJANGO_ENV:-production}
       - sawaliram_debug_value=False
-      - sawaliram_db_password=secret
+      - sawaliram_db_password=${DB_PASSWORD}
       - DB_HOST=localhost
       - GOOGLE_SECRET_KEY=${GOOGLE_SECRET_KEY:-}
       - GOOGLE_SITE_KEY=${GOOGLE_SITE_KEY:-}
